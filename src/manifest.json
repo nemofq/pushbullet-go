@@ -3,6 +3,7 @@
   "name": "Pushbullet Go",
   "version": "1.0",
   "description": "A lightweight extension for Pushbullet that enables receiving and sending pushes directly from browser.",
+  "homepage_url": "https://github.com/nemofq/pushbullet-go/",
   "icons": {
     "128": "icon128.png"
   },
