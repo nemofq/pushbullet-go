@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Pushbullet Go",
   "version": "1.0",
-  "description": "A simple and lightweight Chrome extension for Pushbullet that enables receiving and sending pushes directly from your browser.",
+  "description": "A lightweight extension for Pushbullet that enables receiving and sending pushes directly from browser.",
   "icons": {
     "128": "icon128.png"
   },

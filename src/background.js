@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         status: connectionStatus,
         canRetry: reconnectAttempts >= maxReconnectAttempts
       });
-      break;
+      return true; // Only return true for async responses
     case 'retry_connection':
       // Reset everything like fresh start
       resetConnection();
@@ -48,8 +48,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendPush(message.data);
       break;
   }
-  
-  return true;
 });
 
 

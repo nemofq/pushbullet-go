@@ -185,8 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       }
       
-      messageRowDiv.appendChild(timestampDiv);
-      
       if (push.title) {
         const titleDiv = document.createElement('div');
         titleDiv.className = 'message-title';
@@ -309,9 +307,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function handleFilePaste(file) {
+    const isImage = file.type.startsWith('image/');
+    const fileType = isImage ? 'image' : 'file';
+    
     try {
-      const isImage = file.type.startsWith('image/');
-      const fileType = isImage ? 'image' : 'file';
       
       bodyInput.placeholder = `Uploading ${fileType}...`;
       bodyInput.disabled = true;
@@ -338,8 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(loadMessages, 1000);
 
     } catch (error) {
-      const isImage = file.type.startsWith('image/');
-      const fileType = isImage ? 'image' : 'file';
       bodyInput.placeholder = `${fileType.charAt(0).toUpperCase() + fileType.slice(1)} upload failed. Try again.`;
       
       setTimeout(() => {
