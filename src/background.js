@@ -6,6 +6,7 @@ let heartbeatTimer = null;
 let reconnectAttempts = 0;
 let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
+let isFirstFetch = true;
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed/updated');
@@ -223,6 +224,7 @@ async function refreshPushList(isFromTickle = false) {
   if (!accessToken) return;
   
   try {
+    const wasInitialFetch = lastModified === 0;
     const url = lastModified > 0 
       ? `https://api.pushbullet.com/v2/pushes?modified_after=${lastModified}&active=true`
       : `https://api.pushbullet.com/v2/pushes?active=true&limit=20`;
@@ -251,7 +253,8 @@ async function refreshPushList(isFromTickle = false) {
           await chrome.storage.local.set({ pushes: pushes.slice(0, 100) });
           
           // Show notifications for new pushes (only if from tickle, meaning real-time)
-          if (isFromTickle) {
+          // Skip notifications on first fetch to avoid notifying about initial 20 messages
+          if (isFromTickle && !isFirstFetch) {
             // Apply device filtering for notifications (same as popup display)
             const configData = await chrome.storage.sync.get('localDeviceId');
             
@@ -263,6 +266,11 @@ async function refreshPushList(isFromTickle = false) {
             });
           }
         }
+      }
+      
+      // Mark first fetch as complete only after the initial fetch (when we fetched the first 20 messages)
+      if (isFirstFetch && wasInitialFetch) {
+        isFirstFetch = false;
       }
     }
   } catch (error) {

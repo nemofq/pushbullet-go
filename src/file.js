@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error('No access token found. Please configure in options.');
       }
 
-      status.textContent = 'Uploading file...';
+      status.textContent = 'Preparing upload...';
       progressFill.style.width = '50%';
 
       // Upload file using Pushbullet API directly
       await uploadFile(file, tokenData.accessToken, configData.remoteDeviceId);
 
-      status.textContent = 'Upload complete!';
+      status.textContent = 'File/image pushed!';
       progressFill.style.width = '100%';
 
       // Close window after a short delay
