@@ -49,3 +49,10 @@ This project uses the AGPL-3.0 license. If you have any feature requests or feed
 ## Support
 
 This is a hobby project, you can buy me a coffee to support: https://buymeacoffee.com/nemofq
+
+## One More Thing
+
+If you're also an iOS+Pushbullet user, you may find following Shortcuts useful:
+
+- [Push to Pushbullet](https://www.icloud.com/shortcuts/42b9dce7d6b44c72acd3e5c55b5de07a)
+- [Pushbullet Receiver](https://www.icloud.com/shortcuts/1f94913de21b41debe60ef43631afde2)
