@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pushbullet Go Options</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      margin: 0; 
+      padding: 20px; 
+      min-height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      background: white;
+      color: black;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border: 1px solid #ddd;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      margin: 0 0 30px 0;
+      color: black;
+      font-size: 24px;
+      font-weight: normal;
+    }
+    .form-group { 
+      margin-bottom: 20px; 
+    }
+    label { 
+      display: block; 
+      margin-bottom: 8px; 
+      color: black;
+      font-size: 14px;
+    }
+    input[type="text"] { 
+      width: 100%; 
+      padding: 12px; 
+      border: 1px solid #ccc; 
+      font-size: 14px;
+      box-sizing: border-box;
+      background: white;
+      color: black;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+    button { 
+      background: #4caf50; 
+      color: white; 
+      border: none; 
+      padding: 12px 24px; 
+      cursor: pointer; 
+      font-size: 14px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.2s;
+    }
+    button:hover { 
+      background: #45a049; 
+    }
+    button svg {
+      width: 16px;
+      height: 16px;
+    }
+    .status { 
+      margin-top: 15px; 
+      padding: 12px; 
+      display: none; 
+      text-align: center;
+      font-size: 14px;
+    }
+    .success { 
+      background: #f0f8f0; 
+      color: #4caf50; 
+      border: 1px solid #4caf50; 
+    }
+    .error { 
+      background: #f8f8f8; 
+      color: black; 
+      border: 1px solid #ccc; 
+    }
+    .tip {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+    .tip a {
+      color: #4caf50;
+      text-decoration: none;
+    }
+    .tip a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pushbullet Go Options</h1>
+    <div class="form-group">
+      <label for="accessToken">Access Token:</label>
+      <input type="text" id="accessToken" placeholder="Enter your Pushbullet access token">
+      <div class="tip">
+        Visit <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> to get your access token
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="localDeviceId">Local Device ID:</label>
+      <input type="text" id="localDeviceId" placeholder="Enter local device ID (optional)">
+      <div class="tip">
+        Visit <a href="https://www.pushbullet.com/#devices" target="_blank">https://www.pushbullet.com/#devices</a>, select a device, then copy the string after #devices/ from the browser's address bar
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="remoteDeviceId">Remote Device ID:</label>
+      <input type="text" id="remoteDeviceId" placeholder="Enter target device ID (optional)">
+      <div class="tip">
+        Visit <a href="https://www.pushbullet.com/#devices" target="_blank">https://www.pushbullet.com/#devices</a>, select a device, then copy the string after #devices/ from the browser's address bar
+      </div>
+    </div>
+    <button id="save">Save Settings</button>
+    <div id="status" class="status"></div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

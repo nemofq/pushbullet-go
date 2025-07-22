@@ -1,0 +1,6 @@
+# Claude Code
+.claude
+
+# Certificates
+/*.pem
+/release/*.pem
