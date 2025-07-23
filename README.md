@@ -44,7 +44,7 @@ This extension requires the following permissions:
 
 ## License
 
-This project uses the AGPL-3.0 license. If you have any feature requests or feedback, feel free to create an issue or pull request.
+This project uses the [AGPL-3.0 license](https://github.com/nemofq/pushbullet-go?tab=AGPL-3.0-1-ov-file). If you have any feature requests or feedback, feel free to create an issue or pull request.
 
 ## Support
 
