@@ -4,3 +4,6 @@
 # Certificates
 /*.pem
 /release/*.pem
+
+# Documents
+/docs/store.md
