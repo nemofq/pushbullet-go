@@ -1,4 +1,5 @@
 # Pushbullet Go
+> **Note**: The extension name has been changed to "Push Go" due to Chrome Web Store policy.
 
 ![Pushbullet Go](screenshots/1_popup.png)
 
@@ -19,7 +20,7 @@ This is an extension for [Pushbullet](https://www.pushbullet.com/), so you must 
 
 ## Installation
 
-Install directly from the [Chrome Web Store](https://chromewebstore.google.com/) or:
+Install directly from the [Chrome Web Store (pending review)](https://chromewebstore.google.com/) or:
 
 1. Download the extension (crx file) from the `release/` folder
 2. Open Chrome and navigate to `chrome://extensions/`

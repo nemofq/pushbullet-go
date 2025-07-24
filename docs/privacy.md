@@ -1,10 +1,10 @@
-# Privacy Policy for Pushbullet Go
+# Privacy Policy for Push Go
 
-**Last Updated: July 22, 2025**
+**Last Updated: July 24, 2025**
 
 ## Data Collection
 
-Pushbullet Go does not collect, store, or transmit any personal data from users. This extension operates solely as a client interface for the Pushbullet service.
+Push Go does not collect, store, or transmit any personal data from users. This extension operates solely as a client interface for the Pushbullet service.
 
 ## Data Usage
 

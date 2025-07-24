@@ -1,12 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Pushbullet Go",
+  "name": "Push Go",
   "version": "1.0",
-  "description": "A lightweight extension for Pushbullet that enables receiving and sending pushes directly from browser.",
+  "description": "A lightweight, open-source extension for cross-device pushes via Pushbullet API.",
   "homepage_url": "https://github.com/nemofq/pushbullet-go/",
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
     "128": "icon128.png"
   },
   "minimum_chrome_version": "116",
@@ -24,10 +22,8 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Pushbullet Go",
+    "default_title": "Push Go",
     "default_icon": {
-      "16": "icon16.png",
-      "48": "icon48.png",
       "128": "icon128.png"
     }
   },
