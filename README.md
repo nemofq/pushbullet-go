@@ -22,10 +22,18 @@ This is an extension for [Pushbullet](https://www.pushbullet.com/), so you must 
 
 Install directly from the [Chrome Web Store (pending review)](https://chromewebstore.google.com/) or:
 
+### Method 1: Install from Release
 1. Download the extension (crx file) from the `release/` folder
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top right
 4. Drag the crx file from Step 1 to the page to install
+5. Verify the extension manually at the top of extension page (in three-dot menus)
+
+### Method 2: Install from Source
+1. Download and unzip the source code from this repository
+2. Open Chrome and navigate to `chrome://extensions/`
+3. Enable "Developer mode" in the top right
+4. Click "Load unpacked" and select the `/src` folder from the unzipped source code
 
 ## Setup
 
