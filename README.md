@@ -29,6 +29,8 @@ Install directly from the [Chrome Web Store (pending review)](https://chromewebs
 
 ## Setup
 
+> **Note**: Chrome version 116 or higher is required to use this extension since the `chrome.idle` API is used to maintain connection to Pushbullet's WebSocket server.
+
 1. Get your Pushbullet Access Token from [pushbullet.com](https://www.pushbullet.com/#settings/account)
 2. Click the Pushbullet Go icon in your browser
 3. Enter your access token in the options page
