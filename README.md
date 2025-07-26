@@ -13,6 +13,7 @@ This is an extension for [Pushbullet](https://www.pushbullet.com/), so you must 
 
 - Receive and send pushes
 - Push files/images by pasting or uploading (in standalone window due to Chrome's restrictions)
+- Send current page's URL, selected text, or images from context menu (right-click)
 - Notifications for received pushes (display only)
 - Filter received pushes by setting local device ID
 - Control which device to push to by setting remote device ID
@@ -33,7 +34,7 @@ Install directly from the [Chrome Web Store (pending review)](https://chromewebs
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top right
 4. Drag the crx file from Step 1 to the page to install
-5. Verify the extension manually at the top of extension page (in three-dot menus)
+5. Click "Keep this extension" at the top of extension page (in three-dot menus)
 
 ## Setup
 
@@ -51,6 +52,8 @@ This extension requires the following permissions:
 - **Storage**: To save your options and push history locally
 - **Idle**: To maintain the connection to Pushbullet servers to receive pushes in real time
 - **Notifications**: To display push notifications
+- **Context Menus**: To add right-click menu options for pushing content
+- **Active Tab**: To access current page's URL for context menu actions
 - **Host Access**: To communicate with Pushbullet API servers
 
 ## Privacy

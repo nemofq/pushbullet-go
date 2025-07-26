@@ -11,11 +11,13 @@ let isFirstFetch = true;
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed/updated');
   initializeExtension();
+  setupContextMenus();
 });
 
 chrome.runtime.onStartup.addListener(() => {
   console.log('Chrome started');
   initializeExtension();
+  setupContextMenus();
 });
 
 chrome.idle.onStateChanged.addListener((state) => {
@@ -329,5 +331,157 @@ async function sendPush(pushData) {
     }
   } catch (error) {
     // Silent error handling - don't log to avoid extension page errors
+  }
+}
+
+function setupContextMenus() {
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: 'pushbullet-page',
+      title: 'Push current page\'s URL',
+      contexts: ['page']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-selection',
+      title: 'Push selected text',
+      contexts: ['selection']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-image',
+      title: 'Push this image',
+      contexts: ['image']
+    });
+  });
+}
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (!accessToken) {
+    console.log('No access token available for context menu action');
+    return;
+  }
+  
+  const configData = await chrome.storage.sync.get('remoteDeviceId');
+  
+  switch (info.menuItemId) {
+    case 'pushbullet-page':
+      const pageData = {
+        type: 'link',
+        url: tab.url
+      };
+      if (configData.remoteDeviceId) {
+        pageData.device_iden = configData.remoteDeviceId;
+      }
+      await sendPush(pageData);
+      break;
+      
+    case 'pushbullet-selection':
+      const textData = {
+        type: 'note',
+        body: info.selectionText
+      };
+      if (configData.remoteDeviceId) {
+        textData.device_iden = configData.remoteDeviceId;
+      }
+      await sendPush(textData);
+      break;
+      
+    case 'pushbullet-image':
+      await handleImageContextMenu(info, configData.remoteDeviceId);
+      break;
+  }
+});
+
+async function handleImageContextMenu(info, remoteDeviceId) {
+  try {
+    // Fetch the image data
+    const response = await fetch(info.srcUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch image');
+    }
+    
+    const blob = await response.blob();
+    const fileName = getImageFileName(info.srcUrl);
+    
+    // Upload the image using the same process as file uploads
+    await uploadImageFromUrl(blob, fileName, remoteDeviceId);
+    
+  } catch (error) {
+    console.error('Failed to send image:', error);
+  }
+}
+
+async function uploadImageFromUrl(blob, fileName, remoteDeviceId) {
+  // Step 1: Request upload URL
+  const uploadRequest = await fetch('https://api.pushbullet.com/v2/upload-request', {
+    method: 'POST',
+    headers: {
+      'Access-Token': accessToken,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      file_name: fileName,
+      file_type: blob.type
+    })
+  });
+
+  if (!uploadRequest.ok) {
+    throw new Error('Failed to get upload URL');
+  }
+
+  const uploadData = await uploadRequest.json();
+
+  // Step 2: Upload file
+  const formData = new FormData();
+  if (uploadData.data) {
+    Object.keys(uploadData.data).forEach(key => {
+      formData.append(key, uploadData.data[key]);
+    });
+  }
+  formData.append('file', blob, fileName);
+
+  const uploadResponse = await fetch(uploadData.upload_url, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error('File upload failed');
+  }
+
+  // Step 3: Create push
+  const pushData = {
+    type: 'file',
+    file_name: uploadData.file_name,
+    file_type: uploadData.file_type,
+    file_url: uploadData.file_url
+  };
+
+  if (remoteDeviceId) {
+    pushData.device_iden = remoteDeviceId;
+  }
+
+  await sendPush(pushData);
+}
+
+function getImageFileName(url) {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const fileName = pathname.split('/').pop();
+    
+    // If we got a filename with extension, use it
+    if (fileName && fileName.includes('.')) {
+      return fileName;
+    }
+    
+    // Otherwise generate a name with timestamp
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    return `image-${timestamp}.jpg`;
+  } catch (error) {
+    // Fallback filename
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    return `image-${timestamp}.jpg`;
   }
 }
