@@ -13,7 +13,7 @@ This is an extension for [Pushbullet](https://www.pushbullet.com/), so you must 
 
 - Receive and send pushes
 - Push files/images by pasting or uploading (in standalone window due to Chrome's restrictions)
-- Send current page's URL, selected text, or images from context menu (right-click)
+- Push current page's URL, selected text, or image from context menu (right-click)
 - Notifications for received pushes (display only)
 - Filter received pushes by setting local device ID
 - Control which device to push to by setting remote device ID
