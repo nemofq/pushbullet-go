@@ -21,7 +21,7 @@ This is an extension for [Pushbullet](https://www.pushbullet.com/), so you must 
 
 ## Installation
 
-Install directly from the [Chrome Web Store (pending review)](https://chromewebstore.google.com/) or:
+Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/push-go/dghndapbehjdbhiffbckojkhoennbofg) or:
 
 ### Method 1: Install from Source
 1. Download and unzip the source code from this repository
