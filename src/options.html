@@ -68,6 +68,14 @@
     button:hover { 
       background: #45a049; 
     }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .retrieve-button {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
     button svg {
       width: 16px;
       height: 16px;
@@ -102,6 +110,30 @@
     .tip a:hover {
       text-decoration: underline;
     }
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+      background: white;
+      color: black;
+    }
+    select:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+    select:not([multiple]) {
+      padding: 12px 40px 12px 12px;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+    }
+    select[multiple] {
+      height: 120px;
+    }
   </style>
 </head>
 <body>
@@ -113,19 +145,24 @@
       <div class="tip">
         Visit <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> to get your access token.
       </div>
+      <button id="retrieveDevices" class="retrieve-button" disabled>Retrieve Devices</button>
     </div>
     <div class="form-group">
-      <label for="localDeviceId">Local Device ID:</label>
-      <input type="text" id="localDeviceId" placeholder="Enter local device ID (optional)">
+      <label for="localDeviceId">Local Device:</label>
+      <select id="localDeviceId">
+        <option value="">None</option>
+      </select>
       <div class="tip">
-        Visit <a href="https://www.pushbullet.com/#devices" target="_blank">https://www.pushbullet.com/#devices</a>, select a device, then copy the string after #devices/ from the browser's address bar.
+        Choose which device receives pushes sent to you.
       </div>
     </div>
     <div class="form-group">
-      <label for="remoteDeviceId">Remote Device ID:</label>
-      <input type="text" id="remoteDeviceId" placeholder="Enter target device ID (optional)">
+      <label for="remoteDeviceId">Target Devices:</label>
+      <select id="remoteDeviceId" multiple>
+        <option value="">None (all devices)</option>
+      </select>
       <div class="tip">
-        Visit <a href="https://www.pushbullet.com/#devices" target="_blank">https://www.pushbullet.com/#devices</a>, select a device, then copy the string after #devices/ from the browser's address bar.
+        Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
       </div>
     </div>
     <button id="save">Save Settings</button>

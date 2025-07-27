@@ -305,33 +305,65 @@ async function sendPush(pushData) {
   if (!accessToken) return;
   
   try {
-    const response = await fetch('https://api.pushbullet.com/v2/pushes', {
-      method: 'POST',
-      headers: {
-        'Access-Token': accessToken,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(pushData)
-    });
+    // Handle multiple device IDs
+    const deviceIds = pushData.device_iden ? pushData.device_iden.split(',').map(id => id.trim()).filter(id => id) : [];
     
-    if (response.ok) {
-      const push = await response.json();
+    if (deviceIds.length <= 1) {
+      // Single or no device - use original logic
+      const response = await fetch('https://api.pushbullet.com/v2/pushes', {
+        method: 'POST',
+        headers: {
+          'Access-Token': accessToken,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(pushData)
+      });
       
-      // Store sent message in separate storage for display
-      const existingSentMessages = await chrome.storage.local.get('sentMessages');
-      const sentMessages = existingSentMessages.sentMessages || [];
+      if (response.ok) {
+        const push = await response.json();
+        await storeSentMessage(push);
+      }
+    } else {
+      // Multiple devices - send to each one
+      const pushPromises = deviceIds.map(deviceId => {
+        const devicePushData = { ...pushData, device_iden: deviceId };
+        return fetch('https://api.pushbullet.com/v2/pushes', {
+          method: 'POST',
+          headers: {
+            'Access-Token': accessToken,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(devicePushData)
+        });
+      });
       
-      // Mark as sent and add timestamp
-      push.isSent = true;
-      push.sentAt = Date.now();
+      const responses = await Promise.all(pushPromises);
       
-      sentMessages.unshift(push);
-      
-      await chrome.storage.local.set({ sentMessages: sentMessages.slice(0, 100) });
+      // Store the first successful push for display
+      for (const response of responses) {
+        if (response.ok) {
+          const push = await response.json();
+          await storeSentMessage(push);
+          break; // Only store one copy for display
+        }
+      }
     }
   } catch (error) {
     // Silent error handling - don't log to avoid extension page errors
   }
+}
+
+async function storeSentMessage(push) {
+  const existingSentMessages = await chrome.storage.local.get('sentMessages');
+  const sentMessages = existingSentMessages.sentMessages || [];
+  
+  // Mark as sent and add timestamp
+  push.isSent = true;
+  push.sentAt = Date.now();
+  
+  sentMessages.unshift(push);
+  
+  await chrome.storage.local.set({ sentMessages: sentMessages.slice(0, 100) });
 }
 
 function setupContextMenus() {

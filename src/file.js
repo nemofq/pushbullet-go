@@ -110,30 +110,12 @@ document.addEventListener('DOMContentLoaded', function() {
       pushData.device_iden = remoteDeviceId;
     }
 
-    const pushResponse = await fetch('https://api.pushbullet.com/v2/pushes', {
-      method: 'POST',
-      headers: {
-        'Access-Token': accessToken,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(pushData)
+    // Use the background script's sendPush function which handles multiple devices
+    chrome.runtime.sendMessage({ 
+      type: 'send_push', 
+      data: pushData 
     });
 
-    if (!pushResponse.ok) {
-      throw new Error('Failed to create push');
-    }
-
-    const push = await pushResponse.json();
-    console.log('File upload window: Push created successfully:', push);
-
-    // Store sent message for display in popup
-    const existingSentMessages = await chrome.storage.local.get('sentMessages');
-    const sentMessages = existingSentMessages.sentMessages || [];
-    
-    push.isSent = true;
-    push.sentAt = Date.now();
-    
-    sentMessages.unshift(push);
-    await chrome.storage.local.set({ sentMessages: sentMessages.slice(0, 100) });
+    console.log('File upload window: Push sent via background script');
   }
 });
