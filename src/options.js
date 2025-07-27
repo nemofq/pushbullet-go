@@ -7,10 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const status = document.getElementById('status');
   
   let devices = [];
+  let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
+    people = data.people || [];
     populateDeviceSelects();
     
     if (data.localDeviceId) {
@@ -37,30 +39,56 @@ document.addEventListener('DOMContentLoaded', function() {
     retrieveDevicesButton.textContent = 'Retrieving...';
     
     try {
-      const response = await fetch('https://api.pushbullet.com/v2/devices', {
+      // Fetch devices
+      const devicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
         headers: {
           'Access-Token': accessToken
         }
       });
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`);
+      if (!devicesResponse.ok) {
+        throw new Error(`Failed to fetch devices: ${devicesResponse.status} ${devicesResponse.statusText}`);
       }
       
-      const data = await response.json();
-      devices = data.devices || [];
+      const devicesData = await devicesResponse.json();
+      devices = devicesData.devices || [];
       
-      await chrome.storage.sync.set({ devices: devices });
+      // Fetch chats (people)
+      const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats', {
+        headers: {
+          'Access-Token': accessToken
+        }
+      });
+      
+      if (!chatsResponse.ok) {
+        throw new Error(`Failed to fetch chats: ${chatsResponse.status} ${chatsResponse.statusText}`);
+      }
+      
+      const chatsData = await chatsResponse.json();
+      const chats = chatsData.chats || [];
+      
+      // Filter active chats and extract needed fields
+      people = chats
+        .filter(chat => chat.active === true)
+        .map(chat => ({
+          email_normalized: chat.with.email_normalized,
+          name: chat.with.name
+        }));
+      
+      await chrome.storage.sync.set({ devices: devices, people: people });
       
       populateDeviceSelects();
-      showStatus('Devices retrieved successfully!', 'success');
+      showRetrieveSuccess();
       
     } catch (error) {
       console.error('Error retrieving devices:', error);
       showStatus(`Error: ${error.message}`, 'error');
     } finally {
-      retrieveDevicesButton.disabled = false;
-      retrieveDevicesButton.textContent = 'Retrieve Devices';
+      // Note: Don't re-enable here as showRetrieveSuccess will handle it
+      if (retrieveDevicesButton.textContent === 'Retrieving...') {
+        retrieveDevicesButton.disabled = false;
+        retrieveDevicesButton.textContent = 'Retrieve devices and people';
+      }
     }
   });
 
@@ -76,7 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {
       accessToken: accessToken || '',
       localDeviceId: localDeviceId || '',
       remoteDeviceId: selectedRemoteDevices || '',
-      devices: devices
+      devices: devices,
+      people: people
     };
 
     chrome.storage.sync.set(saveData, function() {
@@ -133,6 +162,23 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       saveButton.innerHTML = originalContent;
       saveButton.disabled = false;
+    }, 2000);
+  }
+
+  function showRetrieveSuccess() {
+    const originalContent = 'Retrieve devices and people';
+    
+    retrieveDevicesButton.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+      </svg>
+      Retrieved
+    `;
+    retrieveDevicesButton.disabled = true;
+    
+    setTimeout(() => {
+      retrieveDevicesButton.textContent = originalContent;
+      retrieveDevicesButton.disabled = false;
     }, 2000);
   }
 });

@@ -20,6 +20,12 @@ chrome.runtime.onStartup.addListener(() => {
   setupContextMenus();
 });
 
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'sync' && (changes.devices || changes.people)) {
+    setupContextMenus();
+  }
+});
+
 chrome.idle.onStateChanged.addListener((state) => {
   if (state === 'active' && connectionStatus === 'disconnected') {
     console.log('System resumed from idle - attempting reconnection');
@@ -32,6 +38,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.type) {
     case 'token_updated':
       initializeExtension();
+      setupContextMenus();
       break;
     case 'get_status':
       sendResponse({ 
@@ -87,7 +94,7 @@ function resetConnection() {
   console.log('Connection reset - fresh start');
 }
 
-function connectWebSocket() {
+async function connectWebSocket() {
   if (!accessToken) {
     connectionStatus = 'disconnected';
     return;
@@ -112,14 +119,50 @@ function connectWebSocket() {
   connectionStatus = 'connecting';
   console.log(`Connecting to WebSocket... (attempt ${reconnectAttempts + 1})`);
   
+  // Check network connectivity first
+  if (!navigator.onLine) {
+    connectionStatus = 'disconnected';
+    handleReconnection();
+    return;
+  }
+  
+  // Universal error suppression: temporarily override console methods
+  const originalConsoleError = console.error;
+  const originalConsoleWarn = console.warn;
+  
+  // Filter function to suppress WebSocket-related errors
+  const wsErrorFilter = (...args) => {
+    const message = args.join(' ').toLowerCase();
+    if (message.includes('websocket') || 
+        message.includes('net::err_name_not_resolved') ||
+        message.includes('net::err_network_changed') ||
+        message.includes('net::err_connection_refused') ||
+        message.includes('stream.pushbullet.com')) {
+      return; // Suppress WebSocket-related errors
+    }
+    originalConsoleError.apply(console, args);
+  };
+  
+  const wsWarnFilter = (...args) => {
+    const message = args.join(' ').toLowerCase();
+    if (message.includes('websocket') || message.includes('stream.pushbullet.com')) {
+      return; // Suppress WebSocket-related warnings
+    }
+    originalConsoleWarn.apply(console, args);
+  };
+  
   try {
-    // Create WebSocket with additional error suppression
+    // Temporarily override console methods
+    console.error = wsErrorFilter;
+    console.warn = wsWarnFilter;
+    
+    // Create WebSocket with comprehensive error suppression
     ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
     
-    // Immediately attach error handler to suppress browser console errors
-    ws.onerror = () => {
+    // Set up all event handlers immediately
+    ws.onerror = (event) => {
       connectionStatus = 'disconnected';
-      // Silent error handling - don't log to avoid extension page errors
+      // Complete silence - no logging at all
     };
     
     ws.onopen = () => {
@@ -147,7 +190,10 @@ function connectWebSocket() {
     
     ws.onclose = (event) => {
       connectionStatus = 'disconnected';
-      console.log('WebSocket disconnected:', event.code);
+      // Only log non-error close codes to avoid spam
+      if (event.code !== 1006 && event.code !== 1002) {
+        console.log('WebSocket disconnected:', event.code);
+      }
       
       if (heartbeatTimer) {
         clearTimeout(heartbeatTimer);
@@ -162,7 +208,17 @@ function connectWebSocket() {
       handleReconnection();
     };
     
+    // Restore console methods after a brief delay to allow WebSocket initialization
+    setTimeout(() => {
+      console.error = originalConsoleError;
+      console.warn = originalConsoleWarn;
+    }, 100);
+    
   } catch (error) {
+    // Restore console methods immediately on error
+    console.error = originalConsoleError;
+    console.warn = originalConsoleWarn;
+    
     connectionStatus = 'disconnected';
     // Silent error handling - don't log to avoid extension page errors
     handleReconnection();
@@ -366,24 +422,158 @@ async function storeSentMessage(push) {
   await chrome.storage.local.set({ sentMessages: sentMessages.slice(0, 100) });
 }
 
-function setupContextMenus() {
-  chrome.contextMenus.removeAll(() => {
+async function setupContextMenus() {
+  chrome.contextMenus.removeAll(async () => {
+    // Get stored devices and people data
+    const data = await chrome.storage.sync.get(['devices', 'people']);
+    const devices = data.devices || [];
+    const people = data.people || [];
+    
+    // Create main context menu for page
     chrome.contextMenus.create({
       id: 'pushbullet-page',
       title: 'Push current page\'s URL',
       contexts: ['page']
     });
     
+    // Create sub-entries for page
+    chrome.contextMenus.create({
+      id: 'pushbullet-page-selected',
+      parentId: 'pushbullet-page',
+      title: 'To selected devices',
+      contexts: ['page']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-page-device',
+      parentId: 'pushbullet-page',
+      title: 'Choose device',
+      contexts: ['page']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-page-people',
+      parentId: 'pushbullet-page',
+      title: 'Choose people',
+      contexts: ['page']
+    });
+    
+    // Add device options under "Choose device" for page
+    devices.filter(d => d.active).forEach(device => {
+      chrome.contextMenus.create({
+        id: `pushbullet-page-device-${device.iden}`,
+        parentId: 'pushbullet-page-device',
+        title: device.nickname || `${device.manufacturer} ${device.model}`,
+        contexts: ['page']
+      });
+    });
+    
+    // Add people options under "Choose people" for page
+    people.forEach(person => {
+      chrome.contextMenus.create({
+        id: `pushbullet-page-people-${person.email_normalized}`,
+        parentId: 'pushbullet-page-people',
+        title: person.name,
+        contexts: ['page']
+      });
+    });
+    
+    // Create main context menu for selection
     chrome.contextMenus.create({
       id: 'pushbullet-selection',
       title: 'Push selected text',
       contexts: ['selection']
     });
     
+    // Create sub-entries for selection
+    chrome.contextMenus.create({
+      id: 'pushbullet-selection-selected',
+      parentId: 'pushbullet-selection',
+      title: 'To selected devices',
+      contexts: ['selection']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-selection-device',
+      parentId: 'pushbullet-selection',
+      title: 'Choose device',
+      contexts: ['selection']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-selection-people',
+      parentId: 'pushbullet-selection',
+      title: 'Choose people',
+      contexts: ['selection']
+    });
+    
+    // Add device options under "Choose device" for selection
+    devices.filter(d => d.active).forEach(device => {
+      chrome.contextMenus.create({
+        id: `pushbullet-selection-device-${device.iden}`,
+        parentId: 'pushbullet-selection-device',
+        title: device.nickname || `${device.manufacturer} ${device.model}`,
+        contexts: ['selection']
+      });
+    });
+    
+    // Add people options under "Choose people" for selection
+    people.forEach(person => {
+      chrome.contextMenus.create({
+        id: `pushbullet-selection-people-${person.email_normalized}`,
+        parentId: 'pushbullet-selection-people',
+        title: person.name,
+        contexts: ['selection']
+      });
+    });
+    
+    // Create main context menu for image
     chrome.contextMenus.create({
       id: 'pushbullet-image',
       title: 'Push this image',
       contexts: ['image']
+    });
+    
+    // Create sub-entries for image
+    chrome.contextMenus.create({
+      id: 'pushbullet-image-selected',
+      parentId: 'pushbullet-image',
+      title: 'To selected devices',
+      contexts: ['image']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-image-device',
+      parentId: 'pushbullet-image',
+      title: 'Choose device',
+      contexts: ['image']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-image-people',
+      parentId: 'pushbullet-image',
+      title: 'Choose people',
+      contexts: ['image']
+    });
+    
+    // Add device options under "Choose device" for image
+    devices.filter(d => d.active).forEach(device => {
+      chrome.contextMenus.create({
+        id: `pushbullet-image-device-${device.iden}`,
+        parentId: 'pushbullet-image-device',
+        title: device.nickname || `${device.manufacturer} ${device.model}`,
+        contexts: ['image']
+      });
+    });
+    
+    // Add people options under "Choose people" for image
+    people.forEach(person => {
+      chrome.contextMenus.create({
+        id: `pushbullet-image-people-${person.email_normalized}`,
+        parentId: 'pushbullet-image-people',
+        title: person.name,
+        contexts: ['image']
+      });
     });
   });
 }
@@ -395,33 +585,86 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
   
   const configData = await chrome.storage.sync.get('remoteDeviceId');
+  const menuItemId = info.menuItemId;
   
-  switch (info.menuItemId) {
-    case 'pushbullet-page':
+  // Handle "To selected devices" menu items (uses configured remote devices)
+  if (menuItemId === 'pushbullet-page-selected') {
+    const pageData = {
+      type: 'link',
+      url: tab.url
+    };
+    if (configData.remoteDeviceId) {
+      pageData.device_iden = configData.remoteDeviceId;
+    }
+    await sendPush(pageData);
+    return;
+  }
+  
+  if (menuItemId === 'pushbullet-selection-selected') {
+    const textData = {
+      type: 'note',
+      body: info.selectionText
+    };
+    if (configData.remoteDeviceId) {
+      textData.device_iden = configData.remoteDeviceId;
+    }
+    await sendPush(textData);
+    return;
+  }
+  
+  if (menuItemId === 'pushbullet-image-selected') {
+    await handleImageContextMenu(info, configData.remoteDeviceId);
+    return;
+  }
+  
+  // Handle device-specific menu items
+  if (menuItemId.includes('-device-') && !menuItemId.endsWith('-device')) {
+    if (menuItemId.startsWith('pushbullet-page-device-')) {
+      const deviceId = menuItemId.replace('pushbullet-page-device-', '');
       const pageData = {
         type: 'link',
-        url: tab.url
+        url: tab.url,
+        device_iden: deviceId
       };
-      if (configData.remoteDeviceId) {
-        pageData.device_iden = configData.remoteDeviceId;
-      }
       await sendPush(pageData);
-      break;
-      
-    case 'pushbullet-selection':
+    } else if (menuItemId.startsWith('pushbullet-selection-device-')) {
+      const deviceId = menuItemId.replace('pushbullet-selection-device-', '');
       const textData = {
         type: 'note',
-        body: info.selectionText
+        body: info.selectionText,
+        device_iden: deviceId
       };
-      if (configData.remoteDeviceId) {
-        textData.device_iden = configData.remoteDeviceId;
-      }
       await sendPush(textData);
-      break;
-      
-    case 'pushbullet-image':
-      await handleImageContextMenu(info, configData.remoteDeviceId);
-      break;
+    } else if (menuItemId.startsWith('pushbullet-image-device-')) {
+      const deviceId = menuItemId.replace('pushbullet-image-device-', '');
+      await handleImageContextMenu(info, deviceId);
+    }
+    return;
+  }
+  
+  // Handle people-specific menu items
+  if (menuItemId.includes('-people-') && !menuItemId.endsWith('-people')) {
+    if (menuItemId.startsWith('pushbullet-page-people-')) {
+      const email = menuItemId.replace('pushbullet-page-people-', '');
+      const pageData = {
+        type: 'link',
+        url: tab.url,
+        email: email
+      };
+      await sendPush(pageData);
+    } else if (menuItemId.startsWith('pushbullet-selection-people-')) {
+      const email = menuItemId.replace('pushbullet-selection-people-', '');
+      const textData = {
+        type: 'note',
+        body: info.selectionText,
+        email: email
+      };
+      await sendPush(textData);
+    } else if (menuItemId.startsWith('pushbullet-image-people-')) {
+      const email = menuItemId.replace('pushbullet-image-people-', '');
+      await handleImageContextMenuForPeople(info, email);
+    }
+    return;
   }
 });
 
@@ -444,7 +687,7 @@ async function handleImageContextMenu(info, remoteDeviceId) {
   }
 }
 
-async function uploadImageFromUrl(blob, fileName, remoteDeviceId) {
+async function uploadImageFromUrl(blob, fileName, remoteDeviceId, email = null) {
   // Step 1: Request upload URL
   const uploadRequest = await fetch('https://api.pushbullet.com/v2/upload-request', {
     method: 'POST',
@@ -490,11 +733,32 @@ async function uploadImageFromUrl(blob, fileName, remoteDeviceId) {
     file_url: uploadData.file_url
   };
 
-  if (remoteDeviceId) {
+  if (email) {
+    pushData.email = email;
+  } else if (remoteDeviceId) {
     pushData.device_iden = remoteDeviceId;
   }
 
   await sendPush(pushData);
+}
+
+async function handleImageContextMenuForPeople(info, email) {
+  try {
+    // Fetch the image data
+    const response = await fetch(info.srcUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch image');
+    }
+    
+    const blob = await response.blob();
+    const fileName = getImageFileName(info.srcUrl);
+    
+    // Upload the image for people
+    await uploadImageFromUrl(blob, fileName, null, email);
+    
+  } catch (error) {
+    console.error('Failed to send image to people:', error);
+  }
 }
 
 function getImageFileName(url) {
