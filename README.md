@@ -1,25 +1,26 @@
 # Pushbullet Go
-> **Note**: The extension name has been changed to "Push Go" due to Chrome Web Store policy.
+> **Note 1**: The extension name has been changed to "Push Go" due to Chrome Web Store policy.
+> **Note 2**: This is a third-party, open-source client for Pushbullet API. Not affiliated with or endorsed by the service.
 
 ![Pushbullet Go](screenshots/1_popup.png)
 
 A lightweight Chrome extension for Pushbullet that enables receiving and sending pushes directly from your browser.
 
-This extension is compatible with Manifest V3, making it an alternative to the official extension (since we could no longer use the official one in newer versions of Chrome).
+This extension is compatible with Manifest V3, making it an alternative to the official extension which no longer works.
 
 ## Features
 
-This is an extension for [Pushbullet](https://www.pushbullet.com/), so you must be a Pushbullet user to access any of the following features:
+Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 
 - Receive and send pushes
-- Push files/images by pasting or uploading (in standalone window due to Chrome's restrictions)
-- Push current page's URL, selected text, or image from context menu (right-click)
-- Notifications for received pushes (display only)
-- Filter received pushes by setting local device ID
-- Control which device to push to by setting remote device ID
-- Note: Only the 100 latest pushes (including received and sent) are stored locally; you can always access your entire push history on the Pushbullet website
+- Push files/images by pasting or uploading (in standalone window due to Chrome's restriction)
+- Push current page's URL, selected text, or images from context menu with device/people selection
+- Notifications for received pushes with button to open links
+- Filter received pushes and control which devices to push to by selecting devices
+- Stores 100 latest pushes locally (full history available on Pushbullet website)
 
 ## Installation
+> **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
 
 Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/push-go/dghndapbehjdbhiffbckojkhoennbofg) or:
 
@@ -38,19 +39,16 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 
 ## Setup
 
-> **Note**: Chrome version 116 or higher is required to use this extension since the `chrome.idle` API is used to maintain connection to Pushbullet's WebSocket server.
-
-1. Get your Pushbullet Access Token from [pushbullet.com](https://www.pushbullet.com/#settings/account)
-2. Click the Pushbullet Go icon in your browser
-3. Enter your access token in the options page
-4. Start receiving and sending pushes!
-5. (Optional) Set Local Device ID and Remote Device ID in the options page to filter incoming pushes and set targets for outgoing ones. You can get device IDs from URLs when visiting and choosing a device on the [Pushbullet devices page](https://www.pushbullet.com/#devices)
+1. Get your access token from [Pushbullet settings](https://www.pushbullet.com/#settings/account)
+2. Click the extension icon and enter your token
+3. Start sending and receiving pushes!
+4. (Optional) Select devices in options to filter incoming pushes and set push targets
 
 ## Permissions
 
 This extension requires the following permissions:
 - **Storage**: To save your options and push history locally
-- **Idle**: To maintain the connection to Pushbullet servers to receive pushes in real time
+- **Idle**: To maintain the connection to receive pushes in real time
 - **Notifications**: To display push notifications
 - **Context Menus**: To add right-click menu options for pushing content
 - **Active Tab**: To access current page's URL for context menu actions
@@ -58,7 +56,7 @@ This extension requires the following permissions:
 
 ## Privacy
 
-This extension stores everything locally and does not transmit any information beyond Pushbullet's API server.
+This extension stores everything locally and does not transmit any information beyond Pushbullet's API.
 
 ## License
 
@@ -70,7 +68,7 @@ This is a hobby project, you can buy me a coffee to support: https://buymeacoffe
 
 ## One More Thing
 
-If you're also an iOS+Pushbullet user, you may find following Shortcuts useful:
+If you're also an iOS+Pushbullet user, you may find these Shortcuts useful:
 
 - [Push to Pushbullet](https://www.icloud.com/shortcuts/42b9dce7d6b44c72acd3e5c55b5de07a)
 - [Pushbullet Receiver](https://www.icloud.com/shortcuts/1f94913de21b41debe60ef43631afde2)

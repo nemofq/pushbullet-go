@@ -349,13 +349,50 @@ function showNotificationForPush(push) {
     notificationBody = push.body || 'New push';
   }
   
-  chrome.notifications.create(`pushbullet-${push.iden}`, {
+  const notificationOptions = {
     type: 'basic',
     iconUrl: 'icon128.png',
     title: push.title || '',
     message: notificationBody
-  });
+  };
+  
+  // Add "Open the link" button for link and file types
+  if (push.type === 'link' || push.type === 'file') {
+    notificationOptions.buttons = [
+      { title: 'Open the link' }
+    ];
+  }
+  
+  chrome.notifications.create(`pushbullet-${push.iden}`, notificationOptions);
 }
+
+chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
+  if (notificationId.startsWith('pushbullet-') && buttonIndex === 0) {
+    const pushIden = notificationId.replace('pushbullet-', '');
+    
+    // Get the push data from storage
+    const data = await chrome.storage.local.get('pushes');
+    const pushes = data.pushes || [];
+    const push = pushes.find(p => p.iden === pushIden);
+    
+    if (push) {
+      let urlToOpen = null;
+      
+      if (push.type === 'link' && push.url) {
+        urlToOpen = push.url;
+      } else if (push.type === 'file' && push.file_url) {
+        urlToOpen = push.file_url;
+      }
+      
+      if (urlToOpen) {
+        chrome.tabs.create({ url: urlToOpen });
+      }
+    }
+    
+    // Clear the notification after opening
+    chrome.notifications.clear(notificationId);
+  }
+});
 
 async function sendPush(pushData) {
   if (!accessToken) return;
