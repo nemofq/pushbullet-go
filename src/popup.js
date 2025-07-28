@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
   updateConnectionStatus();
   refreshMessagesFromAPI();
   
-  // Ensure we're at bottom when popup opens
+  // Fallback scroll to bottom for first-time loading
   setTimeout(() => {
     messagesList.scrollTop = messagesList.scrollHeight;
-  }, 100);
+  }, 200);
   
   setInterval(updateConnectionStatus, 2000);
 
@@ -252,9 +252,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Ensure scroll to bottom after DOM updates
-    setTimeout(() => {
-      messagesList.scrollTop = messagesList.scrollHeight;
-    }, 0);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        messagesList.scrollTop = messagesList.scrollHeight;
+      });
+    });
   }
 
   async function sendMessage() {
