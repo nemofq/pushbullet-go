@@ -1,5 +1,6 @@
 # Pushbullet Go
 > **Note 1**: The extension name has been changed to "Push Go" due to Chrome Web Store policy.
+>
 > **Note 2**: This is a third-party, open-source client for Pushbullet API. Not affiliated with or endorsed by the service.
 
 ![Pushbullet Go](screenshots/1_popup.png)
