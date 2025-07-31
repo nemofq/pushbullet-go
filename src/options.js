@@ -5,11 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const saveButton = document.getElementById('save');
   const retrieveDevicesButton = document.getElementById('retrieveDevices');
   const status = document.getElementById('status');
+  const autoOpenLinksCheckbox = document.getElementById('autoOpenLinks');
+  const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
   
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -26,10 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
     
+    // Load auto-open links setting (default is false/off)
+    autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
+    updateToggleVisual();
+    
     updateRetrieveButton();
   });
   
   accessTokenInput.addEventListener('input', updateRetrieveButton);
+  
+  // Handle toggle clicks
+  autoOpenLinksToggle.addEventListener('click', function() {
+    autoOpenLinksCheckbox.checked = !autoOpenLinksCheckbox.checked;
+    updateToggleVisual();
+  });
 
   retrieveDevicesButton.addEventListener('click', async function() {
     const accessToken = accessTokenInput.value.trim();
@@ -52,6 +64,41 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const devicesData = await devicesResponse.json();
       devices = devicesData.devices || [];
+      
+      // Check if there's a Chrome device, if not create one
+      const hasChromeDevice = devices.some(device => device.type === 'chrome');
+      if (!hasChromeDevice) {
+        console.log('No Chrome device found, creating one...');
+        const createDeviceResponse = await fetch('https://api.pushbullet.com/v2/devices', {
+          method: 'POST',
+          headers: {
+            'Access-Token': accessToken,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nickname: 'Chrome',
+            type: 'chrome',
+            model: 'Chrome'
+          })
+        });
+        
+        if (createDeviceResponse.ok) {
+          console.log('Chrome device created successfully');
+          // Re-fetch devices to get the complete updated list
+          const updatedDevicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
+            headers: {
+              'Access-Token': accessToken
+            }
+          });
+          
+          if (updatedDevicesResponse.ok) {
+            const updatedDevicesData = await updatedDevicesResponse.json();
+            devices = updatedDevicesData.devices || [];
+          }
+        } else {
+          console.warn('Failed to create Chrome device:', createDeviceResponse.status, createDeviceResponse.statusText);
+        }
+      }
       
       // Fetch chats (people)
       const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats', {
@@ -105,7 +152,8 @@ document.addEventListener('DOMContentLoaded', function() {
       localDeviceId: localDeviceId || '',
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
-      people: people
+      people: people,
+      autoOpenLinks: autoOpenLinksCheckbox.checked
     };
 
     chrome.storage.sync.set(saveData, function() {
@@ -136,6 +184,14 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateRetrieveButton() {
     const hasToken = accessTokenInput.value.trim().length > 0;
     retrieveDevicesButton.disabled = !hasToken;
+  }
+  
+  function updateToggleVisual() {
+    if (autoOpenLinksCheckbox.checked) {
+      autoOpenLinksToggle.classList.add('active');
+    } else {
+      autoOpenLinksToggle.classList.remove('active');
+    }
   }
   
   function showStatus(message, type) {

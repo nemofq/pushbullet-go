@@ -17,6 +17,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - Push files/images by pasting or uploading (in standalone window due to Chrome's restriction)
 - Push current page's URL, selected text, or images from context menu with device/people selection
 - Notifications for received pushes with button to open links
+- Auto-open received link in a new tab (default off, enable in options page)
 - Filter received pushes and control which devices to push to by selecting devices
 - Stores 100 latest pushes locally (full history available on Pushbullet website)
 

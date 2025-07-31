@@ -314,12 +314,17 @@ async function refreshPushList(isFromTickle = false) {
           // Skip notifications on first fetch to avoid notifying about initial 20 messages
           if (isFromTickle && !isFirstFetch) {
             // Apply device filtering for notifications (same as popup display)
-            const configData = await chrome.storage.sync.get('localDeviceId');
+            const configData = await chrome.storage.sync.get(['localDeviceId', 'autoOpenLinks']);
             
             newPushes.forEach(push => {
               // Only show notification if no device filter is set, or if push matches the device filter
               if (!configData.localDeviceId || push.target_device_iden === configData.localDeviceId) {
                 showNotificationForPush(push);
+                
+                // Auto-open link pushes in background tabs (only if enabled)
+                if (push.type === 'link' && push.url && configData.autoOpenLinks) {
+                  chrome.tabs.create({ url: push.url, active: false });
+                }
               }
             });
           }

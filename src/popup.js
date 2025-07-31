@@ -219,6 +219,10 @@ document.addEventListener('DOMContentLoaded', function() {
           img.src = push.file_url;
           img.className = 'message-image';
           img.onclick = () => window.open(push.file_url, '_blank');
+          // Add load event listener to handle scroll positioning after image loads
+          img.onload = () => {
+            messagesList.scrollTop = messagesList.scrollHeight;
+          };
           bodyDiv.appendChild(img);
         } else {
           const link = document.createElement('a');

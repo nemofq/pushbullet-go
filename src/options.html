@@ -134,6 +134,44 @@
     select[multiple] {
       height: 120px;
     }
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .toggle-label {
+      margin: 0;
+      flex: 1;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      background: #ccc;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .toggle-switch.active {
+      background: #4caf50;
+    }
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+    .toggle-switch.active .toggle-slider {
+      transform: translateX(26px);
+    }
+    .toggle-input {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -163,6 +201,13 @@
       </select>
       <div class="tip">
         Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
+      </div>
+    </div>
+    <div class="toggle-container">
+      <label class="toggle-label">Auto-open in new tab (inactive) when receiving a link</label>
+      <input type="checkbox" id="autoOpenLinks" class="toggle-input">
+      <div class="toggle-switch" id="autoOpenLinksToggle">
+        <div class="toggle-slider"></div>
       </div>
     </div>
     <button id="save">Save Settings</button>
