@@ -125,6 +125,15 @@ document.addEventListener('DOMContentLoaded', function() {
       await chrome.storage.sync.set({ devices: devices, people: people });
       
       populateDeviceSelects();
+      
+      // Auto-select Chrome device as Local Device if no local device is currently selected
+      if (!localDeviceSelect.value) {
+        const chromeDevice = devices.find(device => device.active && device.type === 'chrome');
+        if (chromeDevice) {
+          localDeviceSelect.value = chromeDevice.iden;
+        }
+      }
+      
       showRetrieveSuccess();
       
     } catch (error) {

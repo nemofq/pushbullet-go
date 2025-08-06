@@ -60,7 +60,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
   accessToken = data.accessToken;
