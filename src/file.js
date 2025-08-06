@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressFill = document.getElementById('progressFill');
   const status = document.getElementById('status');
 
+  loadAndApplyColorMode();
+
   fileButton.addEventListener('click', () => {
     fileInput.click();
   });
@@ -117,5 +119,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     console.log('File upload window: Push sent via background script');
+  }
+
+  async function loadAndApplyColorMode() {
+    const data = await chrome.storage.sync.get('colorMode');
+    const colorMode = data.colorMode || 'system';
+    applyColorMode(colorMode);
+  }
+
+  function applyColorMode(mode) {
+    const body = document.body;
+    
+    // Remove existing theme classes
+    body.classList.remove('theme-light', 'theme-dark', 'theme-system');
+    
+    // Add new theme class
+    body.classList.add(`theme-${mode}`);
+    
+    // For system mode, detect user's preference
+    if (mode === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      body.classList.toggle('system-dark', prefersDark);
+    }
   }
 });

@@ -7,11 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const status = document.getElementById('status');
   const autoOpenLinksCheckbox = document.getElementById('autoOpenLinks');
   const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
+  const colorModeSelect = document.getElementById('colorMode');
   
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'colorMode'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -32,6 +33,10 @@ document.addEventListener('DOMContentLoaded', function() {
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
     updateToggleVisual();
     
+    // Load color mode setting (default is 'system')
+    colorModeSelect.value = data.colorMode || 'system';
+    applyColorMode(colorModeSelect.value);
+    
     updateRetrieveButton();
   });
   
@@ -41,6 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
   autoOpenLinksToggle.addEventListener('click', function() {
     autoOpenLinksCheckbox.checked = !autoOpenLinksCheckbox.checked;
     updateToggleVisual();
+  });
+
+  // Handle color mode changes for immediate preview
+  colorModeSelect.addEventListener('change', function() {
+    applyColorMode(colorModeSelect.value);
   });
 
   retrieveDevicesButton.addEventListener('click', async function() {
@@ -162,7 +172,8 @@ document.addEventListener('DOMContentLoaded', function() {
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
       people: people,
-      autoOpenLinks: autoOpenLinksCheckbox.checked
+      autoOpenLinks: autoOpenLinksCheckbox.checked,
+      colorMode: colorModeSelect.value
     };
 
     chrome.storage.sync.set(saveData, function() {
@@ -245,5 +256,21 @@ document.addEventListener('DOMContentLoaded', function() {
       retrieveDevicesButton.textContent = originalContent;
       retrieveDevicesButton.disabled = false;
     }, 2000);
+  }
+
+  function applyColorMode(mode) {
+    const body = document.body;
+    
+    // Remove existing theme classes
+    body.classList.remove('theme-light', 'theme-dark', 'theme-system');
+    
+    // Add new theme class
+    body.classList.add(`theme-${mode}`);
+    
+    // For system mode, detect user's preference
+    if (mode === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      body.classList.toggle('system-dark', prefersDark);
+    }
   }
 });

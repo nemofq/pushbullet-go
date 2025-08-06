@@ -4,6 +4,58 @@
   <meta charset="utf-8">
   <title>Pushbullet</title>
   <style>
+    :root {
+      /* Light theme */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --bg-tertiary: #f9f9f9;
+      --bg-header: #ffffff;
+      --bg-message-sent: #68BF78;
+      --bg-message-received: #f0f0f0;
+      --bg-message-received-hover: #e8e8e8;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --text-white: #ffffff;
+      --text-link: #1976d2;
+      --text-link-sent: #f0f0f0;
+      --border-primary: #eeeeee;
+      --border-secondary: #dddddd;
+      --button-primary: #4caf50;
+      --button-primary-hover: #45a049;
+      --copy-button: #cccccc;
+      --copy-button-hover: #4caf50;
+      --status-connected: #4caf50;
+      --status-connecting: #ff9800;
+      --status-disconnected: #f44336;
+    }
+
+    .theme-dark,
+    .theme-system.system-dark {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --bg-tertiary: #242424;
+      --bg-header: #1a1a1a;
+      --bg-message-sent: #4caf50;
+      --bg-message-received: #2d2d2d;
+      --bg-message-received-hover: #353535;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --text-tertiary: #999999;
+      --text-white: #ffffff;
+      --text-link: #64b5f6;
+      --text-link-sent: #f0f0f0;
+      --border-primary: #404040;
+      --border-secondary: #555555;
+      --button-primary: #4caf50;
+      --button-primary-hover: #45a049;
+      --copy-button: #666666;
+      --copy-button-hover: #4caf50;
+      --status-connected: #4caf50;
+      --status-connecting: #ff9800;
+      --status-disconnected: #f44336;
+    }
+
     body { 
       width: 450px; 
       height: 600px; 
@@ -11,14 +63,19 @@
       font-family: sans-serif; 
       display: flex; 
       flex-direction: column;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     .header { 
       padding: 12px; 
-      border-bottom: 1px solid #eee; 
+      border-bottom: 1px solid var(--border-primary); 
       display: flex; 
       align-items: center; 
       justify-content: space-between;
       font-size: 15px;
+      background: var(--bg-header);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
     .status { 
       width: 13px; 
@@ -26,9 +83,9 @@
       border-radius: 50%; 
       margin-right: 9px;
     }
-    .status.connected { background: #4caf50; }
-    .status.connecting { background: #ff9800; }
-    .status.disconnected { background: #f44336; }
+    .status.connected { background: var(--status-connected); }
+    .status.connecting { background: var(--status-connecting); }
+    .status.disconnected { background: var(--status-disconnected); }
     .messages { 
       flex: 1; 
       overflow-y: auto; 
@@ -40,16 +97,17 @@
       margin-bottom: 15px; 
       padding: 10px; 
       border-radius: 8px; 
-      background: #f5f5f5;
+      background: var(--bg-secondary);
       max-width: 300px;
       width: fit-content;
+      transition: background-color 0.3s ease;
     }
     .message.sent { 
-      background: #68BF78; 
-      color: white;
+      background: var(--bg-message-sent); 
+      color: var(--text-white);
     }
     .message.received { 
-      background: #f0f0f0;
+      background: var(--bg-message-received);
     }
     .message.clickable {
       cursor: pointer;
@@ -58,7 +116,7 @@
       transition: background-color 0.2s;
     }
     .message.clickable.received:hover {
-      background: #e8e8e8;
+      background: var(--bg-message-received-hover);
     }
     .message.clickable.sent:hover {
       text-decoration: underline;
@@ -91,7 +149,7 @@
     }
     .message-timestamp { 
       font-size: 11px; 
-      color: #999; 
+      color: var(--text-tertiary); 
       margin-bottom: 5px;
       flex-shrink: 0;
       line-height: 1.4;
@@ -110,7 +168,7 @@
       font-size: 14px;
     }
     .message.sent .message-title {
-      color: white;
+      color: var(--text-white);
     }
     .message-body { 
       word-wrap: break-word;
@@ -123,7 +181,7 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: #ccc;
+      color: var(--copy-button);
       font-size: 14px;
       padding: 2px;
       margin-left: 4px;
@@ -136,14 +194,14 @@
       opacity: 1;
     }
     .copy-button:hover {
-      color: #4caf50;
+      color: var(--copy-button-hover);
     }
     .message-link { 
-      color: #1976d2; 
+      color: var(--text-link); 
       text-decoration: none;
     }
     .message.sent .message-link {
-      color: #f0f0f0;
+      color: var(--text-link-sent);
     }
     .message-link:hover { 
       text-decoration: underline;
@@ -154,9 +212,10 @@
       cursor: pointer;
     }
     .send-form { 
-      border-top: 1px solid #eee; 
+      border-top: 1px solid var(--border-primary); 
       padding: 15px;
-      background: #f9f9f9;
+      background: var(--bg-tertiary);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
     .input-container { 
       display: flex; 
@@ -166,26 +225,28 @@
     textarea { 
       flex: 1; 
       padding: 10px 12px; 
-      border: 1px solid #ddd; 
+      border: 1px solid var(--border-secondary); 
       border-radius: 10px; 
       resize: none;
       height: 20px;
       font-family: inherit;
       font-size: 14px;
-      background: white;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.2;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
     }
     textarea:focus {
       outline: none;
-      border-color: #4caf50;
+      border-color: var(--button-primary);
     }
     .button-group {
       display: flex;
       gap: 4px;
     }
     .icon-button { 
-      background: #4caf50; 
-      color: white; 
+      background: var(--button-primary); 
+      color: var(--text-white); 
       border: none; 
       padding: 10px; 
       border-radius: 10px; 
@@ -195,9 +256,10 @@
       justify-content: center;
       width: 40px;
       height: 40px;
+      transition: background-color 0.3s ease;
     }
     .icon-button:hover { 
-      background: #45a049;
+      background: var(--button-primary-hover);
     }
     .icon-button svg {
       width: 18px;
@@ -205,18 +267,18 @@
     }
     .no-messages { 
       text-align: center; 
-      color: #666; 
+      color: var(--text-secondary); 
       margin-top: 50px;
     }
     .setup-guide {
       display: none;
       text-align: center;
       padding: 40px 20px;
-      color: #666;
+      color: var(--text-secondary);
     }
     .setup-guide h3 {
       margin: 0 0 15px 0;
-      color: #333;
+      color: var(--text-primary);
       font-weight: normal;
       font-size: 16px;
     }
@@ -226,19 +288,20 @@
       line-height: 1.4;
     }
     .setup-button {
-      background: #4caf50;
-      color: white;
+      background: var(--button-primary);
+      color: var(--text-white);
       border: none;
       padding: 10px 20px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 14px;
+      transition: background-color 0.3s ease;
     }
     .setup-button:hover {
-      background: #45a049;
+      background: var(--button-primary-hover);
     }
     #retryConnection:hover {
-      background: #45a049 !important;
+      background: var(--button-primary-hover) !important;
     }
   </style>
 </head>
@@ -248,7 +311,7 @@
       <div id="connectionStatus" class="status disconnected"></div>
       <span>Push Go</span>
     </div>
-    <button id="retryConnection" style="background: #4caf50; color: white; border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;" title="Retry connection">
+    <button id="retryConnection" style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;" title="Retry connection">
       Reconnect
     </button>
   </div>

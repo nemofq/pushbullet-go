@@ -4,28 +4,78 @@
   <meta charset="utf-8">
   <title>Push Go Options</title>
   <style>
+    :root {
+      /* Light theme */
+      --bg-primary: #ffffff;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f9f9f9;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --border-primary: #dddddd;
+      --border-secondary: #cccccc;
+      --border-focus: #4caf50;
+      --button-primary: #4caf50;
+      --button-primary-hover: #45a049;
+      --button-disabled: #cccccc;
+      --success-bg: #f0f8f0;
+      --success-text: #4caf50;
+      --success-border: #4caf50;
+      --error-bg: #f8f8f8;
+      --error-text: #000000;
+      --error-border: #cccccc;
+      --toggle-bg: #cccccc;
+      --toggle-active: #4caf50;
+      --toggle-slider: #ffffff;
+    }
+
+    .theme-dark,
+    .theme-system.system-dark {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --bg-tertiary: #242424;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --text-tertiary: #999999;
+      --border-primary: #404040;
+      --border-secondary: #555555;
+      --border-focus: #4caf50;
+      --button-primary: #4caf50;
+      --button-primary-hover: #45a049;
+      --button-disabled: #555555;
+      --success-bg: #1a2e1a;
+      --success-text: #4caf50;
+      --success-border: #4caf50;
+      --error-bg: #2a2a2a;
+      --error-text: #ffffff;
+      --error-border: #555555;
+      --toggle-bg: #555555;
+      --toggle-active: #4caf50;
+      --toggle-slider: #ffffff;
+    }
+
     body { 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
       margin: 0; 
-      padding: 20px; 
-      min-height: 100vh; 
+      padding: 40px 20px; 
       display: flex; 
-      align-items: center; 
       justify-content: center; 
-      background: white;
-      color: black;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     .container {
-      background: white;
-      padding: 40px;
-      border: 1px solid #ddd;
+      background: var(--bg-secondary);
+      padding: 30px;
+      border: 1px solid var(--border-primary);
       max-width: 400px;
       width: 100%;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
     h1 {
       text-align: center;
-      margin: 0 0 30px 0;
-      color: black;
+      margin: 0 0 20px 0;
+      color: var(--text-primary);
       font-size: 24px;
       font-weight: normal;
     }
@@ -35,24 +85,25 @@
     label { 
       display: block; 
       margin-bottom: 8px; 
-      color: black;
+      color: var(--text-primary);
       font-size: 14px;
     }
     input[type="text"] { 
       width: 100%; 
       padding: 12px; 
-      border: 1px solid #ccc; 
+      border: 1px solid var(--border-secondary); 
       font-size: 14px;
       box-sizing: border-box;
-      background: white;
-      color: black;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
     }
     input[type="text"]:focus {
       outline: none;
-      border-color: #4caf50;
+      border-color: var(--border-focus);
     }
     button { 
-      background: #4caf50; 
+      background: var(--button-primary); 
       color: white; 
       border: none; 
       padding: 12px 24px; 
@@ -66,10 +117,10 @@
       transition: background-color 0.2s;
     }
     button:hover { 
-      background: #45a049; 
+      background: var(--button-primary-hover); 
     }
     button:disabled {
-      background: #ccc;
+      background: var(--button-disabled);
       cursor: not-allowed;
     }
     .retrieve-button {
@@ -88,23 +139,23 @@
       font-size: 14px;
     }
     .success { 
-      background: #f0f8f0; 
-      color: #4caf50; 
-      border: 1px solid #4caf50; 
+      background: var(--success-bg); 
+      color: var(--success-text); 
+      border: 1px solid var(--success-border); 
     }
     .error { 
-      background: #f8f8f8; 
-      color: black; 
-      border: 1px solid #ccc; 
+      background: var(--error-bg); 
+      color: var(--error-text); 
+      border: 1px solid var(--error-border); 
     }
     .tip {
       font-size: 12px;
-      color: #666;
+      color: var(--text-secondary);
       margin-top: 5px;
       line-height: 1.4;
     }
     .tip a {
-      color: #4caf50;
+      color: var(--button-primary);
       text-decoration: none;
     }
     .tip a:hover {
@@ -113,23 +164,29 @@
     select {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border-secondary);
       font-size: 14px;
       box-sizing: border-box;
-      background: white;
-      color: black;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
     }
     select:focus {
       outline: none;
-      border-color: #4caf50;
+      border-color: var(--border-focus);
     }
     select:not([multiple]) {
       padding: 12px 40px 12px 12px;
       appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
       background-repeat: no-repeat;
       background-position: right 12px center;
       background-size: 16px;
+    }
+    
+    .theme-dark select:not([multiple]),
+    .theme-system.system-dark select:not([multiple]) {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
     }
     select[multiple] {
       height: 120px;
@@ -148,13 +205,13 @@
       position: relative;
       width: 50px;
       height: 24px;
-      background: #ccc;
+      background: var(--toggle-bg);
       border-radius: 12px;
       cursor: pointer;
       transition: background-color 0.3s;
     }
     .toggle-switch.active {
-      background: #4caf50;
+      background: var(--toggle-active);
     }
     .toggle-slider {
       position: absolute;
@@ -162,7 +219,7 @@
       left: 2px;
       width: 20px;
       height: 20px;
-      background: white;
+      background: var(--toggle-slider);
       border-radius: 50%;
       transition: transform 0.3s;
     }
@@ -208,6 +265,17 @@
       <input type="checkbox" id="autoOpenLinks" class="toggle-input">
       <div class="toggle-switch" id="autoOpenLinksToggle">
         <div class="toggle-slider"></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="colorMode">Color Mode:</label>
+      <select id="colorMode">
+        <option value="system">Follow system</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+      <div class="tip">
+        Choose your preferred color theme. Changes preview immediately.
       </div>
     </div>
     <button id="save">Save Settings</button>

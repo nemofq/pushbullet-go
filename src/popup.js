@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const setupGuide = document.getElementById('setupGuide');
   const openOptionsButton = document.getElementById('openOptionsButton');
 
+  loadAndApplyColorMode();
   checkAccessToken();
   loadMessages();
   updateConnectionStatus();
@@ -408,12 +409,37 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  async function loadAndApplyColorMode() {
+    const data = await chrome.storage.sync.get('colorMode');
+    const colorMode = data.colorMode || 'system';
+    applyColorMode(colorMode);
+  }
+
+  function applyColorMode(mode) {
+    const body = document.body;
+    
+    // Remove existing theme classes
+    body.classList.remove('theme-light', 'theme-dark', 'theme-system');
+    
+    // Add new theme class
+    body.classList.add(`theme-${mode}`);
+    
+    // For system mode, detect user's preference
+    if (mode === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      body.classList.toggle('system-dark', prefersDark);
+    }
+  }
+
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local' && (changes.pushes || changes.sentMessages)) {
       loadMessages();
     }
     if (areaName === 'sync' && changes.accessToken) {
       checkAccessToken();
+    }
+    if (areaName === 'sync' && changes.colorMode) {
+      loadAndApplyColorMode();
     }
   });
 });
