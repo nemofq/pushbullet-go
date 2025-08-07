@@ -20,6 +20,8 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - Auto-open received link in a new tab (default off, enable in options page)
 - Filter received pushes and control which devices to push to by selecting devices
 - Stores 100 latest pushes locally (full history available on Pushbullet website)
+- (New) Notification Mirroring (requires Pushbullet Android app installed and enabled in both Android app and Push Go settings)
+- (New) Dark Mode (follows system by default, or choose manually)
 
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.

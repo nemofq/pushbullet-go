@@ -63,6 +63,7 @@
       font-family: sans-serif; 
       display: flex; 
       flex-direction: column;
+      position: relative;
       background: var(--bg-primary);
       color: var(--text-primary);
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -76,6 +77,29 @@
       font-size: 15px;
       background: var(--bg-header);
       transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .tab-switcher {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-button {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .tab-button.active {
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+    }
+    .tab-button:hover {
+      color: var(--text-primary);
     }
     .status { 
       width: 13px; 
@@ -273,8 +297,19 @@
     .setup-guide {
       display: none;
       text-align: center;
-      padding: 40px 20px;
+      padding: 20px;
       color: var(--text-secondary);
+      position: absolute;
+      top: 80px; /* Below header */
+      bottom: 0;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .setup-guide.show {
+      display: flex;
     }
     .setup-guide h3 {
       margin: 0 0 15px 0;
@@ -303,6 +338,54 @@
     #retryConnection:hover {
       background: var(--button-primary-hover) !important;
     }
+    .notification-card {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .notification-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .notification-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .notification-app {
+      font-weight: bold;
+      font-size: 13px;
+      color: var(--text-primary);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .notification-timestamp {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+    .notification-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .notification-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      word-wrap: normal;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -311,13 +394,21 @@
       <div id="connectionStatus" class="status disconnected"></div>
       <span>Push Go</span>
     </div>
-    <button id="retryConnection" style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;" title="Retry connection">
-      Reconnect
-    </button>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="tab-switcher" id="tabSwitcher" style="display: none;">
+        <button id="pushTab" class="tab-button active">Push</button>
+        <button id="notificationTab" class="tab-button">Notification</button>
+      </div>
+      <button id="retryConnection" style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;" title="Retry connection">
+        Reconnect
+      </button>
+    </div>
   </div>
   
   <div class="messages" id="messagesList">
-    <div class="no-messages">No messages yet</div>
+  </div>
+  
+  <div class="messages" id="notificationsList" style="display: none;">
   </div>
   
   <div class="setup-guide" id="setupGuide">

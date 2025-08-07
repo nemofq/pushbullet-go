@@ -7,12 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const status = document.getElementById('status');
   const autoOpenLinksCheckbox = document.getElementById('autoOpenLinks');
   const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
+  const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
+  const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const colorModeSelect = document.getElementById('colorMode');
   
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'colorMode'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'colorMode'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -33,6 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
     updateToggleVisual();
     
+    // Load notification mirroring setting (default is false/off)
+    notificationMirroringCheckbox.checked = data.notificationMirroring || false;
+    updateNotificationMirroringToggleVisual();
+    
     // Load color mode setting (default is 'system')
     colorModeSelect.value = data.colorMode || 'system';
     applyColorMode(colorModeSelect.value);
@@ -46,6 +52,11 @@ document.addEventListener('DOMContentLoaded', function() {
   autoOpenLinksToggle.addEventListener('click', function() {
     autoOpenLinksCheckbox.checked = !autoOpenLinksCheckbox.checked;
     updateToggleVisual();
+  });
+
+  notificationMirroringToggle.addEventListener('click', function() {
+    notificationMirroringCheckbox.checked = !notificationMirroringCheckbox.checked;
+    updateNotificationMirroringToggleVisual();
   });
 
   // Handle color mode changes for immediate preview
@@ -173,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
       devices: devices,
       people: people,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
+      notificationMirroring: notificationMirroringCheckbox.checked,
       colorMode: colorModeSelect.value
     };
 
@@ -211,6 +223,14 @@ document.addEventListener('DOMContentLoaded', function() {
       autoOpenLinksToggle.classList.add('active');
     } else {
       autoOpenLinksToggle.classList.remove('active');
+    }
+  }
+  
+  function updateNotificationMirroringToggleVisual() {
+    if (notificationMirroringCheckbox.checked) {
+      notificationMirroringToggle.classList.add('active');
+    } else {
+      notificationMirroringToggle.classList.remove('active');
     }
   }
   

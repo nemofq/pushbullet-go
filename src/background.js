@@ -181,6 +181,8 @@ async function connectWebSocket() {
           startHeartbeatMonitor();
         } else if (data.type === 'tickle' && data.subtype === 'push') {
           refreshPushList(true); // Pass true to indicate this is from a tickle (new message)
+        } else if (data.type === 'push' && data.push && data.push.type === 'mirror') {
+          handleMirrorNotification(data.push);
         }
       } catch (error) {
         // Silent error handling - don't log to avoid extension page errors
@@ -368,6 +370,63 @@ function showNotificationForPush(push) {
   }
   
   chrome.notifications.create(`pushbullet-${push.iden}`, notificationOptions);
+}
+
+async function handleMirrorNotification(mirrorData) {
+  // Check if notification mirroring is enabled
+  const configData = await chrome.storage.sync.get('notificationMirroring');
+  if (!configData.notificationMirroring) {
+    return;
+  }
+
+  // Extract needed fields for storage
+  const notificationData = {
+    created: mirrorData.created,
+    icon: mirrorData.icon,
+    title: mirrorData.title,
+    body: mirrorData.body,
+    application_name: mirrorData.application_name,
+    package_name: mirrorData.package_name
+  };
+
+  // Store in local storage (keep latest 100)
+  const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
+  const notifications = existingNotifications.mirrorNotifications || [];
+  
+  notifications.unshift(notificationData);
+  await chrome.storage.local.set({ 
+    mirrorNotifications: notifications.slice(0, 100) 
+  });
+
+  // Create Chrome notification
+  await showMirrorNotification(mirrorData);
+}
+
+async function showMirrorNotification(mirrorData) {
+  const appName = mirrorData.application_name || mirrorData.package_name || 'Unknown App';
+  
+  let message = '';
+  if (mirrorData.title) {
+    message += `${mirrorData.title}\n`;
+  }
+  if (mirrorData.body) {
+    message += `${mirrorData.body}`;
+  }
+  
+  const notificationOptions = {
+    type: 'basic',
+    title: appName,
+    message: message.trim() || 'New notification'
+  };
+  
+  // Handle base64 icon if available
+  if (mirrorData.icon) {
+    notificationOptions.iconUrl = `data:image/jpeg;base64,${mirrorData.icon}`;
+  } else {
+    notificationOptions.iconUrl = 'icon128.png';
+  }
+  
+  chrome.notifications.create(`pushbullet-mirror-${Date.now()}`, notificationOptions);
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {

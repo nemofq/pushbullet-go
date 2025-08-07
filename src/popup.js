@@ -2,17 +2,26 @@ document.addEventListener('DOMContentLoaded', function() {
   const statusElement = document.getElementById('connectionStatus');
   const retryButton = document.getElementById('retryConnection');
   const messagesList = document.getElementById('messagesList');
+  const notificationsList = document.getElementById('notificationsList');
   const bodyInput = document.getElementById('bodyInput');
   const sendButton = document.getElementById('sendButton');
   const sendFileButton = document.getElementById('sendFileButton');
   const setupGuide = document.getElementById('setupGuide');
   const openOptionsButton = document.getElementById('openOptionsButton');
+  const tabSwitcher = document.getElementById('tabSwitcher');
+  const pushTab = document.getElementById('pushTab');
+  const notificationTab = document.getElementById('notificationTab');
 
   loadAndApplyColorMode();
-  checkAccessToken();
-  loadMessages();
-  updateConnectionStatus();
-  refreshMessagesFromAPI();
+  
+  // Check access token first, then handle other initializations
+  checkAccessToken().then(() => {
+    // Only load messages after checking access token to ensure proper display
+    loadMessages();
+    checkNotificationMirroring();
+    updateConnectionStatus();
+    refreshMessagesFromAPI();
+  });
   
   // Fallback scroll to bottom for first-time loading
   setTimeout(() => {
@@ -22,13 +31,19 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(updateConnectionStatus, 2000);
 
   retryButton.addEventListener('click', () => {
-    // Hide retry button and show connecting state immediately
-    retryButton.style.display = 'none';
-    statusElement.className = 'status connecting';
-    // Trigger complete reset and fresh start (identical to extension startup)
-    chrome.runtime.sendMessage({ type: 'retry_connection' });
-    // Check status regularly
-    setTimeout(updateConnectionStatus, 2000);
+    // Check if we have an access token
+    chrome.storage.sync.get('accessToken').then(tokenData => {
+      if (!tokenData.accessToken) {
+        // No access token - open options page
+        chrome.runtime.openOptionsPage();
+      } else {
+        // Has access token - try to reconnect
+        retryButton.style.display = 'none';
+        statusElement.className = 'status connecting';
+        chrome.runtime.sendMessage({ type: 'retry_connection' });
+        setTimeout(updateConnectionStatus, 2000);
+      }
+    });
   });
 
   sendButton.addEventListener('click', sendMessage);
@@ -88,19 +103,76 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.runtime.openOptionsPage();
   });
 
+  // Tab switching
+  pushTab.addEventListener('click', () => {
+    switchTab('push');
+  });
+
+  notificationTab.addEventListener('click', () => {
+    switchTab('notification');
+  });
+
   async function checkAccessToken() {
     const data = await chrome.storage.sync.get('accessToken');
     
+    const sendForm = document.querySelector('.send-form');
+    
     if (!data.accessToken) {
-      // No access token - show setup guide
-      setupGuide.style.display = 'block';
+      // No access token - show setup guide only
+      setupGuide.classList.add('show');
       messagesList.style.display = 'none';
-      document.querySelector('.send-form').style.display = 'none';
+      notificationsList.style.display = 'none';
+      sendForm.style.display = 'none';
+      tabSwitcher.style.display = 'none';
+      // Clear any content that might be affecting layout
+      messagesList.innerHTML = '';
+      notificationsList.innerHTML = '';
     } else {
       // Access token exists - show normal UI
-      setupGuide.style.display = 'none';
+      setupGuide.classList.remove('show');
       messagesList.style.display = 'flex';
-      document.querySelector('.send-form').style.display = 'block';
+      notificationsList.style.display = 'none';
+      sendForm.style.display = 'block';
+      // Re-check notification mirroring to show/hide tabs appropriately
+      checkNotificationMirroring();
+    }
+  }
+
+  async function checkNotificationMirroring() {
+    const tokenData = await chrome.storage.sync.get('accessToken');
+    
+    // Only show tabs if we have an access token
+    if (!tokenData.accessToken) {
+      tabSwitcher.style.display = 'none';
+      return;
+    }
+    
+    const data = await chrome.storage.sync.get('notificationMirroring');
+    
+    if (data.notificationMirroring) {
+      tabSwitcher.style.display = 'flex';
+      loadNotifications();
+    } else {
+      tabSwitcher.style.display = 'none';
+    }
+  }
+
+  function switchTab(tab) {
+    const sendForm = document.querySelector('.send-form');
+    
+    if (tab === 'push') {
+      pushTab.classList.add('active');
+      notificationTab.classList.remove('active');
+      messagesList.style.display = 'flex';
+      notificationsList.style.display = 'none';
+      sendForm.style.display = 'block';
+    } else {
+      pushTab.classList.remove('active');
+      notificationTab.classList.add('active');
+      messagesList.style.display = 'none';
+      notificationsList.style.display = 'flex';
+      sendForm.style.display = 'none';
+      loadNotifications();
     }
   }
 
@@ -108,14 +180,39 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.runtime.sendMessage({ type: 'get_status' }, (response) => {
       if (response && response.status) {
         statusElement.className = `status ${response.status}`;
-        // Show retry button when disconnected (always allow manual retry)
-        retryButton.style.display = response.status === 'disconnected' ? 'block' : 'none';
         
-        // Auto-reconnect if disconnected when popup opens
-        if (response.status === 'disconnected') {
-          console.log('Popup opened with disconnected status - attempting reconnection');
-          chrome.runtime.sendMessage({ type: 'retry_connection' });
-        }
+        // Check if we have an access token first
+        chrome.storage.sync.get('accessToken').then(tokenData => {
+          if (!tokenData.accessToken) {
+            // No access token - always show reconnect button (acts as setup), hide tabs
+            retryButton.style.display = 'block';
+            retryButton.textContent = 'Reconnect';
+            retryButton.title = 'Open settings to configure access token';
+            tabSwitcher.style.display = 'none';
+            return;
+          }
+          
+          // Has access token - normal connection status handling
+          retryButton.textContent = 'Reconnect';
+          retryButton.title = 'Retry connection';
+          const isDisconnected = response.status === 'disconnected';
+          retryButton.style.display = isDisconnected ? 'block' : 'none';
+          
+          if (isDisconnected) {
+            tabSwitcher.style.display = 'none';
+            // Ensure we're on push tab and show send form
+            switchTab('push');
+          } else {
+            // Re-check notification mirroring setting to show/hide tabs
+            checkNotificationMirroring();
+          }
+          
+          // Auto-reconnect if disconnected when popup opens
+          if (isDisconnected) {
+            console.log('Popup opened with disconnected status - attempting reconnection');
+            chrome.runtime.sendMessage({ type: 'retry_connection' });
+          }
+        });
       }
     });
   }
@@ -148,7 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
     allMessages.sort((a, b) => (b.created || b.sentAt / 1000) - (a.created || a.sentAt / 1000));
     
     if (allMessages.length === 0) {
-      messagesList.innerHTML = '<div class="no-messages">No messages yet</div>';
+      // Only show "No messages yet" if we have access token, otherwise show empty
+      const tokenData = await chrome.storage.sync.get('accessToken');
+      if (tokenData.accessToken) {
+        messagesList.innerHTML = '<div class="no-messages">No messages yet</div>';
+      } else {
+        messagesList.innerHTML = '';
+      }
       return;
     }
 
@@ -261,6 +364,99 @@ document.addEventListener('DOMContentLoaded', function() {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         messagesList.scrollTop = messagesList.scrollHeight;
+      });
+    });
+  }
+
+  async function loadNotifications() {
+    const data = await chrome.storage.local.get('mirrorNotifications');
+    const notifications = data.mirrorNotifications || [];
+
+    if (notifications.length === 0) {
+      // Only show "No notifications received" if we have access token, otherwise show empty
+      const tokenData = await chrome.storage.sync.get('accessToken');
+      if (tokenData.accessToken) {
+        notificationsList.innerHTML = '<div class="no-messages">No notifications received</div>';
+      } else {
+        notificationsList.innerHTML = '';
+      }
+      return;
+    }
+
+    notificationsList.innerHTML = '';
+    
+    // Sort by timestamp (oldest to newest as requested)
+    notifications.sort((a, b) => (a.created || 0) - (b.created || 0));
+    
+    notifications.forEach(notification => {
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'notification-card';
+      
+      // Header with icon, app name, and timestamp
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'notification-header';
+      
+      // Icon
+      const iconImg = document.createElement('img');
+      iconImg.className = 'notification-icon';
+      if (notification.icon) {
+        iconImg.src = `data:image/jpeg;base64,${notification.icon}`;
+      } else {
+        iconImg.src = 'icon128.png'; // Fallback icon
+      }
+      iconImg.alt = 'App icon';
+      headerDiv.appendChild(iconImg);
+      
+      // App name
+      const appDiv = document.createElement('div');
+      appDiv.className = 'notification-app';
+      appDiv.textContent = notification.application_name || notification.package_name || 'Unknown App';
+      headerDiv.appendChild(appDiv);
+      
+      // Timestamp
+      const timestampDiv = document.createElement('div');
+      timestampDiv.className = 'notification-timestamp';
+      
+      // Use the same timestamp handling as Push tab
+      const timestamp = notification.created ? notification.created * 1000 : Date.now();
+      const date = new Date(timestamp);
+      const timeString = date.toLocaleString(undefined, { 
+        hour12: false, 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+      
+      timestampDiv.textContent = timeString;
+      headerDiv.appendChild(timestampDiv);
+      
+      cardDiv.appendChild(headerDiv);
+      
+      // Title (if available)
+      if (notification.title) {
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'notification-title';
+        titleDiv.textContent = notification.title;
+        cardDiv.appendChild(titleDiv);
+      }
+      
+      // Body (if available)
+      if (notification.body) {
+        const bodyDiv = document.createElement('div');
+        bodyDiv.className = 'notification-body';
+        bodyDiv.textContent = notification.body;
+        cardDiv.appendChild(bodyDiv);
+      }
+      
+      notificationsList.appendChild(cardDiv);
+    });
+    
+    // Scroll to bottom to show newest notifications
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        notificationsList.scrollTop = notificationsList.scrollHeight;
       });
     });
   }
@@ -435,8 +631,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (areaName === 'local' && (changes.pushes || changes.sentMessages)) {
       loadMessages();
     }
+    if (areaName === 'local' && changes.mirrorNotifications) {
+      loadNotifications();
+    }
     if (areaName === 'sync' && changes.accessToken) {
-      checkAccessToken();
+      checkAccessToken().then(() => {
+        loadMessages();
+        checkNotificationMirroring();
+      });
+    }
+    if (areaName === 'sync' && changes.notificationMirroring) {
+      checkNotificationMirroring();
     }
     if (areaName === 'sync' && changes.colorMode) {
       loadAndApplyColorMode();
