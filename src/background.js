@@ -307,9 +307,13 @@ async function refreshPushList(isFromTickle = false) {
           !pushes.find(existing => existing.iden === push.iden)
         );
         
+        const updatedPushes = data.pushes.filter(push => 
+          pushes.find(existing => existing.iden === push.iden)
+        );
+        
+        // Handle new pushes
         if (newPushes.length > 0) {
           pushes.unshift(...newPushes);
-          await chrome.storage.local.set({ pushes: pushes.slice(0, 100) });
           
           // Show notifications for new pushes (only if from tickle, meaning real-time)
           // Skip notifications on first fetch to avoid notifying about initial 20 messages
@@ -336,6 +340,27 @@ async function refreshPushList(isFromTickle = false) {
               }
             });
           }
+        }
+        
+        // Handle updated pushes
+        if (updatedPushes.length > 0) {
+          // Update existing pushes in storage
+          updatedPushes.forEach(updatedPush => {
+            const existingIndex = pushes.findIndex(p => p.iden === updatedPush.iden);
+            if (existingIndex !== -1) {
+              pushes[existingIndex] = updatedPush;
+            }
+          });
+          
+          // Check for dismissed pushes and clear their notifications
+          if (isFromTickle) {
+            await handleDismissedPushes(updatedPushes);
+          }
+        }
+        
+        // Save updated pushes array
+        if (newPushes.length > 0 || updatedPushes.length > 0) {
+          await chrome.storage.local.set({ pushes: pushes.slice(0, 100) });
         }
       }
       
@@ -369,10 +394,16 @@ function showNotificationForPush(push) {
     message: notificationBody
   };
   
-  // Add "Open the link" button for link and file types
+  // Add buttons based on push type
   if (push.type === 'link' || push.type === 'file') {
     notificationOptions.buttons = [
-      { title: 'Open the link' }
+      { title: 'Open' },
+      { title: 'Dismiss' }
+    ];
+  } else {
+    // For note and other types, only add dismiss button
+    notificationOptions.buttons = [
+      { title: 'Dismiss' }
     ];
   }
   
@@ -393,7 +424,10 @@ async function handleMirrorNotification(mirrorData) {
     title: mirrorData.title,
     body: mirrorData.body,
     application_name: mirrorData.application_name,
-    package_name: mirrorData.package_name
+    package_name: mirrorData.package_name,
+    notification_id: mirrorData.notification_id,
+    notification_tag: mirrorData.notification_tag,
+    source_user_iden: mirrorData.source_user_iden
   };
 
   // Store in local storage (keep latest 100)
@@ -437,7 +471,7 @@ async function showMirrorNotification(mirrorData) {
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
-  if (notificationId.startsWith('pushbullet-') && buttonIndex === 0) {
+  if (notificationId.startsWith('pushbullet-') && !notificationId.startsWith('pushbullet-mirror-')) {
     const pushIden = notificationId.replace('pushbullet-', '');
     
     // Get the push data from storage
@@ -446,32 +480,97 @@ chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIn
     const push = pushes.find(p => p.iden === pushIden);
     
     if (push) {
-      let urlToOpen = null;
-      
-      if (push.type === 'link' && push.url) {
-        urlToOpen = push.url;
-      } else if (push.type === 'file' && push.file_url) {
-        urlToOpen = push.file_url;
-      }
-      
-      if (urlToOpen) {
-        chrome.tabs.create({ url: urlToOpen });
+      if (push.type === 'link' || push.type === 'file') {
+        // For link/file: buttonIndex 0 = Open, buttonIndex 1 = Dismiss
+        if (buttonIndex === 0) {
+          // Open button clicked
+          let urlToOpen = null;
+          
+          if (push.type === 'link' && push.url) {
+            urlToOpen = push.url;
+          } else if (push.type === 'file' && push.file_url) {
+            urlToOpen = push.file_url;
+          }
+          
+          if (urlToOpen) {
+            chrome.tabs.create({ url: urlToOpen });
+          }
+          
+          // Clear the notification after opening
+          chrome.notifications.clear(notificationId);
+        } else if (buttonIndex === 1) {
+          // Dismiss button clicked
+          await dismissPush(pushIden);
+          chrome.notifications.clear(notificationId);
+        }
+      } else {
+        // For note and other types: buttonIndex 0 = Dismiss
+        if (buttonIndex === 0) {
+          await dismissPush(pushIden);
+          chrome.notifications.clear(notificationId);
+        }
       }
     }
-    
-    // Clear the notification after opening
-    chrome.notifications.clear(notificationId);
   }
 });
+
+async function handleDismissedPushes(updatedPushes) {
+  const dismissedPushes = updatedPushes.filter(push => push.dismissed === true);
+  
+  if (dismissedPushes.length > 0) {
+    console.log(`Found ${dismissedPushes.length} dismissed pushes`);
+    
+    for (const push of dismissedPushes) {
+      const notificationId = `pushbullet-${push.iden}`;
+      
+      // Check if the notification is still active using Chrome's API
+      try {
+        const allNotifications = await chrome.notifications.getAll();
+        
+        if (allNotifications[notificationId]) {
+          console.log(`Clearing notification for dismissed push: ${push.iden}`);
+          await chrome.notifications.clear(notificationId);
+        }
+      } catch (error) {
+        console.error('Error checking/clearing notification:', error);
+      }
+    }
+  }
+}
+
+async function dismissPush(pushIden) {
+  if (!accessToken) return;
+  
+  try {
+    const response = await fetch(`https://api.pushbullet.com/v2/pushes/${pushIden}`, {
+      method: 'POST',
+      headers: {
+        'Access-Token': accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        dismissed: true
+      })
+    });
+    
+    if (response.ok) {
+      console.log('Push dismissed successfully');
+    } else {
+      console.error('Failed to dismiss push:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error dismissing push:', error);
+  }
+}
 
 async function sendPush(pushData) {
   if (!accessToken) return;
   
   try {
-    // Get local device ID to add as source_device_iden
-    const configData = await chrome.storage.sync.get('localDeviceId');
-    if (configData.localDeviceId) {
-      pushData.source_device_iden = configData.localDeviceId;
+    // Get Chrome device ID to add as source_device_iden
+    const configData = await chrome.storage.local.get('chromeDeviceId');
+    if (configData.chromeDeviceId) {
+      pushData.source_device_iden = configData.chromeDeviceId;
     }
     
     // Handle multiple device IDs

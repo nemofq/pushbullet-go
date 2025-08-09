@@ -143,17 +143,14 @@ document.addEventListener('DOMContentLoaded', function() {
           name: chat.with.name
         }));
       
+      // Save Chrome device ID to local storage for reference
+      const chromeDevice = devices.find(device => device.active && device.type === 'chrome');
+      const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
+      
       await chrome.storage.sync.set({ devices: devices, people: people });
+      await chrome.storage.local.set({ chromeDeviceId: chromeDeviceId });
       
       populateDeviceSelects();
-      
-      // Auto-select Chrome device as Local Device if no local device is currently selected
-      if (!localDeviceSelect.value) {
-        const chromeDevice = devices.find(device => device.active && device.type === 'chrome');
-        if (chromeDevice) {
-          localDeviceSelect.value = chromeDevice.iden;
-        }
-      }
       
       showRetrieveSuccess();
       
