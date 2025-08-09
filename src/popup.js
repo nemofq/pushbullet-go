@@ -418,8 +418,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const timestampDiv = document.createElement('div');
       timestampDiv.className = 'notification-timestamp';
       
-      // Use the same timestamp handling as Push tab
-      const timestamp = notification.created ? notification.created * 1000 : Date.now();
+      // Use stored timestamp (guaranteed to be valid from background script)
+      const timestamp = notification.created * 1000;
       const date = new Date(timestamp);
       const timeString = date.toLocaleString(undefined, { 
         hour12: false, 
@@ -429,7 +429,6 @@ document.addEventListener('DOMContentLoaded', function() {
         hour: '2-digit', 
         minute: '2-digit' 
       });
-      
       timestampDiv.textContent = timeString;
       headerDiv.appendChild(timestampDiv);
       

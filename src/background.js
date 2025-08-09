@@ -436,7 +436,9 @@ async function handleMirrorNotification(mirrorData) {
 
   // Extract needed fields for storage
   const notificationData = {
-    created: mirrorData.created,
+    created: mirrorData.created && typeof mirrorData.created === 'number' && mirrorData.created > 0 
+      ? mirrorData.created 
+      : Date.now() / 1000,  // Use current time in seconds if websocket timestamp is invalid
     icon: mirrorData.icon,
     title: mirrorData.title,
     body: mirrorData.body,
