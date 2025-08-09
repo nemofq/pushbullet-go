@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const colorModeSelect = document.getElementById('colorMode');
+  const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
   
   let devices = [];
   let people = [];
@@ -30,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
         option.selected = remoteIds.includes(option.value);
       });
     }
+    
+    updateDeviceSelectionStatus();
     
     // Load auto-open links setting (default is false/off)
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
@@ -62,6 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handle color mode changes for immediate preview
   colorModeSelect.addEventListener('change', function() {
     applyColorMode(colorModeSelect.value);
+  });
+
+  // Handle remote device selection changes
+  remoteDeviceSelect.addEventListener('change', function() {
+    updateDeviceSelectionStatus();
   });
 
   retrieveDevicesButton.addEventListener('click', async function() {
@@ -193,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function populateDeviceSelects() {
     localDeviceSelect.innerHTML = '<option value="">None</option>';
-    remoteDeviceSelect.innerHTML = '<option value="">None (all devices)</option>';
+    remoteDeviceSelect.innerHTML = '';
     
     devices.forEach(device => {
       if (device.active) {
@@ -208,6 +216,8 @@ document.addEventListener('DOMContentLoaded', function() {
         remoteDeviceSelect.appendChild(remoteOption);
       }
     });
+    
+    updateDeviceSelectionStatus();
   }
   
   function updateRetrieveButton() {
@@ -228,6 +238,22 @@ document.addEventListener('DOMContentLoaded', function() {
       notificationMirroringToggle.classList.add('active');
     } else {
       notificationMirroringToggle.classList.remove('active');
+    }
+  }
+  
+  function updateDeviceSelectionStatus() {
+    const selectedOptions = Array.from(remoteDeviceSelect.selectedOptions);
+    const selectedDevices = selectedOptions.filter(option => option.value);
+    
+    if (selectedDevices.length === 0) {
+      deviceSelectionStatus.textContent = 'None selected (to all devices)';
+      deviceSelectionStatus.style.display = 'inline';
+    } else if (selectedDevices.length === 1) {
+      deviceSelectionStatus.textContent = `${selectedDevices[0].textContent}`;
+      deviceSelectionStatus.style.display = 'inline';
+    } else {
+      deviceSelectionStatus.textContent = `${selectedDevices.length} devices selected`;
+      deviceSelectionStatus.style.display = 'inline';
     }
   }
   

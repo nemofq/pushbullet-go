@@ -229,6 +229,11 @@
     .toggle-input {
       display: none;
     }
+    .selection-status {
+      font-weight: normal;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
@@ -252,9 +257,8 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="remoteDeviceId">Target Devices:</label>
+      <label for="remoteDeviceId">Target Devices: <span id="deviceSelectionStatus" class="selection-status">None selected (to all devices)</span></label>
       <select id="remoteDeviceId" multiple>
-        <option value="">None (all devices)</option>
       </select>
       <div class="tip">
         Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.

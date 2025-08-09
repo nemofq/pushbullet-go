@@ -417,6 +417,12 @@ async function handleMirrorNotification(mirrorData) {
     return;
   }
 
+  // Check if this is a dismissal notification
+  if (mirrorData.type === 'dismissal') {
+    await handleMirrorDismissal(mirrorData);
+    return;
+  }
+
   // Extract needed fields for storage
   const notificationData = {
     created: mirrorData.created,
@@ -427,7 +433,8 @@ async function handleMirrorNotification(mirrorData) {
     package_name: mirrorData.package_name,
     notification_id: mirrorData.notification_id,
     notification_tag: mirrorData.notification_tag,
-    source_user_iden: mirrorData.source_user_iden
+    source_user_iden: mirrorData.source_user_iden,
+    dismissable: mirrorData.dismissable
   };
 
   // Store in local storage (keep latest 100)
@@ -467,11 +474,28 @@ async function showMirrorNotification(mirrorData) {
     notificationOptions.iconUrl = 'icon128.png';
   }
   
-  chrome.notifications.create(`pushbullet-mirror-${Date.now()}`, notificationOptions);
+  // Add dismiss button only if dismissable is true
+  if (mirrorData.dismissable) {
+    notificationOptions.buttons = [
+      { title: 'Dismiss' }
+    ];
+  }
+  
+  // Create unique notification ID that includes mirror data for identification
+  const notificationId = `pushbullet-mirror-${mirrorData.package_name}-${mirrorData.notification_id}-${Date.now()}`;
+  
+  chrome.notifications.create(notificationId, notificationOptions);
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
-  if (notificationId.startsWith('pushbullet-') && !notificationId.startsWith('pushbullet-mirror-')) {
+  if (notificationId.startsWith('pushbullet-mirror-')) {
+    // Handle mirror notification button clicks
+    if (buttonIndex === 0) {
+      // Dismiss button clicked for mirror notification
+      await dismissMirrorNotification(notificationId);
+      chrome.notifications.clear(notificationId);
+    }
+  } else if (notificationId.startsWith('pushbullet-')) {
     const pushIden = notificationId.replace('pushbullet-', '');
     
     // Get the push data from storage
@@ -560,6 +584,100 @@ async function dismissPush(pushIden) {
     }
   } catch (error) {
     console.error('Error dismissing push:', error);
+  }
+}
+
+async function dismissMirrorNotification(notificationId) {
+  if (!accessToken) return;
+  
+  try {
+    // Parse notification ID to extract mirror notification data
+    // Format: pushbullet-mirror-{package_name}-{notification_id}-{timestamp}
+    const parts = notificationId.replace('pushbullet-mirror-', '').split('-');
+    
+    if (parts.length < 3) {
+      console.error('Invalid mirror notification ID format');
+      return;
+    }
+    
+    // Extract package_name and notification_id (timestamp is the last part)
+    const timestamp = parts.pop(); // Remove timestamp
+    const package_name = parts[0];
+    const notification_id = parts.slice(1).join('-'); // Rejoin remaining parts as notification_id might contain dashes
+    
+    // Find the stored mirror notification to get complete data
+    const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
+    const notifications = existingNotifications.mirrorNotifications || [];
+    
+    // Find matching notification based on package_name and notification_id
+    const notification = notifications.find(n => 
+      n.package_name === package_name && n.notification_id === notification_id
+    );
+    
+    if (!notification) {
+      console.error('Mirror notification not found in storage');
+      return;
+    }
+    
+    const dismissalData = {
+      type: 'push',
+      push: {
+        type: 'dismissal',
+        package_name: notification.package_name,
+        notification_id: notification.notification_id,
+        notification_tag: notification.notification_tag,
+        source_user_iden: notification.source_user_iden
+      }
+    };
+    
+    const response = await fetch('https://api.pushbullet.com/v2/ephemerals', {
+      method: 'POST',
+      headers: {
+        'Access-Token': accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dismissalData)
+    });
+    
+    if (response.ok) {
+      console.log('Mirror notification dismissed successfully');
+    } else {
+      console.error('Failed to dismiss mirror notification:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error dismissing mirror notification:', error);
+  }
+}
+
+async function handleMirrorDismissal(dismissalData) {
+  try {
+    // Since notification IDs now include timestamps, we need to find and clear all matching notifications
+    // by iterating through active notifications and matching by package_name and notification_id
+    const allNotifications = await chrome.notifications.getAll();
+    
+    const matchingNotificationIds = Object.keys(allNotifications).filter(notificationId => {
+      if (!notificationId.startsWith('pushbullet-mirror-')) return false;
+      
+      // Parse the notification ID to extract package_name and notification_id
+      const parts = notificationId.replace('pushbullet-mirror-', '').split('-');
+      if (parts.length < 3) return false;
+      
+      // Extract package_name and notification_id (timestamp is the last part)
+      parts.pop(); // Remove timestamp
+      const package_name = parts[0];
+      const notification_id = parts.slice(1).join('-');
+      
+      return package_name === dismissalData.package_name && 
+             notification_id === dismissalData.notification_id;
+    });
+    
+    // Clear all matching notifications
+    for (const notificationId of matchingNotificationIds) {
+      console.log(`Clearing mirror notification for dismissal: ${dismissalData.package_name}`);
+      await chrome.notifications.clear(notificationId);
+    }
+  } catch (error) {
+    console.error('Error handling mirror dismissal:', error);
   }
 }
 
