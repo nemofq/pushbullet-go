@@ -320,7 +320,14 @@ async function refreshPushList(isFromTickle = false) {
             newPushes.forEach(push => {
               // Only show notification if no device filter is set, or if push matches the device filter
               if (!configData.localDeviceId || push.target_device_iden === configData.localDeviceId) {
-                showNotificationForPush(push);
+                // Don't show notification for local-to-local pushes (sent from local device to itself)
+                const isLocalToLocal = configData.localDeviceId && 
+                                     push.target_device_iden === configData.localDeviceId && 
+                                     push.source_device_iden === configData.localDeviceId;
+                
+                if (!isLocalToLocal) {
+                  showNotificationForPush(push);
+                }
                 
                 // Auto-open link pushes in background tabs (only if enabled)
                 if (push.type === 'link' && push.url && configData.autoOpenLinks) {
@@ -461,6 +468,12 @@ async function sendPush(pushData) {
   if (!accessToken) return;
   
   try {
+    // Get local device ID to add as source_device_iden
+    const configData = await chrome.storage.sync.get('localDeviceId');
+    if (configData.localDeviceId) {
+      pushData.source_device_iden = configData.localDeviceId;
+    }
+    
     // Handle multiple device IDs
     const deviceIds = pushData.device_iden ? pushData.device_iden.split(',').map(id => id.trim()).filter(id => id) : [];
     
