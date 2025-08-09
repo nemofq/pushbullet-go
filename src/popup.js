@@ -218,17 +218,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadMessages() {
-    const [receivedData, sentData, configData] = await Promise.all([
+    const [receivedData, sentData, configData, localData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.sync.get('localDeviceId')
+      chrome.storage.sync.get('onlyBrowserPushes'),
+      chrome.storage.local.get('chromeDeviceId')
     ]);
     
-    // Get received messages (filtered by device if set)
+    // Get received messages (filtered by "Only notify and show pushes to browsers" if set)
     let receivedMessages = receivedData.pushes || [];
-    if (configData.localDeviceId) {
+    if (configData.onlyBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
       receivedMessages = receivedMessages.filter(push => 
-        push.target_device_iden === configData.localDeviceId
+        push.target_device_iden === localData.chromeDeviceId
       );
     }
     

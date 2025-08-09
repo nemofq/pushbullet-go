@@ -248,20 +248,25 @@
       <button id="retrieveDevices" class="retrieve-button" disabled>Retrieve devices and people</button>
     </div>
     <div class="form-group">
-      <label for="localDeviceId">Local Device:</label>
-      <select id="localDeviceId">
-        <option value="">None</option>
-      </select>
-      <div class="tip">
-        Choose which device receives pushes sent to you.
-      </div>
-    </div>
-    <div class="form-group">
       <label for="remoteDeviceId">Target Devices: <span id="deviceSelectionStatus" class="selection-status">None selected (to all devices)</span></label>
       <select id="remoteDeviceId" multiple>
       </select>
       <div class="tip">
         Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
+      </div>
+    </div>
+    <div class="toggle-container">
+      <label class="toggle-label">Only notify and show pushes to browsers</label>
+      <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
+      <div class="toggle-switch" id="onlyBrowserPushesToggle">
+        <div class="toggle-slider"></div>
+      </div>
+    </div>
+    <div class="toggle-container">
+      <label class="toggle-label">Hide notification of pushes sent from browser</label>
+      <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
+      <div class="toggle-switch" id="hideBrowserPushesToggle">
+        <div class="toggle-slider"></div>
       </div>
     </div>
     <div class="toggle-container">

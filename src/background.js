@@ -319,17 +319,28 @@ async function refreshPushList(isFromTickle = false) {
           // Skip notifications on first fetch to avoid notifying about initial 20 messages
           if (isFromTickle && !isFirstFetch) {
             // Apply device filtering for notifications (same as popup display)
-            const configData = await chrome.storage.sync.get(['localDeviceId', 'autoOpenLinks']);
+            const configData = await chrome.storage.sync.get(['onlyBrowserPushes', 'autoOpenLinks', 'hideBrowserPushes']);
+            const localData = await chrome.storage.local.get('chromeDeviceId');
             
             newPushes.forEach(push => {
-              // Only show notification if no device filter is set, or if push matches the device filter
-              if (!configData.localDeviceId || push.target_device_iden === configData.localDeviceId) {
-                // Don't show notification for local-to-local pushes (sent from local device to itself)
-                const isLocalToLocal = configData.localDeviceId && 
-                                     push.target_device_iden === configData.localDeviceId && 
-                                     push.source_device_iden === configData.localDeviceId;
+              // Apply "Only notify and show pushes to browsers" filter
+              let shouldShowPush = true;
+              
+              if (configData.onlyBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
+                // Only show pushes targeted to the Chrome device
+                shouldShowPush = push.target_device_iden === localData.chromeDeviceId;
+              }
+              
+              if (shouldShowPush) {
+                // Check if we should hide notifications from browser pushes
+                let shouldHideNotification = false;
                 
-                if (!isLocalToLocal) {
+                if (configData.hideBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
+                  // Hide notification if push is from the Chrome device
+                  shouldHideNotification = push.source_device_iden === localData.chromeDeviceId;
+                }
+                
+                if (!shouldHideNotification) {
                   showNotificationForPush(push);
                 }
                 

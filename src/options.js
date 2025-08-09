@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
   const accessTokenInput = document.getElementById('accessToken');
-  const localDeviceSelect = document.getElementById('localDeviceId');
   const remoteDeviceSelect = document.getElementById('remoteDeviceId');
   const saveButton = document.getElementById('save');
   const retrieveDevicesButton = document.getElementById('retrieveDevices');
@@ -9,21 +8,21 @@ document.addEventListener('DOMContentLoaded', function() {
   const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
+  const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
+  const onlyBrowserPushesToggle = document.getElementById('onlyBrowserPushesToggle');
+  const hideBrowserPushesCheckbox = document.getElementById('hideBrowserPushes');
+  const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const colorModeSelect = document.getElementById('colorMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
   
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'localDeviceId', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'colorMode'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'colorMode'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
     populateDeviceSelects();
-    
-    if (data.localDeviceId) {
-      localDeviceSelect.value = data.localDeviceId;
-    }
     
     if (data.remoteDeviceId) {
       const remoteIds = data.remoteDeviceId.split(',').map(id => id.trim()).filter(id => id);
@@ -41,6 +40,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load notification mirroring setting (default is false/off)
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
     updateNotificationMirroringToggleVisual();
+    
+    // Load only browser pushes setting (default is true/on)
+    onlyBrowserPushesCheckbox.checked = data.onlyBrowserPushes !== false; // Default to true
+    updateOnlyBrowserPushesToggleVisual();
+    
+    // Load hide browser pushes setting (default is true/on)
+    hideBrowserPushesCheckbox.checked = data.hideBrowserPushes !== false; // Default to true
+    updateHideBrowserPushesToggleVisual();
     
     // Load color mode setting (default is 'system')
     colorModeSelect.value = data.colorMode || 'system';
@@ -60,6 +67,16 @@ document.addEventListener('DOMContentLoaded', function() {
   notificationMirroringToggle.addEventListener('click', function() {
     notificationMirroringCheckbox.checked = !notificationMirroringCheckbox.checked;
     updateNotificationMirroringToggleVisual();
+  });
+
+  onlyBrowserPushesToggle.addEventListener('click', function() {
+    onlyBrowserPushesCheckbox.checked = !onlyBrowserPushesCheckbox.checked;
+    updateOnlyBrowserPushesToggleVisual();
+  });
+
+  hideBrowserPushesToggle.addEventListener('click', function() {
+    hideBrowserPushesCheckbox.checked = !hideBrowserPushesCheckbox.checked;
+    updateHideBrowserPushesToggleVisual();
   });
 
   // Handle color mode changes for immediate preview
@@ -176,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   saveButton.addEventListener('click', function() {
     const accessToken = accessTokenInput.value.trim();
-    const localDeviceId = localDeviceSelect.value;
     const selectedRemoteDevices = Array.from(remoteDeviceSelect.selectedOptions)
       .map(option => option.value)
       .filter(value => value)
@@ -184,12 +200,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const saveData = { 
       accessToken: accessToken || '',
-      localDeviceId: localDeviceId || '',
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
       people: people,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       notificationMirroring: notificationMirroringCheckbox.checked,
+      onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
+      hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       colorMode: colorModeSelect.value
     };
 
@@ -200,16 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function populateDeviceSelects() {
-    localDeviceSelect.innerHTML = '<option value="">None</option>';
     remoteDeviceSelect.innerHTML = '';
     
     devices.forEach(device => {
       if (device.active) {
-        const localOption = document.createElement('option');
-        localOption.value = device.iden;
-        localOption.textContent = device.nickname || `${device.manufacturer} ${device.model}`;
-        localDeviceSelect.appendChild(localOption);
-        
         const remoteOption = document.createElement('option');
         remoteOption.value = device.iden;
         remoteOption.textContent = device.nickname || `${device.manufacturer} ${device.model}`;
@@ -238,6 +249,22 @@ document.addEventListener('DOMContentLoaded', function() {
       notificationMirroringToggle.classList.add('active');
     } else {
       notificationMirroringToggle.classList.remove('active');
+    }
+  }
+  
+  function updateOnlyBrowserPushesToggleVisual() {
+    if (onlyBrowserPushesCheckbox.checked) {
+      onlyBrowserPushesToggle.classList.add('active');
+    } else {
+      onlyBrowserPushesToggle.classList.remove('active');
+    }
+  }
+  
+  function updateHideBrowserPushesToggleVisual() {
+    if (hideBrowserPushesCheckbox.checked) {
+      hideBrowserPushesToggle.classList.add('active');
+    } else {
+      hideBrowserPushesToggle.classList.remove('active');
     }
   }
   
