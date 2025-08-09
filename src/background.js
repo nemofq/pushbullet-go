@@ -418,7 +418,7 @@ function showNotificationForPush(push) {
     ];
   }
   
-  chrome.notifications.create(`pushbullet-${push.iden}`, notificationOptions);
+  chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
 }
 
 async function handleMirrorNotification(mirrorData) {
@@ -509,7 +509,8 @@ chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIn
       chrome.notifications.clear(notificationId);
     }
   } else if (notificationId.startsWith('pushbullet-')) {
-    const pushIden = notificationId.replace('pushbullet-', '');
+    // Extract push iden from notification ID (format: pushbullet-{iden}-{timestamp})
+    const pushIden = notificationId.replace('pushbullet-', '').split('-').slice(0, -1).join('-');
     
     // Get the push data from storage
     const data = await chrome.storage.local.get('pushes');
@@ -558,13 +559,22 @@ async function handleDismissedPushes(updatedPushes) {
     console.log(`Found ${dismissedPushes.length} dismissed pushes`);
     
     for (const push of dismissedPushes) {
-      const notificationId = `pushbullet-${push.iden}`;
-      
-      // Check if the notification is still active using Chrome's API
+      // Since notification IDs now include timestamps, we need to find and clear all matching notifications
+      // by iterating through active notifications and matching by push identifier
       try {
         const allNotifications = await chrome.notifications.getAll();
         
-        if (allNotifications[notificationId]) {
+        const matchingNotificationIds = Object.keys(allNotifications).filter(notificationId => {
+          if (!notificationId.startsWith('pushbullet-')) return false;
+          if (notificationId.startsWith('pushbullet-mirror-')) return false;
+          
+          // Extract push iden from notification ID (format: pushbullet-{iden}-{timestamp})
+          const pushIden = notificationId.replace('pushbullet-', '').split('-').slice(0, -1).join('-');
+          return pushIden === push.iden;
+        });
+        
+        // Clear all matching notifications
+        for (const notificationId of matchingNotificationIds) {
           console.log(`Clearing notification for dismissed push: ${push.iden}`);
           await chrome.notifications.clear(notificationId);
         }
