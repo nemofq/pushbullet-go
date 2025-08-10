@@ -308,13 +308,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedDevices = selectedOptions.filter(option => option.value);
     
     if (selectedDevices.length === 0) {
-      deviceSelectionStatus.textContent = window.CustomI18n.getMessage('none_selected_all_devices');
+      deviceSelectionStatus.textContent = window.CustomI18n && window.CustomI18n.getMessage 
+        ? window.CustomI18n.getMessage('none_selected_all_devices') 
+        : 'None selected (to all devices)';
       deviceSelectionStatus.style.display = 'inline';
     } else if (selectedDevices.length === 1) {
       deviceSelectionStatus.textContent = `${selectedDevices[0].textContent}`;
       deviceSelectionStatus.style.display = 'inline';
     } else {
-      deviceSelectionStatus.textContent = `${selectedDevices.length} ${window.CustomI18n.getMessage('devices_selected')}`;
+      const devicesSelectedText = window.CustomI18n && window.CustomI18n.getMessage 
+        ? window.CustomI18n.getMessage('devices_selected') 
+        : 'devices selected';
+      deviceSelectionStatus.textContent = `${selectedDevices.length} ${devicesSelectedText}`;
       deviceSelectionStatus.style.display = 'inline';
     }
   }
@@ -377,6 +382,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const messageKey = element.getAttribute('data-i18n-placeholder');
       element.placeholder = window.CustomI18n.getMessage(messageKey);
     });
+    
+    // Update device selection status with proper i18n
+    updateDeviceSelectionStatus();
   }
 
   function applyColorMode(mode) {
