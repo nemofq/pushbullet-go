@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Trimite"
+  },
+  "notification_button": {
+    "message": "Notificare"
+  },
+  "reconnect_button": {
+    "message": "Reconectare"
+  },
+  "setup_required": {
+    "message": "Configurare necesară"
+  },
+  "setup_configure_token": {
+    "message": "Configurați tokenul de acces Pushbullet pentru a începe să utilizați extensia."
+  },
+  "open_settings_button": {
+    "message": "Deschide setările"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Scrieți sau lipiți"
+  },
+  "send_message_title": {
+    "message": "Trimite mesaj"
+  },
+  "send_file_title": {
+    "message": "Trimite fișier/imagine"
+  },
+  "no_messages_yet": {
+    "message": "Niciun mesaj încă"
+  },
+  "no_notifications_received": {
+    "message": "Nicio notificare primită"
+  },
+  "paste_one_file": {
+    "message": "Lipiți un singur fișier/imagine o dată."
+  },
+  "copy_link": {
+    "message": "Copiază linkul"
+  },
+  "copy_message": {
+    "message": "Copiază mesajul"
+  },
+  "upload_failed_retry": {
+    "message": "Încărcarea a eșuat. Încercați din nou."
+  },
+  "uploaded_successfully": {
+    "message": " încărcat cu succes!"
+  },
+  "uploading": {
+    "message": "Se încarcă "
+  },
+  "app_icon_alt": {
+    "message": "Pictograma aplicației"
+  },
+  "download_file": {
+    "message": "Descarcă fișier"
+  },
+  "push_go_options": {
+    "message": "Opțiuni Push Go"
+  },
+  "access_token_label": {
+    "message": "Token de acces:"
+  },
+  "access_token_placeholder": {
+    "message": "Introduceți tokenul de acces Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Vizitați"
+  },
+  "get_access_token_tip": {
+    "message": "pentru a obține tokenul de acces."
+  },
+  "retrieve_devices_button": {
+    "message": "Recuperează dispozitive și persoane"
+  },
+  "retrieving": {
+    "message": "Se recuperează..."
+  },
+  "retrieved": {
+    "message": "Recuperat"
+  },
+  "target_devices_label": {
+    "message": "Dispozitive țintă:"
+  },
+  "none_selected_all_devices": {
+    "message": "Nimic selectat (către toate dispozitivele)"
+  },
+  "choose_devices_tip": {
+    "message": "Alegeți dispozitivele pentru trimitere. Țineți Ctrl/Cmd pentru selecție multiplă."
+  },
+  "only_browser_pushes_label": {
+    "message": "Notifică și afișează doar push-urile către browsere"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Ascunde notificările push trimise din browsere"
+  },
+  "auto_open_links_label": {
+    "message": "Deschide automat în filă nouă (inactiv) la primirea unui link"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Activează oglindirea notificărilor"
+  },
+  "color_mode_label": {
+    "message": "Mod culoare:"
+  },
+  "follow_system": {
+    "message": "Urmărește sistemul"
+  },
+  "light": {
+    "message": "Luminos"
+  },
+  "dark": {
+    "message": "Întunecat"
+  },
+  "save_settings_button": {
+    "message": "Salvează setările"
+  },
+  "saved": {
+    "message": "Salvat"
+  },
+  "devices_selected": {
+    "message": "dispozitive selectate"
+  },
+  "push_file_image_title": {
+    "message": "Trimite fișier/imagine"
+  },
+  "choose_file_button": {
+    "message": "Alege fișier"
+  },
+  "preparing": {
+    "message": "Se pregătește..."
+  },
+  "processing_file": {
+    "message": "Se procesează fișierul..."
+  },
+  "preparing_upload": {
+    "message": "Se pregătește încărcarea..."
+  },
+  "file_image_pushed": {
+    "message": "Fișier/imagine trimis!"
+  },
+  "upload_failed": {
+    "message": "Încărcarea a eșuat: "
+  },
+  "uploading_to_server": {
+    "message": "Se încarcă pe server..."
+  },
+  "creating_push": {
+    "message": "Se creează push..."
+  },
+  "new_note": {
+    "message": "Notă nouă"
+  },
+  "new_link": {
+    "message": "Link nou"
+  },
+  "file_prefix": {
+    "message": "Fișier: "
+  },
+  "new_file": {
+    "message": "Fișier nou"
+  },
+  "new_push": {
+    "message": "Push nou"
+  },
+  "open_button": {
+    "message": "Deschide"
+  },
+  "dismiss_button": {
+    "message": "Respinge"
+  },
+  "unknown_app": {
+    "message": "Aplicație necunoscută"
+  },
+  "new_notification": {
+    "message": "Notificare nouă"
+  },
+  "push_current_page_url": {
+    "message": "Trimite URL-ul paginii curente"
+  },
+  "to_selected_devices": {
+    "message": "Către dispozitivele selectate"
+  },
+  "choose_device": {
+    "message": "Alege dispozitiv"
+  },
+  "choose_people": {
+    "message": "Alege persoane"
+  },
+  "push_selected_text": {
+    "message": "Trimite textul selectat"
+  },
+  "push_this_image": {
+    "message": "Trimite această imagine"
+  },
+  "retry_connection_title": {
+    "message": "Reîncearcă conexiunea"
+  },
+  "open_settings_to_configure": {
+    "message": "Deschide setările pentru a configura tokenul de acces"
+  },
+  "no_access_token": {
+    "message": "Niciun token de acces găsit. Configurați în opțiuni."
+  },
+  "image": {
+    "message": "imagine"
+  },
+  "file": {
+    "message": "fișier"
+  }
+}

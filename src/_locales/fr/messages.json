@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Envoyer"
+  },
+  "notification_button": {
+    "message": "Notification"
+  },
+  "reconnect_button": {
+    "message": "Reconnecter"
+  },
+  "setup_required": {
+    "message": "Configuration requise"
+  },
+  "setup_configure_token": {
+    "message": "Configurez votre jeton d’accès Pushbullet pour commencer à utiliser l’extension."
+  },
+  "open_settings_button": {
+    "message": "Ouvrir les paramètres"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Saisir ou coller"
+  },
+  "send_message_title": {
+    "message": "Envoyer un message"
+  },
+  "send_file_title": {
+    "message": "Envoyer fichier/image"
+  },
+  "no_messages_yet": {
+    "message": "Aucun message"
+  },
+  "no_notifications_received": {
+    "message": "Aucune notification reçue"
+  },
+  "paste_one_file": {
+    "message": "Collez un seul fichier/image à la fois."
+  },
+  "copy_link": {
+    "message": "Copier le lien"
+  },
+  "copy_message": {
+    "message": "Copier le message"
+  },
+  "upload_failed_retry": {
+    "message": "Échec du téléversement. Réessayez."
+  },
+  "uploaded_successfully": {
+    "message": " téléversé avec succès !"
+  },
+  "uploading": {
+    "message": "Téléversement "
+  },
+  "app_icon_alt": {
+    "message": "Icône de l’application"
+  },
+  "download_file": {
+    "message": "Télécharger le fichier"
+  },
+  "push_go_options": {
+    "message": "Options Push Go"
+  },
+  "access_token_label": {
+    "message": "Jeton d’accès :"
+  },
+  "access_token_placeholder": {
+    "message": "Entrez votre jeton d’accès Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Visiter"
+  },
+  "get_access_token_tip": {
+    "message": "pour obtenir votre jeton."
+  },
+  "retrieve_devices_button": {
+    "message": "Récupérer appareils et personnes"
+  },
+  "retrieving": {
+    "message": "Récupération..."
+  },
+  "retrieved": {
+    "message": "Récupéré"
+  },
+  "target_devices_label": {
+    "message": "Appareils cibles :"
+  },
+  "none_selected_all_devices": {
+    "message": "Aucun sélectionné (tous les appareils)"
+  },
+  "choose_devices_tip": {
+    "message": "Choisissez les appareils pour l’envoi. Maintenez Ctrl/Cmd pour en sélectionner plusieurs."
+  },
+  "only_browser_pushes_label": {
+    "message": "Notifier/afficher uniquement sur navigateurs"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Masquer les notifications envoyées depuis navigateurs"
+  },
+  "auto_open_links_label": {
+    "message": "Ouvrir auto. (inactif) les liens reçus"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Activer le mirroring des notifications"
+  },
+  "color_mode_label": {
+    "message": "Mode de couleur :"
+  },
+  "follow_system": {
+    "message": "Suivre le système"
+  },
+  "light": {
+    "message": "Clair"
+  },
+  "dark": {
+    "message": "Sombre"
+  },
+  "save_settings_button": {
+    "message": "Enregistrer"
+  },
+  "saved": {
+    "message": "Enregistré"
+  },
+  "devices_selected": {
+    "message": "appareils sélectionnés"
+  },
+  "push_file_image_title": {
+    "message": "Envoyer fichier/image"
+  },
+  "choose_file_button": {
+    "message": "Choisir fichier"
+  },
+  "preparing": {
+    "message": "Préparation..."
+  },
+  "processing_file": {
+    "message": "Traitement du fichier..."
+  },
+  "preparing_upload": {
+    "message": "Préparation du téléversement..."
+  },
+  "file_image_pushed": {
+    "message": "Fichier/image envoyé !"
+  },
+  "upload_failed": {
+    "message": "Échec du téléversement : "
+  },
+  "uploading_to_server": {
+    "message": "Téléversement vers le serveur..."
+  },
+  "creating_push": {
+    "message": "Création de l’envoi..."
+  },
+  "new_note": {
+    "message": "Nouvelle note"
+  },
+  "new_link": {
+    "message": "Nouveau lien"
+  },
+  "file_prefix": {
+    "message": "Fichier : "
+  },
+  "new_file": {
+    "message": "Nouveau fichier"
+  },
+  "new_push": {
+    "message": "Nouvel envoi"
+  },
+  "open_button": {
+    "message": "Ouvrir"
+  },
+  "dismiss_button": {
+    "message": "Ignorer"
+  },
+  "unknown_app": {
+    "message": "Application inconnue"
+  },
+  "new_notification": {
+    "message": "Nouvelle notification"
+  },
+  "push_current_page_url": {
+    "message": "Envoyer l’URL de la page"
+  },
+  "to_selected_devices": {
+    "message": "Vers appareils sélectionnés"
+  },
+  "choose_device": {
+    "message": "Choisir appareil"
+  },
+  "choose_people": {
+    "message": "Choisir personnes"
+  },
+  "push_selected_text": {
+    "message": "Envoyer le texte sélectionné"
+  },
+  "push_this_image": {
+    "message": "Envoyer cette image"
+  },
+  "retry_connection_title": {
+    "message": "Réessayer la connexion"
+  },
+  "open_settings_to_configure": {
+    "message": "Ouvrez paramètres pour configurer le jeton"
+  },
+  "no_access_token": {
+    "message": "Aucun jeton trouvé. Configurez-le dans les options."
+  },
+  "image": {
+    "message": "image"
+  },
+  "file": {
+    "message": "fichier"
+  }
+}

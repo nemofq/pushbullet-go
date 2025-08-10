@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Gönder"
+  },
+  "notification_button": {
+    "message": "Bildirim"
+  },
+  "reconnect_button": {
+    "message": "Yeniden Bağlan"
+  },
+  "setup_required": {
+    "message": "Kurulum Gerekli"
+  },
+  "setup_configure_token": {
+    "message": "Eklentiyi kullanmaya başlamak için Pushbullet erişim belirtecinizi yapılandırın."
+  },
+  "open_settings_button": {
+    "message": "Ayarları Aç"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Yaz veya yapıştır"
+  },
+  "send_message_title": {
+    "message": "Mesaj gönder"
+  },
+  "send_file_title": {
+    "message": "Dosya/görsel gönder"
+  },
+  "no_messages_yet": {
+    "message": "Henüz mesaj yok"
+  },
+  "no_notifications_received": {
+    "message": "Bildirim alınmadı"
+  },
+  "paste_one_file": {
+    "message": "Tek seferde bir görsel/dosya yapıştırın."
+  },
+  "copy_link": {
+    "message": "Bağlantıyı kopyala"
+  },
+  "copy_message": {
+    "message": "Mesajı kopyala"
+  },
+  "upload_failed_retry": {
+    "message": "Yükleme başarısız. Tekrar deneyin."
+  },
+  "uploaded_successfully": {
+    "message": " başarıyla yüklendi!"
+  },
+  "uploading": {
+    "message": "Yükleniyor "
+  },
+  "app_icon_alt": {
+    "message": "Uygulama simgesi"
+  },
+  "download_file": {
+    "message": "Dosyayı indir"
+  },
+  "push_go_options": {
+    "message": "Push Go Ayarları"
+  },
+  "access_token_label": {
+    "message": "Erişim Belirteci:"
+  },
+  "access_token_placeholder": {
+    "message": "Pushbullet erişim belirtecinizi girin"
+  },
+  "visit_link_tip": {
+    "message": "Ziyaret et"
+  },
+  "get_access_token_tip": {
+    "message": "erişim belirtecinizi almak için."
+  },
+  "retrieve_devices_button": {
+    "message": "Cihazları ve kişileri getir"
+  },
+  "retrieving": {
+    "message": "Getiriliyor..."
+  },
+  "retrieved": {
+    "message": "Getirildi"
+  },
+  "target_devices_label": {
+    "message": "Hedef Cihazlar:"
+  },
+  "none_selected_all_devices": {
+    "message": "Hiçbiri seçilmedi (tüm cihazlara)"
+  },
+  "choose_devices_tip": {
+    "message": "Push göndermek istediğiniz cihazları seçin. Birden fazla seçmek için Ctrl/Cmd basılı tutun."
+  },
+  "only_browser_pushes_label": {
+    "message": "Yalnızca tarayıcılara bildir ve göster"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Tarayıcılardan gönderilen push bildirimlerini gizle"
+  },
+  "auto_open_links_label": {
+    "message": "Bağlantı alındığında yeni sekmede otomatik aç (pasif)"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Bildirim Yansıtmayı Etkinleştir"
+  },
+  "color_mode_label": {
+    "message": "Renk Modu:"
+  },
+  "follow_system": {
+    "message": "Sistemi takip et"
+  },
+  "light": {
+    "message": "Açık"
+  },
+  "dark": {
+    "message": "Koyu"
+  },
+  "save_settings_button": {
+    "message": "Ayarları Kaydet"
+  },
+  "saved": {
+    "message": "Kaydedildi"
+  },
+  "devices_selected": {
+    "message": "cihaz seçildi"
+  },
+  "push_file_image_title": {
+    "message": "Dosya/Görsel Gönder"
+  },
+  "choose_file_button": {
+    "message": "Dosya Seç"
+  },
+  "preparing": {
+    "message": "Hazırlanıyor..."
+  },
+  "processing_file": {
+    "message": "Dosya işleniyor..."
+  },
+  "preparing_upload": {
+    "message": "Yükleme hazırlanıyor..."
+  },
+  "file_image_pushed": {
+    "message": "Dosya/görsel gönderildi!"
+  },
+  "upload_failed": {
+    "message": "Yükleme başarısız: "
+  },
+  "uploading_to_server": {
+    "message": "Sunucuya yükleniyor..."
+  },
+  "creating_push": {
+    "message": "Push oluşturuluyor..."
+  },
+  "new_note": {
+    "message": "Yeni not"
+  },
+  "new_link": {
+    "message": "Yeni bağlantı"
+  },
+  "file_prefix": {
+    "message": "Dosya: "
+  },
+  "new_file": {
+    "message": "Yeni dosya"
+  },
+  "new_push": {
+    "message": "Yeni push"
+  },
+  "open_button": {
+    "message": "Aç"
+  },
+  "dismiss_button": {
+    "message": "Kapat"
+  },
+  "unknown_app": {
+    "message": "Bilinmeyen Uygulama"
+  },
+  "new_notification": {
+    "message": "Yeni bildirim"
+  },
+  "push_current_page_url": {
+    "message": "Geçerli sayfa URL'sini gönder"
+  },
+  "to_selected_devices": {
+    "message": "Seçili cihazlara"
+  },
+  "choose_device": {
+    "message": "Cihaz seç"
+  },
+  "choose_people": {
+    "message": "Kişi seç"
+  },
+  "push_selected_text": {
+    "message": "Seçili metni gönder"
+  },
+  "push_this_image": {
+    "message": "Bu görseli gönder"
+  },
+  "retry_connection_title": {
+    "message": "Bağlantıyı yeniden dene"
+  },
+  "open_settings_to_configure": {
+    "message": "Erişim belirtecini ayarlamak için ayarları açın"
+  },
+  "no_access_token": {
+    "message": "Erişim belirteci bulunamadı. Lütfen ayarlar bölümünden yapılandırın."
+  },
+  "image": {
+    "message": "görsel"
+  },
+  "file": {
+    "message": "dosya"
+  }
+}

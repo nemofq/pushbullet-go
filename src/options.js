@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const colorModeSelect = document.getElementById('colorMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
   
+  // Initialize i18n
+  initializeI18n();
+  
   let devices = [];
   let people = [];
 
@@ -45,8 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
     onlyBrowserPushesCheckbox.checked = data.onlyBrowserPushes !== false; // Default to true
     updateOnlyBrowserPushesToggleVisual();
     
-    // Load hide browser pushes setting (default is true/on)
-    hideBrowserPushesCheckbox.checked = data.hideBrowserPushes !== false; // Default to true
+    // Load hide browser pushes setting (default is false/off)
+    hideBrowserPushesCheckbox.checked = data.hideBrowserPushes || false; // Default to false
     updateHideBrowserPushesToggleVisual();
     
     // Load color mode setting (default is 'system')
@@ -94,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!accessToken) return;
     
     retrieveDevicesButton.disabled = true;
-    retrieveDevicesButton.textContent = 'Retrieving...';
+    retrieveDevicesButton.textContent = chrome.i18n.getMessage('retrieving');
     
     try {
       // Fetch devices
@@ -184,9 +187,9 @@ document.addEventListener('DOMContentLoaded', function() {
       showStatus(`Error: ${error.message}`, 'error');
     } finally {
       // Note: Don't re-enable here as showRetrieveSuccess will handle it
-      if (retrieveDevicesButton.textContent === 'Retrieving...') {
+      if (retrieveDevicesButton.textContent === chrome.i18n.getMessage('retrieving')) {
         retrieveDevicesButton.disabled = false;
-        retrieveDevicesButton.textContent = 'Retrieve devices and people';
+        retrieveDevicesButton.textContent = chrome.i18n.getMessage('retrieve_devices_button');
       }
     }
   });
@@ -273,13 +276,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedDevices = selectedOptions.filter(option => option.value);
     
     if (selectedDevices.length === 0) {
-      deviceSelectionStatus.textContent = 'None selected (to all devices)';
+      deviceSelectionStatus.textContent = chrome.i18n.getMessage('none_selected_all_devices');
       deviceSelectionStatus.style.display = 'inline';
     } else if (selectedDevices.length === 1) {
       deviceSelectionStatus.textContent = `${selectedDevices[0].textContent}`;
       deviceSelectionStatus.style.display = 'inline';
     } else {
-      deviceSelectionStatus.textContent = `${selectedDevices.length} devices selected`;
+      deviceSelectionStatus.textContent = `${selectedDevices.length} ${chrome.i18n.getMessage('devices_selected')}`;
       deviceSelectionStatus.style.display = 'inline';
     }
   }
@@ -301,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
       </svg>
-      Saved
+      ${chrome.i18n.getMessage('saved')}
     `;
     saveButton.disabled = true;
     
@@ -312,13 +315,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showRetrieveSuccess() {
-    const originalContent = 'Retrieve devices and people';
+    const originalContent = chrome.i18n.getMessage('retrieve_devices_button');
     
     retrieveDevicesButton.innerHTML = `
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
       </svg>
-      Retrieved
+      ${chrome.i18n.getMessage('retrieved')}
     `;
     retrieveDevicesButton.disabled = true;
     
@@ -326,6 +329,22 @@ document.addEventListener('DOMContentLoaded', function() {
       retrieveDevicesButton.textContent = originalContent;
       retrieveDevicesButton.disabled = false;
     }, 2000);
+  }
+
+  function initializeI18n() {
+    // Replace all elements with data-i18n attribute
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(element => {
+      const messageKey = element.getAttribute('data-i18n');
+      element.textContent = chrome.i18n.getMessage(messageKey);
+    });
+    
+    // Replace placeholder attributes
+    const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+    placeholderElements.forEach(element => {
+      const messageKey = element.getAttribute('data-i18n-placeholder');
+      element.placeholder = chrome.i18n.getMessage(messageKey);
+    });
   }
 
   function applyColorMode(mode) {

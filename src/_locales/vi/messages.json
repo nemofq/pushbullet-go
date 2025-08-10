@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Gửi"
+  },
+  "notification_button": {
+    "message": "Thông báo"
+  },
+  "reconnect_button": {
+    "message": "Kết nối lại"
+  },
+  "setup_required": {
+    "message": "Yêu cầu cài đặt"
+  },
+  "setup_configure_token": {
+    "message": "Cấu hình mã truy cập Pushbullet để bắt đầu sử dụng tiện ích."
+  },
+  "open_settings_button": {
+    "message": "Mở cài đặt"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Nhập hoặc dán"
+  },
+  "send_message_title": {
+    "message": "Gửi tin nhắn"
+  },
+  "send_file_title": {
+    "message": "Gửi tệp/hình ảnh"
+  },
+  "no_messages_yet": {
+    "message": "Chưa có tin nhắn"
+  },
+  "no_notifications_received": {
+    "message": "Chưa nhận thông báo nào"
+  },
+  "paste_one_file": {
+    "message": "Chỉ dán một tệp/hình ảnh mỗi lần."
+  },
+  "copy_link": {
+    "message": "Sao chép liên kết"
+  },
+  "copy_message": {
+    "message": "Sao chép tin nhắn"
+  },
+  "upload_failed_retry": {
+    "message": "Tải lên thất bại. Thử lại."
+  },
+  "uploaded_successfully": {
+    "message": "Tải lên thành công!"
+  },
+  "uploading": {
+    "message": "Đang tải lên "
+  },
+  "app_icon_alt": {
+    "message": "Biểu tượng ứng dụng"
+  },
+  "download_file": {
+    "message": "Tải xuống tệp"
+  },
+  "push_go_options": {
+    "message": "Tùy chọn Push Go"
+  },
+  "access_token_label": {
+    "message": "Mã truy cập:"
+  },
+  "access_token_placeholder": {
+    "message": "Nhập mã truy cập Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Truy cập"
+  },
+  "get_access_token_tip": {
+    "message": "để lấy mã truy cập."
+  },
+  "retrieve_devices_button": {
+    "message": "Lấy thiết bị và người"
+  },
+  "retrieving": {
+    "message": "Đang lấy..."
+  },
+  "retrieved": {
+    "message": "Đã lấy"
+  },
+  "target_devices_label": {
+    "message": "Thiết bị nhận:"
+  },
+  "none_selected_all_devices": {
+    "message": "Không chọn (gửi tới tất cả thiết bị)"
+  },
+  "choose_devices_tip": {
+    "message": "Chọn thiết bị để gửi. Giữ Ctrl/Cmd để chọn nhiều."
+  },
+  "only_browser_pushes_label": {
+    "message": "Chỉ thông báo và hiển thị trên trình duyệt"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Ẩn thông báo từ trình duyệt"
+  },
+  "auto_open_links_label": {
+    "message": "Tự mở tab mới (nếu không hoạt động) khi nhận liên kết"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Bật phản chiếu thông báo"
+  },
+  "color_mode_label": {
+    "message": "Chế độ màu:"
+  },
+  "follow_system": {
+    "message": "Theo hệ thống"
+  },
+  "light": {
+    "message": "Sáng"
+  },
+  "dark": {
+    "message": "Tối"
+  },
+  "save_settings_button": {
+    "message": "Lưu cài đặt"
+  },
+  "saved": {
+    "message": "Đã lưu"
+  },
+  "devices_selected": {
+    "message": "thiết bị đã chọn"
+  },
+  "push_file_image_title": {
+    "message": "Gửi tệp/hình ảnh"
+  },
+  "choose_file_button": {
+    "message": "Chọn tệp"
+  },
+  "preparing": {
+    "message": "Đang chuẩn bị..."
+  },
+  "processing_file": {
+    "message": "Đang xử lý tệp..."
+  },
+  "preparing_upload": {
+    "message": "Chuẩn bị tải lên..."
+  },
+  "file_image_pushed": {
+    "message": "Đã gửi tệp/hình ảnh!"
+  },
+  "upload_failed": {
+    "message": "Tải lên thất bại: "
+  },
+  "uploading_to_server": {
+    "message": "Đang tải lên máy chủ..."
+  },
+  "creating_push": {
+    "message": "Đang tạo push..."
+  },
+  "new_note": {
+    "message": "Ghi chú mới"
+  },
+  "new_link": {
+    "message": "Liên kết mới"
+  },
+  "file_prefix": {
+    "message": "Tệp: "
+  },
+  "new_file": {
+    "message": "Tệp mới"
+  },
+  "new_push": {
+    "message": "Push mới"
+  },
+  "open_button": {
+    "message": "Mở"
+  },
+  "dismiss_button": {
+    "message": "Bỏ qua"
+  },
+  "unknown_app": {
+    "message": "Ứng dụng không xác định"
+  },
+  "new_notification": {
+    "message": "Thông báo mới"
+  },
+  "push_current_page_url": {
+    "message": "Gửi URL trang hiện tại"
+  },
+  "to_selected_devices": {
+    "message": "Tới thiết bị đã chọn"
+  },
+  "choose_device": {
+    "message": "Chọn thiết bị"
+  },
+  "choose_people": {
+    "message": "Chọn người"
+  },
+  "push_selected_text": {
+    "message": "Gửi đoạn văn bản đã chọn"
+  },
+  "push_this_image": {
+    "message": "Gửi hình ảnh này"
+  },
+  "retry_connection_title": {
+    "message": "Thử kết nối lại"
+  },
+  "open_settings_to_configure": {
+    "message": "Mở cài đặt để cấu hình mã truy cập"
+  },
+  "no_access_token": {
+    "message": "Không tìm thấy mã truy cập. Vui lòng cấu hình trong tùy chọn."
+  },
+  "image": {
+    "message": "hình ảnh"
+  },
+  "file": {
+    "message": "tệp"
+  }
+}

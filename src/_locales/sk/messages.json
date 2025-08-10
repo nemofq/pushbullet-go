@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Odoslať"
+  },
+  "notification_button": {
+    "message": "Upozornenie"
+  },
+  "reconnect_button": {
+    "message": "Znova pripojiť"
+  },
+  "setup_required": {
+    "message": "Vyžaduje sa nastavenie"
+  },
+  "setup_configure_token": {
+    "message": "Nakonfigurujte svoj prístupový token Pushbullet na používanie rozšírenia."
+  },
+  "open_settings_button": {
+    "message": "Otvoriť nastavenia"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Napíšte alebo vložte"
+  },
+  "send_message_title": {
+    "message": "Odoslať správu"
+  },
+  "send_file_title": {
+    "message": "Odoslať súbor/obrázok"
+  },
+  "no_messages_yet": {
+    "message": "Zatiaľ žiadne správy"
+  },
+  "no_notifications_received": {
+    "message": "Neboli prijaté žiadne upozornenia"
+  },
+  "paste_one_file": {
+    "message": "Vložte jeden obrázok/súbor naraz."
+  },
+  "copy_link": {
+    "message": "Kopírovať odkaz"
+  },
+  "copy_message": {
+    "message": "Kopírovať správu"
+  },
+  "upload_failed_retry": {
+    "message": "Nahrávanie zlyhalo. Skúste znova."
+  },
+  "uploaded_successfully": {
+    "message": " úspešne nahraté!"
+  },
+  "uploading": {
+    "message": "Nahráva sa "
+  },
+  "app_icon_alt": {
+    "message": "Ikona aplikácie"
+  },
+  "download_file": {
+    "message": "Stiahnuť súbor"
+  },
+  "push_go_options": {
+    "message": "Možnosti Push Go"
+  },
+  "access_token_label": {
+    "message": "Prístupový token:"
+  },
+  "access_token_placeholder": {
+    "message": "Zadajte svoj prístupový token Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Navštíviť"
+  },
+  "get_access_token_tip": {
+    "message": "na získanie prístupového tokenu."
+  },
+  "retrieve_devices_button": {
+    "message": "Získať zariadenia a ľudí"
+  },
+  "retrieving": {
+    "message": "Získava sa..."
+  },
+  "retrieved": {
+    "message": "Získané"
+  },
+  "target_devices_label": {
+    "message": "Cieľové zariadenia:"
+  },
+  "none_selected_all_devices": {
+    "message": "Nevybrané (pre všetky zariadenia)"
+  },
+  "choose_devices_tip": {
+    "message": "Vyberte zariadenia, kam sa majú posielať správy. Podržte Ctrl/Cmd pre viacnásobný výber."
+  },
+  "only_browser_pushes_label": {
+    "message": "Upozorňovať a zobrazovať iba správy prehliadača"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Skryť upozornenia na správy odoslané z prehliadačov"
+  },
+  "auto_open_links_label": {
+    "message": "Automaticky otvoriť v novej karte (neaktívne) pri prijatí odkazu"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Povoliť zrkadlenie upozornení"
+  },
+  "color_mode_label": {
+    "message": "Farebný režim:"
+  },
+  "follow_system": {
+    "message": "Podľa systému"
+  },
+  "light": {
+    "message": "Svetlý"
+  },
+  "dark": {
+    "message": "Tmavý"
+  },
+  "save_settings_button": {
+    "message": "Uložiť nastavenia"
+  },
+  "saved": {
+    "message": "Uložené"
+  },
+  "devices_selected": {
+    "message": "zariadení vybraných"
+  },
+  "push_file_image_title": {
+    "message": "Odoslať súbor/obrázok"
+  },
+  "choose_file_button": {
+    "message": "Vybrať súbor"
+  },
+  "preparing": {
+    "message": "Pripravuje sa..."
+  },
+  "processing_file": {
+    "message": "Spracováva sa súbor..."
+  },
+  "preparing_upload": {
+    "message": "Pripravuje sa nahrávanie..."
+  },
+  "file_image_pushed": {
+    "message": "Súbor/obrázok odoslaný!"
+  },
+  "upload_failed": {
+    "message": "Nahrávanie zlyhalo: "
+  },
+  "uploading_to_server": {
+    "message": "Nahráva sa na server..."
+  },
+  "creating_push": {
+    "message": "Vytvára sa správa..."
+  },
+  "new_note": {
+    "message": "Nová poznámka"
+  },
+  "new_link": {
+    "message": "Nový odkaz"
+  },
+  "file_prefix": {
+    "message": "Súbor: "
+  },
+  "new_file": {
+    "message": "Nový súbor"
+  },
+  "new_push": {
+    "message": "Nová správa"
+  },
+  "open_button": {
+    "message": "Otvoriť"
+  },
+  "dismiss_button": {
+    "message": "Zavrieť"
+  },
+  "unknown_app": {
+    "message": "Neznáma aplikácia"
+  },
+  "new_notification": {
+    "message": "Nové upozornenie"
+  },
+  "push_current_page_url": {
+    "message": "Odoslať URL aktuálnej stránky"
+  },
+  "to_selected_devices": {
+    "message": "Na vybrané zariadenia"
+  },
+  "choose_device": {
+    "message": "Vybrať zariadenie"
+  },
+  "choose_people": {
+    "message": "Vybrať ľudí"
+  },
+  "push_selected_text": {
+    "message": "Odoslať vybraný text"
+  },
+  "push_this_image": {
+    "message": "Odoslať tento obrázok"
+  },
+  "retry_connection_title": {
+    "message": "Skúsiť znova pripojiť"
+  },
+  "open_settings_to_configure": {
+    "message": "Otvorte nastavenia a nakonfigurujte prístupový token"
+  },
+  "no_access_token": {
+    "message": "Prístupový token nebol nájdený. Nakonfigurujte ho v možnostiach."
+  },
+  "image": {
+    "message": "obrázok"
+  },
+  "file": {
+    "message": "súbor"
+  }
+}

@@ -396,10 +396,10 @@
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
       <div class="tab-switcher" id="tabSwitcher" style="display: none;">
-        <button id="pushTab" class="tab-button active">Push</button>
-        <button id="notificationTab" class="tab-button">Notification</button>
+        <button id="pushTab" class="tab-button active" data-i18n="push_button">Push</button>
+        <button id="notificationTab" class="tab-button" data-i18n="notification_button">Notification</button>
       </div>
-      <button id="retryConnection" style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;" title="Retry connection">
+      <button id="retryConnection" style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;" title="Retry connection" data-i18n="reconnect_button">
         Reconnect
       </button>
     </div>
@@ -412,21 +412,21 @@
   </div>
   
   <div class="setup-guide" id="setupGuide">
-    <h3>Setup Required</h3>
-    <p>Configure your Pushbullet access token to start using the extension.</p>
-    <button class="setup-button" id="openOptionsButton">Open Settings</button>
+    <h3 data-i18n="setup_required">Setup Required</h3>
+    <p data-i18n="setup_configure_token">Configure your Pushbullet access token to start using the extension.</p>
+    <button class="setup-button" id="openOptionsButton" data-i18n="open_settings_button">Open Settings</button>
   </div>
   
   <div class="send-form">
     <div class="input-container">
-      <textarea id="bodyInput" placeholder="Type or paste"></textarea>
+      <textarea id="bodyInput" data-i18n-placeholder="type_or_paste_placeholder" placeholder="Type or paste"></textarea>
       <div class="button-group">
-        <button id="sendButton" class="icon-button" title="Send message">
+        <button id="sendButton" class="icon-button" data-i18n-title="send_message_title" title="Send message">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
           </svg>
         </button>
-        <button id="sendFileButton" class="icon-button" title="Send file/image">
+        <button id="sendFileButton" class="icon-button" data-i18n-title="send_file_title" title="Send file/image">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
           </svg>

@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Enviar"
+  },
+  "notification_button": {
+    "message": "Notificació"
+  },
+  "reconnect_button": {
+    "message": "Torna a connectar"
+  },
+  "setup_required": {
+    "message": "Cal configuració"
+  },
+  "setup_configure_token": {
+    "message": "Configura el teu token d'accés Pushbullet per començar a utilitzar l'extensió."
+  },
+  "open_settings_button": {
+    "message": "Obrir configuració"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Escriu o enganxa"
+  },
+  "send_message_title": {
+    "message": "Enviar missatge"
+  },
+  "send_file_title": {
+    "message": "Enviar fitxer/imatge"
+  },
+  "no_messages_yet": {
+    "message": "Encara no hi ha missatges"
+  },
+  "no_notifications_received": {
+    "message": "No s'han rebut notificacions"
+  },
+  "paste_one_file": {
+    "message": "Enganxa un sol fitxer/imatge alhora."
+  },
+  "copy_link": {
+    "message": "Copiar enllaç"
+  },
+  "copy_message": {
+    "message": "Copiar missatge"
+  },
+  "upload_failed_retry": {
+    "message": "Càrrega fallida. Torna-ho a provar."
+  },
+  "uploaded_successfully": {
+    "message": " carregat correctament!"
+  },
+  "uploading": {
+    "message": "Carregant "
+  },
+  "app_icon_alt": {
+    "message": "Icona de l'aplicació"
+  },
+  "download_file": {
+    "message": "Descarregar fitxer"
+  },
+  "push_go_options": {
+    "message": "Opcions de Push Go"
+  },
+  "access_token_label": {
+    "message": "Token d'accés:"
+  },
+  "access_token_placeholder": {
+    "message": "Introdueix el teu token d'accés Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Visita"
+  },
+  "get_access_token_tip": {
+    "message": "per obtenir el teu token d'accés."
+  },
+  "retrieve_devices_button": {
+    "message": "Recuperar dispositius i persones"
+  },
+  "retrieving": {
+    "message": "Recuperant..."
+  },
+  "retrieved": {
+    "message": "Recuperat"
+  },
+  "target_devices_label": {
+    "message": "Dispositius destinataris:"
+  },
+  "none_selected_all_devices": {
+    "message": "Cap seleccionat (a tots els dispositius)"
+  },
+  "choose_devices_tip": {
+    "message": "Tria a quins dispositius vols enviar els enviaments. Mantén premut Ctrl/Cmd per seleccionar-ne més d'un."
+  },
+  "only_browser_pushes_label": {
+    "message": "Només notificar i mostrar enviaments al navegador"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Amaga les notificacions d'enviaments fets des del navegador"
+  },
+  "auto_open_links_label": {
+    "message": "Obrir automàticament en una pestanya nova (inactiu) en rebre un enllaç"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Activar duplicació de notificacions"
+  },
+  "color_mode_label": {
+    "message": "Mode de color:"
+  },
+  "follow_system": {
+    "message": "Seguir sistema"
+  },
+  "light": {
+    "message": "Clar"
+  },
+  "dark": {
+    "message": "Fosc"
+  },
+  "save_settings_button": {
+    "message": "Desar configuració"
+  },
+  "saved": {
+    "message": "Desat"
+  },
+  "devices_selected": {
+    "message": "dispositius seleccionats"
+  },
+  "push_file_image_title": {
+    "message": "Enviar fitxer/imatge"
+  },
+  "choose_file_button": {
+    "message": "Triar fitxer"
+  },
+  "preparing": {
+    "message": "Preparant..."
+  },
+  "processing_file": {
+    "message": "Processant fitxer..."
+  },
+  "preparing_upload": {
+    "message": "Preparant càrrega..."
+  },
+  "file_image_pushed": {
+    "message": "Fitxer/imatge enviat!"
+  },
+  "upload_failed": {
+    "message": "Càrrega fallida: "
+  },
+  "uploading_to_server": {
+    "message": "Carregant al servidor..."
+  },
+  "creating_push": {
+    "message": "Creant enviament..."
+  },
+  "new_note": {
+    "message": "Nova nota"
+  },
+  "new_link": {
+    "message": "Nou enllaç"
+  },
+  "file_prefix": {
+    "message": "Fitxer: "
+  },
+  "new_file": {
+    "message": "Nou fitxer"
+  },
+  "new_push": {
+    "message": "Nou enviament"
+  },
+  "open_button": {
+    "message": "Obrir"
+  },
+  "dismiss_button": {
+    "message": "Descartar"
+  },
+  "unknown_app": {
+    "message": "Aplicació desconeguda"
+  },
+  "new_notification": {
+    "message": "Nova notificació"
+  },
+  "push_current_page_url": {
+    "message": "Enviar l'URL de la pàgina actual"
+  },
+  "to_selected_devices": {
+    "message": "Als dispositius seleccionats"
+  },
+  "choose_device": {
+    "message": "Triar dispositiu"
+  },
+  "choose_people": {
+    "message": "Triar persones"
+  },
+  "push_selected_text": {
+    "message": "Enviar text seleccionat"
+  },
+  "push_this_image": {
+    "message": "Enviar aquesta imatge"
+  },
+  "retry_connection_title": {
+    "message": "Reintentar connexió"
+  },
+  "open_settings_to_configure": {
+    "message": "Obre la configuració per configurar el token d'accés"
+  },
+  "no_access_token": {
+    "message": "No s'ha trobat cap token d'accés. Si us plau, configura'l a les opcions."
+  },
+  "image": {
+    "message": "imatge"
+  },
+  "file": {
+    "message": "fitxer"
+  }
+}

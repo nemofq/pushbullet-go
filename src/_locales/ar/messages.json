@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "إرسال"
+  },
+  "notification_button": {
+    "message": "إشعار"
+  },
+  "reconnect_button": {
+    "message": "إعادة الاتصال"
+  },
+  "setup_required": {
+    "message": "الإعداد مطلوب"
+  },
+  "setup_configure_token": {
+    "message": "قم بإعداد رمز وصول Pushbullet لبدء استخدام الامتداد."
+  },
+  "open_settings_button": {
+    "message": "فتح الإعدادات"
+  },
+  "type_or_paste_placeholder": {
+    "message": "اكتب أو الصق"
+  },
+  "send_message_title": {
+    "message": "إرسال رسالة"
+  },
+  "send_file_title": {
+    "message": "إرسال ملف/صورة"
+  },
+  "no_messages_yet": {
+    "message": "لا توجد رسائل بعد"
+  },
+  "no_notifications_received": {
+    "message": "لم يتم تلقي أي إشعارات"
+  },
+  "paste_one_file": {
+    "message": "الصق ملف/صورة واحد فقط في المرة."
+  },
+  "copy_link": {
+    "message": "نسخ الرابط"
+  },
+  "copy_message": {
+    "message": "نسخ الرسالة"
+  },
+  "upload_failed_retry": {
+    "message": "فشل الرفع. حاول مرة أخرى."
+  },
+  "uploaded_successfully": {
+    "message": "تم الرفع بنجاح!"
+  },
+  "uploading": {
+    "message": "جارٍ الرفع "
+  },
+  "app_icon_alt": {
+    "message": "أيقونة التطبيق"
+  },
+  "download_file": {
+    "message": "تنزيل الملف"
+  },
+  "push_go_options": {
+    "message": "خيارات Push Go"
+  },
+  "access_token_label": {
+    "message": "رمز الوصول:"
+  },
+  "access_token_placeholder": {
+    "message": "أدخل رمز وصول Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "قم بزيارة"
+  },
+  "get_access_token_tip": {
+    "message": "للحصول على رمز الوصول الخاص بك."
+  },
+  "retrieve_devices_button": {
+    "message": "استرجاع الأجهزة والأشخاص"
+  },
+  "retrieving": {
+    "message": "جارٍ الاسترجاع..."
+  },
+  "retrieved": {
+    "message": "تم الاسترجاع"
+  },
+  "target_devices_label": {
+    "message": "الأجهزة المستهدفة:"
+  },
+  "none_selected_all_devices": {
+    "message": "لم يتم اختيار أي جهاز (إلى جميع الأجهزة)"
+  },
+  "choose_devices_tip": {
+    "message": "اختر الأجهزة لإرسال الإشعارات إليها. اضغط Ctrl/Cmd لتحديد عدة أجهزة."
+  },
+  "only_browser_pushes_label": {
+    "message": "إشعار المتصفح فقط وعرض الإشعارات على المتصفحات"
+  },
+  "hide_browser_pushes_label": {
+    "message": "إخفاء إشعارات الإرسال من المتصفحات"
+  },
+  "auto_open_links_label": {
+    "message": "فتح الروابط تلقائيًا في علامة تبويب جديدة (غير نشط) عند استلام رابط"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "تفعيل نسخ الإشعارات"
+  },
+  "color_mode_label": {
+    "message": "وضع الألوان:"
+  },
+  "follow_system": {
+    "message": "اتباع النظام"
+  },
+  "light": {
+    "message": "فاتح"
+  },
+  "dark": {
+    "message": "داكن"
+  },
+  "save_settings_button": {
+    "message": "حفظ الإعدادات"
+  },
+  "saved": {
+    "message": "تم الحفظ"
+  },
+  "devices_selected": {
+    "message": "أجهزة محددة"
+  },
+  "push_file_image_title": {
+    "message": "إرسال ملف/صورة"
+  },
+  "choose_file_button": {
+    "message": "اختر ملف"
+  },
+  "preparing": {
+    "message": "جارٍ التحضير..."
+  },
+  "processing_file": {
+    "message": "جارٍ معالجة الملف..."
+  },
+  "preparing_upload": {
+    "message": "جارٍ التحضير للرفع..."
+  },
+  "file_image_pushed": {
+    "message": "تم إرسال الملف/الصورة!"
+  },
+  "upload_failed": {
+    "message": "فشل الرفع: "
+  },
+  "uploading_to_server": {
+    "message": "جارٍ الرفع إلى الخادم..."
+  },
+  "creating_push": {
+    "message": "جارٍ إنشاء الإرسال..."
+  },
+  "new_note": {
+    "message": "ملاحظة جديدة"
+  },
+  "new_link": {
+    "message": "رابط جديد"
+  },
+  "file_prefix": {
+    "message": "ملف: "
+  },
+  "new_file": {
+    "message": "ملف جديد"
+  },
+  "new_push": {
+    "message": "إرسال جديد"
+  },
+  "open_button": {
+    "message": "فتح"
+  },
+  "dismiss_button": {
+    "message": "تجاهل"
+  },
+  "unknown_app": {
+    "message": "تطبيق غير معروف"
+  },
+  "new_notification": {
+    "message": "إشعار جديد"
+  },
+  "push_current_page_url": {
+    "message": "إرسال رابط الصفحة الحالية"
+  },
+  "to_selected_devices": {
+    "message": "إلى الأجهزة المحددة"
+  },
+  "choose_device": {
+    "message": "اختر جهاز"
+  },
+  "choose_people": {
+    "message": "اختر أشخاص"
+  },
+  "push_selected_text": {
+    "message": "إرسال النص المحدد"
+  },
+  "push_this_image": {
+    "message": "إرسال هذه الصورة"
+  },
+  "retry_connection_title": {
+    "message": "إعادة محاولة الاتصال"
+  },
+  "open_settings_to_configure": {
+    "message": "افتح الإعدادات لتكوين رمز الوصول"
+  },
+  "no_access_token": {
+    "message": "لم يتم العثور على رمز وصول. يرجى التكوين في الخيارات."
+  },
+  "image": {
+    "message": "صورة"
+  },
+  "file": {
+    "message": "ملف"
+  }
+}

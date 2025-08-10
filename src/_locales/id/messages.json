@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Kirim"
+  },
+  "notification_button": {
+    "message": "Notifikasi"
+  },
+  "reconnect_button": {
+    "message": "Sambungkan Ulang"
+  },
+  "setup_required": {
+    "message": "Pengaturan Diperlukan"
+  },
+  "setup_configure_token": {
+    "message": "Konfigurasikan token akses Pushbullet Anda untuk mulai menggunakan ekstensi."
+  },
+  "open_settings_button": {
+    "message": "Buka Pengaturan"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Ketik atau tempel"
+  },
+  "send_message_title": {
+    "message": "Kirim pesan"
+  },
+  "send_file_title": {
+    "message": "Kirim file/gambar"
+  },
+  "no_messages_yet": {
+    "message": "Belum ada pesan"
+  },
+  "no_notifications_received": {
+    "message": "Tidak ada notifikasi"
+  },
+  "paste_one_file": {
+    "message": "Tempel satu gambar/file sekaligus."
+  },
+  "copy_link": {
+    "message": "Salin tautan"
+  },
+  "copy_message": {
+    "message": "Salin pesan"
+  },
+  "upload_failed_retry": {
+    "message": "Unggahan gagal. Coba lagi."
+  },
+  "uploaded_successfully": {
+    "message": " berhasil diunggah!"
+  },
+  "uploading": {
+    "message": "Mengunggah "
+  },
+  "app_icon_alt": {
+    "message": "Ikon aplikasi"
+  },
+  "download_file": {
+    "message": "Unduh File"
+  },
+  "push_go_options": {
+    "message": "Opsi Push Go"
+  },
+  "access_token_label": {
+    "message": "Token Akses:"
+  },
+  "access_token_placeholder": {
+    "message": "Masukkan token akses Pushbullet Anda"
+  },
+  "visit_link_tip": {
+    "message": "Kunjungi"
+  },
+  "get_access_token_tip": {
+    "message": "untuk mendapatkan token akses Anda."
+  },
+  "retrieve_devices_button": {
+    "message": "Ambil perangkat dan orang"
+  },
+  "retrieving": {
+    "message": "Mengambil..."
+  },
+  "retrieved": {
+    "message": "Diambil"
+  },
+  "target_devices_label": {
+    "message": "Perangkat Tujuan:"
+  },
+  "none_selected_all_devices": {
+    "message": "Tidak ada yang dipilih (ke semua perangkat)"
+  },
+  "choose_devices_tip": {
+    "message": "Pilih perangkat untuk mengirim push. Tahan Ctrl/Cmd untuk memilih beberapa."
+  },
+  "only_browser_pushes_label": {
+    "message": "Hanya beri notifikasi & tampilkan push di browser"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Sembunyikan notifikasi dari push yang dikirim dari browser"
+  },
+  "auto_open_links_label": {
+    "message": "Buka otomatis di tab baru (tidak aktif) saat menerima tautan"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Aktifkan Pencerminan Notifikasi"
+  },
+  "color_mode_label": {
+    "message": "Mode Warna:"
+  },
+  "follow_system": {
+    "message": "Ikuti sistem"
+  },
+  "light": {
+    "message": "Terang"
+  },
+  "dark": {
+    "message": "Gelap"
+  },
+  "save_settings_button": {
+    "message": "Simpan Pengaturan"
+  },
+  "saved": {
+    "message": "Tersimpan"
+  },
+  "devices_selected": {
+    "message": "perangkat dipilih"
+  },
+  "push_file_image_title": {
+    "message": "Kirim File/Gambar"
+  },
+  "choose_file_button": {
+    "message": "Pilih File"
+  },
+  "preparing": {
+    "message": "Menyiapkan..."
+  },
+  "processing_file": {
+    "message": "Memproses file..."
+  },
+  "preparing_upload": {
+    "message": "Menyiapkan unggahan..."
+  },
+  "file_image_pushed": {
+    "message": "File/gambar terkirim!"
+  },
+  "upload_failed": {
+    "message": "Unggahan gagal: "
+  },
+  "uploading_to_server": {
+    "message": "Mengunggah ke server..."
+  },
+  "creating_push": {
+    "message": "Membuat push..."
+  },
+  "new_note": {
+    "message": "Catatan baru"
+  },
+  "new_link": {
+    "message": "Tautan baru"
+  },
+  "file_prefix": {
+    "message": "File: "
+  },
+  "new_file": {
+    "message": "File baru"
+  },
+  "new_push": {
+    "message": "Push baru"
+  },
+  "open_button": {
+    "message": "Buka"
+  },
+  "dismiss_button": {
+    "message": "Tutup"
+  },
+  "unknown_app": {
+    "message": "Aplikasi tidak dikenal"
+  },
+  "new_notification": {
+    "message": "Notifikasi baru"
+  },
+  "push_current_page_url": {
+    "message": "Kirim URL halaman ini"
+  },
+  "to_selected_devices": {
+    "message": "Ke perangkat terpilih"
+  },
+  "choose_device": {
+    "message": "Pilih perangkat"
+  },
+  "choose_people": {
+    "message": "Pilih orang"
+  },
+  "push_selected_text": {
+    "message": "Kirim teks terpilih"
+  },
+  "push_this_image": {
+    "message": "Kirim gambar ini"
+  },
+  "retry_connection_title": {
+    "message": "Coba sambungan ulang"
+  },
+  "open_settings_to_configure": {
+    "message": "Buka pengaturan untuk mengonfigurasi token akses"
+  },
+  "no_access_token": {
+    "message": "Token akses tidak ditemukan. Silakan atur di opsi."
+  },
+  "image": {
+    "message": "gambar"
+  },
+  "file": {
+    "message": "file"
+  }
+}

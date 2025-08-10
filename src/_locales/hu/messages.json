@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Küldés"
+  },
+  "notification_button": {
+    "message": "Értesítés"
+  },
+  "reconnect_button": {
+    "message": "Újrakapcsolódás"
+  },
+  "setup_required": {
+    "message": "Beállítás szükséges"
+  },
+  "setup_configure_token": {
+    "message": "Állítsa be a Pushbullet hozzáférési tokent a bővítmény használatához."
+  },
+  "open_settings_button": {
+    "message": "Beállítások megnyitása"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Írjon vagy illesszen be"
+  },
+  "send_message_title": {
+    "message": "Üzenet küldése"
+  },
+  "send_file_title": {
+    "message": "Fájl/kép küldése"
+  },
+  "no_messages_yet": {
+    "message": "Még nincs üzenet"
+  },
+  "no_notifications_received": {
+    "message": "Nem érkezett értesítés"
+  },
+  "paste_one_file": {
+    "message": "Egyszerre csak egy képet/fájlt illesszen be."
+  },
+  "copy_link": {
+    "message": "Hivatkozás másolása"
+  },
+  "copy_message": {
+    "message": "Üzenet másolása"
+  },
+  "upload_failed_retry": {
+    "message": "Feltöltés sikertelen. Próbálja újra."
+  },
+  "uploaded_successfully": {
+    "message": " sikeresen feltöltve!"
+  },
+  "uploading": {
+    "message": "Feltöltés "
+  },
+  "app_icon_alt": {
+    "message": "Alkalmazás ikon"
+  },
+  "download_file": {
+    "message": "Fájl letöltése"
+  },
+  "push_go_options": {
+    "message": "Push Go beállítások"
+  },
+  "access_token_label": {
+    "message": "Hozzáférési token:"
+  },
+  "access_token_placeholder": {
+    "message": "Adja meg a Pushbullet hozzáférési tokent"
+  },
+  "visit_link_tip": {
+    "message": "Látogassa meg"
+  },
+  "get_access_token_tip": {
+    "message": "a hozzáférési token beszerzéséhez."
+  },
+  "retrieve_devices_button": {
+    "message": "Eszközök és személyek lekérése"
+  },
+  "retrieving": {
+    "message": "Lekérés..."
+  },
+  "retrieved": {
+    "message": "Lekérve"
+  },
+  "target_devices_label": {
+    "message": "Cél eszközök:"
+  },
+  "none_selected_all_devices": {
+    "message": "Nincs kiválasztva (összes eszköz)"
+  },
+  "choose_devices_tip": {
+    "message": "Válassza ki, mely eszközökre küld push üzenetet. Több kiválasztásához tartsa lenyomva a Ctrl/Cmd-t."
+  },
+  "only_browser_pushes_label": {
+    "message": "Csak böngésző push értesítések megjelenítése"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Böngészőből küldött értesítések elrejtése"
+  },
+  "auto_open_links_label": {
+    "message": "Linkek automatikus megnyitása új fülön (inaktív)"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Értesítéstükrözés engedélyezése"
+  },
+  "color_mode_label": {
+    "message": "Színmód:"
+  },
+  "follow_system": {
+    "message": "Rendszer követése"
+  },
+  "light": {
+    "message": "Világos"
+  },
+  "dark": {
+    "message": "Sötét"
+  },
+  "save_settings_button": {
+    "message": "Beállítások mentése"
+  },
+  "saved": {
+    "message": "Mentve"
+  },
+  "devices_selected": {
+    "message": "eszköz kiválasztva"
+  },
+  "push_file_image_title": {
+    "message": "Fájl/kép küldése"
+  },
+  "choose_file_button": {
+    "message": "Fájl kiválasztása"
+  },
+  "preparing": {
+    "message": "Előkészítés..."
+  },
+  "processing_file": {
+    "message": "Fájl feldolgozása..."
+  },
+  "preparing_upload": {
+    "message": "Feltöltés előkészítése..."
+  },
+  "file_image_pushed": {
+    "message": "Fájl/kép elküldve!"
+  },
+  "upload_failed": {
+    "message": "Feltöltés sikertelen: "
+  },
+  "uploading_to_server": {
+    "message": "Feltöltés a szerverre..."
+  },
+  "creating_push": {
+    "message": "Push létrehozása..."
+  },
+  "new_note": {
+    "message": "Új jegyzet"
+  },
+  "new_link": {
+    "message": "Új hivatkozás"
+  },
+  "file_prefix": {
+    "message": "Fájl: "
+  },
+  "new_file": {
+    "message": "Új fájl"
+  },
+  "new_push": {
+    "message": "Új push"
+  },
+  "open_button": {
+    "message": "Megnyitás"
+  },
+  "dismiss_button": {
+    "message": "Bezárás"
+  },
+  "unknown_app": {
+    "message": "Ismeretlen alkalmazás"
+  },
+  "new_notification": {
+    "message": "Új értesítés"
+  },
+  "push_current_page_url": {
+    "message": "Aktuális oldal URL küldése"
+  },
+  "to_selected_devices": {
+    "message": "Kiválasztott eszközökre"
+  },
+  "choose_device": {
+    "message": "Eszköz kiválasztása"
+  },
+  "choose_people": {
+    "message": "Személyek kiválasztása"
+  },
+  "push_selected_text": {
+    "message": "Kijelölt szöveg küldése"
+  },
+  "push_this_image": {
+    "message": "Ezen kép küldése"
+  },
+  "retry_connection_title": {
+    "message": "Kapcsolat újrapróbálása"
+  },
+  "open_settings_to_configure": {
+    "message": "Nyissa meg a beállításokat a hozzáférési token konfigurálásához"
+  },
+  "no_access_token": {
+    "message": "Nincs hozzáférési token. Kérjük, állítsa be az opciókban."
+  },
+  "image": {
+    "message": "kép"
+  },
+  "file": {
+    "message": "fájl"
+  }
+}

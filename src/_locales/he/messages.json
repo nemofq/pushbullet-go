@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "שלח"
+  },
+  "notification_button": {
+    "message": "התראה"
+  },
+  "reconnect_button": {
+    "message": "התחבר מחדש"
+  },
+  "setup_required": {
+    "message": "נדרש הגדרות"
+  },
+  "setup_configure_token": {
+    "message": "הגדר את אסימון הגישה של Pushbullet כדי להתחיל להשתמש בהרחבה."
+  },
+  "open_settings_button": {
+    "message": "פתח הגדרות"
+  },
+  "type_or_paste_placeholder": {
+    "message": "הקלד או הדבק"
+  },
+  "send_message_title": {
+    "message": "שלח הודעה"
+  },
+  "send_file_title": {
+    "message": "שלח קובץ/תמונה"
+  },
+  "no_messages_yet": {
+    "message": "אין הודעות עדיין"
+  },
+  "no_notifications_received": {
+    "message": "לא התקבלו התראות"
+  },
+  "paste_one_file": {
+    "message": "הדבק קובץ/תמונה אחד בכל פעם."
+  },
+  "copy_link": {
+    "message": "העתק קישור"
+  },
+  "copy_message": {
+    "message": "העתק הודעה"
+  },
+  "upload_failed_retry": {
+    "message": "העלאה נכשלה. נסה שוב."
+  },
+  "uploaded_successfully": {
+    "message": " הועלה בהצלחה!"
+  },
+  "uploading": {
+    "message": "מעלה "
+  },
+  "app_icon_alt": {
+    "message": "סמל האפליקציה"
+  },
+  "download_file": {
+    "message": "הורד קובץ"
+  },
+  "push_go_options": {
+    "message": "אפשרויות Push Go"
+  },
+  "access_token_label": {
+    "message": "אסימון גישה:"
+  },
+  "access_token_placeholder": {
+    "message": "הזן את אסימון הגישה של Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "בקר ב"
+  },
+  "get_access_token_tip": {
+    "message": "לקבלת אסימון הגישה שלך."
+  },
+  "retrieve_devices_button": {
+    "message": "שלוף מכשירים ואנשים"
+  },
+  "retrieving": {
+    "message": "טוען..."
+  },
+  "retrieved": {
+    "message": "נטען"
+  },
+  "target_devices_label": {
+    "message": "מכשירי יעד:"
+  },
+  "none_selected_all_devices": {
+    "message": "לא נבחרו (לכל המכשירים)"
+  },
+  "choose_devices_tip": {
+    "message": "בחר את המכשירים לשליחה. החזק Ctrl/Cmd לבחירה מרובה."
+  },
+  "only_browser_pushes_label": {
+    "message": "הצג התראות ודחיפות לדפדפנים בלבד"
+  },
+  "hide_browser_pushes_label": {
+    "message": "הסתר התראות של דחיפות שנשלחו מדפדפנים"
+  },
+  "auto_open_links_label": {
+    "message": "פתח אוטומטית בלשונית חדשה (לא פעיל) בעת קבלת קישור"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "אפשר שיקוף התראות"
+  },
+  "color_mode_label": {
+    "message": "מצב צבע:"
+  },
+  "follow_system": {
+    "message": "כפי מערכת"
+  },
+  "light": {
+    "message": "בהיר"
+  },
+  "dark": {
+    "message": "כהה"
+  },
+  "save_settings_button": {
+    "message": "שמור הגדרות"
+  },
+  "saved": {
+    "message": "נשמר"
+  },
+  "devices_selected": {
+    "message": "מכשירים נבחרו"
+  },
+  "push_file_image_title": {
+    "message": "שלח קובץ/תמונה"
+  },
+  "choose_file_button": {
+    "message": "בחר קובץ"
+  },
+  "preparing": {
+    "message": "מכין..."
+  },
+  "processing_file": {
+    "message": "מעבד קובץ..."
+  },
+  "preparing_upload": {
+    "message": "מכין העלאה..."
+  },
+  "file_image_pushed": {
+    "message": "קובץ/תמונה נשלחו!"
+  },
+  "upload_failed": {
+    "message": "העלאה נכשלה: "
+  },
+  "uploading_to_server": {
+    "message": "מעלה לשרת..."
+  },
+  "creating_push": {
+    "message": "יוצר דחיפה..."
+  },
+  "new_note": {
+    "message": "הערה חדשה"
+  },
+  "new_link": {
+    "message": "קישור חדש"
+  },
+  "file_prefix": {
+    "message": "קובץ: "
+  },
+  "new_file": {
+    "message": "קובץ חדש"
+  },
+  "new_push": {
+    "message": "דחיפה חדשה"
+  },
+  "open_button": {
+    "message": "פתח"
+  },
+  "dismiss_button": {
+    "message": "התעלם"
+  },
+  "unknown_app": {
+    "message": "אפליקציה לא ידועה"
+  },
+  "new_notification": {
+    "message": "התראה חדשה"
+  },
+  "push_current_page_url": {
+    "message": "שלח כתובת הדף הנוכחי"
+  },
+  "to_selected_devices": {
+    "message": "למכשירים שנבחרו"
+  },
+  "choose_device": {
+    "message": "בחר מכשיר"
+  },
+  "choose_people": {
+    "message": "בחר אנשים"
+  },
+  "push_selected_text": {
+    "message": "שלח טקסט נבחר"
+  },
+  "push_this_image": {
+    "message": "שלח תמונה זו"
+  },
+  "retry_connection_title": {
+    "message": "נסה חיבור מחדש"
+  },
+  "open_settings_to_configure": {
+    "message": "פתח הגדרות להגדרת אסימון גישה"
+  },
+  "no_access_token": {
+    "message": "לא נמצא אסימון גישה. יש להגדיר באפשרויות."
+  },
+  "image": {
+    "message": "תמונה"
+  },
+  "file": {
+    "message": "קובץ"
+  }
+}

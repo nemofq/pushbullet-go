@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "推送"
+  },
+  "notification_button": {
+    "message": "通知"
+  },
+  "reconnect_button": {
+    "message": "重新连接"
+  },
+  "setup_required": {
+    "message": "需要设置"
+  },
+  "setup_configure_token": {
+    "message": "请配置 Pushbullet 访问令牌以开始使用扩展。"
+  },
+  "open_settings_button": {
+    "message": "打开设置"
+  },
+  "type_or_paste_placeholder": {
+    "message": "输入或粘贴"
+  },
+  "send_message_title": {
+    "message": "发送消息"
+  },
+  "send_file_title": {
+    "message": "发送文件/图片"
+  },
+  "no_messages_yet": {
+    "message": "暂无消息"
+  },
+  "no_notifications_received": {
+    "message": "未收到通知"
+  },
+  "paste_one_file": {
+    "message": "一次粘贴一张图片/文件。"
+  },
+  "copy_link": {
+    "message": "复制链接"
+  },
+  "copy_message": {
+    "message": "复制消息"
+  },
+  "upload_failed_retry": {
+    "message": "上传失败，请重试。"
+  },
+  "uploaded_successfully": {
+    "message": " 上传成功！"
+  },
+  "uploading": {
+    "message": "正在上传 "
+  },
+  "app_icon_alt": {
+    "message": "应用图标"
+  },
+  "download_file": {
+    "message": "下载文件"
+  },
+  "push_go_options": {
+    "message": "Push Go 选项"
+  },
+  "access_token_label": {
+    "message": "访问令牌："
+  },
+  "access_token_placeholder": {
+    "message": "请输入 Pushbullet 访问令牌"
+  },
+  "visit_link_tip": {
+    "message": "访问"
+  },
+  "get_access_token_tip": {
+    "message": "以获取访问令牌。"
+  },
+  "retrieve_devices_button": {
+    "message": "获取设备和联系人"
+  },
+  "retrieving": {
+    "message": "正在获取..."
+  },
+  "retrieved": {
+    "message": "获取完成"
+  },
+  "target_devices_label": {
+    "message": "目标设备："
+  },
+  "none_selected_all_devices": {
+    "message": "未选择（发送到所有设备）"
+  },
+  "choose_devices_tip": {
+    "message": "选择要发送推送的设备。按住 Ctrl/Cmd 可多选。"
+  },
+  "only_browser_pushes_label": {
+    "message": "仅通知并显示发送到浏览器的推送"
+  },
+  "hide_browser_pushes_label": {
+    "message": "隐藏来自浏览器的推送通知"
+  },
+  "auto_open_links_label": {
+    "message": "接收链接时自动在新标签页打开（非激活）"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "启用通知镜像"
+  },
+  "color_mode_label": {
+    "message": "颜色模式："
+  },
+  "follow_system": {
+    "message": "跟随系统"
+  },
+  "light": {
+    "message": "浅色"
+  },
+  "dark": {
+    "message": "深色"
+  },
+  "save_settings_button": {
+    "message": "保存设置"
+  },
+  "saved": {
+    "message": "已保存"
+  },
+  "devices_selected": {
+    "message": "个设备已选"
+  },
+  "push_file_image_title": {
+    "message": "推送文件/图片"
+  },
+  "choose_file_button": {
+    "message": "选择文件"
+  },
+  "preparing": {
+    "message": "准备中..."
+  },
+  "processing_file": {
+    "message": "正在处理文件..."
+  },
+  "preparing_upload": {
+    "message": "准备上传..."
+  },
+  "file_image_pushed": {
+    "message": "文件/图片已推送！"
+  },
+  "upload_failed": {
+    "message": "上传失败："
+  },
+  "uploading_to_server": {
+    "message": "正在上传到服务器..."
+  },
+  "creating_push": {
+    "message": "正在创建推送..."
+  },
+  "new_note": {
+    "message": "新文本"
+  },
+  "new_link": {
+    "message": "新链接"
+  },
+  "file_prefix": {
+    "message": "文件："
+  },
+  "new_file": {
+    "message": "新文件"
+  },
+  "new_push": {
+    "message": "新推送"
+  },
+  "open_button": {
+    "message": "打开"
+  },
+  "dismiss_button": {
+    "message": "清除"
+  },
+  "unknown_app": {
+    "message": "未知应用"
+  },
+  "new_notification": {
+    "message": "新通知"
+  },
+  "push_current_page_url": {
+    "message": "推送当前页面链接"
+  },
+  "to_selected_devices": {
+    "message": "发送到所选设备"
+  },
+  "choose_device": {
+    "message": "选择设备"
+  },
+  "choose_people": {
+    "message": "选择联系人"
+  },
+  "push_selected_text": {
+    "message": "推送选中文本"
+  },
+  "push_this_image": {
+    "message": "推送此图片"
+  },
+  "retry_connection_title": {
+    "message": "重试连接"
+  },
+  "open_settings_to_configure": {
+    "message": "打开设置以配置访问令牌"
+  },
+  "no_access_token": {
+    "message": "未找到访问令牌，请在选项中配置。"
+  },
+  "image": {
+    "message": "图片"
+  },
+  "file": {
+    "message": "文件"
+  }
+}

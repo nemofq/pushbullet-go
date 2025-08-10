@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "プッシュ"
+  },
+  "notification_button": {
+    "message": "通知"
+  },
+  "reconnect_button": {
+    "message": "再接続"
+  },
+  "setup_required": {
+    "message": "設定が必要"
+  },
+  "setup_configure_token": {
+    "message": "拡張機能を使用するには Pushbullet のアクセス トークンを設定してください。"
+  },
+  "open_settings_button": {
+    "message": "設定を開く"
+  },
+  "type_or_paste_placeholder": {
+    "message": "入力または貼り付け"
+  },
+  "send_message_title": {
+    "message": "メッセージ送信"
+  },
+  "send_file_title": {
+    "message": "ファイル/画像送信"
+  },
+  "no_messages_yet": {
+    "message": "まだメッセージがありません"
+  },
+  "no_notifications_received": {
+    "message": "通知はありません"
+  },
+  "paste_one_file": {
+    "message": "一度に 1 つの画像/ファイルを貼り付けてください。"
+  },
+  "copy_link": {
+    "message": "リンクをコピー"
+  },
+  "copy_message": {
+    "message": "メッセージをコピー"
+  },
+  "upload_failed_retry": {
+    "message": "アップロードに失敗しました。再試行してください。"
+  },
+  "uploaded_successfully": {
+    "message": "アップロード成功！"
+  },
+  "uploading": {
+    "message": "アップロード中 "
+  },
+  "app_icon_alt": {
+    "message": "アプリアイコン"
+  },
+  "download_file": {
+    "message": "ファイルをダウンロード"
+  },
+  "push_go_options": {
+    "message": "Push Go オプション"
+  },
+  "access_token_label": {
+    "message": "アクセス トークン:"
+  },
+  "access_token_placeholder": {
+    "message": "Pushbullet アクセス トークンを入力"
+  },
+  "visit_link_tip": {
+    "message": "アクセス"
+  },
+  "get_access_token_tip": {
+    "message": "してアクセス トークンを取得してください。"
+  },
+  "retrieve_devices_button": {
+    "message": "デバイスとユーザーを取得"
+  },
+  "retrieving": {
+    "message": "取得中..."
+  },
+  "retrieved": {
+    "message": "取得完了"
+  },
+  "target_devices_label": {
+    "message": "対象デバイス:"
+  },
+  "none_selected_all_devices": {
+    "message": "未選択（すべてのデバイス）"
+  },
+  "choose_devices_tip": {
+    "message": "プッシュを送信するデバイスを選択（複数選択は Ctrl/Cmd）"
+  },
+  "only_browser_pushes_label": {
+    "message": "ブラウザへのプッシュのみ通知・表示"
+  },
+  "hide_browser_pushes_label": {
+    "message": "ブラウザからのプッシュ通知を非表示"
+  },
+  "auto_open_links_label": {
+    "message": "リンク受信時に新しいタブで自動表示（非アクティブ）"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "通知ミラーリングを有効化"
+  },
+  "color_mode_label": {
+    "message": "カラーモード:"
+  },
+  "follow_system": {
+    "message": "システムに従う"
+  },
+  "light": {
+    "message": "ライト"
+  },
+  "dark": {
+    "message": "ダーク"
+  },
+  "save_settings_button": {
+    "message": "設定を保存"
+  },
+  "saved": {
+    "message": "保存しました"
+  },
+  "devices_selected": {
+    "message": "台のデバイスを選択"
+  },
+  "push_file_image_title": {
+    "message": "ファイル/画像をプッシュ"
+  },
+  "choose_file_button": {
+    "message": "ファイルを選択"
+  },
+  "preparing": {
+    "message": "準備中..."
+  },
+  "processing_file": {
+    "message": "ファイルを処理中..."
+  },
+  "preparing_upload": {
+    "message": "アップロードを準備中..."
+  },
+  "file_image_pushed": {
+    "message": "ファイル/画像を送信しました！"
+  },
+  "upload_failed": {
+    "message": "アップロード失敗: "
+  },
+  "uploading_to_server": {
+    "message": "サーバーにアップロード中..."
+  },
+  "creating_push": {
+    "message": "プッシュ作成中..."
+  },
+  "new_note": {
+    "message": "新しいメモ"
+  },
+  "new_link": {
+    "message": "新しいリンク"
+  },
+  "file_prefix": {
+    "message": "ファイル: "
+  },
+  "new_file": {
+    "message": "新しいファイル"
+  },
+  "new_push": {
+    "message": "新しいプッシュ"
+  },
+  "open_button": {
+    "message": "開く"
+  },
+  "dismiss_button": {
+    "message": "閉じる"
+  },
+  "unknown_app": {
+    "message": "不明なアプリ"
+  },
+  "new_notification": {
+    "message": "新しい通知"
+  },
+  "push_current_page_url": {
+    "message": "現在のページURLをプッシュ"
+  },
+  "to_selected_devices": {
+    "message": "選択したデバイスへ"
+  },
+  "choose_device": {
+    "message": "デバイスを選択"
+  },
+  "choose_people": {
+    "message": "ユーザーを選択"
+  },
+  "push_selected_text": {
+    "message": "選択したテキストをプッシュ"
+  },
+  "push_this_image": {
+    "message": "この画像をプッシュ"
+  },
+  "retry_connection_title": {
+    "message": "接続を再試行"
+  },
+  "open_settings_to_configure": {
+    "message": "設定を開いてアクセス トークンを設定"
+  },
+  "no_access_token": {
+    "message": "アクセス トークンが見つかりません。オプションで設定してください。"
+  },
+  "image": {
+    "message": "画像"
+  },
+  "file": {
+    "message": "ファイル"
+  }
+}

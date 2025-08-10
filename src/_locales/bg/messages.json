@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Изпрати"
+  },
+  "notification_button": {
+    "message": "Известие"
+  },
+  "reconnect_button": {
+    "message": "Повторно свързване"
+  },
+  "setup_required": {
+    "message": "Необходимо е настройване"
+  },
+  "setup_configure_token": {
+    "message": "Конфигурирайте своя Pushbullet токен за достъп, за да започнете да използвате разширението."
+  },
+  "open_settings_button": {
+    "message": "Отвори настройки"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Въведете или поставете"
+  },
+  "send_message_title": {
+    "message": "Изпрати съобщение"
+  },
+  "send_file_title": {
+    "message": "Изпрати файл/изображение"
+  },
+  "no_messages_yet": {
+    "message": "Все още няма съобщения"
+  },
+  "no_notifications_received": {
+    "message": "Няма получени известия"
+  },
+  "paste_one_file": {
+    "message": "Поставете само един файл/изображение наведнъж."
+  },
+  "copy_link": {
+    "message": "Копирай линк"
+  },
+  "copy_message": {
+    "message": "Копирай съобщение"
+  },
+  "upload_failed_retry": {
+    "message": "Качването неуспешно. Опитайте отново."
+  },
+  "uploaded_successfully": {
+    "message": " качено успешно!"
+  },
+  "uploading": {
+    "message": "Качване "
+  },
+  "app_icon_alt": {
+    "message": "Икона на приложението"
+  },
+  "download_file": {
+    "message": "Изтегли файл"
+  },
+  "push_go_options": {
+    "message": "Настройки на Push Go"
+  },
+  "access_token_label": {
+    "message": "Токен за достъп:"
+  },
+  "access_token_placeholder": {
+    "message": "Въведете своя Pushbullet токен за достъп"
+  },
+  "visit_link_tip": {
+    "message": "Посетете"
+  },
+  "get_access_token_tip": {
+    "message": "за да получите своя токен за достъп."
+  },
+  "retrieve_devices_button": {
+    "message": "Извлечи устройства и хора"
+  },
+  "retrieving": {
+    "message": "Извличане..."
+  },
+  "retrieved": {
+    "message": "Извлечено"
+  },
+  "target_devices_label": {
+    "message": "Целеви устройства:"
+  },
+  "none_selected_all_devices": {
+    "message": "Няма избрани (до всички устройства)"
+  },
+  "choose_devices_tip": {
+    "message": "Изберете устройства за изпращане. Задръжте Ctrl/Cmd за избор на няколко."
+  },
+  "only_browser_pushes_label": {
+    "message": "Известия само към браузъри"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Скрий известията от браузъри"
+  },
+  "auto_open_links_label": {
+    "message": "Автоматично отваряне в нов раздел (неактивно) при получаване на линк"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Активирай отразяване на известия"
+  },
+  "color_mode_label": {
+    "message": "Цветови режим:"
+  },
+  "follow_system": {
+    "message": "Следвай системата"
+  },
+  "light": {
+    "message": "Светъл"
+  },
+  "dark": {
+    "message": "Тъмен"
+  },
+  "save_settings_button": {
+    "message": "Запази настройките"
+  },
+  "saved": {
+    "message": "Запазено"
+  },
+  "devices_selected": {
+    "message": "избрани устройства"
+  },
+  "push_file_image_title": {
+    "message": "Изпрати файл/изображение"
+  },
+  "choose_file_button": {
+    "message": "Избери файл"
+  },
+  "preparing": {
+    "message": "Подготовка..."
+  },
+  "processing_file": {
+    "message": "Обработване на файл..."
+  },
+  "preparing_upload": {
+    "message": "Подготовка за качване..."
+  },
+  "file_image_pushed": {
+    "message": "Файл/изображение изпратено!"
+  },
+  "upload_failed": {
+    "message": "Неуспешно качване: "
+  },
+  "uploading_to_server": {
+    "message": "Качване на сървър..."
+  },
+  "creating_push": {
+    "message": "Създаване на изпращане..."
+  },
+  "new_note": {
+    "message": "Нова бележка"
+  },
+  "new_link": {
+    "message": "Нов линк"
+  },
+  "file_prefix": {
+    "message": "Файл: "
+  },
+  "new_file": {
+    "message": "Нов файл"
+  },
+  "new_push": {
+    "message": "Ново изпращане"
+  },
+  "open_button": {
+    "message": "Отвори"
+  },
+  "dismiss_button": {
+    "message": "Отхвърли"
+  },
+  "unknown_app": {
+    "message": "Непознато приложение"
+  },
+  "new_notification": {
+    "message": "Ново известие"
+  },
+  "push_current_page_url": {
+    "message": "Изпрати URL на текущата страница"
+  },
+  "to_selected_devices": {
+    "message": "До избрани устройства"
+  },
+  "choose_device": {
+    "message": "Избери устройство"
+  },
+  "choose_people": {
+    "message": "Избери хора"
+  },
+  "push_selected_text": {
+    "message": "Изпрати избрания текст"
+  },
+  "push_this_image": {
+    "message": "Изпрати това изображение"
+  },
+  "retry_connection_title": {
+    "message": "Повтори свързването"
+  },
+  "open_settings_to_configure": {
+    "message": "Отворете настройките, за да конфигурирате токена за достъп"
+  },
+  "no_access_token": {
+    "message": "Няма намерен токен за достъп. Конфигурирайте в настройките."
+  },
+  "image": {
+    "message": "изображение"
+  },
+  "file": {
+    "message": "файл"
+  }
+}

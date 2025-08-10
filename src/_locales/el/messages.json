@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Προώθηση"
+  },
+  "notification_button": {
+    "message": "Ειδοποίηση"
+  },
+  "reconnect_button": {
+    "message": "Επανασύνδεση"
+  },
+  "setup_required": {
+    "message": "Απαιτείται ρύθμιση"
+  },
+  "setup_configure_token": {
+    "message": "Ρυθμίστε το διακριτικό πρόσβασης Pushbullet για να αρχίσετε να χρησιμοποιείτε την επέκταση."
+  },
+  "open_settings_button": {
+    "message": "Άνοιγμα ρυθμίσεων"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Πληκτρολογήστε ή επικολλήστε"
+  },
+  "send_message_title": {
+    "message": "Αποστολή μηνύματος"
+  },
+  "send_file_title": {
+    "message": "Αποστολή αρχείου/εικόνας"
+  },
+  "no_messages_yet": {
+    "message": "Δεν υπάρχουν μηνύματα"
+  },
+  "no_notifications_received": {
+    "message": "Δεν ελήφθησαν ειδοποιήσεις"
+  },
+  "paste_one_file": {
+    "message": "Επικολλήστε ένα αρχείο/εικόνα κάθε φορά."
+  },
+  "copy_link": {
+    "message": "Αντιγραφή συνδέσμου"
+  },
+  "copy_message": {
+    "message": "Αντιγραφή μηνύματος"
+  },
+  "upload_failed_retry": {
+    "message": "Η μεταφόρτωση απέτυχε. Δοκιμάστε ξανά."
+  },
+  "uploaded_successfully": {
+    "message": " μεταφορτώθηκε με επιτυχία!"
+  },
+  "uploading": {
+    "message": "Μεταφόρτωση "
+  },
+  "app_icon_alt": {
+    "message": "Εικονίδιο εφαρμογής"
+  },
+  "download_file": {
+    "message": "Λήψη αρχείου"
+  },
+  "push_go_options": {
+    "message": "Επιλογές Push Go"
+  },
+  "access_token_label": {
+    "message": "Διακριτικό πρόσβασης:"
+  },
+  "access_token_placeholder": {
+    "message": "Εισάγετε το διακριτικό πρόσβασης Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Επισκεφθείτε"
+  },
+  "get_access_token_tip": {
+    "message": "για να λάβετε το διακριτικό πρόσβασης."
+  },
+  "retrieve_devices_button": {
+    "message": "Ανάκτηση συσκευών και επαφών"
+  },
+  "retrieving": {
+    "message": "Γίνεται ανάκτηση..."
+  },
+  "retrieved": {
+    "message": "Ανακτήθηκε"
+  },
+  "target_devices_label": {
+    "message": "Συσκευές-στόχοι:"
+  },
+  "none_selected_all_devices": {
+    "message": "Καμία επιλογή (σε όλες τις συσκευές)"
+  },
+  "choose_devices_tip": {
+    "message": "Επιλέξτε σε ποιες συσκευές θα σταλούν προωθήσεις. Κρατήστε Ctrl/Cmd για πολλαπλή επιλογή."
+  },
+  "only_browser_pushes_label": {
+    "message": "Μόνο ειδοποίηση και εμφάνιση προωθήσεων σε προγράμματα περιήγησης"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Απόκρυψη ειδοποιήσεων για προωθήσεις από προγράμματα περιήγησης"
+  },
+  "auto_open_links_label": {
+    "message": "Αυτόματο άνοιγμα σε νέα καρτέλα (ανενεργό) κατά την παραλαβή συνδέσμου"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Ενεργοποίηση κατοπτρισμού ειδοποιήσεων"
+  },
+  "color_mode_label": {
+    "message": "Λειτουργία χρώματος:"
+  },
+  "follow_system": {
+    "message": "Σύμφωνα με το σύστημα"
+  },
+  "light": {
+    "message": "Φωτεινό"
+  },
+  "dark": {
+    "message": "Σκοτεινό"
+  },
+  "save_settings_button": {
+    "message": "Αποθήκευση ρυθμίσεων"
+  },
+  "saved": {
+    "message": "Αποθηκεύτηκε"
+  },
+  "devices_selected": {
+    "message": "συσκευές επιλέχθηκαν"
+  },
+  "push_file_image_title": {
+    "message": "Προώθηση αρχείου/εικόνας"
+  },
+  "choose_file_button": {
+    "message": "Επιλογή αρχείου"
+  },
+  "preparing": {
+    "message": "Προετοιμασία..."
+  },
+  "processing_file": {
+    "message": "Επεξεργασία αρχείου..."
+  },
+  "preparing_upload": {
+    "message": "Προετοιμασία μεταφόρτωσης..."
+  },
+  "file_image_pushed": {
+    "message": "Το αρχείο/εικόνα προωθήθηκε!"
+  },
+  "upload_failed": {
+    "message": "Η μεταφόρτωση απέτυχε: "
+  },
+  "uploading_to_server": {
+    "message": "Μεταφόρτωση στον διακομιστή..."
+  },
+  "creating_push": {
+    "message": "Δημιουργία προώθησης..."
+  },
+  "new_note": {
+    "message": "Νέο σημείωμα"
+  },
+  "new_link": {
+    "message": "Νέος σύνδεσμος"
+  },
+  "file_prefix": {
+    "message": "Αρχείο: "
+  },
+  "new_file": {
+    "message": "Νέο αρχείο"
+  },
+  "new_push": {
+    "message": "Νέα προώθηση"
+  },
+  "open_button": {
+    "message": "Άνοιγμα"
+  },
+  "dismiss_button": {
+    "message": "Απόρριψη"
+  },
+  "unknown_app": {
+    "message": "Άγνωστη εφαρμογή"
+  },
+  "new_notification": {
+    "message": "Νέα ειδοποίηση"
+  },
+  "push_current_page_url": {
+    "message": "Προώθηση URL τρέχουσας σελίδας"
+  },
+  "to_selected_devices": {
+    "message": "Σε επιλεγμένες συσκευές"
+  },
+  "choose_device": {
+    "message": "Επιλογή συσκευής"
+  },
+  "choose_people": {
+    "message": "Επιλογή επαφών"
+  },
+  "push_selected_text": {
+    "message": "Προώθηση επιλεγμένου κειμένου"
+  },
+  "push_this_image": {
+    "message": "Προώθηση αυτής της εικόνας"
+  },
+  "retry_connection_title": {
+    "message": "Επανάληψη σύνδεσης"
+  },
+  "open_settings_to_configure": {
+    "message": "Ανοίξτε τις ρυθμίσεις για να διαμορφώσετε το διακριτικό πρόσβασης"
+  },
+  "no_access_token": {
+    "message": "Δεν βρέθηκε διακριτικό πρόσβασης. Ρυθμίστε το στις επιλογές."
+  },
+  "image": {
+    "message": "εικόνα"
+  },
+  "file": {
+    "message": "αρχείο"
+  }
+}

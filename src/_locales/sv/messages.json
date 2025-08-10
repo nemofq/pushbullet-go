@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Skicka"
+  },
+  "notification_button": {
+    "message": "Avisering"
+  },
+  "reconnect_button": {
+    "message": "Återanslut"
+  },
+  "setup_required": {
+    "message": "Inställning krävs"
+  },
+  "setup_configure_token": {
+    "message": "Konfigurera din Pushbullet-åtkomsttoken för att börja använda tillägget."
+  },
+  "open_settings_button": {
+    "message": "Öppna inställningar"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Skriv eller klistra in"
+  },
+  "send_message_title": {
+    "message": "Skicka meddelande"
+  },
+  "send_file_title": {
+    "message": "Skicka fil/bild"
+  },
+  "no_messages_yet": {
+    "message": "Inga meddelanden ännu"
+  },
+  "no_notifications_received": {
+    "message": "Inga aviseringar mottagna"
+  },
+  "paste_one_file": {
+    "message": "Klistra in en bild/fil åt gången."
+  },
+  "copy_link": {
+    "message": "Kopiera länk"
+  },
+  "copy_message": {
+    "message": "Kopiera meddelande"
+  },
+  "upload_failed_retry": {
+    "message": "Uppladdning misslyckades. Försök igen."
+  },
+  "uploaded_successfully": {
+    "message": " uppladdad!"
+  },
+  "uploading": {
+    "message": "Laddar upp "
+  },
+  "app_icon_alt": {
+    "message": "Appikon"
+  },
+  "download_file": {
+    "message": "Ladda ner fil"
+  },
+  "push_go_options": {
+    "message": "Push Go-alternativ"
+  },
+  "access_token_label": {
+    "message": "Åtkomsttoken:"
+  },
+  "access_token_placeholder": {
+    "message": "Ange din Pushbullet-åtkomsttoken"
+  },
+  "visit_link_tip": {
+    "message": "Besök"
+  },
+  "get_access_token_tip": {
+    "message": "för att hämta din åtkomsttoken."
+  },
+  "retrieve_devices_button": {
+    "message": "Hämta enheter och personer"
+  },
+  "retrieving": {
+    "message": "Hämtar..."
+  },
+  "retrieved": {
+    "message": "Hämtat"
+  },
+  "target_devices_label": {
+    "message": "Målenheter:"
+  },
+  "none_selected_all_devices": {
+    "message": "Ingen vald (till alla enheter)"
+  },
+  "choose_devices_tip": {
+    "message": "Välj vilka enheter att skicka pushar till. Håll Ctrl/Cmd för att välja flera."
+  },
+  "only_browser_pushes_label": {
+    "message": "Visa endast pushar till webbläsare"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Dölj pushaviseringar från webbläsare"
+  },
+  "auto_open_links_label": {
+    "message": "Öppna länkar automatiskt i ny flik (inaktiv)"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Aktivera aviseringsspegel"
+  },
+  "color_mode_label": {
+    "message": "Färgläge:"
+  },
+  "follow_system": {
+    "message": "Följ system"
+  },
+  "light": {
+    "message": "Ljust"
+  },
+  "dark": {
+    "message": "Mörkt"
+  },
+  "save_settings_button": {
+    "message": "Spara inställningar"
+  },
+  "saved": {
+    "message": "Sparat"
+  },
+  "devices_selected": {
+    "message": "enheter valda"
+  },
+  "push_file_image_title": {
+    "message": "Skicka fil/bild"
+  },
+  "choose_file_button": {
+    "message": "Välj fil"
+  },
+  "preparing": {
+    "message": "Förbereder..."
+  },
+  "processing_file": {
+    "message": "Bearbetar fil..."
+  },
+  "preparing_upload": {
+    "message": "Förbereder uppladdning..."
+  },
+  "file_image_pushed": {
+    "message": "Fil/bild skickad!"
+  },
+  "upload_failed": {
+    "message": "Uppladdning misslyckades: "
+  },
+  "uploading_to_server": {
+    "message": "Laddar upp till server..."
+  },
+  "creating_push": {
+    "message": "Skapar push..."
+  },
+  "new_note": {
+    "message": "Nytt anteckning"
+  },
+  "new_link": {
+    "message": "Ny länk"
+  },
+  "file_prefix": {
+    "message": "Fil: "
+  },
+  "new_file": {
+    "message": "Ny fil"
+  },
+  "new_push": {
+    "message": "Ny push"
+  },
+  "open_button": {
+    "message": "Öppna"
+  },
+  "dismiss_button": {
+    "message": "Avvisa"
+  },
+  "unknown_app": {
+    "message": "Okänd app"
+  },
+  "new_notification": {
+    "message": "Ny avisering"
+  },
+  "push_current_page_url": {
+    "message": "Skicka aktuell sidans URL"
+  },
+  "to_selected_devices": {
+    "message": "Till valda enheter"
+  },
+  "choose_device": {
+    "message": "Välj enhet"
+  },
+  "choose_people": {
+    "message": "Välj personer"
+  },
+  "push_selected_text": {
+    "message": "Skicka markerad text"
+  },
+  "push_this_image": {
+    "message": "Skicka denna bild"
+  },
+  "retry_connection_title": {
+    "message": "Försök att ansluta igen"
+  },
+  "open_settings_to_configure": {
+    "message": "Öppna inställningar för att konfigurera åtkomsttoken"
+  },
+  "no_access_token": {
+    "message": "Ingen åtkomsttoken hittades. Konfigurera i alternativen."
+  },
+  "image": {
+    "message": "bild"
+  },
+  "file": {
+    "message": "fil"
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "푸시"
+  },
+  "notification_button": {
+    "message": "알림"
+  },
+  "reconnect_button": {
+    "message": "재연결"
+  },
+  "setup_required": {
+    "message": "설정 필요"
+  },
+  "setup_configure_token": {
+    "message": "확장 프로그램을 사용하려면 Pushbullet 액세스 토큰을 설정하세요."
+  },
+  "open_settings_button": {
+    "message": "설정 열기"
+  },
+  "type_or_paste_placeholder": {
+    "message": "입력 또는 붙여넣기"
+  },
+  "send_message_title": {
+    "message": "메시지 보내기"
+  },
+  "send_file_title": {
+    "message": "파일/이미지 보내기"
+  },
+  "no_messages_yet": {
+    "message": "아직 메시지가 없습니다"
+  },
+  "no_notifications_received": {
+    "message": "받은 알림이 없습니다"
+  },
+  "paste_one_file": {
+    "message": "한 번에 이미지/파일 하나만 붙여넣기."
+  },
+  "copy_link": {
+    "message": "링크 복사"
+  },
+  "copy_message": {
+    "message": "메시지 복사"
+  },
+  "upload_failed_retry": {
+    "message": "업로드 실패. 다시 시도하세요."
+  },
+  "uploaded_successfully": {
+    "message": " 업로드 완료!"
+  },
+  "uploading": {
+    "message": "업로드 중 "
+  },
+  "app_icon_alt": {
+    "message": "앱 아이콘"
+  },
+  "download_file": {
+    "message": "파일 다운로드"
+  },
+  "push_go_options": {
+    "message": "Push Go 옵션"
+  },
+  "access_token_label": {
+    "message": "액세스 토큰:"
+  },
+  "access_token_placeholder": {
+    "message": "Pushbullet 액세스 토큰 입력"
+  },
+  "visit_link_tip": {
+    "message": "방문"
+  },
+  "get_access_token_tip": {
+    "message": "액세스 토큰 받기."
+  },
+  "retrieve_devices_button": {
+    "message": "디바이스 및 사용자 가져오기"
+  },
+  "retrieving": {
+    "message": "가져오는 중..."
+  },
+  "retrieved": {
+    "message": "가져옴"
+  },
+  "target_devices_label": {
+    "message": "대상 디바이스:"
+  },
+  "none_selected_all_devices": {
+    "message": "선택 없음 (모든 디바이스로)"
+  },
+  "choose_devices_tip": {
+    "message": "푸시를 보낼 디바이스를 선택하세요. 여러 개 선택하려면 Ctrl/Cmd 키를 누르세요."
+  },
+  "only_browser_pushes_label": {
+    "message": "브라우저로만 알림 및 푸시 표시"
+  },
+  "hide_browser_pushes_label": {
+    "message": "브라우저에서 보낸 푸시 알림 숨기기"
+  },
+  "auto_open_links_label": {
+    "message": "링크 수신 시 새 탭에서 자동 열기 (비활성)"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "알림 미러링 활성화"
+  },
+  "color_mode_label": {
+    "message": "색상 모드:"
+  },
+  "follow_system": {
+    "message": "시스템 따르기"
+  },
+  "light": {
+    "message": "라이트"
+  },
+  "dark": {
+    "message": "다크"
+  },
+  "save_settings_button": {
+    "message": "설정 저장"
+  },
+  "saved": {
+    "message": "저장됨"
+  },
+  "devices_selected": {
+    "message": "개 디바이스 선택됨"
+  },
+  "push_file_image_title": {
+    "message": "파일/이미지 푸시"
+  },
+  "choose_file_button": {
+    "message": "파일 선택"
+  },
+  "preparing": {
+    "message": "준비 중..."
+  },
+  "processing_file": {
+    "message": "파일 처리 중..."
+  },
+  "preparing_upload": {
+    "message": "업로드 준비 중..."
+  },
+  "file_image_pushed": {
+    "message": "파일/이미지 푸시 완료!"
+  },
+  "upload_failed": {
+    "message": "업로드 실패: "
+  },
+  "uploading_to_server": {
+    "message": "서버로 업로드 중..."
+  },
+  "creating_push": {
+    "message": "푸시 생성 중..."
+  },
+  "new_note": {
+    "message": "새 노트"
+  },
+  "new_link": {
+    "message": "새 링크"
+  },
+  "file_prefix": {
+    "message": "파일: "
+  },
+  "new_file": {
+    "message": "새 파일"
+  },
+  "new_push": {
+    "message": "새 푸시"
+  },
+  "open_button": {
+    "message": "열기"
+  },
+  "dismiss_button": {
+    "message": "닫기"
+  },
+  "unknown_app": {
+    "message": "알 수 없는 앱"
+  },
+  "new_notification": {
+    "message": "새 알림"
+  },
+  "push_current_page_url": {
+    "message": "현재 페이지 URL 푸시"
+  },
+  "to_selected_devices": {
+    "message": "선택한 디바이스로"
+  },
+  "choose_device": {
+    "message": "디바이스 선택"
+  },
+  "choose_people": {
+    "message": "사용자 선택"
+  },
+  "push_selected_text": {
+    "message": "선택한 텍스트 푸시"
+  },
+  "push_this_image": {
+    "message": "이 이미지 푸시"
+  },
+  "retry_connection_title": {
+    "message": "연결 재시도"
+  },
+  "open_settings_to_configure": {
+    "message": "액세스 토큰 설정을 위해 설정 열기"
+  },
+  "no_access_token": {
+    "message": "액세스 토큰이 없습니다. 옵션에서 설정하세요."
+  },
+  "image": {
+    "message": "이미지"
+  },
+  "file": {
+    "message": "파일"
+  }
+}

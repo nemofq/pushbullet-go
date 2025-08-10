@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Отправить"
+  },
+  "notification_button": {
+    "message": "Уведомление"
+  },
+  "reconnect_button": {
+    "message": "Повторное подключение"
+  },
+  "setup_required": {
+    "message": "Требуется настройка"
+  },
+  "setup_configure_token": {
+    "message": "Настройте свой токен доступа Pushbullet, чтобы начать использовать расширение."
+  },
+  "open_settings_button": {
+    "message": "Открыть настройки"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Введите или вставьте"
+  },
+  "send_message_title": {
+    "message": "Отправить сообщение"
+  },
+  "send_file_title": {
+    "message": "Отправить файл/изображение"
+  },
+  "no_messages_yet": {
+    "message": "Сообщений пока нет"
+  },
+  "no_notifications_received": {
+    "message": "Уведомлений не получено"
+  },
+  "paste_one_file": {
+    "message": "Вставляйте только один файл/изображение за раз."
+  },
+  "copy_link": {
+    "message": "Копировать ссылку"
+  },
+  "copy_message": {
+    "message": "Копировать сообщение"
+  },
+  "upload_failed_retry": {
+    "message": "Загрузка не удалась. Попробуйте снова."
+  },
+  "uploaded_successfully": {
+    "message": " успешно загружено!"
+  },
+  "uploading": {
+    "message": "Загрузка "
+  },
+  "app_icon_alt": {
+    "message": "Значок приложения"
+  },
+  "download_file": {
+    "message": "Скачать файл"
+  },
+  "push_go_options": {
+    "message": "Настройки Push Go"
+  },
+  "access_token_label": {
+    "message": "Токен доступа:"
+  },
+  "access_token_placeholder": {
+    "message": "Введите свой токен доступа Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Перейдите"
+  },
+  "get_access_token_tip": {
+    "message": "чтобы получить свой токен доступа."
+  },
+  "retrieve_devices_button": {
+    "message": "Получить устройства и людей"
+  },
+  "retrieving": {
+    "message": "Получение..."
+  },
+  "retrieved": {
+    "message": "Получено"
+  },
+  "target_devices_label": {
+    "message": "Целевые устройства:"
+  },
+  "none_selected_all_devices": {
+    "message": "Не выбрано (для всех устройств)"
+  },
+  "choose_devices_tip": {
+    "message": "Выберите устройства для отправки. Удерживайте Ctrl/Cmd для выбора нескольких."
+  },
+  "only_browser_pushes_label": {
+    "message": "Уведомлять только браузеры"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Скрывать уведомления, отправленные из браузеров"
+  },
+  "auto_open_links_label": {
+    "message": "Автооткрытие в новой вкладке (неактивно) при получении ссылки"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Включить зеркалирование уведомлений"
+  },
+  "color_mode_label": {
+    "message": "Цветовой режим:"
+  },
+  "follow_system": {
+    "message": "Как в системе"
+  },
+  "light": {
+    "message": "Светлый"
+  },
+  "dark": {
+    "message": "Тёмный"
+  },
+  "save_settings_button": {
+    "message": "Сохранить настройки"
+  },
+  "saved": {
+    "message": "Сохранено"
+  },
+  "devices_selected": {
+    "message": "устройства выбраны"
+  },
+  "push_file_image_title": {
+    "message": "Отправить файл/изображение"
+  },
+  "choose_file_button": {
+    "message": "Выбрать файл"
+  },
+  "preparing": {
+    "message": "Подготовка..."
+  },
+  "processing_file": {
+    "message": "Обработка файла..."
+  },
+  "preparing_upload": {
+    "message": "Подготовка к загрузке..."
+  },
+  "file_image_pushed": {
+    "message": "Файл/изображение отправлено!"
+  },
+  "upload_failed": {
+    "message": "Ошибка загрузки: "
+  },
+  "uploading_to_server": {
+    "message": "Загрузка на сервер..."
+  },
+  "creating_push": {
+    "message": "Создание отправки..."
+  },
+  "new_note": {
+    "message": "Новая заметка"
+  },
+  "new_link": {
+    "message": "Новая ссылка"
+  },
+  "file_prefix": {
+    "message": "Файл: "
+  },
+  "new_file": {
+    "message": "Новый файл"
+  },
+  "new_push": {
+    "message": "Новая отправка"
+  },
+  "open_button": {
+    "message": "Открыть"
+  },
+  "dismiss_button": {
+    "message": "Закрыть"
+  },
+  "unknown_app": {
+    "message": "Неизвестное приложение"
+  },
+  "new_notification": {
+    "message": "Новое уведомление"
+  },
+  "push_current_page_url": {
+    "message": "Отправить URL текущей страницы"
+  },
+  "to_selected_devices": {
+    "message": "На выбранные устройства"
+  },
+  "choose_device": {
+    "message": "Выберите устройство"
+  },
+  "choose_people": {
+    "message": "Выберите людей"
+  },
+  "push_selected_text": {
+    "message": "Отправить выделенный текст"
+  },
+  "push_this_image": {
+    "message": "Отправить это изображение"
+  },
+  "retry_connection_title": {
+    "message": "Повторить подключение"
+  },
+  "open_settings_to_configure": {
+    "message": "Откройте настройки для конфигурации токена доступа"
+  },
+  "no_access_token": {
+    "message": "Токен доступа не найден. Настройте его в параметрах."
+  },
+  "image": {
+    "message": "изображение"
+  },
+  "file": {
+    "message": "файл"
+  }
+}

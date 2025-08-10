@@ -238,60 +238,60 @@
 </head>
 <body>
   <div class="container">
-    <h1>Push Go Options</h1>
+    <h1 data-i18n="push_go_options">Push Go Options</h1>
     <div class="form-group">
-      <label for="accessToken">Access Token:</label>
-      <input type="text" id="accessToken" placeholder="Enter your Pushbullet access token">
+      <label for="accessToken" data-i18n="access_token_label">Access Token:</label>
+      <input type="text" id="accessToken" data-i18n-placeholder="access_token_placeholder" placeholder="Enter your Pushbullet access token">
       <div class="tip">
-        Visit <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> to get your access token.
+        <span data-i18n="visit_link_tip">Visit</span> <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> <span data-i18n="get_access_token_tip">to get your access token.</span>
       </div>
-      <button id="retrieveDevices" class="retrieve-button" disabled>Retrieve devices and people</button>
+      <button id="retrieveDevices" class="retrieve-button" disabled data-i18n="retrieve_devices_button">Retrieve devices and people</button>
     </div>
     <div class="form-group">
-      <label for="remoteDeviceId">Target Devices: <span id="deviceSelectionStatus" class="selection-status">None selected (to all devices)</span></label>
+      <label for="remoteDeviceId" data-i18n="target_devices_label">Target Devices: <span id="deviceSelectionStatus" class="selection-status">None selected (to all devices)</span></label>
       <select id="remoteDeviceId" multiple>
       </select>
-      <div class="tip">
+      <div class="tip" data-i18n="choose_devices_tip">
         Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
       </div>
     </div>
     <div class="toggle-container">
-      <label class="toggle-label">Only notify and show pushes to browsers</label>
+      <label class="toggle-label" data-i18n="only_browser_pushes_label">Only notify and show pushes to browsers</label>
       <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
       <div class="toggle-switch" id="onlyBrowserPushesToggle">
         <div class="toggle-slider"></div>
       </div>
     </div>
     <div class="toggle-container">
-      <label class="toggle-label">Hide notification of pushes sent from browsers</label>
+      <label class="toggle-label" data-i18n="hide_browser_pushes_label">Hide notification of pushes sent from browsers</label>
       <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
       <div class="toggle-switch" id="hideBrowserPushesToggle">
         <div class="toggle-slider"></div>
       </div>
     </div>
     <div class="toggle-container">
-      <label class="toggle-label">Auto-open in new tab (inactive) when receiving a link</label>
+      <label class="toggle-label" data-i18n="auto_open_links_label">Auto-open in new tab (inactive) when receiving a link</label>
       <input type="checkbox" id="autoOpenLinks" class="toggle-input">
       <div class="toggle-switch" id="autoOpenLinksToggle">
         <div class="toggle-slider"></div>
       </div>
     </div>
     <div class="toggle-container">
-      <label class="toggle-label">Enable Notification Mirroring</label>
+      <label class="toggle-label" data-i18n="enable_notification_mirroring_label">Enable Notification Mirroring</label>
       <input type="checkbox" id="notificationMirroring" class="toggle-input">
       <div class="toggle-switch" id="notificationMirroringToggle">
         <div class="toggle-slider"></div>
       </div>
     </div>
     <div class="form-group">
-      <label for="colorMode">Color Mode:</label>
+      <label for="colorMode" data-i18n="color_mode_label">Color Mode:</label>
       <select id="colorMode">
-        <option value="system">Follow system</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
+        <option value="system" data-i18n="follow_system">Follow system</option>
+        <option value="light" data-i18n="light">Light</option>
+        <option value="dark" data-i18n="dark">Dark</option>
       </select>
     </div>
-    <button id="save">Save Settings</button>
+    <button id="save" data-i18n="save_settings_button">Save Settings</button>
     <div id="status" class="status"></div>
   </div>
   <script src="options.js"></script>

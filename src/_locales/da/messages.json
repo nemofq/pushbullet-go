@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Send"
+  },
+  "notification_button": {
+    "message": "Notifikation"
+  },
+  "reconnect_button": {
+    "message": "Opret forbindelse igen"
+  },
+  "setup_required": {
+    "message": "Opsætning påkrævet"
+  },
+  "setup_configure_token": {
+    "message": "Konfigurer din Pushbullet-adgangstoken for at begynde at bruge udvidelsen."
+  },
+  "open_settings_button": {
+    "message": "Åbn indstillinger"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Skriv eller indsæt"
+  },
+  "send_message_title": {
+    "message": "Send besked"
+  },
+  "send_file_title": {
+    "message": "Send fil/billede"
+  },
+  "no_messages_yet": {
+    "message": "Ingen beskeder endnu"
+  },
+  "no_notifications_received": {
+    "message": "Ingen notifikationer modtaget"
+  },
+  "paste_one_file": {
+    "message": "Indsæt én fil/billede ad gangen."
+  },
+  "copy_link": {
+    "message": "Kopiér link"
+  },
+  "copy_message": {
+    "message": "Kopiér besked"
+  },
+  "upload_failed_retry": {
+    "message": "Upload mislykkedes. Prøv igen."
+  },
+  "uploaded_successfully": {
+    "message": " uploadet med succes!"
+  },
+  "uploading": {
+    "message": "Uploader "
+  },
+  "app_icon_alt": {
+    "message": "App-ikon"
+  },
+  "download_file": {
+    "message": "Download fil"
+  },
+  "push_go_options": {
+    "message": "Push Go-indstillinger"
+  },
+  "access_token_label": {
+    "message": "Adgangstoken:"
+  },
+  "access_token_placeholder": {
+    "message": "Indtast din Pushbullet-adgangstoken"
+  },
+  "visit_link_tip": {
+    "message": "Besøg"
+  },
+  "get_access_token_tip": {
+    "message": "for at få din adgangstoken."
+  },
+  "retrieve_devices_button": {
+    "message": "Hent enheder og personer"
+  },
+  "retrieving": {
+    "message": "Henter..."
+  },
+  "retrieved": {
+    "message": "Hentet"
+  },
+  "target_devices_label": {
+    "message": "Målenheder:"
+  },
+  "none_selected_all_devices": {
+    "message": "Ingen valgt (til alle enheder)"
+  },
+  "choose_devices_tip": {
+    "message": "Vælg hvilke enheder der skal modtage push. Hold Ctrl/Cmd for at vælge flere."
+  },
+  "only_browser_pushes_label": {
+    "message": "Kun underret og vis push til browsere"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Skjul notifikationer om push sendt fra browsere"
+  },
+  "auto_open_links_label": {
+    "message": "Åbn automatisk i nyt faneblad (inaktivt) ved modtagelse af link"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Aktivér notifikationsspejling"
+  },
+  "color_mode_label": {
+    "message": "Farvetilstand:"
+  },
+  "follow_system": {
+    "message": "Følg system"
+  },
+  "light": {
+    "message": "Lys"
+  },
+  "dark": {
+    "message": "Mørk"
+  },
+  "save_settings_button": {
+    "message": "Gem indstillinger"
+  },
+  "saved": {
+    "message": "Gemt"
+  },
+  "devices_selected": {
+    "message": "enheder valgt"
+  },
+  "push_file_image_title": {
+    "message": "Send fil/billede"
+  },
+  "choose_file_button": {
+    "message": "Vælg fil"
+  },
+  "preparing": {
+    "message": "Forbereder..."
+  },
+  "processing_file": {
+    "message": "Behandler fil..."
+  },
+  "preparing_upload": {
+    "message": "Forbereder upload..."
+  },
+  "file_image_pushed": {
+    "message": "Fil/billede sendt!"
+  },
+  "upload_failed": {
+    "message": "Upload mislykkedes: "
+  },
+  "uploading_to_server": {
+    "message": "Uploader til server..."
+  },
+  "creating_push": {
+    "message": "Opretter push..."
+  },
+  "new_note": {
+    "message": "Ny note"
+  },
+  "new_link": {
+    "message": "Nyt link"
+  },
+  "file_prefix": {
+    "message": "Fil: "
+  },
+  "new_file": {
+    "message": "Ny fil"
+  },
+  "new_push": {
+    "message": "Ny push"
+  },
+  "open_button": {
+    "message": "Åbn"
+  },
+  "dismiss_button": {
+    "message": "Afvis"
+  },
+  "unknown_app": {
+    "message": "Ukendt app"
+  },
+  "new_notification": {
+    "message": "Ny notifikation"
+  },
+  "push_current_page_url": {
+    "message": "Send nuværende sidas URL"
+  },
+  "to_selected_devices": {
+    "message": "Til valgte enheder"
+  },
+  "choose_device": {
+    "message": "Vælg enhed"
+  },
+  "choose_people": {
+    "message": "Vælg personer"
+  },
+  "push_selected_text": {
+    "message": "Send markeret tekst"
+  },
+  "push_this_image": {
+    "message": "Send dette billede"
+  },
+  "retry_connection_title": {
+    "message": "Prøv at oprette forbindelse igen"
+  },
+  "open_settings_to_configure": {
+    "message": "Åbn indstillinger for at konfigurere adgangstoken"
+  },
+  "no_access_token": {
+    "message": "Ingen adgangstoken fundet. Konfigurer venligst i indstillinger."
+  },
+  "image": {
+    "message": "billede"
+  },
+  "file": {
+    "message": "fil"
+  }
+}

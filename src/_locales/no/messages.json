@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Send"
+  },
+  "notification_button": {
+    "message": "Varsel"
+  },
+  "reconnect_button": {
+    "message": "Koble til igjen"
+  },
+  "setup_required": {
+    "message": "Oppsett kreves"
+  },
+  "setup_configure_token": {
+    "message": "Konfigurer din Pushbullet-tilgangsnøkkel for å begynne å bruke utvidelsen."
+  },
+  "open_settings_button": {
+    "message": "Åpne innstillinger"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Skriv eller lim inn"
+  },
+  "send_message_title": {
+    "message": "Send melding"
+  },
+  "send_file_title": {
+    "message": "Send fil/bilde"
+  },
+  "no_messages_yet": {
+    "message": "Ingen meldinger ennå"
+  },
+  "no_notifications_received": {
+    "message": "Ingen varsler mottatt"
+  },
+  "paste_one_file": {
+    "message": "Lim inn én fil/bilde om gangen."
+  },
+  "copy_link": {
+    "message": "Kopier lenke"
+  },
+  "copy_message": {
+    "message": "Kopier melding"
+  },
+  "upload_failed_retry": {
+    "message": "Opplasting mislyktes. Prøv igjen."
+  },
+  "uploaded_successfully": {
+    "message": " lastet opp!"
+  },
+  "uploading": {
+    "message": "Laster opp "
+  },
+  "app_icon_alt": {
+    "message": "App-ikon"
+  },
+  "download_file": {
+    "message": "Last ned fil"
+  },
+  "push_go_options": {
+    "message": "Send Go-alternativer"
+  },
+  "access_token_label": {
+    "message": "Tilgangsnøkkel:"
+  },
+  "access_token_placeholder": {
+    "message": "Skriv inn din Pushbullet-tilgangsnøkkel"
+  },
+  "visit_link_tip": {
+    "message": "Besøk"
+  },
+  "get_access_token_tip": {
+    "message": "for å få din tilgangsnøkkel."
+  },
+  "retrieve_devices_button": {
+    "message": "Hent enheter og personer"
+  },
+  "retrieving": {
+    "message": "Henter..."
+  },
+  "retrieved": {
+    "message": "Hentet"
+  },
+  "target_devices_label": {
+    "message": "Målenheter:"
+  },
+  "none_selected_all_devices": {
+    "message": "Ingen valgt (til alle enheter)"
+  },
+  "choose_devices_tip": {
+    "message": "Velg hvilke enheter du vil sende meldinger til. Hold Ctrl/Cmd for å velge flere."
+  },
+  "only_browser_pushes_label": {
+    "message": "Varsle og vis kun meldinger til nettlesere"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Skjul varsler for meldinger sendt fra nettlesere"
+  },
+  "auto_open_links_label": {
+    "message": "Åpne automatisk i ny fane (inaktiv) ved mottak av lenke"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Aktiver varselspeiling"
+  },
+  "color_mode_label": {
+    "message": "Fargemodus:"
+  },
+  "follow_system": {
+    "message": "Følg system"
+  },
+  "light": {
+    "message": "Lys"
+  },
+  "dark": {
+    "message": "Mørk"
+  },
+  "save_settings_button": {
+    "message": "Lagre innstillinger"
+  },
+  "saved": {
+    "message": "Lagret"
+  },
+  "devices_selected": {
+    "message": "enheter valgt"
+  },
+  "push_file_image_title": {
+    "message": "Send fil/bilde"
+  },
+  "choose_file_button": {
+    "message": "Velg fil"
+  },
+  "preparing": {
+    "message": "Forbereder..."
+  },
+  "processing_file": {
+    "message": "Behandler fil..."
+  },
+  "preparing_upload": {
+    "message": "Forbereder opplasting..."
+  },
+  "file_image_pushed": {
+    "message": "Fil/bilde sendt!"
+  },
+  "upload_failed": {
+    "message": "Opplasting mislyktes: "
+  },
+  "uploading_to_server": {
+    "message": "Laster opp til server..."
+  },
+  "creating_push": {
+    "message": "Oppretter sending..."
+  },
+  "new_note": {
+    "message": "Nytt notat"
+  },
+  "new_link": {
+    "message": "Ny lenke"
+  },
+  "file_prefix": {
+    "message": "Fil: "
+  },
+  "new_file": {
+    "message": "Ny fil"
+  },
+  "new_push": {
+    "message": "Ny sending"
+  },
+  "open_button": {
+    "message": "Åpne"
+  },
+  "dismiss_button": {
+    "message": "Avvis"
+  },
+  "unknown_app": {
+    "message": "Ukjent app"
+  },
+  "new_notification": {
+    "message": "Nytt varsel"
+  },
+  "push_current_page_url": {
+    "message": "Send gjeldende sides URL"
+  },
+  "to_selected_devices": {
+    "message": "Til valgte enheter"
+  },
+  "choose_device": {
+    "message": "Velg enhet"
+  },
+  "choose_people": {
+    "message": "Velg personer"
+  },
+  "push_selected_text": {
+    "message": "Send valgt tekst"
+  },
+  "push_this_image": {
+    "message": "Send dette bildet"
+  },
+  "retry_connection_title": {
+    "message": "Prøv å koble til igjen"
+  },
+  "open_settings_to_configure": {
+    "message": "Åpne innstillinger for å konfigurere tilgangsnøkkel"
+  },
+  "no_access_token": {
+    "message": "Ingen tilgangsnøkkel funnet. Konfigurer i alternativene."
+  },
+  "image": {
+    "message": "bilde"
+  },
+  "file": {
+    "message": "fil"
+  }
+}

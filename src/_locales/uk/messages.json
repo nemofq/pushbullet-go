@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Надіслати"
+  },
+  "notification_button": {
+    "message": "Сповіщення"
+  },
+  "reconnect_button": {
+    "message": "Підключити знову"
+  },
+  "setup_required": {
+    "message": "Потрібне налаштування"
+  },
+  "setup_configure_token": {
+    "message": "Налаштуйте свій токен доступу Pushbullet, щоб почати користуватися розширенням."
+  },
+  "open_settings_button": {
+    "message": "Відкрити налаштування"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Введіть або вставте"
+  },
+  "send_message_title": {
+    "message": "Надіслати повідомлення"
+  },
+  "send_file_title": {
+    "message": "Надіслати файл/зображення"
+  },
+  "no_messages_yet": {
+    "message": "Повідомлень ще немає"
+  },
+  "no_notifications_received": {
+    "message": "Сповіщень не отримано"
+  },
+  "paste_one_file": {
+    "message": "Вставляйте по одному зображенню/файлу за раз."
+  },
+  "copy_link": {
+    "message": "Копіювати посилання"
+  },
+  "copy_message": {
+    "message": "Копіювати повідомлення"
+  },
+  "upload_failed_retry": {
+    "message": "Помилка завантаження. Спробуйте ще раз."
+  },
+  "uploaded_successfully": {
+    "message": " успішно завантажено!"
+  },
+  "uploading": {
+    "message": "Завантаження "
+  },
+  "app_icon_alt": {
+    "message": "Іконка додатка"
+  },
+  "download_file": {
+    "message": "Завантажити файл"
+  },
+  "push_go_options": {
+    "message": "Параметри Push Go"
+  },
+  "access_token_label": {
+    "message": "Токен доступу:"
+  },
+  "access_token_placeholder": {
+    "message": "Введіть свій токен доступу Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Відвідати"
+  },
+  "get_access_token_tip": {
+    "message": "щоб отримати свій токен доступу."
+  },
+  "retrieve_devices_button": {
+    "message": "Отримати пристрої та контакти"
+  },
+  "retrieving": {
+    "message": "Отримання..."
+  },
+  "retrieved": {
+    "message": "Отримано"
+  },
+  "target_devices_label": {
+    "message": "Цільові пристрої:"
+  },
+  "none_selected_all_devices": {
+    "message": "Нічого не вибрано (для всіх пристроїв)"
+  },
+  "choose_devices_tip": {
+    "message": "Виберіть пристрої для надсилання push. Утримуйте Ctrl/Cmd, щоб вибрати кілька."
+  },
+  "only_browser_pushes_label": {
+    "message": "Показувати та сповіщати лише у браузері"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Приховати сповіщення про push із браузерів"
+  },
+  "auto_open_links_label": {
+    "message": "Автовідкриття у новій вкладці (неактивно) при отриманні посилання"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Увімкнути дзеркалення сповіщень"
+  },
+  "color_mode_label": {
+    "message": "Режим кольору:"
+  },
+  "follow_system": {
+    "message": "Як у системі"
+  },
+  "light": {
+    "message": "Світлий"
+  },
+  "dark": {
+    "message": "Темний"
+  },
+  "save_settings_button": {
+    "message": "Зберегти налаштування"
+  },
+  "saved": {
+    "message": "Збережено"
+  },
+  "devices_selected": {
+    "message": "пристроїв вибрано"
+  },
+  "push_file_image_title": {
+    "message": "Надіслати файл/зображення"
+  },
+  "choose_file_button": {
+    "message": "Вибрати файл"
+  },
+  "preparing": {
+    "message": "Підготовка..."
+  },
+  "processing_file": {
+    "message": "Обробка файлу..."
+  },
+  "preparing_upload": {
+    "message": "Підготовка завантаження..."
+  },
+  "file_image_pushed": {
+    "message": "Файл/зображення надіслано!"
+  },
+  "upload_failed": {
+    "message": "Помилка завантаження: "
+  },
+  "uploading_to_server": {
+    "message": "Завантаження на сервер..."
+  },
+  "creating_push": {
+    "message": "Створення push..."
+  },
+  "new_note": {
+    "message": "Нова нотатка"
+  },
+  "new_link": {
+    "message": "Нове посилання"
+  },
+  "file_prefix": {
+    "message": "Файл: "
+  },
+  "new_file": {
+    "message": "Новий файл"
+  },
+  "new_push": {
+    "message": "Новий push"
+  },
+  "open_button": {
+    "message": "Відкрити"
+  },
+  "dismiss_button": {
+    "message": "Закрити"
+  },
+  "unknown_app": {
+    "message": "Невідомий додаток"
+  },
+  "new_notification": {
+    "message": "Нове сповіщення"
+  },
+  "push_current_page_url": {
+    "message": "Надіслати URL поточної сторінки"
+  },
+  "to_selected_devices": {
+    "message": "До вибраних пристроїв"
+  },
+  "choose_device": {
+    "message": "Вибрати пристрій"
+  },
+  "choose_people": {
+    "message": "Вибрати контакти"
+  },
+  "push_selected_text": {
+    "message": "Надіслати вибраний текст"
+  },
+  "push_this_image": {
+    "message": "Надіслати це зображення"
+  },
+  "retry_connection_title": {
+    "message": "Повторити підключення"
+  },
+  "open_settings_to_configure": {
+    "message": "Відкрийте налаштування, щоб вказати токен доступу"
+  },
+  "no_access_token": {
+    "message": "Токен доступу не знайдено. Налаштуйте його в параметрах."
+  },
+  "image": {
+    "message": "зображення"
+  },
+  "file": {
+    "message": "файл"
+  }
+}

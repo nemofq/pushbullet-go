@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "ส่ง"
+  },
+  "notification_button": {
+    "message": "การแจ้งเตือน"
+  },
+  "reconnect_button": {
+    "message": "เชื่อมต่อใหม่"
+  },
+  "setup_required": {
+    "message": "ต้องตั้งค่า"
+  },
+  "setup_configure_token": {
+    "message": "กำหนดค่าโทเค็นการเข้าถึง Pushbullet เพื่อเริ่มใช้งานส่วนขยาย"
+  },
+  "open_settings_button": {
+    "message": "เปิดการตั้งค่า"
+  },
+  "type_or_paste_placeholder": {
+    "message": "พิมพ์หรือวาง"
+  },
+  "send_message_title": {
+    "message": "ส่งข้อความ"
+  },
+  "send_file_title": {
+    "message": "ส่งไฟล์/รูปภาพ"
+  },
+  "no_messages_yet": {
+    "message": "ยังไม่มีข้อความ"
+  },
+  "no_notifications_received": {
+    "message": "ยังไม่มีการแจ้งเตือน"
+  },
+  "paste_one_file": {
+    "message": "วางไฟล์/รูปภาพทีละหนึ่งไฟล์"
+  },
+  "copy_link": {
+    "message": "คัดลอกลิงก์"
+  },
+  "copy_message": {
+    "message": "คัดลอกข้อความ"
+  },
+  "upload_failed_retry": {
+    "message": "อัปโหลดล้มเหลว ลองอีกครั้ง"
+  },
+  "uploaded_successfully": {
+    "message": "อัปโหลดสำเร็จ!"
+  },
+  "uploading": {
+    "message": "กำลังอัปโหลด "
+  },
+  "app_icon_alt": {
+    "message": "ไอคอนแอป"
+  },
+  "download_file": {
+    "message": "ดาวน์โหลดไฟล์"
+  },
+  "push_go_options": {
+    "message": "ตัวเลือก Push Go"
+  },
+  "access_token_label": {
+    "message": "โทเค็นการเข้าถึง:"
+  },
+  "access_token_placeholder": {
+    "message": "ใส่โทเค็นการเข้าถึง Pushbullet ของคุณ"
+  },
+  "visit_link_tip": {
+    "message": "ไปที่"
+  },
+  "get_access_token_tip": {
+    "message": "เพื่อรับโทเค็นการเข้าถึง"
+  },
+  "retrieve_devices_button": {
+    "message": "ดึงข้อมูลอุปกรณ์และบุคคล"
+  },
+  "retrieving": {
+    "message": "กำลังดึงข้อมูล..."
+  },
+  "retrieved": {
+    "message": "ดึงข้อมูลแล้ว"
+  },
+  "target_devices_label": {
+    "message": "อุปกรณ์เป้าหมาย:"
+  },
+  "none_selected_all_devices": {
+    "message": "ไม่ได้เลือก (ส่งไปยังทุกอุปกรณ์)"
+  },
+  "choose_devices_tip": {
+    "message": "เลือกอุปกรณ์ที่จะส่ง กด Ctrl/Cmd เพื่อเลือกหลายรายการ"
+  },
+  "only_browser_pushes_label": {
+    "message": "แจ้งเตือนเฉพาะการส่งไปยังเบราว์เซอร์"
+  },
+  "hide_browser_pushes_label": {
+    "message": "ซ่อนการแจ้งเตือนที่ส่งจากเบราว์เซอร์"
+  },
+  "auto_open_links_label": {
+    "message": "เปิดลิงก์อัตโนมัติในแท็บใหม่ (ไม่ทำงาน) เมื่อได้รับลิงก์"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "เปิดการมิเรอร์การแจ้งเตือน"
+  },
+  "color_mode_label": {
+    "message": "โหมดสี:"
+  },
+  "follow_system": {
+    "message": "ตามระบบ"
+  },
+  "light": {
+    "message": "สว่าง"
+  },
+  "dark": {
+    "message": "มืด"
+  },
+  "save_settings_button": {
+    "message": "บันทึกการตั้งค่า"
+  },
+  "saved": {
+    "message": "บันทึกแล้ว"
+  },
+  "devices_selected": {
+    "message": "อุปกรณ์ที่เลือก"
+  },
+  "push_file_image_title": {
+    "message": "ส่งไฟล์/รูปภาพ"
+  },
+  "choose_file_button": {
+    "message": "เลือกไฟล์"
+  },
+  "preparing": {
+    "message": "กำลังเตรียม..."
+  },
+  "processing_file": {
+    "message": "กำลังประมวลผลไฟล์..."
+  },
+  "preparing_upload": {
+    "message": "กำลังเตรียมอัปโหลด..."
+  },
+  "file_image_pushed": {
+    "message": "ส่งไฟล์/รูปภาพแล้ว!"
+  },
+  "upload_failed": {
+    "message": "อัปโหลดล้มเหลว: "
+  },
+  "uploading_to_server": {
+    "message": "กำลังอัปโหลดไปยังเซิร์ฟเวอร์..."
+  },
+  "creating_push": {
+    "message": "กำลังสร้างการส่ง..."
+  },
+  "new_note": {
+    "message": "บันทึกใหม่"
+  },
+  "new_link": {
+    "message": "ลิงก์ใหม่"
+  },
+  "file_prefix": {
+    "message": "ไฟล์: "
+  },
+  "new_file": {
+    "message": "ไฟล์ใหม่"
+  },
+  "new_push": {
+    "message": "การส่งใหม่"
+  },
+  "open_button": {
+    "message": "เปิด"
+  },
+  "dismiss_button": {
+    "message": "ปิด"
+  },
+  "unknown_app": {
+    "message": "แอปไม่ทราบชื่อ"
+  },
+  "new_notification": {
+    "message": "การแจ้งเตือนใหม่"
+  },
+  "push_current_page_url": {
+    "message": "ส่ง URL ของหน้านี้"
+  },
+  "to_selected_devices": {
+    "message": "ไปยังอุปกรณ์ที่เลือก"
+  },
+  "choose_device": {
+    "message": "เลือกอุปกรณ์"
+  },
+  "choose_people": {
+    "message": "เลือกบุคคล"
+  },
+  "push_selected_text": {
+    "message": "ส่งข้อความที่เลือก"
+  },
+  "push_this_image": {
+    "message": "ส่งรูปภาพนี้"
+  },
+  "retry_connection_title": {
+    "message": "ลองเชื่อมต่อใหม่"
+  },
+  "open_settings_to_configure": {
+    "message": "เปิดการตั้งค่าเพื่อตั้งค่าโทเค็นการเข้าถึง"
+  },
+  "no_access_token": {
+    "message": "ไม่พบโทเค็นการเข้าถึง โปรดตั้งค่าในตัวเลือก"
+  },
+  "image": {
+    "message": "รูปภาพ"
+  },
+  "file": {
+    "message": "ไฟล์"
+  }
+}

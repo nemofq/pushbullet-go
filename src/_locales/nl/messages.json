@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Pushen"
+  },
+  "notification_button": {
+    "message": "Melding"
+  },
+  "reconnect_button": {
+    "message": "Opnieuw verbinden"
+  },
+  "setup_required": {
+    "message": "Instellen vereist"
+  },
+  "setup_configure_token": {
+    "message": "Configureer je Pushbullet-toegangstoken om de extensie te gebruiken."
+  },
+  "open_settings_button": {
+    "message": "Instellingen openen"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Typ of plak"
+  },
+  "send_message_title": {
+    "message": "Bericht verzenden"
+  },
+  "send_file_title": {
+    "message": "Bestand/afbeelding verzenden"
+  },
+  "no_messages_yet": {
+    "message": "Nog geen berichten"
+  },
+  "no_notifications_received": {
+    "message": "Geen meldingen ontvangen"
+  },
+  "paste_one_file": {
+    "message": "Plak één afbeelding/bestand tegelijk."
+  },
+  "copy_link": {
+    "message": "Link kopiëren"
+  },
+  "copy_message": {
+    "message": "Bericht kopiëren"
+  },
+  "upload_failed_retry": {
+    "message": "Upload mislukt. Probeer opnieuw."
+  },
+  "uploaded_successfully": {
+    "message": " succesvol geüpload!"
+  },
+  "uploading": {
+    "message": "Uploaden "
+  },
+  "app_icon_alt": {
+    "message": "App-pictogram"
+  },
+  "download_file": {
+    "message": "Bestand downloaden"
+  },
+  "push_go_options": {
+    "message": "Push Go-opties"
+  },
+  "access_token_label": {
+    "message": "Toegangstoken:"
+  },
+  "access_token_placeholder": {
+    "message": "Voer je Pushbullet-toegangstoken in"
+  },
+  "visit_link_tip": {
+    "message": "Bezoek"
+  },
+  "get_access_token_tip": {
+    "message": "om je toegangstoken te verkrijgen."
+  },
+  "retrieve_devices_button": {
+    "message": "Apparaten en personen ophalen"
+  },
+  "retrieving": {
+    "message": "Ophalen..."
+  },
+  "retrieved": {
+    "message": "Opgehaald"
+  },
+  "target_devices_label": {
+    "message": "Doelapparaten:"
+  },
+  "none_selected_all_devices": {
+    "message": "Geen geselecteerd (naar alle apparaten)"
+  },
+  "choose_devices_tip": {
+    "message": "Kies naar welke apparaten je wilt pushen. Houd Ctrl/Cmd ingedrukt om meerdere te selecteren."
+  },
+  "only_browser_pushes_label": {
+    "message": "Alleen pushmeldingen naar browsers tonen"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Meldingen verbergen van pushes die vanuit browsers zijn verzonden"
+  },
+  "auto_open_links_label": {
+    "message": "Automatisch openen in nieuw tabblad (inactief) bij ontvangen van een link"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Meldingsspiegeling inschakelen"
+  },
+  "color_mode_label": {
+    "message": "Kleurmodus:"
+  },
+  "follow_system": {
+    "message": "Systeem volgen"
+  },
+  "light": {
+    "message": "Licht"
+  },
+  "dark": {
+    "message": "Donker"
+  },
+  "save_settings_button": {
+    "message": "Instellingen opslaan"
+  },
+  "saved": {
+    "message": "Opgeslagen"
+  },
+  "devices_selected": {
+    "message": "apparaten geselecteerd"
+  },
+  "push_file_image_title": {
+    "message": "Bestand/Afbeelding pushen"
+  },
+  "choose_file_button": {
+    "message": "Bestand kiezen"
+  },
+  "preparing": {
+    "message": "Voorbereiden..."
+  },
+  "processing_file": {
+    "message": "Bestand verwerken..."
+  },
+  "preparing_upload": {
+    "message": "Upload voorbereiden..."
+  },
+  "file_image_pushed": {
+    "message": "Bestand/afbeelding gepusht!"
+  },
+  "upload_failed": {
+    "message": "Upload mislukt: "
+  },
+  "uploading_to_server": {
+    "message": "Uploaden naar server..."
+  },
+  "creating_push": {
+    "message": "Push maken..."
+  },
+  "new_note": {
+    "message": "Nieuwe notitie"
+  },
+  "new_link": {
+    "message": "Nieuwe link"
+  },
+  "file_prefix": {
+    "message": "Bestand: "
+  },
+  "new_file": {
+    "message": "Nieuw bestand"
+  },
+  "new_push": {
+    "message": "Nieuwe push"
+  },
+  "open_button": {
+    "message": "Openen"
+  },
+  "dismiss_button": {
+    "message": "Sluiten"
+  },
+  "unknown_app": {
+    "message": "Onbekende app"
+  },
+  "new_notification": {
+    "message": "Nieuwe melding"
+  },
+  "push_current_page_url": {
+    "message": "URL van huidige pagina pushen"
+  },
+  "to_selected_devices": {
+    "message": "Naar geselecteerde apparaten"
+  },
+  "choose_device": {
+    "message": "Kies apparaat"
+  },
+  "choose_people": {
+    "message": "Kies personen"
+  },
+  "push_selected_text": {
+    "message": "Geselecteerde tekst pushen"
+  },
+  "push_this_image": {
+    "message": "Deze afbeelding pushen"
+  },
+  "retry_connection_title": {
+    "message": "Verbinding opnieuw proberen"
+  },
+  "open_settings_to_configure": {
+    "message": "Open instellingen om toegangstoken te configureren"
+  },
+  "no_access_token": {
+    "message": "Geen toegangstoken gevonden. Stel dit in bij opties."
+  },
+  "image": {
+    "message": "afbeelding"
+  },
+  "file": {
+    "message": "bestand"
+  }
+}

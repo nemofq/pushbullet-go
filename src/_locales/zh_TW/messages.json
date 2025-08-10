@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "推送"
+  },
+  "notification_button": {
+    "message": "通知"
+  },
+  "reconnect_button": {
+    "message": "重新連線"
+  },
+  "setup_required": {
+    "message": "需要設定"
+  },
+  "setup_configure_token": {
+    "message": "請配置 Pushbullet 訪問令牌以開始使用擴充套件。"
+  },
+  "open_settings_button": {
+    "message": "開啟設定"
+  },
+  "type_or_paste_placeholder": {
+    "message": "輸入或貼上"
+  },
+  "send_message_title": {
+    "message": "傳送訊息"
+  },
+  "send_file_title": {
+    "message": "傳送檔案/圖片"
+  },
+  "no_messages_yet": {
+    "message": "暫無訊息"
+  },
+  "no_notifications_received": {
+    "message": "未收到通知"
+  },
+  "paste_one_file": {
+    "message": "一次貼上一張圖片/檔案。"
+  },
+  "copy_link": {
+    "message": "複製連結"
+  },
+  "copy_message": {
+    "message": "複製訊息"
+  },
+  "upload_failed_retry": {
+    "message": "上傳失敗，請重試。"
+  },
+  "uploaded_successfully": {
+    "message": " 上傳成功！"
+  },
+  "uploading": {
+    "message": "正在上傳 "
+  },
+  "app_icon_alt": {
+    "message": "應用圖示"
+  },
+  "download_file": {
+    "message": "下載檔案"
+  },
+  "push_go_options": {
+    "message": "Push Go 選項"
+  },
+  "access_token_label": {
+    "message": "訪問令牌："
+  },
+  "access_token_placeholder": {
+    "message": "請輸入 Pushbullet 訪問令牌"
+  },
+  "visit_link_tip": {
+    "message": "訪問"
+  },
+  "get_access_token_tip": {
+    "message": "以獲取訪問令牌。"
+  },
+  "retrieve_devices_button": {
+    "message": "獲取裝置和聯絡人"
+  },
+  "retrieving": {
+    "message": "正在獲取..."
+  },
+  "retrieved": {
+    "message": "獲取完成"
+  },
+  "target_devices_label": {
+    "message": "目標裝置："
+  },
+  "none_selected_all_devices": {
+    "message": "未選擇（傳送到所有裝置）"
+  },
+  "choose_devices_tip": {
+    "message": "選擇要傳送推送的裝置。按住 Ctrl/Cmd 可多選。"
+  },
+  "only_browser_pushes_label": {
+    "message": "僅通知並顯示傳送到瀏覽器的推送"
+  },
+  "hide_browser_pushes_label": {
+    "message": "隱藏來自瀏覽器的推送通知"
+  },
+  "auto_open_links_label": {
+    "message": "接收連結時自動在新標籤頁開啟（非啟用）"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "啟用通知映象"
+  },
+  "color_mode_label": {
+    "message": "顏色模式："
+  },
+  "follow_system": {
+    "message": "跟隨系統"
+  },
+  "light": {
+    "message": "淺色"
+  },
+  "dark": {
+    "message": "深色"
+  },
+  "save_settings_button": {
+    "message": "儲存設定"
+  },
+  "saved": {
+    "message": "已儲存"
+  },
+  "devices_selected": {
+    "message": "個裝置已選"
+  },
+  "push_file_image_title": {
+    "message": "推送檔案/圖片"
+  },
+  "choose_file_button": {
+    "message": "選擇檔案"
+  },
+  "preparing": {
+    "message": "準備中..."
+  },
+  "processing_file": {
+    "message": "正在處理檔案..."
+  },
+  "preparing_upload": {
+    "message": "準備上傳..."
+  },
+  "file_image_pushed": {
+    "message": "檔案/圖片已推送！"
+  },
+  "upload_failed": {
+    "message": "上傳失敗："
+  },
+  "uploading_to_server": {
+    "message": "正在上傳到伺服器..."
+  },
+  "creating_push": {
+    "message": "正在建立推送..."
+  },
+  "new_note": {
+    "message": "新文字"
+  },
+  "new_link": {
+    "message": "新連結"
+  },
+  "file_prefix": {
+    "message": "檔案："
+  },
+  "new_file": {
+    "message": "新檔案"
+  },
+  "new_push": {
+    "message": "新推送"
+  },
+  "open_button": {
+    "message": "開啟"
+  },
+  "dismiss_button": {
+    "message": "清除"
+  },
+  "unknown_app": {
+    "message": "未知應用"
+  },
+  "new_notification": {
+    "message": "新通知"
+  },
+  "push_current_page_url": {
+    "message": "推送當前頁面連結"
+  },
+  "to_selected_devices": {
+    "message": "傳送到所選裝置"
+  },
+  "choose_device": {
+    "message": "選擇裝置"
+  },
+  "choose_people": {
+    "message": "選擇聯絡人"
+  },
+  "push_selected_text": {
+    "message": "推送選中文字"
+  },
+  "push_this_image": {
+    "message": "推送此圖片"
+  },
+  "retry_connection_title": {
+    "message": "重試連線"
+  },
+  "open_settings_to_configure": {
+    "message": "開啟設定以配置訪問令牌"
+  },
+  "no_access_token": {
+    "message": "未找到訪問令牌，請在選項中配置。"
+  },
+  "image": {
+    "message": "圖片"
+  },
+  "file": {
+    "message": "檔案"
+  }
+}

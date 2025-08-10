@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Lähetä"
+  },
+  "notification_button": {
+    "message": "Ilmoitus"
+  },
+  "reconnect_button": {
+    "message": "Yhdistä uudelleen"
+  },
+  "setup_required": {
+    "message": "Määritys vaaditaan"
+  },
+  "setup_configure_token": {
+    "message": "Määritä Pushbullet-käyttöoikeustunnus aloittaaksesi laajennuksen käytön."
+  },
+  "open_settings_button": {
+    "message": "Avaa asetukset"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Kirjoita tai liitä"
+  },
+  "send_message_title": {
+    "message": "Lähetä viesti"
+  },
+  "send_file_title": {
+    "message": "Lähetä tiedosto/kuva"
+  },
+  "no_messages_yet": {
+    "message": "Ei viestejä vielä"
+  },
+  "no_notifications_received": {
+    "message": "Ei ilmoituksia vastaanotettu"
+  },
+  "paste_one_file": {
+    "message": "Liitä yksi kuva/tiedosto kerrallaan."
+  },
+  "copy_link": {
+    "message": "Kopioi linkki"
+  },
+  "copy_message": {
+    "message": "Kopioi viesti"
+  },
+  "upload_failed_retry": {
+    "message": "Lataus epäonnistui. Yritä uudelleen."
+  },
+  "uploaded_successfully": {
+    "message": " ladattu onnistuneesti!"
+  },
+  "uploading": {
+    "message": "Ladataan "
+  },
+  "app_icon_alt": {
+    "message": "Sovelluskuvake"
+  },
+  "download_file": {
+    "message": "Lataa tiedosto"
+  },
+  "push_go_options": {
+    "message": "Push Go -asetukset"
+  },
+  "access_token_label": {
+    "message": "Käyttöoikeustunnus:"
+  },
+  "access_token_placeholder": {
+    "message": "Anna Pushbullet-käyttöoikeustunnus"
+  },
+  "visit_link_tip": {
+    "message": "Siirry"
+  },
+  "get_access_token_tip": {
+    "message": "hanki käyttöoikeustunnus."
+  },
+  "retrieve_devices_button": {
+    "message": "Hae laitteet ja henkilöt"
+  },
+  "retrieving": {
+    "message": "Haetaan..."
+  },
+  "retrieved": {
+    "message": "Haettu"
+  },
+  "target_devices_label": {
+    "message": "Kohdelaitteet:"
+  },
+  "none_selected_all_devices": {
+    "message": "Ei valintaa (kaikkiin laitteisiin)"
+  },
+  "choose_devices_tip": {
+    "message": "Valitse laitteet, joihin lähetetään. Pidä Ctrl/Cmd valitaksesi useita."
+  },
+  "only_browser_pushes_label": {
+    "message": "Ilmoita ja näytä vain selaimille"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Piilota selaimista lähetettyjen viestien ilmoitukset"
+  },
+  "auto_open_links_label": {
+    "message": "Avaa linkit automaattisesti uuteen välilehteen (passiivinen)"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Ota käyttöön ilmoitusten peilaus"
+  },
+  "color_mode_label": {
+    "message": "Väritila:"
+  },
+  "follow_system": {
+    "message": "Seuraa järjestelmää"
+  },
+  "light": {
+    "message": "Vaalea"
+  },
+  "dark": {
+    "message": "Tumma"
+  },
+  "save_settings_button": {
+    "message": "Tallenna asetukset"
+  },
+  "saved": {
+    "message": "Tallennettu"
+  },
+  "devices_selected": {
+    "message": "laitetta valittu"
+  },
+  "push_file_image_title": {
+    "message": "Lähetä tiedosto/kuva"
+  },
+  "choose_file_button": {
+    "message": "Valitse tiedosto"
+  },
+  "preparing": {
+    "message": "Valmistellaan..."
+  },
+  "processing_file": {
+    "message": "Käsitellään tiedostoa..."
+  },
+  "preparing_upload": {
+    "message": "Valmistellaan latausta..."
+  },
+  "file_image_pushed": {
+    "message": "Tiedosto/kuva lähetetty!"
+  },
+  "upload_failed": {
+    "message": "Lataus epäonnistui: "
+  },
+  "uploading_to_server": {
+    "message": "Ladataan palvelimelle..."
+  },
+  "creating_push": {
+    "message": "Luodaan push..."
+  },
+  "new_note": {
+    "message": "Uusi muistiinpano"
+  },
+  "new_link": {
+    "message": "Uusi linkki"
+  },
+  "file_prefix": {
+    "message": "Tiedosto: "
+  },
+  "new_file": {
+    "message": "Uusi tiedosto"
+  },
+  "new_push": {
+    "message": "Uusi push"
+  },
+  "open_button": {
+    "message": "Avaa"
+  },
+  "dismiss_button": {
+    "message": "Hylkää"
+  },
+  "unknown_app": {
+    "message": "Tuntematon sovellus"
+  },
+  "new_notification": {
+    "message": "Uusi ilmoitus"
+  },
+  "push_current_page_url": {
+    "message": "Lähetä nykyisen sivun URL"
+  },
+  "to_selected_devices": {
+    "message": "Valituille laitteille"
+  },
+  "choose_device": {
+    "message": "Valitse laite"
+  },
+  "choose_people": {
+    "message": "Valitse henkilöt"
+  },
+  "push_selected_text": {
+    "message": "Lähetä valittu teksti"
+  },
+  "push_this_image": {
+    "message": "Lähetä tämä kuva"
+  },
+  "retry_connection_title": {
+    "message": "Yritä yhdistää uudelleen"
+  },
+  "open_settings_to_configure": {
+    "message": "Avaa asetukset käyttöoikeustunnuksen määrittämiseksi"
+  },
+  "no_access_token": {
+    "message": "Käyttöoikeustunnusta ei löydy. Määritä se asetuksista."
+  },
+  "image": {
+    "message": "kuva"
+  },
+  "file": {
+    "message": "tiedosto"
+  }
+}

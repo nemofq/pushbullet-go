@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Push"
+  },
+  "notification_button": {
+    "message": "Notification"
+  },
+  "reconnect_button": {
+    "message": "Reconnect"
+  },
+  "setup_required": {
+    "message": "Setup Required"
+  },
+  "setup_configure_token": {
+    "message": "Configure your Pushbullet access token to start using the extension."
+  },
+  "open_settings_button": {
+    "message": "Open Settings"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Type or paste"
+  },
+  "send_message_title": {
+    "message": "Send message"
+  },
+  "send_file_title": {
+    "message": "Send file/image"
+  },
+  "no_messages_yet": {
+    "message": "No messages yet"
+  },
+  "no_notifications_received": {
+    "message": "No notifications received"
+  },
+  "paste_one_file": {
+    "message": "Paste one image/file at a time."
+  },
+  "copy_link": {
+    "message": "Copy link"
+  },
+  "copy_message": {
+    "message": "Copy message"
+  },
+  "upload_failed_retry": {
+    "message": "upload failed. Try again."
+  },
+  "uploaded_successfully": {
+    "message": " uploaded successfully!"
+  },
+  "uploading": {
+    "message": "Uploading "
+  },
+  "app_icon_alt": {
+    "message": "App icon"
+  },
+  "download_file": {
+    "message": "Download File"
+  },
+  "push_go_options": {
+    "message": "Push Go Options"
+  },
+  "access_token_label": {
+    "message": "Access Token:"
+  },
+  "access_token_placeholder": {
+    "message": "Enter your Pushbullet access token"
+  },
+  "visit_link_tip": {
+    "message": "Visit"
+  },
+  "get_access_token_tip": {
+    "message": "to get your access token."
+  },
+  "retrieve_devices_button": {
+    "message": "Retrieve devices and people"
+  },
+  "retrieving": {
+    "message": "Retrieving..."
+  },
+  "retrieved": {
+    "message": "Retrieved"
+  },
+  "target_devices_label": {
+    "message": "Target Devices:"
+  },
+  "none_selected_all_devices": {
+    "message": "None selected (to all devices)"
+  },
+  "choose_devices_tip": {
+    "message": "Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple."
+  },
+  "only_browser_pushes_label": {
+    "message": "Only notify and show pushes to browsers"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Hide notification of pushes sent from browsers"
+  },
+  "auto_open_links_label": {
+    "message": "Auto-open in new tab (inactive) when receiving a link"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Enable Notification Mirroring"
+  },
+  "color_mode_label": {
+    "message": "Color Mode:"
+  },
+  "follow_system": {
+    "message": "Follow system"
+  },
+  "light": {
+    "message": "Light"
+  },
+  "dark": {
+    "message": "Dark"
+  },
+  "save_settings_button": {
+    "message": "Save Settings"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "devices_selected": {
+    "message": "devices selected"
+  },
+  "push_file_image_title": {
+    "message": "Push File/Image"
+  },
+  "choose_file_button": {
+    "message": "Choose File"
+  },
+  "preparing": {
+    "message": "Preparing..."
+  },
+  "processing_file": {
+    "message": "Processing file..."
+  },
+  "preparing_upload": {
+    "message": "Preparing upload..."
+  },
+  "file_image_pushed": {
+    "message": "File/image pushed!"
+  },
+  "upload_failed": {
+    "message": "Upload failed: "
+  },
+  "uploading_to_server": {
+    "message": "Uploading to server..."
+  },
+  "creating_push": {
+    "message": "Creating push..."
+  },
+  "new_note": {
+    "message": "New note"
+  },
+  "new_link": {
+    "message": "New link"
+  },
+  "file_prefix": {
+    "message": "File: "
+  },
+  "new_file": {
+    "message": "New file"
+  },
+  "new_push": {
+    "message": "New push"
+  },
+  "open_button": {
+    "message": "Open"
+  },
+  "dismiss_button": {
+    "message": "Dismiss"
+  },
+  "unknown_app": {
+    "message": "Unknown App"
+  },
+  "new_notification": {
+    "message": "New notification"
+  },
+  "push_current_page_url": {
+    "message": "Push current page's URL"
+  },
+  "to_selected_devices": {
+    "message": "To selected devices"
+  },
+  "choose_device": {
+    "message": "Choose device"
+  },
+  "choose_people": {
+    "message": "Choose people"
+  },
+  "push_selected_text": {
+    "message": "Push selected text"
+  },
+  "push_this_image": {
+    "message": "Push this image"
+  },
+  "retry_connection_title": {
+    "message": "Retry connection"
+  },
+  "open_settings_to_configure": {
+    "message": "Open settings to configure access token"
+  },
+  "no_access_token": {
+    "message": "No access token found. Please configure in options."
+  },
+  "image": {
+    "message": "image"
+  },
+  "file": {
+    "message": "file"
+  }
+}

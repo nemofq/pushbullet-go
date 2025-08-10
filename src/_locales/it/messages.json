@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Invia"
+  },
+  "notification_button": {
+    "message": "Notifica"
+  },
+  "reconnect_button": {
+    "message": "Riconnetti"
+  },
+  "setup_required": {
+    "message": "Configurazione richiesta"
+  },
+  "setup_configure_token": {
+    "message": "Configura il tuo token di accesso Pushbullet per iniziare a usare l'estensione."
+  },
+  "open_settings_button": {
+    "message": "Apri impostazioni"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Digita o incolla"
+  },
+  "send_message_title": {
+    "message": "Invia messaggio"
+  },
+  "send_file_title": {
+    "message": "Invia file/immagine"
+  },
+  "no_messages_yet": {
+    "message": "Nessun messaggio"
+  },
+  "no_notifications_received": {
+    "message": "Nessuna notifica ricevuta"
+  },
+  "paste_one_file": {
+    "message": "Incolla un'immagine/file alla volta."
+  },
+  "copy_link": {
+    "message": "Copia link"
+  },
+  "copy_message": {
+    "message": "Copia messaggio"
+  },
+  "upload_failed_retry": {
+    "message": "Caricamento fallito. Riprova."
+  },
+  "uploaded_successfully": {
+    "message": " caricato con successo!"
+  },
+  "uploading": {
+    "message": "Caricamento in corso "
+  },
+  "app_icon_alt": {
+    "message": "Icona app"
+  },
+  "download_file": {
+    "message": "Scarica file"
+  },
+  "push_go_options": {
+    "message": "Opzioni Push Go"
+  },
+  "access_token_label": {
+    "message": "Token di accesso:"
+  },
+  "access_token_placeholder": {
+    "message": "Inserisci il tuo token di accesso Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Visita"
+  },
+  "get_access_token_tip": {
+    "message": "per ottenere il tuo token di accesso."
+  },
+  "retrieve_devices_button": {
+    "message": "Recupera dispositivi e persone"
+  },
+  "retrieving": {
+    "message": "Recupero in corso..."
+  },
+  "retrieved": {
+    "message": "Recuperato"
+  },
+  "target_devices_label": {
+    "message": "Dispositivi di destinazione:"
+  },
+  "none_selected_all_devices": {
+    "message": "Nessuno selezionato (a tutti i dispositivi)"
+  },
+  "choose_devices_tip": {
+    "message": "Scegli a quali dispositivi inviare. Tieni premuto Ctrl/Cmd per selezionare più elementi."
+  },
+  "only_browser_pushes_label": {
+    "message": "Notifica solo ai browser"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Nascondi notifiche inviate dai browser"
+  },
+  "auto_open_links_label": {
+    "message": "Apri automaticamente in nuova scheda (inattivo) alla ricezione di un link"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Abilita mirroring notifiche"
+  },
+  "color_mode_label": {
+    "message": "Modalità colore:"
+  },
+  "follow_system": {
+    "message": "Segui sistema"
+  },
+  "light": {
+    "message": "Chiaro"
+  },
+  "dark": {
+    "message": "Scuro"
+  },
+  "save_settings_button": {
+    "message": "Salva impostazioni"
+  },
+  "saved": {
+    "message": "Salvato"
+  },
+  "devices_selected": {
+    "message": "dispositivi selezionati"
+  },
+  "push_file_image_title": {
+    "message": "Invia file/immagine"
+  },
+  "choose_file_button": {
+    "message": "Scegli file"
+  },
+  "preparing": {
+    "message": "Preparazione..."
+  },
+  "processing_file": {
+    "message": "Elaborazione file..."
+  },
+  "preparing_upload": {
+    "message": "Preparazione caricamento..."
+  },
+  "file_image_pushed": {
+    "message": "File/immagine inviato!"
+  },
+  "upload_failed": {
+    "message": "Caricamento fallito: "
+  },
+  "uploading_to_server": {
+    "message": "Caricamento sul server..."
+  },
+  "creating_push": {
+    "message": "Creazione push..."
+  },
+  "new_note": {
+    "message": "Nuova nota"
+  },
+  "new_link": {
+    "message": "Nuovo link"
+  },
+  "file_prefix": {
+    "message": "File: "
+  },
+  "new_file": {
+    "message": "Nuovo file"
+  },
+  "new_push": {
+    "message": "Nuovo push"
+  },
+  "open_button": {
+    "message": "Apri"
+  },
+  "dismiss_button": {
+    "message": "Ignora"
+  },
+  "unknown_app": {
+    "message": "App sconosciuta"
+  },
+  "new_notification": {
+    "message": "Nuova notifica"
+  },
+  "push_current_page_url": {
+    "message": "Invia URL pagina corrente"
+  },
+  "to_selected_devices": {
+    "message": "Ai dispositivi selezionati"
+  },
+  "choose_device": {
+    "message": "Scegli dispositivo"
+  },
+  "choose_people": {
+    "message": "Scegli persone"
+  },
+  "push_selected_text": {
+    "message": "Invia testo selezionato"
+  },
+  "push_this_image": {
+    "message": "Invia questa immagine"
+  },
+  "retry_connection_title": {
+    "message": "Riprova connessione"
+  },
+  "open_settings_to_configure": {
+    "message": "Apri impostazioni per configurare il token di accesso"
+  },
+  "no_access_token": {
+    "message": "Nessun token di accesso trovato. Configuralo nelle opzioni."
+  },
+  "image": {
+    "message": "immagine"
+  },
+  "file": {
+    "message": "file"
+  }
+}

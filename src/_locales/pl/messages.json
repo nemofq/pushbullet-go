@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Wyślij"
+  },
+  "notification_button": {
+    "message": "Powiadomienie"
+  },
+  "reconnect_button": {
+    "message": "Połącz ponownie"
+  },
+  "setup_required": {
+    "message": "Wymagana konfiguracja"
+  },
+  "setup_configure_token": {
+    "message": "Skonfiguruj swój token dostępu Pushbullet, aby rozpocząć korzystanie z rozszerzenia."
+  },
+  "open_settings_button": {
+    "message": "Otwórz ustawienia"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Wpisz lub wklej"
+  },
+  "send_message_title": {
+    "message": "Wyślij wiadomość"
+  },
+  "send_file_title": {
+    "message": "Wyślij plik/obraz"
+  },
+  "no_messages_yet": {
+    "message": "Brak wiadomości"
+  },
+  "no_notifications_received": {
+    "message": "Brak powiadomień"
+  },
+  "paste_one_file": {
+    "message": "Wklej jeden obraz/plik naraz."
+  },
+  "copy_link": {
+    "message": "Kopiuj link"
+  },
+  "copy_message": {
+    "message": "Kopiuj wiadomość"
+  },
+  "upload_failed_retry": {
+    "message": "Przesyłanie nieudane. Spróbuj ponownie."
+  },
+  "uploaded_successfully": {
+    "message": " przesłano pomyślnie!"
+  },
+  "uploading": {
+    "message": "Przesyłanie "
+  },
+  "app_icon_alt": {
+    "message": "Ikona aplikacji"
+  },
+  "download_file": {
+    "message": "Pobierz plik"
+  },
+  "push_go_options": {
+    "message": "Opcje Push Go"
+  },
+  "access_token_label": {
+    "message": "Token dostępu:"
+  },
+  "access_token_placeholder": {
+    "message": "Wprowadź token dostępu Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Odwiedź"
+  },
+  "get_access_token_tip": {
+    "message": "aby uzyskać swój token dostępu."
+  },
+  "retrieve_devices_button": {
+    "message": "Pobierz urządzenia i osoby"
+  },
+  "retrieving": {
+    "message": "Pobieranie..."
+  },
+  "retrieved": {
+    "message": "Pobrano"
+  },
+  "target_devices_label": {
+    "message": "Urządzenia docelowe:"
+  },
+  "none_selected_all_devices": {
+    "message": "Brak wyboru (do wszystkich urządzeń)"
+  },
+  "choose_devices_tip": {
+    "message": "Wybierz urządzenia do wysyłki. Przytrzymaj Ctrl/Cmd, aby zaznaczyć wiele."
+  },
+  "only_browser_pushes_label": {
+    "message": "Powiadamiaj tylko w przeglądarkach"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Ukryj powiadomienia z przeglądarek"
+  },
+  "auto_open_links_label": {
+    "message": "Automatycznie otwieraj w nowej karcie (nieaktywne) po otrzymaniu linku"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Włącz duplikowanie powiadomień"
+  },
+  "color_mode_label": {
+    "message": "Tryb kolorów:"
+  },
+  "follow_system": {
+    "message": "Zgodnie z systemem"
+  },
+  "light": {
+    "message": "Jasny"
+  },
+  "dark": {
+    "message": "Ciemny"
+  },
+  "save_settings_button": {
+    "message": "Zapisz ustawienia"
+  },
+  "saved": {
+    "message": "Zapisano"
+  },
+  "devices_selected": {
+    "message": "urządzenia wybrane"
+  },
+  "push_file_image_title": {
+    "message": "Wyślij plik/obraz"
+  },
+  "choose_file_button": {
+    "message": "Wybierz plik"
+  },
+  "preparing": {
+    "message": "Przygotowywanie..."
+  },
+  "processing_file": {
+    "message": "Przetwarzanie pliku..."
+  },
+  "preparing_upload": {
+    "message": "Przygotowywanie przesyłania..."
+  },
+  "file_image_pushed": {
+    "message": "Plik/obraz wysłany!"
+  },
+  "upload_failed": {
+    "message": "Błąd przesyłania: "
+  },
+  "uploading_to_server": {
+    "message": "Przesyłanie na serwer..."
+  },
+  "creating_push": {
+    "message": "Tworzenie wysyłki..."
+  },
+  "new_note": {
+    "message": "Nowa notatka"
+  },
+  "new_link": {
+    "message": "Nowy link"
+  },
+  "file_prefix": {
+    "message": "Plik: "
+  },
+  "new_file": {
+    "message": "Nowy plik"
+  },
+  "new_push": {
+    "message": "Nowa wysyłka"
+  },
+  "open_button": {
+    "message": "Otwórz"
+  },
+  "dismiss_button": {
+    "message": "Odrzuć"
+  },
+  "unknown_app": {
+    "message": "Nieznana aplikacja"
+  },
+  "new_notification": {
+    "message": "Nowe powiadomienie"
+  },
+  "push_current_page_url": {
+    "message": "Wyślij adres bieżącej strony"
+  },
+  "to_selected_devices": {
+    "message": "Do wybranych urządzeń"
+  },
+  "choose_device": {
+    "message": "Wybierz urządzenie"
+  },
+  "choose_people": {
+    "message": "Wybierz osoby"
+  },
+  "push_selected_text": {
+    "message": "Wyślij zaznaczony tekst"
+  },
+  "push_this_image": {
+    "message": "Wyślij ten obraz"
+  },
+  "retry_connection_title": {
+    "message": "Ponów połączenie"
+  },
+  "open_settings_to_configure": {
+    "message": "Otwórz ustawienia, aby skonfigurować token dostępu"
+  },
+  "no_access_token": {
+    "message": "Nie znaleziono tokenu dostępu. Skonfiguruj w opcjach."
+  },
+  "image": {
+    "message": "obraz"
+  },
+  "file": {
+    "message": "plik"
+  }
+}

@@ -389,13 +389,13 @@ function showNotificationForPush(push) {
   let notificationBody = '';
   
   if (push.type === 'note') {
-    notificationBody = push.body || 'New note';
+    notificationBody = push.body || chrome.i18n.getMessage('new_note');
   } else if (push.type === 'link') {
-    notificationBody = push.body || push.url || 'New link';
+    notificationBody = push.body || push.url || chrome.i18n.getMessage('new_link');
   } else if (push.type === 'file') {
-    notificationBody = push.body || `File: ${push.file_name}` || 'New file';
+    notificationBody = push.body || `${chrome.i18n.getMessage('file_prefix')}${push.file_name}` || chrome.i18n.getMessage('new_file');
   } else {
-    notificationBody = push.body || 'New push';
+    notificationBody = push.body || chrome.i18n.getMessage('new_push');
   }
   
   const notificationOptions = {
@@ -408,13 +408,13 @@ function showNotificationForPush(push) {
   // Add buttons based on push type
   if (push.type === 'link' || push.type === 'file') {
     notificationOptions.buttons = [
-      { title: 'Open' },
-      { title: 'Dismiss' }
+      { title: chrome.i18n.getMessage('open_button') },
+      { title: chrome.i18n.getMessage('dismiss_button') }
     ];
   } else {
     // For note and other types, only add dismiss button
     notificationOptions.buttons = [
-      { title: 'Dismiss' }
+      { title: chrome.i18n.getMessage('dismiss_button') }
     ];
   }
   
@@ -464,7 +464,7 @@ async function handleMirrorNotification(mirrorData) {
 }
 
 async function showMirrorNotification(mirrorData) {
-  const appName = mirrorData.application_name || mirrorData.package_name || 'Unknown App';
+  const appName = mirrorData.application_name || mirrorData.package_name || chrome.i18n.getMessage('unknown_app');
   
   let message = '';
   if (mirrorData.title) {
@@ -477,7 +477,7 @@ async function showMirrorNotification(mirrorData) {
   const notificationOptions = {
     type: 'basic',
     title: appName,
-    message: message.trim() || 'New notification'
+    message: message.trim() || chrome.i18n.getMessage('new_notification')
   };
   
   // Handle base64 icon if available
@@ -490,7 +490,7 @@ async function showMirrorNotification(mirrorData) {
   // Add dismiss button only if dismissable is true
   if (mirrorData.dismissable) {
     notificationOptions.buttons = [
-      { title: 'Dismiss' }
+      { title: chrome.i18n.getMessage('dismiss_button') }
     ];
   }
   
@@ -785,7 +785,7 @@ async function setupContextMenus() {
     // Create main context menu for page
     chrome.contextMenus.create({
       id: 'pushbullet-page',
-      title: 'Push current page\'s URL',
+      title: chrome.i18n.getMessage('push_current_page_url'),
       contexts: ['page']
     });
     
@@ -793,21 +793,21 @@ async function setupContextMenus() {
     chrome.contextMenus.create({
       id: 'pushbullet-page-selected',
       parentId: 'pushbullet-page',
-      title: 'To selected devices',
+      title: chrome.i18n.getMessage('to_selected_devices'),
       contexts: ['page']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-page-device',
       parentId: 'pushbullet-page',
-      title: 'Choose device',
+      title: chrome.i18n.getMessage('choose_device'),
       contexts: ['page']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-page-people',
       parentId: 'pushbullet-page',
-      title: 'Choose people',
+      title: chrome.i18n.getMessage('choose_people'),
       contexts: ['page']
     });
     
@@ -834,7 +834,7 @@ async function setupContextMenus() {
     // Create main context menu for selection
     chrome.contextMenus.create({
       id: 'pushbullet-selection',
-      title: 'Push selected text',
+      title: chrome.i18n.getMessage('push_selected_text'),
       contexts: ['selection']
     });
     
@@ -842,21 +842,21 @@ async function setupContextMenus() {
     chrome.contextMenus.create({
       id: 'pushbullet-selection-selected',
       parentId: 'pushbullet-selection',
-      title: 'To selected devices',
+      title: chrome.i18n.getMessage('to_selected_devices'),
       contexts: ['selection']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-selection-device',
       parentId: 'pushbullet-selection',
-      title: 'Choose device',
+      title: chrome.i18n.getMessage('choose_device'),
       contexts: ['selection']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-selection-people',
       parentId: 'pushbullet-selection',
-      title: 'Choose people',
+      title: chrome.i18n.getMessage('choose_people'),
       contexts: ['selection']
     });
     
@@ -883,7 +883,7 @@ async function setupContextMenus() {
     // Create main context menu for image
     chrome.contextMenus.create({
       id: 'pushbullet-image',
-      title: 'Push this image',
+      title: chrome.i18n.getMessage('push_this_image'),
       contexts: ['image']
     });
     
@@ -891,21 +891,21 @@ async function setupContextMenus() {
     chrome.contextMenus.create({
       id: 'pushbullet-image-selected',
       parentId: 'pushbullet-image',
-      title: 'To selected devices',
+      title: chrome.i18n.getMessage('to_selected_devices'),
       contexts: ['image']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-image-device',
       parentId: 'pushbullet-image',
-      title: 'Choose device',
+      title: chrome.i18n.getMessage('choose_device'),
       contexts: ['image']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-image-people',
       parentId: 'pushbullet-image',
-      title: 'Choose people',
+      title: chrome.i18n.getMessage('choose_people'),
       contexts: ['image']
     });
     

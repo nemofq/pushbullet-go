@@ -1,0 +1,212 @@
+{
+  "push_button": {
+    "message": "Pošlji"
+  },
+  "notification_button": {
+    "message": "Obvestilo"
+  },
+  "reconnect_button": {
+    "message": "Ponovno poveži"
+  },
+  "setup_required": {
+    "message": "Potrebna nastavitev"
+  },
+  "setup_configure_token": {
+    "message": "Nastavite svoj dostopni žeton Pushbullet za začetek uporabe razširitve."
+  },
+  "open_settings_button": {
+    "message": "Odpri nastavitve"
+  },
+  "type_or_paste_placeholder": {
+    "message": "Vnesite ali prilepite"
+  },
+  "send_message_title": {
+    "message": "Pošlji sporočilo"
+  },
+  "send_file_title": {
+    "message": "Pošlji datoteko/sliko"
+  },
+  "no_messages_yet": {
+    "message": "Ni sporočil"
+  },
+  "no_notifications_received": {
+    "message": "Ni prejetih obvestil"
+  },
+  "paste_one_file": {
+    "message": "Prilepite eno sliko/datoteko naenkrat."
+  },
+  "copy_link": {
+    "message": "Kopiraj povezavo"
+  },
+  "copy_message": {
+    "message": "Kopiraj sporočilo"
+  },
+  "upload_failed_retry": {
+    "message": "Nalaganje ni uspelo. Poskusite znova."
+  },
+  "uploaded_successfully": {
+    "message": " uspešno naloženo!"
+  },
+  "uploading": {
+    "message": "Nalaganje "
+  },
+  "app_icon_alt": {
+    "message": "Ikona aplikacije"
+  },
+  "download_file": {
+    "message": "Prenesi datoteko"
+  },
+  "push_go_options": {
+    "message": "Možnosti Push Go"
+  },
+  "access_token_label": {
+    "message": "Dostopni žeton:"
+  },
+  "access_token_placeholder": {
+    "message": "Vnesite svoj dostopni žeton Pushbullet"
+  },
+  "visit_link_tip": {
+    "message": "Obiščite"
+  },
+  "get_access_token_tip": {
+    "message": "za pridobitev dostopnega žetona."
+  },
+  "retrieve_devices_button": {
+    "message": "Pridobi naprave in osebe"
+  },
+  "retrieving": {
+    "message": "Pridobivanje..."
+  },
+  "retrieved": {
+    "message": "Pridobljeno"
+  },
+  "target_devices_label": {
+    "message": "Ciljne naprave:"
+  },
+  "none_selected_all_devices": {
+    "message": "Nič izbranega (za vse naprave)"
+  },
+  "choose_devices_tip": {
+    "message": "Izberite naprave za pošiljanje. Držite Ctrl/Cmd za več izbir."
+  },
+  "only_browser_pushes_label": {
+    "message": "Obvesti in prikaži potiske samo v brskalnikih"
+  },
+  "hide_browser_pushes_label": {
+    "message": "Skrij obvestila o potiskih iz brskalnikov"
+  },
+  "auto_open_links_label": {
+    "message": "Samodejno odpri v novem zavihku (neaktivno) ob prejemu povezave"
+  },
+  "enable_notification_mirroring_label": {
+    "message": "Omogoči zrcaljenje obvestil"
+  },
+  "color_mode_label": {
+    "message": "Barvni način:"
+  },
+  "follow_system": {
+    "message": "Sledi sistemu"
+  },
+  "light": {
+    "message": "Svetlo"
+  },
+  "dark": {
+    "message": "Temno"
+  },
+  "save_settings_button": {
+    "message": "Shrani nastavitve"
+  },
+  "saved": {
+    "message": "Shranjeno"
+  },
+  "devices_selected": {
+    "message": "naprav izbranih"
+  },
+  "push_file_image_title": {
+    "message": "Pošlji datoteko/sliko"
+  },
+  "choose_file_button": {
+    "message": "Izberi datoteko"
+  },
+  "preparing": {
+    "message": "Priprava..."
+  },
+  "processing_file": {
+    "message": "Obdelava datoteke..."
+  },
+  "preparing_upload": {
+    "message": "Priprava nalaganja..."
+  },
+  "file_image_pushed": {
+    "message": "Datoteka/slika poslana!"
+  },
+  "upload_failed": {
+    "message": "Nalaganje ni uspelo: "
+  },
+  "uploading_to_server": {
+    "message": "Nalaganje na strežnik..."
+  },
+  "creating_push": {
+    "message": "Ustvarjanje potiska..."
+  },
+  "new_note": {
+    "message": "Nova opomba"
+  },
+  "new_link": {
+    "message": "Nova povezava"
+  },
+  "file_prefix": {
+    "message": "Datoteka: "
+  },
+  "new_file": {
+    "message": "Nova datoteka"
+  },
+  "new_push": {
+    "message": "Nov potisk"
+  },
+  "open_button": {
+    "message": "Odpri"
+  },
+  "dismiss_button": {
+    "message": "Zapri"
+  },
+  "unknown_app": {
+    "message": "Neznana aplikacija"
+  },
+  "new_notification": {
+    "message": "Novo obvestilo"
+  },
+  "push_current_page_url": {
+    "message": "Pošlji URL trenutne strani"
+  },
+  "to_selected_devices": {
+    "message": "Na izbrane naprave"
+  },
+  "choose_device": {
+    "message": "Izberi napravo"
+  },
+  "choose_people": {
+    "message": "Izberi osebe"
+  },
+  "push_selected_text": {
+    "message": "Pošlji izbrano besedilo"
+  },
+  "push_this_image": {
+    "message": "Pošlji to sliko"
+  },
+  "retry_connection_title": {
+    "message": "Ponovno poveži"
+  },
+  "open_settings_to_configure": {
+    "message": "Odprite nastavitve za nastavitev dostopnega žetona"
+  },
+  "no_access_token": {
+    "message": "Dostopni žeton ni najden. Nastavite ga v možnostih."
+  },
+  "image": {
+    "message": "slika"
+  },
+  "file": {
+    "message": "datoteka"
+  }
+}

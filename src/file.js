@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressFill = document.getElementById('progressFill');
   const status = document.getElementById('status');
 
+  // Initialize i18n
+  initializeI18n();
+
   loadAndApplyColorMode();
 
   fileButton.addEventListener('click', () => {
@@ -21,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show progress
     progress.style.display = 'block';
-    status.textContent = 'Processing file...';
+    status.textContent = chrome.i18n.getMessage('processing_file');
     progressFill.style.width = '20%';
 
     try {
@@ -32,16 +35,16 @@ document.addEventListener('DOMContentLoaded', function() {
       ]);
 
       if (!tokenData.accessToken) {
-        throw new Error('No access token found. Please configure in options.');
+        throw new Error(chrome.i18n.getMessage('no_access_token'));
       }
 
-      status.textContent = 'Preparing upload...';
+      status.textContent = chrome.i18n.getMessage('preparing_upload');
       progressFill.style.width = '50%';
 
       // Upload file using Pushbullet API directly
       await uploadFile(file, tokenData.accessToken, configData.remoteDeviceId);
 
-      status.textContent = 'File/image pushed!';
+      status.textContent = chrome.i18n.getMessage('file_image_pushed');
       progressFill.style.width = '100%';
 
       // Close window after a short delay
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     } catch (error) {
       console.error('File upload failed:', error);
-      status.textContent = 'Upload failed: ' + error.message;
+      status.textContent = chrome.i18n.getMessage('upload_failed') + error.message;
       progressFill.style.width = '0%';
     }
   }
@@ -76,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const uploadData = await uploadRequest.json();
     
-    status.textContent = 'Uploading to server...';
+    status.textContent = chrome.i18n.getMessage('uploading_to_server');
     progressFill.style.width = '70%';
 
     // Step 2: Upload file
@@ -97,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
       throw new Error('File upload failed');
     }
 
-    status.textContent = 'Creating push...';
+    status.textContent = chrome.i18n.getMessage('creating_push');
     progressFill.style.width = '90%';
 
     // Step 3: Create push
@@ -125,6 +128,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const data = await chrome.storage.sync.get('colorMode');
     const colorMode = data.colorMode || 'system';
     applyColorMode(colorMode);
+  }
+
+  function initializeI18n() {
+    // Replace all elements with data-i18n attribute
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(element => {
+      const messageKey = element.getAttribute('data-i18n');
+      element.textContent = chrome.i18n.getMessage(messageKey);
+    });
   }
 
   function applyColorMode(mode) {
