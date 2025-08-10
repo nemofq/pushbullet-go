@@ -16,11 +16,14 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - Receive and send pushes
 - Push files/images by pasting or uploading (in standalone window due to Chrome's restriction)
 - Push current page's URL, selected text, or images from context menu with device/people selection
-- Notifications for received pushes with button to open links
+- Control which devices to push to by selecting devices
+- Notifications for received pushes with buttons to open links and dismiss
 - Auto-open received link in a new tab (default off, enable in options page)
-- Filter received pushes and control which devices to push to by selecting devices
 - Stores 100 latest pushes locally (full history available on Pushbullet website)
+- (New) Filter to only show and notify pushes sent to browsers
+- (New) Control notifications from browser-sourced pushes (useful for multi-browser use case)
 - (New) Notification Mirroring (requires Pushbullet Android app installed and enabled in both Android app and Push Go settings)
+- (New) Supports i18n with 33 languages
 - (New) Dark Mode (follows system by default, or choose manually)
 
 ## Installation
