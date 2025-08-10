@@ -5,8 +5,23 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressFill = document.getElementById('progressFill');
   const status = document.getElementById('status');
 
-  // Initialize i18n
-  initializeI18n();
+  // Initialize i18n after CustomI18n is ready
+  if (window.CustomI18n) {
+    window.CustomI18n.initializeI18n().then(() => {
+      initializeI18n();
+    });
+  } else {
+    // Fallback if CustomI18n not available
+    setTimeout(() => {
+      if (window.CustomI18n) {
+        window.CustomI18n.initializeI18n().then(() => {
+          initializeI18n();
+        });
+      } else {
+        initializeI18n();
+      }
+    }, 100);
+  }
 
   loadAndApplyColorMode();
 
@@ -24,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show progress
     progress.style.display = 'block';
-    status.textContent = chrome.i18n.getMessage('processing_file');
+    status.textContent = window.CustomI18n.getMessage('processing_file');
     progressFill.style.width = '20%';
 
     try {
@@ -35,16 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
       ]);
 
       if (!tokenData.accessToken) {
-        throw new Error(chrome.i18n.getMessage('no_access_token'));
+        throw new Error(window.CustomI18n.getMessage('no_access_token'));
       }
 
-      status.textContent = chrome.i18n.getMessage('preparing_upload');
+      status.textContent = window.CustomI18n.getMessage('preparing_upload');
       progressFill.style.width = '50%';
 
       // Upload file using Pushbullet API directly
       await uploadFile(file, tokenData.accessToken, configData.remoteDeviceId);
 
-      status.textContent = chrome.i18n.getMessage('file_image_pushed');
+      status.textContent = window.CustomI18n.getMessage('file_image_pushed');
       progressFill.style.width = '100%';
 
       // Close window after a short delay
@@ -54,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     } catch (error) {
       console.error('File upload failed:', error);
-      status.textContent = chrome.i18n.getMessage('upload_failed') + error.message;
+      status.textContent = window.CustomI18n.getMessage('upload_failed') + error.message;
       progressFill.style.width = '0%';
     }
   }
@@ -79,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const uploadData = await uploadRequest.json();
     
-    status.textContent = chrome.i18n.getMessage('uploading_to_server');
+    status.textContent = window.CustomI18n.getMessage('uploading_to_server');
     progressFill.style.width = '70%';
 
     // Step 2: Upload file
@@ -100,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
       throw new Error('File upload failed');
     }
 
-    status.textContent = chrome.i18n.getMessage('creating_push');
+    status.textContent = window.CustomI18n.getMessage('creating_push');
     progressFill.style.width = '90%';
 
     // Step 3: Create push
@@ -135,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(element => {
       const messageKey = element.getAttribute('data-i18n');
-      element.textContent = chrome.i18n.getMessage(messageKey);
+      element.textContent = window.CustomI18n.getMessage(messageKey);
     });
   }
 

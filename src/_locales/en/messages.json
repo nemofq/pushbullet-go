@@ -101,6 +101,12 @@
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
   },
+  "language_label": {
+    "message": "Language:"
+  },
+  "auto_browser_language": {
+    "message": "Auto (Browser's language)"
+  },
   "color_mode_label": {
     "message": "Color Mode:"
   },

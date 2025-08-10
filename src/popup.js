@@ -12,8 +12,23 @@ document.addEventListener('DOMContentLoaded', function() {
   const pushTab = document.getElementById('pushTab');
   const notificationTab = document.getElementById('notificationTab');
 
-  // Initialize i18n
-  initializeI18n();
+  // Initialize i18n after CustomI18n is ready
+  if (window.CustomI18n) {
+    window.CustomI18n.initializeI18n().then(() => {
+      initializeI18n();
+    });
+  } else {
+    // Fallback if CustomI18n not available
+    setTimeout(() => {
+      if (window.CustomI18n) {
+        window.CustomI18n.initializeI18n().then(() => {
+          initializeI18n();
+        });
+      } else {
+        initializeI18n();
+      }
+    }, 100);
+  }
   
   loadAndApplyColorMode();
   
@@ -81,9 +96,9 @@ document.addEventListener('DOMContentLoaded', function() {
     } else if (files.length > 1) {
       // Multiple files - show tip and do nothing
       e.preventDefault();
-      bodyInput.placeholder = chrome.i18n.getMessage('paste_one_file');
+      bodyInput.placeholder = window.CustomI18n.getMessage('paste_one_file');
       setTimeout(() => {
-        bodyInput.placeholder = chrome.i18n.getMessage('type_or_paste_placeholder');
+        bodyInput.placeholder = window.CustomI18n.getMessage('type_or_paste_placeholder');
       }, 2500);
     }
     // If no files, let default paste behavior continue
@@ -189,15 +204,15 @@ document.addEventListener('DOMContentLoaded', function() {
           if (!tokenData.accessToken) {
             // No access token - always show reconnect button (acts as setup), hide tabs
             retryButton.style.display = 'block';
-            retryButton.textContent = chrome.i18n.getMessage('reconnect_button');
-            retryButton.title = chrome.i18n.getMessage('open_settings_to_configure');
+            retryButton.textContent = window.CustomI18n.getMessage('reconnect_button');
+            retryButton.title = window.CustomI18n.getMessage('open_settings_to_configure');
             tabSwitcher.style.display = 'none';
             return;
           }
           
           // Has access token - normal connection status handling
-          retryButton.textContent = chrome.i18n.getMessage('reconnect_button');
-          retryButton.title = chrome.i18n.getMessage('retry_connection_title');
+          retryButton.textContent = window.CustomI18n.getMessage('reconnect_button');
+          retryButton.title = window.CustomI18n.getMessage('retry_connection_title');
           const isDisconnected = response.status === 'disconnected';
           retryButton.style.display = isDisconnected ? 'block' : 'none';
           
@@ -252,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Only show "No messages yet" if we have access token, otherwise show empty
       const tokenData = await chrome.storage.sync.get('accessToken');
       if (tokenData.accessToken) {
-        messagesList.innerHTML = `<div class="no-messages">${chrome.i18n.getMessage('no_messages_yet')}</div>`;
+        messagesList.innerHTML = `<div class="no-messages">${window.CustomI18n.getMessage('no_messages_yet')}</div>`;
       } else {
         messagesList.innerHTML = '';
       }
@@ -335,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
           const link = document.createElement('a');
           link.href = push.file_url;
-          link.textContent = push.file_name || chrome.i18n.getMessage('download_file');
+          link.textContent = push.file_name || window.CustomI18n.getMessage('download_file');
           link.className = 'message-link';
           link.target = '_blank';
           bodyDiv.appendChild(link);
@@ -350,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-button';
         copyButton.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>';
-        copyButton.title = push.type === 'link' ? chrome.i18n.getMessage('copy_link') : chrome.i18n.getMessage('copy_message');
+        copyButton.title = push.type === 'link' ? window.CustomI18n.getMessage('copy_link') : window.CustomI18n.getMessage('copy_message');
         copyButton.onclick = (e) => {
           e.stopPropagation();
           const textToCopy = push.type === 'link' ? push.url : push.body;
@@ -380,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Only show "No notifications received" if we have access token, otherwise show empty
       const tokenData = await chrome.storage.sync.get('accessToken');
       if (tokenData.accessToken) {
-        notificationsList.innerHTML = `<div class="no-messages">${chrome.i18n.getMessage('no_notifications_received')}</div>`;
+        notificationsList.innerHTML = `<div class="no-messages">${window.CustomI18n.getMessage('no_notifications_received')}</div>`;
       } else {
         notificationsList.innerHTML = '';
       }
@@ -408,13 +423,13 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         iconImg.src = 'icon128.png'; // Fallback icon
       }
-      iconImg.alt = chrome.i18n.getMessage('app_icon_alt');
+      iconImg.alt = window.CustomI18n.getMessage('app_icon_alt');
       headerDiv.appendChild(iconImg);
       
       // App name
       const appDiv = document.createElement('div');
       appDiv.className = 'notification-app';
-      appDiv.textContent = notification.application_name || notification.package_name || chrome.i18n.getMessage('unknown_app');
+      appDiv.textContent = notification.application_name || notification.package_name || window.CustomI18n.getMessage('unknown_app');
       headerDiv.appendChild(appDiv);
       
       // Timestamp
@@ -516,11 +531,11 @@ document.addEventListener('DOMContentLoaded', function() {
   async function handleFilePaste(file) {
     const isImage = file.type.startsWith('image/');
     const fileTypeKey = isImage ? 'image' : 'file';
-    const fileType = chrome.i18n.getMessage(fileTypeKey);
+    const fileType = window.CustomI18n.getMessage(fileTypeKey);
     
     try {
       
-      bodyInput.placeholder = chrome.i18n.getMessage('uploading') + fileType + '...';
+      bodyInput.placeholder = window.CustomI18n.getMessage('uploading') + fileType + '...';
       bodyInput.disabled = true;
       sendButton.disabled = true;
 
@@ -530,14 +545,14 @@ document.addEventListener('DOMContentLoaded', function() {
       ]);
 
       if (!tokenData.accessToken) {
-        throw new Error(chrome.i18n.getMessage('no_access_token'));
+        throw new Error(window.CustomI18n.getMessage('no_access_token'));
       }
 
       await uploadPastedFile(file, tokenData.accessToken, configData.remoteDeviceId);
       
-      bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + chrome.i18n.getMessage('uploaded_successfully');
+      bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + window.CustomI18n.getMessage('uploaded_successfully');
       setTimeout(() => {
-        bodyInput.placeholder = chrome.i18n.getMessage('type_or_paste_placeholder');
+        bodyInput.placeholder = window.CustomI18n.getMessage('type_or_paste_placeholder');
         bodyInput.disabled = false;
         sendButton.disabled = false;
       }, 2000);
@@ -545,10 +560,10 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(loadMessages, 1000);
 
     } catch (error) {
-      bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + ' ' + chrome.i18n.getMessage('upload_failed_retry');
+      bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + ' ' + window.CustomI18n.getMessage('upload_failed_retry');
       
       setTimeout(() => {
-        bodyInput.placeholder = chrome.i18n.getMessage('type_or_paste_placeholder');
+        bodyInput.placeholder = window.CustomI18n.getMessage('type_or_paste_placeholder');
         bodyInput.disabled = false;
         sendButton.disabled = false;
       }, 3000);
@@ -636,21 +651,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(element => {
       const messageKey = element.getAttribute('data-i18n');
-      element.textContent = chrome.i18n.getMessage(messageKey);
+      element.textContent = window.CustomI18n.getMessage(messageKey);
     });
     
     // Replace placeholder attributes
     const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
     placeholderElements.forEach(element => {
       const messageKey = element.getAttribute('data-i18n-placeholder');
-      element.placeholder = chrome.i18n.getMessage(messageKey);
+      element.placeholder = window.CustomI18n.getMessage(messageKey);
     });
     
     // Replace title attributes
     const titleElements = document.querySelectorAll('[data-i18n-title]');
     titleElements.forEach(element => {
       const messageKey = element.getAttribute('data-i18n-title');
-      element.title = chrome.i18n.getMessage(messageKey);
+      element.title = window.CustomI18n.getMessage(messageKey);
     });
   }
 
@@ -672,6 +687,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (areaName === 'sync' && changes.colorMode) {
       loadAndApplyColorMode();
+    }
+    if (areaName === 'sync' && changes.languageMode) {
+      // Language changed, reload locale and reinitialize UI
+      if (window.CustomI18n) {
+        window.CustomI18n.changeLanguage(changes.languageMode.newValue).then(() => {
+          initializeI18n();
+          loadMessages(); // Refresh messages to update any UI text
+          loadNotifications(); // Refresh notifications too
+        });
+      }
     }
   });
 });

@@ -13,15 +13,31 @@ document.addEventListener('DOMContentLoaded', function() {
   const hideBrowserPushesCheckbox = document.getElementById('hideBrowserPushes');
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const colorModeSelect = document.getElementById('colorMode');
+  const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
   
-  // Initialize i18n
-  initializeI18n();
+  // Initialize i18n after CustomI18n is ready
+  if (window.CustomI18n) {
+    window.CustomI18n.initializeI18n().then(() => {
+      initializeI18n();
+    });
+  } else {
+    // Fallback if CustomI18n not available
+    setTimeout(() => {
+      if (window.CustomI18n) {
+        window.CustomI18n.initializeI18n().then(() => {
+          initializeI18n();
+        });
+      } else {
+        initializeI18n();
+      }
+    }, 100);
+  }
   
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'colorMode'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'colorMode', 'languageMode'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -51,6 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load hide browser pushes setting (default is false/off)
     hideBrowserPushesCheckbox.checked = data.hideBrowserPushes || false; // Default to false
     updateHideBrowserPushesToggleVisual();
+    
+    // Load language mode setting (default is 'auto')
+    languageModeSelect.value = data.languageMode || 'auto';
     
     // Load color mode setting (default is 'system')
     colorModeSelect.value = data.colorMode || 'system';
@@ -97,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!accessToken) return;
     
     retrieveDevicesButton.disabled = true;
-    retrieveDevicesButton.textContent = chrome.i18n.getMessage('retrieving');
+    retrieveDevicesButton.textContent = window.CustomI18n.getMessage('retrieving');
     
     try {
       // Fetch devices
@@ -187,9 +206,9 @@ document.addEventListener('DOMContentLoaded', function() {
       showStatus(`Error: ${error.message}`, 'error');
     } finally {
       // Note: Don't re-enable here as showRetrieveSuccess will handle it
-      if (retrieveDevicesButton.textContent === chrome.i18n.getMessage('retrieving')) {
+      if (retrieveDevicesButton.textContent === window.CustomI18n.getMessage('retrieving')) {
         retrieveDevicesButton.disabled = false;
-        retrieveDevicesButton.textContent = chrome.i18n.getMessage('retrieve_devices_button');
+        retrieveDevicesButton.textContent = window.CustomI18n.getMessage('retrieve_devices_button');
       }
     }
   });
@@ -210,11 +229,24 @@ document.addEventListener('DOMContentLoaded', function() {
       notificationMirroring: notificationMirroringCheckbox.checked,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
+      languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value
     };
 
     chrome.storage.sync.set(saveData, function() {
-      showSaveSuccess();
+      // Check if language has changed
+      const oldLanguage = window.CustomI18n.getCurrentLanguage();
+      const newLanguage = languageModeSelect.value;
+      
+      if (oldLanguage !== newLanguage) {
+        // Language changed, reload the locale and update UI
+        window.CustomI18n.changeLanguage(newLanguage).then(() => {
+          initializeI18n();
+          showSaveSuccess();
+        });
+      } else {
+        showSaveSuccess();
+      }
       chrome.runtime.sendMessage({ type: 'token_updated' });
     });
   });
@@ -276,13 +308,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedDevices = selectedOptions.filter(option => option.value);
     
     if (selectedDevices.length === 0) {
-      deviceSelectionStatus.textContent = chrome.i18n.getMessage('none_selected_all_devices');
+      deviceSelectionStatus.textContent = window.CustomI18n.getMessage('none_selected_all_devices');
       deviceSelectionStatus.style.display = 'inline';
     } else if (selectedDevices.length === 1) {
       deviceSelectionStatus.textContent = `${selectedDevices[0].textContent}`;
       deviceSelectionStatus.style.display = 'inline';
     } else {
-      deviceSelectionStatus.textContent = `${selectedDevices.length} ${chrome.i18n.getMessage('devices_selected')}`;
+      deviceSelectionStatus.textContent = `${selectedDevices.length} ${window.CustomI18n.getMessage('devices_selected')}`;
       deviceSelectionStatus.style.display = 'inline';
     }
   }
@@ -304,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
       </svg>
-      ${chrome.i18n.getMessage('saved')}
+      ${window.CustomI18n.getMessage('saved')}
     `;
     saveButton.disabled = true;
     
@@ -315,13 +347,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showRetrieveSuccess() {
-    const originalContent = chrome.i18n.getMessage('retrieve_devices_button');
+    const originalContent = window.CustomI18n.getMessage('retrieve_devices_button');
     
     retrieveDevicesButton.innerHTML = `
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
       </svg>
-      ${chrome.i18n.getMessage('retrieved')}
+      ${window.CustomI18n.getMessage('retrieved')}
     `;
     retrieveDevicesButton.disabled = true;
     
@@ -336,14 +368,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(element => {
       const messageKey = element.getAttribute('data-i18n');
-      element.textContent = chrome.i18n.getMessage(messageKey);
+      element.textContent = window.CustomI18n.getMessage(messageKey);
     });
     
     // Replace placeholder attributes
     const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
     placeholderElements.forEach(element => {
       const messageKey = element.getAttribute('data-i18n-placeholder');
-      element.placeholder = chrome.i18n.getMessage(messageKey);
+      element.placeholder = window.CustomI18n.getMessage(messageKey);
     });
   }
 

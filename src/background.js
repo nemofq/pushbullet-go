@@ -8,21 +8,123 @@ let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
 let isFirstFetch = true;
 
+// Context menu setup lock to prevent race conditions
+let isSettingUpContextMenus = false;
+
+// Initialize custom i18n for background script
+let cachedMessages = {};
+let currentLanguage = 'auto';
+let isI18nInitialized = false;
+
+// Custom getMessage for background script
+function getMessage(messageKey, substitutions = []) {
+  if (currentLanguage === 'auto' || !isI18nInitialized) {
+    return chrome.i18n.getMessage(messageKey, substitutions);
+  }
+  
+  const messageObj = cachedMessages[messageKey];
+  if (!messageObj || !messageObj.message) {
+    return chrome.i18n.getMessage(messageKey, substitutions);
+  }
+  
+  let message = messageObj.message;
+  
+  if (substitutions && substitutions.length > 0) {
+    substitutions.forEach((substitution, index) => {
+      const placeholder = `$${index + 1}`;
+      message = message.replace(new RegExp(`\\${placeholder}`, 'g'), substitution);
+    });
+  }
+  
+  return message;
+}
+
+// Initialize i18n for background script
+async function initializeBackgroundI18n() {
+  try {
+    const data = await chrome.storage.sync.get('languageMode');
+    currentLanguage = data.languageMode || 'auto';
+    
+    if (currentLanguage === 'auto') {
+      isI18nInitialized = true;
+      return;
+    }
+    
+    // Load locale messages differently in service worker context
+    try {
+      const url = chrome.runtime.getURL(`_locales/${currentLanguage}/messages.json`);
+      const response = await fetch(url);
+      
+      if (response.ok) {
+        const text = await response.text();
+        cachedMessages = JSON.parse(text);
+      } else {
+        throw new Error(`Failed to load locale: ${response.status}`);
+      }
+    } catch (fetchError) {
+      console.warn(`Failed to load custom locale ${currentLanguage}, using Chrome default:`, fetchError);
+      currentLanguage = 'auto';
+    }
+    
+    isI18nInitialized = true;
+  } catch (error) {
+    console.warn('Failed to initialize background i18n, falling back to Chrome default:', error);
+    currentLanguage = 'auto';
+    isI18nInitialized = true;
+  }
+}
+
+// Get current language function for background script
+function getCurrentLanguage() {
+  return currentLanguage;
+}
+
+// Create a global CustomI18n object for service worker context
+const CustomI18n = { getMessage, getCurrentLanguage, initializeI18n: initializeBackgroundI18n };
+
+// Initialize i18n immediately for service worker
+initializeBackgroundI18n().catch(error => {
+  console.warn('Initial i18n initialization failed, will use Chrome default:', error);
+});
+
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed/updated');
-  initializeExtension();
-  setupContextMenus();
+  initializeBackgroundI18n().then(async () => {
+    initializeExtension();
+    await setupContextMenus();
+  }).catch(async (error) => {
+    console.error('Failed to initialize extension:', error);
+    // Fallback initialization without custom i18n
+    initializeExtension();
+    await setupContextMenus();
+  });
 });
 
 chrome.runtime.onStartup.addListener(() => {
   console.log('Chrome started');
-  initializeExtension();
-  setupContextMenus();
+  initializeBackgroundI18n().then(async () => {
+    initializeExtension();
+    await setupContextMenus();
+  }).catch(async (error) => {
+    console.error('Failed to initialize extension:', error);
+    // Fallback initialization without custom i18n
+    initializeExtension();
+    await setupContextMenus();
+  });
 });
 
-chrome.storage.onChanged.addListener((changes, namespace) => {
+chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace === 'sync' && (changes.devices || changes.people)) {
-    setupContextMenus();
+    await setupContextMenus();
+  }
+  if (namespace === 'sync' && changes.languageMode) {
+    // Language changed, reinitialize i18n and update context menus
+    initializeBackgroundI18n().then(async () => {
+      await setupContextMenus();
+    }).catch(async (error) => {
+      console.error('Failed to reinitialize i18n:', error);
+      await setupContextMenus();
+    });
   }
 });
 
@@ -37,8 +139,14 @@ chrome.idle.onStateChanged.addListener((state) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.type) {
     case 'token_updated':
-      initializeExtension();
-      setupContextMenus();
+      initializeBackgroundI18n().then(async () => {
+        initializeExtension();
+        await setupContextMenus();
+      }).catch(async (error) => {
+        console.error('Failed to reinitialize i18n:', error);
+        initializeExtension();
+        await setupContextMenus();
+      });
       break;
     case 'get_status':
       sendResponse({ 
@@ -389,13 +497,13 @@ function showNotificationForPush(push) {
   let notificationBody = '';
   
   if (push.type === 'note') {
-    notificationBody = push.body || chrome.i18n.getMessage('new_note');
+    notificationBody = push.body || getMessage('new_note');
   } else if (push.type === 'link') {
-    notificationBody = push.body || push.url || chrome.i18n.getMessage('new_link');
+    notificationBody = push.body || push.url || getMessage('new_link');
   } else if (push.type === 'file') {
-    notificationBody = push.body || `${chrome.i18n.getMessage('file_prefix')}${push.file_name}` || chrome.i18n.getMessage('new_file');
+    notificationBody = push.body || `${getMessage('file_prefix')}${push.file_name}` || getMessage('new_file');
   } else {
-    notificationBody = push.body || chrome.i18n.getMessage('new_push');
+    notificationBody = push.body || getMessage('new_push');
   }
   
   const notificationOptions = {
@@ -408,13 +516,13 @@ function showNotificationForPush(push) {
   // Add buttons based on push type
   if (push.type === 'link' || push.type === 'file') {
     notificationOptions.buttons = [
-      { title: chrome.i18n.getMessage('open_button') },
-      { title: chrome.i18n.getMessage('dismiss_button') }
+      { title: getMessage('open_button') },
+      { title: getMessage('dismiss_button') }
     ];
   } else {
     // For note and other types, only add dismiss button
     notificationOptions.buttons = [
-      { title: chrome.i18n.getMessage('dismiss_button') }
+      { title: getMessage('dismiss_button') }
     ];
   }
   
@@ -464,7 +572,7 @@ async function handleMirrorNotification(mirrorData) {
 }
 
 async function showMirrorNotification(mirrorData) {
-  const appName = mirrorData.application_name || mirrorData.package_name || chrome.i18n.getMessage('unknown_app');
+  const appName = mirrorData.application_name || mirrorData.package_name || getMessage('unknown_app');
   
   let message = '';
   if (mirrorData.title) {
@@ -477,7 +585,7 @@ async function showMirrorNotification(mirrorData) {
   const notificationOptions = {
     type: 'basic',
     title: appName,
-    message: message.trim() || chrome.i18n.getMessage('new_notification')
+    message: message.trim() || getMessage('new_notification')
   };
   
   // Handle base64 icon if available
@@ -490,7 +598,7 @@ async function showMirrorNotification(mirrorData) {
   // Add dismiss button only if dismissable is true
   if (mirrorData.dismissable) {
     notificationOptions.buttons = [
-      { title: chrome.i18n.getMessage('dismiss_button') }
+      { title: getMessage('dismiss_button') }
     ];
   }
   
@@ -776,16 +884,25 @@ async function storeSentMessage(push) {
 }
 
 async function setupContextMenus() {
-  chrome.contextMenus.removeAll(async () => {
-    // Get stored devices and people data
-    const data = await chrome.storage.sync.get(['devices', 'people']);
-    const devices = data.devices || [];
-    const people = data.people || [];
+  // Prevent concurrent context menu setup
+  if (isSettingUpContextMenus) {
+    console.log('Context menu setup already in progress, skipping...');
+    return;
+  }
+  
+  isSettingUpContextMenus = true;
+  
+  return new Promise((resolve) => {
+    chrome.contextMenus.removeAll(async () => {
+      // Get stored devices and people data
+      const data = await chrome.storage.sync.get(['devices', 'people']);
+      const devices = data.devices || [];
+      const people = data.people || [];
     
     // Create main context menu for page
     chrome.contextMenus.create({
       id: 'pushbullet-page',
-      title: chrome.i18n.getMessage('push_current_page_url'),
+      title: getMessage('push_current_page_url'),
       contexts: ['page']
     });
     
@@ -793,21 +910,21 @@ async function setupContextMenus() {
     chrome.contextMenus.create({
       id: 'pushbullet-page-selected',
       parentId: 'pushbullet-page',
-      title: chrome.i18n.getMessage('to_selected_devices'),
+      title: getMessage('to_selected_devices'),
       contexts: ['page']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-page-device',
       parentId: 'pushbullet-page',
-      title: chrome.i18n.getMessage('choose_device'),
+      title: getMessage('choose_device'),
       contexts: ['page']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-page-people',
       parentId: 'pushbullet-page',
-      title: chrome.i18n.getMessage('choose_people'),
+      title: getMessage('choose_people'),
       contexts: ['page']
     });
     
@@ -834,7 +951,7 @@ async function setupContextMenus() {
     // Create main context menu for selection
     chrome.contextMenus.create({
       id: 'pushbullet-selection',
-      title: chrome.i18n.getMessage('push_selected_text'),
+      title: getMessage('push_selected_text'),
       contexts: ['selection']
     });
     
@@ -842,21 +959,21 @@ async function setupContextMenus() {
     chrome.contextMenus.create({
       id: 'pushbullet-selection-selected',
       parentId: 'pushbullet-selection',
-      title: chrome.i18n.getMessage('to_selected_devices'),
+      title: getMessage('to_selected_devices'),
       contexts: ['selection']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-selection-device',
       parentId: 'pushbullet-selection',
-      title: chrome.i18n.getMessage('choose_device'),
+      title: getMessage('choose_device'),
       contexts: ['selection']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-selection-people',
       parentId: 'pushbullet-selection',
-      title: chrome.i18n.getMessage('choose_people'),
+      title: getMessage('choose_people'),
       contexts: ['selection']
     });
     
@@ -883,7 +1000,7 @@ async function setupContextMenus() {
     // Create main context menu for image
     chrome.contextMenus.create({
       id: 'pushbullet-image',
-      title: chrome.i18n.getMessage('push_this_image'),
+      title: getMessage('push_this_image'),
       contexts: ['image']
     });
     
@@ -891,21 +1008,21 @@ async function setupContextMenus() {
     chrome.contextMenus.create({
       id: 'pushbullet-image-selected',
       parentId: 'pushbullet-image',
-      title: chrome.i18n.getMessage('to_selected_devices'),
+      title: getMessage('to_selected_devices'),
       contexts: ['image']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-image-device',
       parentId: 'pushbullet-image',
-      title: chrome.i18n.getMessage('choose_device'),
+      title: getMessage('choose_device'),
       contexts: ['image']
     });
     
     chrome.contextMenus.create({
       id: 'pushbullet-image-people',
       parentId: 'pushbullet-image',
-      title: chrome.i18n.getMessage('choose_people'),
+      title: getMessage('choose_people'),
       contexts: ['image']
     });
     
@@ -927,6 +1044,10 @@ async function setupContextMenus() {
         title: person.name,
         contexts: ['image']
       });
+    });
+      
+      isSettingUpContextMenus = false;
+      resolve();
     });
   });
 }
