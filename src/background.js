@@ -555,7 +555,7 @@ async function handleMirrorNotification(mirrorData) {
     notification_id: mirrorData.notification_id,
     notification_tag: mirrorData.notification_tag,
     source_user_iden: mirrorData.source_user_iden,
-    dismissable: mirrorData.dismissable
+    dismissible: mirrorData.dismissible
   };
 
   // Store in local storage (keep latest 100)
@@ -595,8 +595,8 @@ async function showMirrorNotification(mirrorData) {
     notificationOptions.iconUrl = 'icon128.png';
   }
   
-  // Add dismiss button only if dismissable is true
-  if (mirrorData.dismissable) {
+  // Add dismiss button only if dismissible is true
+  if (mirrorData.dismissible) {
     notificationOptions.buttons = [
       { title: getMessage('dismiss_button') }
     ];
