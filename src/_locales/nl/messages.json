@@ -99,10 +99,10 @@
     "message": "Automatisch openen in nieuw tabblad (inactief) bij ontvangen van een link"
   },
   "enable_notification_mirroring_label": {
-    "message": "Meldingsspiegeling inschakelen"
+    "message": "Spiegelen van meldingen inschakelen"
   },
   "color_mode_label": {
-    "message": "Kleurmodus:"
+    "message": "Thema:"
   },
   "follow_system": {
     "message": "Systeem volgen"
@@ -126,7 +126,7 @@
     "message": "Bestand/Afbeelding pushen"
   },
   "choose_file_button": {
-    "message": "Bestand kiezen"
+    "message": "Bestand selecteren"
   },
   "preparing": {
     "message": "Voorbereiden..."
@@ -183,10 +183,10 @@
     "message": "Naar geselecteerde apparaten"
   },
   "choose_device": {
-    "message": "Kies apparaat"
+    "message": "Selecteer apparaat"
   },
   "choose_people": {
-    "message": "Kies personen"
+    "message": "Selecteer personen"
   },
   "push_selected_text": {
     "message": "Geselecteerde tekst pushen"
