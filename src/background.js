@@ -291,6 +291,8 @@ async function connectWebSocket() {
           refreshPushList(true); // Pass true to indicate this is from a tickle (new message)
         } else if (data.type === 'push' && data.push && data.push.type === 'mirror') {
           handleMirrorNotification(data.push);
+        } else if (data.type === 'push' && data.push && data.push.type === 'dismissal') {
+          handleMirrorDismissal(data.push);
         }
       } catch (error) {
         // Silent error handling - don't log to avoid extension page errors
