@@ -197,6 +197,28 @@ document.addEventListener('DOMContentLoaded', function() {
       await chrome.storage.sync.set({ devices: devices, people: people });
       await chrome.storage.local.set({ chromeDeviceId: chromeDeviceId });
       
+      // Fetch initial 20 pushes for display in popup (silent, no notifications)
+      const pushesResponse = await fetch('https://api.pushbullet.com/v2/pushes?active=true&limit=20', {
+        headers: {
+          'Access-Token': accessToken
+        }
+      });
+      
+      if (pushesResponse.ok) {
+        const pushesData = await pushesResponse.json();
+        if (pushesData.pushes && pushesData.pushes.length > 0) {
+          // Store the initial pushes and set lastModified
+          const lastModified = pushesData.pushes[0].modified;
+          await chrome.storage.local.set({ 
+            pushes: pushesData.pushes.slice(0, 100),
+            lastModified: lastModified 
+          });
+          console.log(`Initial setup: Retrieved ${pushesData.pushes.length} pushes, lastModified set to ${lastModified}`);
+        }
+      } else {
+        console.warn('Failed to fetch initial pushes:', pushesResponse.status, pushesResponse.statusText);
+      }
+      
       populateDeviceSelects();
       
       showRetrieveSuccess();

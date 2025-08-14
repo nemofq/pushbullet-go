@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMessages();
     checkNotificationMirroring();
     updateConnectionStatus();
-    refreshMessagesFromAPI();
   });
   
   // Fallback scroll to bottom for first-time loading
@@ -528,10 +527,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function refreshMessagesFromAPI() {
-    console.log('Refreshing messages from API');
-    chrome.runtime.sendMessage({ type: 'refresh_messages' });
-  }
 
   async function handleFilePaste(file) {
     const isImage = file.type.startsWith('image/');

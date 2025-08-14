@@ -173,9 +173,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       resetConnection();
       initializeExtension();
       break;
-    case 'refresh_messages':
-      refreshPushList();
-      break;
     case 'send_push':
       sendPush(message.data);
       break;
@@ -184,7 +181,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
+  const localData = await chrome.storage.local.get('lastModified');
   accessToken = data.accessToken;
+  
+  // Restore lastModified from storage to survive extension restarts
+  if (localData.lastModified) {
+    lastModified = localData.lastModified;
+  }
   
   if (accessToken) {
     connectWebSocket();
@@ -377,7 +380,7 @@ async function refreshPushList(isFromTickle = false) {
   if (!accessToken) return;
   
   try {
-    const wasInitialFetch = lastModified === 0;
+    // Always fetch based on lastModified, no special initial fetch logic
     const url = lastModified > 0 
       ? `https://api.pushbullet.com/v2/pushes?modified_after=${lastModified}&active=true`
       : `https://api.pushbullet.com/v2/pushes?active=true&limit=20`;
@@ -393,6 +396,8 @@ async function refreshPushList(isFromTickle = false) {
       
       if (data.pushes && data.pushes.length > 0) {
         lastModified = data.pushes[0].modified;
+        // Persist lastModified to survive extension restarts
+        chrome.storage.local.set({ lastModified: lastModified });
         
         const existingPushes = await chrome.storage.local.get('pushes');
         const pushes = existingPushes.pushes || [];
@@ -410,7 +415,6 @@ async function refreshPushList(isFromTickle = false) {
           pushes.unshift(...newPushes);
           
           // Show notifications for new pushes (only if from tickle, meaning real-time)
-          // Skip notifications on bulk fetch to avoid notifying about initial/existing messages
           if (isFromTickle) {
             // Apply device filtering for notifications (same as popup display)
             const configData = await chrome.storage.sync.get(['onlyBrowserPushes', 'autoOpenLinks', 'hideBrowserPushes']);
