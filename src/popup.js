@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     messagesList.scrollTop = messagesList.scrollHeight;
   }, 200);
   
+  let lastConnectionStatus = null;
   setInterval(updateConnectionStatus, 2000);
 
   retryButton.addEventListener('click', () => {
@@ -197,7 +198,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateConnectionStatus() {
     chrome.runtime.sendMessage({ type: 'get_status' }, (response) => {
       if (response && response.status) {
-        statusElement.className = `status ${response.status}`;
+        const currentStatus = response.status;
+        statusElement.className = `status ${currentStatus}`;
         
         // Check if we have an access token first
         chrome.storage.sync.get('accessToken').then(tokenData => {
@@ -207,13 +209,14 @@ document.addEventListener('DOMContentLoaded', function() {
             retryButton.textContent = window.CustomI18n.getMessage('reconnect_button');
             retryButton.title = window.CustomI18n.getMessage('open_settings_to_configure');
             tabSwitcher.style.display = 'none';
+            lastConnectionStatus = currentStatus;
             return;
           }
           
           // Has access token - normal connection status handling
           retryButton.textContent = window.CustomI18n.getMessage('reconnect_button');
           retryButton.title = window.CustomI18n.getMessage('retry_connection_title');
-          const isDisconnected = response.status === 'disconnected';
+          const isDisconnected = currentStatus === 'disconnected';
           retryButton.style.display = isDisconnected ? 'block' : 'none';
           
           if (isDisconnected) {
@@ -221,9 +224,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ensure we're on push tab and show send form
             switchTab('push');
           } else {
-            // Re-check notification mirroring setting to show/hide tabs
-            checkNotificationMirroring();
+            // Only re-check and reload content when transitioning from disconnected to connected
+            if (lastConnectionStatus === 'disconnected' || lastConnectionStatus === null) {
+              console.log('Connection restored - refreshing both push and notification content');
+              loadMessages(); // Refresh push messages
+              checkNotificationMirroring(); // This will also refresh notifications if enabled
+            }
           }
+          
+          lastConnectionStatus = currentStatus;
           
           // Auto-reconnect if disconnected when popup opens
           if (isDisconnected) {
