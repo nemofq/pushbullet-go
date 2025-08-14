@@ -251,22 +251,13 @@ async function connectWebSocket() {
   }
   
   try {
-    // Create WebSocket with error handling
-    try {
-      ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
-    } catch (constructorError) {
-      // Silently handle WebSocket constructor errors (like net::ERR_NAME_NOT_RESOLVED)
-      // Log to console only, not to extension UI
-      console.log('WebSocket connection failed:', constructorError.message);
-      connectionStatus = 'disconnected';
-      handleReconnection();
-      return;
-    }
+    // Create WebSocket - network errors will still show in Chrome console but won't break extension
+    ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
     
     // Set up all event handlers immediately
     ws.onerror = (event) => {
       connectionStatus = 'disconnected';
-      // Complete silence - no logging at all
+      // Silent error handling - these are network-level errors that Chrome logs anyway
     };
     
     ws.onopen = () => {
@@ -318,7 +309,7 @@ async function connectWebSocket() {
     
   } catch (error) {
     connectionStatus = 'disconnected';
-    // Silent error handling - don't log to avoid extension page errors
+    // Handle all WebSocket-related errors silently
     handleReconnection();
   }
 }
@@ -439,12 +430,7 @@ async function refreshPushList(isFromTickle = false) {
                 }
                 
                 if (!shouldHideNotification) {
-                  showNotificationForPush(push);
-                }
-                
-                // Auto-open link pushes in background tabs (only if enabled)
-                if (push.type === 'link' && push.url && configData.autoOpenLinks) {
-                  chrome.tabs.create({ url: push.url, active: false });
+                  showNotificationForPush(push, configData.autoOpenLinks);
                 }
               }
             });
@@ -479,7 +465,7 @@ async function refreshPushList(isFromTickle = false) {
   }
 }
 
-function showNotificationForPush(push) {
+function showNotificationForPush(push, autoOpenLinks = false) {
   let notificationBody = '';
   
   if (push.type === 'note') {
@@ -513,6 +499,11 @@ function showNotificationForPush(push) {
   }
   
   chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
+  
+  // Auto-open link pushes in background tabs (only if enabled and notification is created)
+  if (push.type === 'link' && push.url && autoOpenLinks) {
+    chrome.tabs.create({ url: push.url, active: false });
+  }
 }
 
 async function handleMirrorNotification(mirrorData) {
