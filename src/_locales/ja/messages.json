@@ -90,10 +90,10 @@
     "message": "プッシュを送信するデバイスを選択（複数選択は Ctrl/Cmd）"
   },
   "only_browser_pushes_label": {
-    "message": "ブラウザへのプッシュのみ通知・表示"
+    "message": "Chrome(s)へのプッシュのみ通知・表示"
   },
   "hide_browser_pushes_label": {
-    "message": "ブラウザからのプッシュ通知を非表示"
+    "message": "Chrome(s)からのプッシュ通知を非表示"
   },
   "auto_open_links_label": {
     "message": "リンク受信時に新しいタブで自動表示（非アクティブ）"

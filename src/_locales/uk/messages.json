@@ -90,10 +90,10 @@
     "message": "Виберіть пристрої для надсилання push. Утримуйте Ctrl/Cmd, щоб вибрати кілька."
   },
   "only_browser_pushes_label": {
-    "message": "Показувати та сповіщати лише у браузері"
+    "message": "Показувати та сповіщати лише у Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Приховати сповіщення про push із браузерів"
+    "message": "Приховати сповіщення про push із Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Автовідкриття у новій вкладці (неактивно) при отриманні посилання"

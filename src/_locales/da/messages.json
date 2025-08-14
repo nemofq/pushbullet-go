@@ -90,10 +90,10 @@
     "message": "Vælg hvilke enheder der skal modtage push. Hold Ctrl/Cmd for at vælge flere."
   },
   "only_browser_pushes_label": {
-    "message": "Kun underret og vis push til browsere"
+    "message": "Kun underret og vis push til Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Skjul notifikationer om push sendt fra browsere"
+    "message": "Skjul notifikationer om push sendt fra Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Åbn automatisk i nyt faneblad (inaktivt) ved modtagelse af link"

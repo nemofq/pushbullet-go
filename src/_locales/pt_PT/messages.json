@@ -90,10 +90,10 @@
     "message": "Escolha os dispositivos para enviar. Use Ctrl/Cmd para selecionar vários."
   },
   "only_browser_pushes_label": {
-    "message": "Notificar e mostrar apenas envios para navegadores"
+    "message": "Notificar e mostrar apenas envios para Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Ocultar notificações de envios feitos a partir de navegadores"
+    "message": "Ocultar notificações de envios feitos a partir de Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Abrir automaticamente em novo separador (inativo) ao receber ligação"

@@ -90,10 +90,10 @@
     "message": "Välj vilka enheter att skicka pushar till. Håll Ctrl/Cmd för att välja flera."
   },
   "only_browser_pushes_label": {
-    "message": "Visa endast pushar till webbläsare"
+    "message": "Visa endast pushar till Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Dölj pushaviseringar från webbläsare"
+    "message": "Dölj pushaviseringar från Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Öppna länkar automatiskt i ny flik (inaktiv)"

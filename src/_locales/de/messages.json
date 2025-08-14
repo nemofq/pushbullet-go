@@ -90,10 +90,10 @@
     "message": "Wählen Sie Geräte zum Senden aus. Strg/Cmd halten, um mehrere zu wählen."
   },
   "only_browser_pushes_label": {
-    "message": "Nur Browser-Pushs anzeigen/benachrichtigen"
+    "message": "Nur Chrome(s)-Pushs anzeigen/benachrichtigen"
   },
   "hide_browser_pushes_label": {
-    "message": "Benachrichtigungen von Browser-Pushs ausblenden"
+    "message": "Benachrichtigungen von Chrome(s)-Pushs ausblenden"
   },
   "auto_open_links_label": {
     "message": "Links automatisch in neuem Tab öffnen (inaktiv)"

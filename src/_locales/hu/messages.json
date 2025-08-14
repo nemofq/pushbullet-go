@@ -90,10 +90,10 @@
     "message": "Válassza ki, mely eszközökre küld push üzenetet. Több kiválasztásához tartsa lenyomva a Ctrl/Cmd-t."
   },
   "only_browser_pushes_label": {
-    "message": "Csak böngésző push értesítések megjelenítése"
+    "message": "Csak Chrome(s) push értesítések megjelenítése"
   },
   "hide_browser_pushes_label": {
-    "message": "Böngészőből küldött értesítések elrejtése"
+    "message": "Chrome(s)-ből küldött értesítések elrejtése"
   },
   "auto_open_links_label": {
     "message": "Linkek automatikus megnyitása új fülön (inaktív)"

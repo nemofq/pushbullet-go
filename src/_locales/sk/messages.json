@@ -90,10 +90,10 @@
     "message": "Vyberte zariadenia, kam sa majú posielať správy. Podržte Ctrl/Cmd pre viacnásobný výber."
   },
   "only_browser_pushes_label": {
-    "message": "Upozorňovať a zobrazovať iba správy prehliadača"
+    "message": "Upozorňovať a zobrazovať iba správy Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Skryť upozornenia na správy odoslané z prehliadačov"
+    "message": "Skryť upozornenia na správy odoslané z Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Automaticky otvoriť v novej karte (neaktívne) pri prijatí odkazu"

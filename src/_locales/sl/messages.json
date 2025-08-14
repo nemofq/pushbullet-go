@@ -90,10 +90,10 @@
     "message": "Izberite naprave za pošiljanje. Držite Ctrl/Cmd za več izbir."
   },
   "only_browser_pushes_label": {
-    "message": "Obvesti in prikaži potiske samo v brskalnikih"
+    "message": "Obvesti in prikaži potiske samo v Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Skrij obvestila o potiskih iz brskalnikov"
+    "message": "Skrij obvestila o potiskih iz Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Samodejno odpri v novem zavihku (neaktivno) ob prejemu povezave"

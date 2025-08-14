@@ -90,10 +90,10 @@
     "message": "Tria a quins dispositius vols enviar els enviaments. Mantén premut Ctrl/Cmd per seleccionar-ne més d'un."
   },
   "only_browser_pushes_label": {
-    "message": "Només notificar i mostrar enviaments al navegador"
+    "message": "Només notificar i mostrar enviaments al Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Amaga les notificacions d'enviaments fets des del navegador"
+    "message": "Amaga les notificacions d'enviaments fets des del Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Obrir automàticament en una pestanya nova (inactiu) en rebre un enllaç"

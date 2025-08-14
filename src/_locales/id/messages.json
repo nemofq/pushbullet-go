@@ -90,10 +90,10 @@
     "message": "Pilih perangkat untuk mengirim push. Tahan Ctrl/Cmd untuk memilih beberapa."
   },
   "only_browser_pushes_label": {
-    "message": "Hanya beri notifikasi & tampilkan push di browser"
+    "message": "Hanya beri notifikasi & tampilkan push di Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Sembunyikan notifikasi dari push yang dikirim dari browser"
+    "message": "Sembunyikan notifikasi dari push yang dikirim dari Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Buka otomatis di tab baru (tidak aktif) saat menerima tautan"

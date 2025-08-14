@@ -90,10 +90,10 @@
     "message": "Alegeți dispozitivele pentru trimitere. Țineți Ctrl/Cmd pentru selecție multiplă."
   },
   "only_browser_pushes_label": {
-    "message": "Notifică și afișează doar push-urile către browsere"
+    "message": "Notifică și afișează doar push-urile către Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Ascunde notificările push trimise din browsere"
+    "message": "Ascunde notificările push trimise din Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Deschide automat în filă nouă (inactiv) la primirea unui link"

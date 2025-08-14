@@ -90,10 +90,10 @@
     "message": "Push göndermek istediğiniz cihazları seçin. Birden fazla seçmek için Ctrl/Cmd basılı tutun."
   },
   "only_browser_pushes_label": {
-    "message": "Yalnızca tarayıcılara bildir ve göster"
+    "message": "Yalnızca Chrome(s)'a bildir ve göster"
   },
   "hide_browser_pushes_label": {
-    "message": "Tarayıcılardan gönderilen push bildirimlerini gizle"
+    "message": "Chrome(s)'dan gönderilen push bildirimlerini gizle"
   },
   "auto_open_links_label": {
     "message": "Bağlantı alındığında yeni sekmede otomatik aç (pasif)"

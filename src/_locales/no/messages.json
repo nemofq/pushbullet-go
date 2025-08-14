@@ -90,10 +90,10 @@
     "message": "Velg hvilke enheter du vil sende meldinger til. Hold Ctrl/Cmd for å velge flere."
   },
   "only_browser_pushes_label": {
-    "message": "Varsle og vis kun meldinger til nettlesere"
+    "message": "Varsle og vis kun meldinger til Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Skjul varsler for meldinger sendt fra nettlesere"
+    "message": "Skjul varsler for meldinger sendt fra Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Åpne automatisk i ny fane (inaktiv) ved mottak av lenke"

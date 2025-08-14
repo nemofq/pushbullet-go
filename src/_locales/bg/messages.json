@@ -90,10 +90,10 @@
     "message": "Изберете устройства за изпращане. Задръжте Ctrl/Cmd за избор на няколко."
   },
   "only_browser_pushes_label": {
-    "message": "Известия само към браузъри"
+    "message": "Известия само към Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Скрий известията от браузъри"
+    "message": "Скрий известията от Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Автоматично отваряне в нов раздел (неактивно) при получаване на линк"

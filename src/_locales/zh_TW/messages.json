@@ -90,10 +90,10 @@
     "message": "選擇要傳送推送的裝置。按住 Ctrl/Cmd 可多選。"
   },
   "only_browser_pushes_label": {
-    "message": "僅通知並顯示傳送到瀏覽器的推送"
+    "message": "僅通知並顯示傳送到 Chrome(s) 的推送"
   },
   "hide_browser_pushes_label": {
-    "message": "隱藏來自瀏覽器的推送通知"
+    "message": "隱藏來自 Chrome(s) 的推送通知"
   },
   "auto_open_links_label": {
     "message": "接收連結時自動在新標籤頁開啟（非啟用）"

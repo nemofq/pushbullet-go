@@ -90,10 +90,10 @@
     "message": "Valitse laitteet, joihin lähetetään. Pidä Ctrl/Cmd valitaksesi useita."
   },
   "only_browser_pushes_label": {
-    "message": "Ilmoita ja näytä vain selaimille"
+    "message": "Ilmoita ja näytä vain Chrome(s):lle"
   },
   "hide_browser_pushes_label": {
-    "message": "Piilota selaimista lähetettyjen viestien ilmoitukset"
+    "message": "Piilota Chrome(s):sta lähetettyjen viestien ilmoitukset"
   },
   "auto_open_links_label": {
     "message": "Avaa linkit automaattisesti uuteen välilehteen (passiivinen)"

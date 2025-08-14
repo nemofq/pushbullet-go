@@ -90,10 +90,10 @@
     "message": "Chọn thiết bị để gửi. Giữ Ctrl/Cmd để chọn nhiều."
   },
   "only_browser_pushes_label": {
-    "message": "Chỉ thông báo và hiển thị trên trình duyệt"
+    "message": "Chỉ thông báo và hiển thị trên Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Ẩn thông báo từ trình duyệt"
+    "message": "Ẩn thông báo từ Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Tự mở tab mới (nếu không hoạt động) khi nhận liên kết"

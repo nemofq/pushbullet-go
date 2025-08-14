@@ -90,10 +90,10 @@
     "message": "Vyberte zařízení pro odeslání. Držte Ctrl/Cmd pro více výběrů."
   },
   "only_browser_pushes_label": {
-    "message": "Oznámit a zobrazit pouze v prohlížečích"
+    "message": "Oznámit a zobrazit pouze v Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Skrýt oznámení z prohlížečů"
+    "message": "Skrýt oznámení z Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Automaticky otevřít v nové kartě při přijetí odkazu"

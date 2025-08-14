@@ -90,10 +90,10 @@
     "message": "Escolha para quais dispositivos enviar. Segure Ctrl/Cmd para selecionar vários."
   },
   "only_browser_pushes_label": {
-    "message": "Notificar e mostrar apenas no navegador"
+    "message": "Notificar e mostrar apenas no Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Ocultar notificações enviadas de navegadores"
+    "message": "Ocultar notificações enviadas de Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Abrir automaticamente em nova guia (inativo) ao receber link"

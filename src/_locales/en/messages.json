@@ -90,10 +90,10 @@
     "message": "Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple."
   },
   "only_browser_pushes_label": {
-    "message": "Only notify and show pushes to browsers"
+    "message": "Only notify and show pushes to Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Hide notification of pushes sent from browsers"
+    "message": "Hide notification of pushes sent from Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Auto-open in new tab (inactive) when receiving a link"

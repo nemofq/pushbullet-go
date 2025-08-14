@@ -90,10 +90,10 @@
     "message": "Wybierz urządzenia do wysyłki. Przytrzymaj Ctrl/Cmd, aby zaznaczyć wiele."
   },
   "only_browser_pushes_label": {
-    "message": "Powiadamiaj tylko w przeglądarkach"
+    "message": "Powiadamiaj tylko w Chrome(s)"
   },
   "hide_browser_pushes_label": {
-    "message": "Ukryj powiadomienia z przeglądarek"
+    "message": "Ukryj powiadomienia z Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "Automatycznie otwieraj w nowej karcie (nieaktywne) po otrzymaniu linku"

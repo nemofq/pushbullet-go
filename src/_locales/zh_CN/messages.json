@@ -90,10 +90,10 @@
     "message": "选择要发送推送的设备。按住 Ctrl/Cmd 可多选。"
   },
   "only_browser_pushes_label": {
-    "message": "仅通知并显示发送到浏览器的推送"
+    "message": "仅通知并显示发送到 Chrome(s) 的推送"
   },
   "hide_browser_pushes_label": {
-    "message": "隐藏来自浏览器的推送通知"
+    "message": "隐藏来自 Chrome(s) 的推送通知"
   },
   "auto_open_links_label": {
     "message": "接收链接时自动在新标签页打开（非激活）"

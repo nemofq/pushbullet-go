@@ -90,10 +90,10 @@
     "message": "Kies naar welke apparaten je wilt pushen. Houd Ctrl/Cmd ingedrukt om meerdere te selecteren."
   },
   "only_browser_pushes_label": {
-    "message": "Alleen pushmeldingen naar browsers tonen"
+    "message": "Alleen pushmeldingen naar Chrome(s) tonen"
   },
   "hide_browser_pushes_label": {
-    "message": "Meldingen verbergen van pushes die vanuit browsers zijn verzonden"
+    "message": "Meldingen verbergen van pushes die vanuit Chrome(s) zijn verzonden"
   },
   "auto_open_links_label": {
     "message": "Automatisch openen in nieuw tabblad (inactief) bij ontvangen van een link"

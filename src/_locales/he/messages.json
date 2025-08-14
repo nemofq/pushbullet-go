@@ -90,10 +90,10 @@
     "message": "בחר את המכשירים לשליחה. החזק Ctrl/Cmd לבחירה מרובה."
   },
   "only_browser_pushes_label": {
-    "message": "הצג התראות ודחיפות לדפדפנים בלבד"
+    "message": "הצג התראות ודחיפות ל-Chrome(s) בלבד"
   },
   "hide_browser_pushes_label": {
-    "message": "הסתר התראות של דחיפות שנשלחו מדפדפנים"
+    "message": "הסתר התראות של דחיפות שנשלחו מ-Chrome(s)"
   },
   "auto_open_links_label": {
     "message": "פתח אוטומטית בלשונית חדשה (לא פעיל) בעת קבלת קישור"
