@@ -86,19 +86,29 @@ initializeBackgroundI18n().catch(error => {
   console.warn('Initial i18n initialization failed, will use Chrome default:', error);
 });
 
-// Auto-reconnection logic: check connection status periodically and reconnect if needed
+// Network event listeners for immediate reconnection when network comes back
+// Note: In service workers, we rely on navigator.onLine checks in connectWebSocket instead of events
+
+// Consolidated auto-reconnection logic: check connection status periodically
 setInterval(async () => {
   try {
     const data = await chrome.storage.sync.get('accessToken');
     if (data.accessToken && connectionStatus === 'disconnected' && !ws) {
-      console.log('Auto-reconnection: detected disconnected state - reconnecting');
-      resetConnection();
-      initializeExtension();
+      // Auto-reconnect scenarios:
+      // 1. After max attempts reached - periodic retry after individual attempts gave up  
+      // 2. Fresh extension start - initializeExtension should handle this, but as backup
+      if (reconnectAttempts >= maxReconnectAttempts) {
+        console.log('Auto-reconnection: periodic retry after max attempts reached');
+        resetConnection(); // Reset attempts counter for fresh start
+        connectWebSocket();
+      }
+      // For disable/enable scenario, initializeExtension() should handle the connection
+      // This periodic check primarily serves as backup for max attempts scenario
     }
   } catch (error) {
-    // Silent error handling
+    console.log('Auto-reconnection check failed - will retry next cycle:', error);
   }
-}, 5000); // Check every 5 seconds
+}, 5000); // Check every 5 seconds like original
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed/updated');
@@ -126,6 +136,19 @@ chrome.runtime.onStartup.addListener(() => {
   });
 });
 
+// Handle extension enable after disable - this doesn't trigger onInstalled
+// Initialize immediately when service worker starts
+console.log('Service worker starting - initializing extension');
+initializeBackgroundI18n().then(async () => {
+  initializeExtension();
+  await setupContextMenus();
+}).catch(async (error) => {
+  console.error('Failed to initialize extension on startup:', error);
+  // Fallback initialization without custom i18n
+  initializeExtension();
+  await setupContextMenus();
+});
+
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace === 'sync' && (changes.devices || changes.people)) {
     await setupContextMenus();
@@ -143,10 +166,12 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
 
 
 chrome.idle.onStateChanged.addListener((state) => {
-  if (state === 'active' && connectionStatus === 'disconnected') {
-    console.log('System resumed from idle - attempting reconnection');
-    resetConnection();
-    initializeExtension();
+  if (state === 'active' && connectionStatus === 'disconnected' && accessToken) {
+    console.log('System resumed from idle - triggering reconnection');
+    // Reset attempts counter to allow fresh reconnection
+    reconnectAttempts = 0;
+    // Use existing reconnection logic directly
+    connectWebSocket();
   }
 });
 
@@ -169,9 +194,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
       return true; // Only return true for async responses
     case 'retry_connection':
-      // Reset everything like fresh start
-      resetConnection();
-      initializeExtension();
+      // Manual reconnection from popup - use existing logic directly
+      if (accessToken) {
+        console.log('Manual reconnection requested from popup');
+        // Reset attempts counter for fresh start
+        reconnectAttempts = 0;
+        // Use existing reconnection logic directly
+        connectWebSocket();
+      } else {
+        console.log('No access token available for manual reconnection');
+        connectionStatus = 'disconnected';
+      }
       break;
     case 'send_push':
       sendPush(message.data);
@@ -243,75 +276,65 @@ async function connectWebSocket() {
   connectionStatus = 'connecting';
   console.log(`Connecting to WebSocket... (attempt ${reconnectAttempts + 1})`);
   
-  // Check network connectivity first
+  // Check network connectivity before attempting connection
   if (!navigator.onLine) {
+    console.log('No network connectivity - postponing WebSocket connection');
     connectionStatus = 'disconnected';
     handleReconnection();
     return;
   }
   
-  try {
-    // Create WebSocket - network errors will still show in Chrome console but won't break extension
-    ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
-    
-    // Set up all event handlers immediately
-    ws.onerror = (event) => {
-      connectionStatus = 'disconnected';
-      // Silent error handling - these are network-level errors that Chrome logs anyway
-    };
-    
-    ws.onopen = () => {
-      connectionStatus = 'connected';
-      reconnectAttempts = 0; // Reset on successful connection
-      console.log('WebSocket connected successfully');
-      startHeartbeatMonitor();
-      keepAlive(); // Start official Chrome 116+ keepalive
-    };
-    
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        
-        if (data.type === 'nop') {
-          // Reset heartbeat timer on each nop message
-          startHeartbeatMonitor();
-        } else if (data.type === 'tickle' && data.subtype === 'push') {
-          refreshPushList(true); // Pass true to indicate this is from a tickle (new message)
-        } else if (data.type === 'push' && data.push && data.push.type === 'mirror') {
-          handleMirrorNotification(data.push);
-        } else if (data.type === 'push' && data.push && data.push.type === 'dismissal') {
-          handleMirrorDismissal(data.push);
-        }
-      } catch (error) {
-        // Silent error handling - don't log to avoid extension page errors
-      }
-    };
-    
-    ws.onclose = (event) => {
-      connectionStatus = 'disconnected';
-      // Only log non-error close codes to avoid spam
-      if (event.code !== 1006 && event.code !== 1002) {
-        console.log('WebSocket disconnected:', event.code);
-      }
-      
-      if (heartbeatTimer) {
-        clearTimeout(heartbeatTimer);
-        heartbeatTimer = null;
-      }
-      
-      if (keepAliveIntervalId) {
-        clearInterval(keepAliveIntervalId);
-        keepAliveIntervalId = null;
-      }
-      
-      handleReconnection();
-    };
-    
-  } catch (error) {
+  // Create WebSocket with consolidated error handling
+  ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
+  
+  // Set up error handler immediately - treat errors as disconnection
+  ws.onerror = (event) => {
+    console.log('WebSocket error occurred - treating as disconnected:', {
+      type: event.type,
+      target: event.target?.readyState,
+      timestamp: new Date().toISOString()
+    });
     connectionStatus = 'disconnected';
-    // Handle all WebSocket-related errors silently
     handleReconnection();
-  }
+  };
+  
+  // Centralized WebSocket close handling
+  const handleWebSocketClose = (event) => {
+    connectionStatus = 'disconnected';
+    // Only log unexpected closures for debugging
+    if (event.code !== 1000 && event.code !== 1001) {
+      console.log('WebSocket closed unexpectedly:', event.code, event.reason || 'No reason provided');
+    }
+    handleReconnection();
+  };
+  
+  ws.onopen = () => {
+    connectionStatus = 'connected';
+    reconnectAttempts = 0;
+    console.log('WebSocket connected successfully');
+    startHeartbeatMonitor();
+    keepAlive();
+  };
+  
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      
+      if (data.type === 'nop') {
+        startHeartbeatMonitor();
+      } else if (data.type === 'tickle' && data.subtype === 'push') {
+        refreshPushList(true);
+      } else if (data.type === 'push' && data.push && data.push.type === 'mirror') {
+        handleMirrorNotification(data.push);
+      } else if (data.type === 'push' && data.push && data.push.type === 'dismissal') {
+        handleMirrorDismissal(data.push);
+      }
+    } catch (error) {
+      console.log('Failed to parse WebSocket message:', error);
+    }
+  };
+  
+  ws.onclose = handleWebSocketClose;
 }
 
 function keepAlive() {
@@ -348,6 +371,8 @@ function startHeartbeatMonitor() {
 
 function handleReconnection() {
   if (!accessToken) {
+    console.log('No access token available for reconnection');
+    connectionStatus = 'disconnected';
     return;
   }
   
@@ -355,14 +380,23 @@ function handleReconnection() {
   console.log(`Reconnection attempt ${reconnectAttempts}/${maxReconnectAttempts}`);
   
   if (reconnectAttempts < maxReconnectAttempts) {
-    // Auto-reconnect after 3 seconds
-    setTimeout(() => {
-      if (connectionStatus === 'disconnected') {
+    // Individual reconnection attempts: 5 attempts, 5s intervals each
+    // Total time before giving up: 25 seconds (5 attempts × 5s each)
+    console.log(`Scheduling reconnection in 5000ms (${maxReconnectAttempts - reconnectAttempts} attempts remaining)`);
+    
+    setTimeout(async () => {
+      if (connectionStatus === 'disconnected' && accessToken) {
+        // Double-check network before attempting reconnection
+        if (!navigator.onLine) {
+          console.log('Still offline - postponing reconnection');
+          handleReconnection();
+          return;
+        }
         connectWebSocket();
       }
-    }, 3000);
+    }, 5000);
   } else {
-    console.log('Max reconnection attempts reached - manual retry required');
+    console.log('Max individual reconnection attempts reached (25s total) - periodic check will take over');
     connectionStatus = 'disconnected';
   }
 }
@@ -461,7 +495,7 @@ async function refreshPushList(isFromTickle = false) {
       
     }
   } catch (error) {
-    // Silent error handling - don't log to avoid extension page errors
+    console.log('API request failed - will retry on next tickle:', error);
   }
 }
 
@@ -843,7 +877,7 @@ async function sendPush(pushData) {
       }
     }
   } catch (error) {
-    // Silent error handling - don't log to avoid extension page errors
+    console.log('Push send failed:', error);
   }
 }
 

@@ -52,14 +52,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if we have an access token
     chrome.storage.sync.get('accessToken').then(tokenData => {
       if (!tokenData.accessToken) {
-        // No access token - open options page
+        // No access token - open options page for setup
         chrome.runtime.openOptionsPage();
       } else {
-        // Has access token - try to reconnect
+        // Has access token - delegate manual reconnection to background.js
         retryButton.style.display = 'none';
         statusElement.className = 'status connecting';
         chrome.runtime.sendMessage({ type: 'retry_connection' });
-        setTimeout(updateConnectionStatus, 2000);
+        // Update status after a short delay to show connecting state
+        setTimeout(updateConnectionStatus, 1000);
       }
     });
   });
@@ -203,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if we have an access token first
         chrome.storage.sync.get('accessToken').then(tokenData => {
           if (!tokenData.accessToken) {
-            // No access token - always show reconnect button (acts as setup), hide tabs
+            // No access token - show setup button
             retryButton.style.display = 'block';
             retryButton.textContent = window.CustomI18n.getMessage('reconnect_button');
             retryButton.title = window.CustomI18n.getMessage('open_settings_to_configure');
@@ -212,28 +213,27 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
           }
           
-          // Has access token - normal connection status handling
+          // Has access token - display connection status only
           retryButton.textContent = window.CustomI18n.getMessage('reconnect_button');
           retryButton.title = window.CustomI18n.getMessage('retry_connection_title');
           const isDisconnected = currentStatus === 'disconnected';
+          
+          // Show retry button for manual reconnection when disconnected
           retryButton.style.display = isDisconnected ? 'block' : 'none';
           
           if (isDisconnected) {
             tabSwitcher.style.display = 'none';
-            // Ensure we're on push tab and show send form
             switchTab('push');
           } else {
-            // Only re-check and reload content when transitioning from disconnected to connected
+            // Only refresh content when transitioning from disconnected to connected
             if (lastConnectionStatus === 'disconnected' || lastConnectionStatus === null) {
-              console.log('Connection restored - refreshing both push and notification content');
-              loadMessages(); // Refresh push messages
-              checkNotificationMirroring(); // This will also refresh notifications if enabled
+              console.log('Connection restored - refreshing content');
+              loadMessages();
+              checkNotificationMirroring();
             }
           }
           
           lastConnectionStatus = currentStatus;
-          
-          // Background.js now handles auto-reconnection, popup just displays status
         });
       }
     });

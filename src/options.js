@@ -197,26 +197,35 @@ document.addEventListener('DOMContentLoaded', function() {
       await chrome.storage.sync.set({ devices: devices, people: people });
       await chrome.storage.local.set({ chromeDeviceId: chromeDeviceId });
       
-      // Fetch initial 20 pushes for display in popup (silent, no notifications)
-      const pushesResponse = await fetch('https://api.pushbullet.com/v2/pushes?active=true&limit=20', {
-        headers: {
-          'Access-Token': accessToken
-        }
-      });
+      // Check if we need to fetch initial pushes (only if we haven't done it before)
+      const existingData = await chrome.storage.local.get('lastModified');
+      const hasInitialPushes = existingData.lastModified && existingData.lastModified > 0;
       
-      if (pushesResponse.ok) {
-        const pushesData = await pushesResponse.json();
-        if (pushesData.pushes && pushesData.pushes.length > 0) {
-          // Store the initial pushes and set lastModified
-          const lastModified = pushesData.pushes[0].modified;
-          await chrome.storage.local.set({ 
-            pushes: pushesData.pushes.slice(0, 100),
-            lastModified: lastModified 
-          });
-          console.log(`Initial setup: Retrieved ${pushesData.pushes.length} pushes, lastModified set to ${lastModified}`);
+      if (!hasInitialPushes) {
+        console.log('No initial pushes found - fetching first 20 pushes for display');
+        // Fetch initial 20 pushes for display in popup (silent, no notifications)
+        const pushesResponse = await fetch('https://api.pushbullet.com/v2/pushes?active=true&limit=20', {
+          headers: {
+            'Access-Token': accessToken
+          }
+        });
+        
+        if (pushesResponse.ok) {
+          const pushesData = await pushesResponse.json();
+          if (pushesData.pushes && pushesData.pushes.length > 0) {
+            // Store the initial pushes and set lastModified
+            const lastModified = pushesData.pushes[0].modified;
+            await chrome.storage.local.set({ 
+              pushes: pushesData.pushes.slice(0, 100),
+              lastModified: lastModified 
+            });
+            console.log(`Initial setup: Retrieved ${pushesData.pushes.length} pushes, lastModified set to ${lastModified}`);
+          }
+        } else {
+          console.warn('Failed to fetch initial pushes:', pushesResponse.status, pushesResponse.statusText);
         }
       } else {
-        console.warn('Failed to fetch initial pushes:', pushesResponse.status, pushesResponse.statusText);
+        console.log('Initial pushes already exist - skipping fetch (lastModified:', existingData.lastModified, ')');
       }
       
       populateDeviceSelects();
