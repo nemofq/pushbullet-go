@@ -234,11 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           lastConnectionStatus = currentStatus;
           
-          // Auto-reconnect if disconnected when popup opens
-          if (isDisconnected) {
-            console.log('Popup opened with disconnected status - attempting reconnection');
-            chrome.runtime.sendMessage({ type: 'retry_connection' });
-          }
+          // Background.js now handles auto-reconnection, popup just displays status
         });
       }
     });

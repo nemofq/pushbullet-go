@@ -6,7 +6,6 @@ let heartbeatTimer = null;
 let reconnectAttempts = 0;
 let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
-let isFirstFetch = true;
 
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
@@ -87,6 +86,20 @@ initializeBackgroundI18n().catch(error => {
   console.warn('Initial i18n initialization failed, will use Chrome default:', error);
 });
 
+// Auto-reconnection logic: check connection status periodically and reconnect if needed
+setInterval(async () => {
+  try {
+    const data = await chrome.storage.sync.get('accessToken');
+    if (data.accessToken && connectionStatus === 'disconnected' && !ws) {
+      console.log('Auto-reconnection: detected disconnected state - reconnecting');
+      resetConnection();
+      initializeExtension();
+    }
+  } catch (error) {
+    // Silent error handling
+  }
+}, 5000); // Check every 5 seconds
+
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed/updated');
   initializeBackgroundI18n().then(async () => {
@@ -127,6 +140,7 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
     });
   }
 });
+
 
 chrome.idle.onStateChanged.addListener((state) => {
   if (state === 'active' && connectionStatus === 'disconnected') {
@@ -233,38 +247,18 @@ async function connectWebSocket() {
     return;
   }
   
-  // Universal error suppression: temporarily override console methods
-  const originalConsoleError = console.error;
-  const originalConsoleWarn = console.warn;
-  
-  // Filter function to suppress WebSocket-related errors
-  const wsErrorFilter = (...args) => {
-    const message = args.join(' ').toLowerCase();
-    if (message.includes('websocket') || 
-        message.includes('net::err_name_not_resolved') ||
-        message.includes('net::err_network_changed') ||
-        message.includes('net::err_connection_refused') ||
-        message.includes('stream.pushbullet.com')) {
-      return; // Suppress WebSocket-related errors
-    }
-    originalConsoleError.apply(console, args);
-  };
-  
-  const wsWarnFilter = (...args) => {
-    const message = args.join(' ').toLowerCase();
-    if (message.includes('websocket') || message.includes('stream.pushbullet.com')) {
-      return; // Suppress WebSocket-related warnings
-    }
-    originalConsoleWarn.apply(console, args);
-  };
-  
   try {
-    // Temporarily override console methods
-    console.error = wsErrorFilter;
-    console.warn = wsWarnFilter;
-    
-    // Create WebSocket with comprehensive error suppression
-    ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
+    // Create WebSocket with error handling
+    try {
+      ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
+    } catch (constructorError) {
+      // Silently handle WebSocket constructor errors (like net::ERR_NAME_NOT_RESOLVED)
+      // Log to console only, not to extension UI
+      console.log('WebSocket connection failed:', constructorError.message);
+      connectionStatus = 'disconnected';
+      handleReconnection();
+      return;
+    }
     
     // Set up all event handlers immediately
     ws.onerror = (event) => {
@@ -319,17 +313,7 @@ async function connectWebSocket() {
       handleReconnection();
     };
     
-    // Restore console methods after a brief delay to allow WebSocket initialization
-    setTimeout(() => {
-      console.error = originalConsoleError;
-      console.warn = originalConsoleWarn;
-    }, 100);
-    
   } catch (error) {
-    // Restore console methods immediately on error
-    console.error = originalConsoleError;
-    console.warn = originalConsoleWarn;
-    
     connectionStatus = 'disconnected';
     // Silent error handling - don't log to avoid extension page errors
     handleReconnection();
@@ -426,8 +410,8 @@ async function refreshPushList(isFromTickle = false) {
           pushes.unshift(...newPushes);
           
           // Show notifications for new pushes (only if from tickle, meaning real-time)
-          // Skip notifications on first fetch to avoid notifying about initial 20 messages
-          if (isFromTickle && !isFirstFetch) {
+          // Skip notifications on bulk fetch to avoid notifying about initial/existing messages
+          if (isFromTickle) {
             // Apply device filtering for notifications (same as popup display)
             const configData = await chrome.storage.sync.get(['onlyBrowserPushes', 'autoOpenLinks', 'hideBrowserPushes']);
             const localData = await chrome.storage.local.get('chromeDeviceId');
@@ -485,10 +469,6 @@ async function refreshPushList(isFromTickle = false) {
         }
       }
       
-      // Mark first fetch as complete only after the initial fetch (when we fetched the first 20 messages)
-      if (isFirstFetch && wasInitialFetch) {
-        isFirstFetch = false;
-      }
     }
   } catch (error) {
     // Silent error handling - don't log to avoid extension page errors
