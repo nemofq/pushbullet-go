@@ -314,6 +314,7 @@ async function connectWebSocket() {
     console.log('WebSocket connected successfully');
     startHeartbeatMonitor();
     keepAlive();
+    refreshPushList(true, false);
   };
   
   ws.onmessage = (event) => {
@@ -401,7 +402,7 @@ function handleReconnection() {
   }
 }
 
-async function refreshPushList(isFromTickle = false) {
+async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) {
   if (!accessToken) return;
   
   try {
@@ -464,7 +465,7 @@ async function refreshPushList(isFromTickle = false) {
                 }
                 
                 if (!shouldHideNotification) {
-                  showNotificationForPush(push, configData.autoOpenLinks);
+                  showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks);
                 }
               }
             });
