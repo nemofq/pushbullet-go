@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Pushbullet SMS webfelület megnyitása"
+  },
+  "language_label": {
+    "message": "Nyelv:"
+  },
+  "auto_browser_language": {
+    "message": "Automatikus (Böngésző nyelve)"
   }
 }

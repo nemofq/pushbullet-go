@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Åbn Pushbullet SMS webgrænseflade"
+  },
+  "language_label": {
+    "message": "Sprog:"
+  },
+  "auto_browser_language": {
+    "message": "Automatisk (Browserens sprog)"
   }
 }

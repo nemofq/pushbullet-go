@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "פתח ממשק אינטרנט SMS של Pushbullet"
+  },
+  "language_label": {
+    "message": "שפה:"
+  },
+  "auto_browser_language": {
+    "message": "אוטומטי (שפת הדפדפן)"
   }
 }

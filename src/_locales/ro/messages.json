@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Deschideți interfața web SMS Pushbullet"
+  },
+  "language_label": {
+    "message": "Limbă:"
+  },
+  "auto_browser_language": {
+    "message": "Automat (Limba navigatorului)"
   }
 }

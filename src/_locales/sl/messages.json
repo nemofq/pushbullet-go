@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Odpri Pushbullet SMS spletni vmesnik"
+  },
+  "language_label": {
+    "message": "Jezik:"
+  },
+  "auto_browser_language": {
+    "message": "Samodejno (Jezik brskalnika)"
   }
 }

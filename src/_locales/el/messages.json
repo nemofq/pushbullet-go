@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Άνοιγμα ιστοσελίδας SMS Pushbullet"
+  },
+  "language_label": {
+    "message": "Γλώσσα:"
+  },
+  "auto_browser_language": {
+    "message": "Αυτόματα (Γλώσσα του προγράμματος περιήγησης)"
   }
 }

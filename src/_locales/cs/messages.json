@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Otevřít Pushbullet SMS webové rozhraní"
+  },
+  "language_label": {
+    "message": "Jazyk:"
+  },
+  "auto_browser_language": {
+    "message": "Automaticky (Jazyk prohlížeče)"
   }
 }

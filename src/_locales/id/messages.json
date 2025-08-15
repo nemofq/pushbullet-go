@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Buka antarmuka web SMS Pushbullet"
+  },
+  "language_label": {
+    "message": "Bahasa:"
+  },
+  "auto_browser_language": {
+    "message": "Otomatis (Bahasa browser)"
   }
 }

@@ -217,5 +217,11 @@
   },
   "open_sms_web_interface": {
     "message": "Avaa Pushbullet SMS verkkoselainkäyttöliittymä"
+  },
+  "language_label": {
+    "message": "Kieli:"
+  },
+  "auto_browser_language": {
+    "message": "Automaattinen (Selaimen kieli)"
   }
 }
