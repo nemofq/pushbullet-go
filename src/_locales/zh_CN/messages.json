@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "通知"
   },
+  "sms_button": {
+    "message": "短信"
+  },
   "reconnect_button": {
     "message": "重新连接"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "启用通知镜像"
+  },
+  "show_sms_shortcut_label": {
+    "message": "在弹窗中显示 Pushbullet 短信快捷方式"
+  },
+  "language_label": {
+    "message": "语言："
+  },
+  "auto_browser_language": {
+    "message": "自动（浏览器语言）"
   },
   "color_mode_label": {
     "message": "颜色模式："
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "文件"
+  },
+  "open_sms_web_interface": {
+    "message": "打开 Pushbullet 短信网页界面"
   }
 }

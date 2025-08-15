@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Известие"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Повторно свързване"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Активирай отразяване на известия"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Показвай Pushbullet SMS пряк път в popup"
   },
   "color_mode_label": {
     "message": "Цветови режим:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "файл"
+  },
+  "open_sms_web_interface": {
+    "message": "Отвори Pushbullet SMS уеб интерфейс"
   }
 }

@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Avisering"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Återanslut"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Aktivera aviseringsspegel"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Visa Pushbullet SMS-genväg i popup"
+  },
+  "language_label": {
+    "message": "Språk:"
+  },
+  "auto_browser_language": {
+    "message": "Auto (webbläsarspråk)"
   },
   "color_mode_label": {
     "message": "Färgläge:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "fil"
+  },
+  "open_sms_web_interface": {
+    "message": "Öppna Pushbullet SMS-webbgränssnitt"
   }
 }

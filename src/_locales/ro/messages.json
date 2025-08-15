@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Notificare"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Reconectare"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Activează oglindirea notificărilor"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Afișați scurtatura SMS Pushbullet în popup"
   },
   "color_mode_label": {
     "message": "Mod culoare:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "fișier"
+  },
+  "open_sms_web_interface": {
+    "message": "Deschideți interfața web SMS Pushbullet"
   }
 }

@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Notification"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Reconnect"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Show Pushbullet SMS shortcut in popup"
   },
   "language_label": {
     "message": "Language:"
@@ -214,5 +220,8 @@
   },
   "file": {
     "message": "file"
+  },
+  "open_sms_web_interface": {
+    "message": "Open Pushbullet SMS web interface"
   }
 }

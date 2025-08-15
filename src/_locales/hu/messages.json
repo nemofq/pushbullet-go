@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Értesítés"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Újrakapcsolódás"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Értesítéstükrözés engedélyezése"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Pushbullet SMS parancsikon megjelenítése a popup-ban"
   },
   "color_mode_label": {
     "message": "Színmód:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "fájl"
+  },
+  "open_sms_web_interface": {
+    "message": "Pushbullet SMS webfelület megnyitása"
   }
 }

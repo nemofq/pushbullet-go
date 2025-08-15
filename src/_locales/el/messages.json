@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Ειδοποίηση"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Επανασύνδεση"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Ενεργοποίηση κατοπτρισμού ειδοποιήσεων"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Εμφάνιση συντόμευσης SMS Pushbullet στο popup"
   },
   "color_mode_label": {
     "message": "Λειτουργία χρώματος:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "αρχείο"
+  },
+  "open_sms_web_interface": {
+    "message": "Άνοιγμα ιστοσελίδας SMS Pushbullet"
   }
 }

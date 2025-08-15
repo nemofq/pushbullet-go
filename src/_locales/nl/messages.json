@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Melding"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Opnieuw verbinden"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Spiegelen van meldingen inschakelen"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Pushbullet SMS-snelkoppeling in popup tonen"
+  },
+  "language_label": {
+    "message": "Taal:"
+  },
+  "auto_browser_language": {
+    "message": "Auto (browsertaal)"
   },
   "color_mode_label": {
     "message": "Thema:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "bestand"
+  },
+  "open_sms_web_interface": {
+    "message": "Pushbullet SMS-webinterface openen"
   }
 }

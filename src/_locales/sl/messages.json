@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Obvestilo"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Ponovno poveži"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Omogoči zrcaljenje obvestil"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Prikaži Pushbullet SMS bližnjico v popup"
   },
   "color_mode_label": {
     "message": "Barvni način:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "datoteka"
+  },
+  "open_sms_web_interface": {
+    "message": "Odpri Pushbullet SMS spletni vmesnik"
   }
 }

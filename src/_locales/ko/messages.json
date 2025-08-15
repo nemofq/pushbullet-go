@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "알림"
   },
+  "sms_button": {
+    "message": "문자"
+  },
   "reconnect_button": {
     "message": "재연결"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "알림 미러링 활성화"
+  },
+  "show_sms_shortcut_label": {
+    "message": "팝업에서 Pushbullet 문자 단축키 표시"
+  },
+  "language_label": {
+    "message": "언어:"
+  },
+  "auto_browser_language": {
+    "message": "자동 (브라우저 언어)"
   },
   "color_mode_label": {
     "message": "색상 모드:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "파일"
+  },
+  "open_sms_web_interface": {
+    "message": "Pushbullet 문자 웹 인터페이스 열기"
   }
 }

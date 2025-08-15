@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Upozornenie"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Znova pripojiť"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Povoliť zrkadlenie upozornení"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Zobraziť Pushbullet SMS skratku v popup"
   },
   "color_mode_label": {
     "message": "Farebný režim:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "súbor"
+  },
+  "open_sms_web_interface": {
+    "message": "Otvoriť Pushbullet SMS webové rozhranie"
   }
 }

@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "通知"
   },
+  "sms_button": {
+    "message": "簡訊"
+  },
   "reconnect_button": {
     "message": "重新連線"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "啟用通知映象"
+  },
+  "show_sms_shortcut_label": {
+    "message": "在彈窗中顯示 Pushbullet 簡訊快速鍵"
+  },
+  "language_label": {
+    "message": "語言："
+  },
+  "auto_browser_language": {
+    "message": "自動（瀏覽器語言）"
   },
   "color_mode_label": {
     "message": "顏色模式："
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "檔案"
+  },
+  "open_sms_web_interface": {
+    "message": "開啟 Pushbullet 簡訊網頁界面"
   }
 }

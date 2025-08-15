@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const onlyBrowserPushesToggle = document.getElementById('onlyBrowserPushesToggle');
   const hideBrowserPushesCheckbox = document.getElementById('hideBrowserPushes');
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
+  const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
+  const showSmsShortcutToggle = document.getElementById('showSmsShortcutToggle');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -37,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'colorMode', 'languageMode'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -67,6 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load hide browser pushes setting (default is false/off)
     hideBrowserPushesCheckbox.checked = data.hideBrowserPushes || false; // Default to false
     updateHideBrowserPushesToggleVisual();
+    
+    // Load SMS shortcut setting (default is false/off)
+    showSmsShortcutCheckbox.checked = data.showSmsShortcut || false; // Default to false
+    updateShowSmsShortcutToggleVisual();
     
     // Load language mode setting (default is 'auto')
     languageModeSelect.value = data.languageMode || 'auto';
@@ -99,6 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
   hideBrowserPushesToggle.addEventListener('click', function() {
     hideBrowserPushesCheckbox.checked = !hideBrowserPushesCheckbox.checked;
     updateHideBrowserPushesToggleVisual();
+  });
+
+  showSmsShortcutToggle.addEventListener('click', function() {
+    showSmsShortcutCheckbox.checked = !showSmsShortcutCheckbox.checked;
+    updateShowSmsShortcutToggleVisual();
   });
 
   // Handle color mode changes for immediate preview
@@ -260,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
       notificationMirroring: notificationMirroringCheckbox.checked,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
+      showSmsShortcut: showSmsShortcutCheckbox.checked,
       languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value
     };
@@ -331,6 +343,14 @@ document.addEventListener('DOMContentLoaded', function() {
       hideBrowserPushesToggle.classList.add('active');
     } else {
       hideBrowserPushesToggle.classList.remove('active');
+    }
+  }
+  
+  function updateShowSmsShortcutToggleVisual() {
+    if (showSmsShortcutCheckbox.checked) {
+      showSmsShortcutToggle.classList.add('active');
+    } else {
+      showSmsShortcutToggle.classList.remove('active');
     }
   }
   

@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Notification"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Reconnecter"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Activer le mirroring des notifications"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Afficher le raccourci SMS Pushbullet dans la popup"
+  },
+  "language_label": {
+    "message": "Langue :"
+  },
+  "auto_browser_language": {
+    "message": "Auto (langue du navigateur)"
   },
   "color_mode_label": {
     "message": "Mode de couleur :"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "fichier"
+  },
+  "open_sms_web_interface": {
+    "message": "Ouvrir l'interface web SMS Pushbullet"
   }
 }

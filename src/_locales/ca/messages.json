@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Notificació"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Torna a connectar"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Activar duplicació de notificacions"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Mostra la drecera SMS de Pushbullet al popup"
   },
   "color_mode_label": {
     "message": "Mode de color:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "fitxer"
+  },
+  "open_sms_web_interface": {
+    "message": "Obre la interfície web SMS de Pushbullet"
   }
 }

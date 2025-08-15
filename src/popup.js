@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const tabSwitcher = document.getElementById('tabSwitcher');
   const pushTab = document.getElementById('pushTab');
   const notificationTab = document.getElementById('notificationTab');
+  const smsShortcut = document.getElementById('smsShortcut');
 
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -163,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Only show tabs if we have an access token
     if (!tokenData.accessToken) {
       tabSwitcher.style.display = 'none';
+      checkSmsShortcut();
       return;
     }
     
@@ -173,6 +175,21 @@ document.addEventListener('DOMContentLoaded', function() {
       loadNotifications();
     } else {
       tabSwitcher.style.display = 'none';
+    }
+    checkSmsShortcut();
+  }
+
+  async function checkSmsShortcut() {
+    const [tokenData, smsData] = await Promise.all([
+      chrome.storage.sync.get('accessToken'),
+      chrome.storage.sync.get('showSmsShortcut')
+    ]);
+    
+    // Only show SMS shortcut if we have an access token and the setting is enabled
+    if (tokenData.accessToken && smsData.showSmsShortcut && tabSwitcher.style.display !== 'none') {
+      smsShortcut.style.display = 'flex';
+    } else {
+      smsShortcut.style.display = 'none';
     }
   }
 
@@ -223,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           if (isDisconnected) {
             tabSwitcher.style.display = 'none';
+            smsShortcut.style.display = 'none';
             switchTab('push');
           } else {
             // Only refresh content when transitioning from disconnected to connected
@@ -684,6 +702,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (areaName === 'sync' && changes.notificationMirroring) {
       checkNotificationMirroring();
+    }
+    if (areaName === 'sync' && changes.showSmsShortcut) {
+      checkSmsShortcut();
     }
     if (areaName === 'sync' && changes.colorMode) {
       loadAndApplyColorMode();

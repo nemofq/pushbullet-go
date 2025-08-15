@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Ilmoitus"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Yhdistä uudelleen"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Ota käyttöön ilmoitusten peilaus"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Näytä Pushbullet SMS pikakuvake popup-ikkunassa"
   },
   "color_mode_label": {
     "message": "Väritila:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "tiedosto"
+  },
+  "open_sms_web_interface": {
+    "message": "Avaa Pushbullet SMS verkkoselainkäyttöliittymä"
   }
 }

@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Bildirim"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Yeniden Bağlan"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Bildirim Yansıtmayı Etkinleştir"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Pushbullet SMS kısayolunu popup'ta göster"
+  },
+  "language_label": {
+    "message": "Dil:"
+  },
+  "auto_browser_language": {
+    "message": "Otomatik (tarayıcı dili)"
   },
   "color_mode_label": {
     "message": "Renk Modu:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "dosya"
+  },
+  "open_sms_web_interface": {
+    "message": "Pushbullet SMS web arayüzünü aç"
   }
 }

@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "การแจ้งเตือน"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "เชื่อมต่อใหม่"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "เปิดการมิเรอร์การแจ้งเตือน"
+  },
+  "show_sms_shortcut_label": {
+    "message": "แสดงทางลัด SMS Pushbullet ในป็อปอัพ"
+  },
+  "language_label": {
+    "message": "ภาษา:"
+  },
+  "auto_browser_language": {
+    "message": "อัตโนมัติ (ภาษาเบราว์เซอร์)"
   },
   "color_mode_label": {
     "message": "โหมดสี:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "ไฟล์"
+  },
+  "open_sms_web_interface": {
+    "message": "เปิดอินเทอร์เฟสเว็บ SMS Pushbullet"
   }
 }

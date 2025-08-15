@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Benachrichtigung"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Neu verbinden"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Benachrichtigungsspiegelung aktivieren"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Pushbullet SMS-Verknüpfung im Popup anzeigen"
+  },
+  "language_label": {
+    "message": "Sprache:"
+  },
+  "auto_browser_language": {
+    "message": "Auto (Browser-Sprache)"
   },
   "color_mode_label": {
     "message": "Farbmodus:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "Datei"
+  },
+  "open_sms_web_interface": {
+    "message": "Pushbullet SMS-Weboberfläche öffnen"
   }
 }

@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "通知"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "再接続"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "通知ミラーリングを有効化"
+  },
+  "show_sms_shortcut_label": {
+    "message": "ポップアップにPushbullet SMSショートカットを表示"
+  },
+  "language_label": {
+    "message": "言語:"
+  },
+  "auto_browser_language": {
+    "message": "自動（ブラウザの言語）"
   },
   "color_mode_label": {
     "message": "カラーモード:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "ファイル"
+  },
+  "open_sms_web_interface": {
+    "message": "Pushbullet SMS Webインターフェースを開く"
   }
 }

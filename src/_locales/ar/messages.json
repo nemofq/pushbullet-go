@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "إشعار"
   },
+  "sms_button": {
+    "message": "رسائل قصيرة"
+  },
   "reconnect_button": {
     "message": "إعادة الاتصال"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "تفعيل نسخ الإشعارات"
+  },
+  "show_sms_shortcut_label": {
+    "message": "إظهار اختصار Pushbullet للرسائل القصيرة في النافذة المنبثقة"
+  },
+  "language_label": {
+    "message": "اللغة:"
+  },
+  "auto_browser_language": {
+    "message": "تلقائي (لغة المتصفح)"
   },
   "color_mode_label": {
     "message": "وضع الألوان:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "ملف"
+  },
+  "open_sms_web_interface": {
+    "message": "فتح واجهة الويب للرسائل القصيرة Pushbullet"
   }
 }

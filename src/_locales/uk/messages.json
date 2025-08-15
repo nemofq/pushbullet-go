@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Сповіщення"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Підключити знову"
   },
@@ -100,6 +103,15 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Увімкнути дзеркалення сповіщень"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Показати ярлик SMS Pushbullet у спливаючому вікні"
+  },
+  "language_label": {
+    "message": "Мова:"
+  },
+  "auto_browser_language": {
+    "message": "Авто (мова браузера)"
   },
   "color_mode_label": {
     "message": "Режим кольору:"
@@ -208,5 +220,8 @@
   },
   "file": {
     "message": "файл"
+  },
+  "open_sms_web_interface": {
+    "message": "Відкрити веб-інтерфейс SMS Pushbullet"
   }
 }

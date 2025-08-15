@@ -5,6 +5,9 @@
   "notification_button": {
     "message": "Notifikasi"
   },
+  "sms_button": {
+    "message": "SMS"
+  },
   "reconnect_button": {
     "message": "Sambungkan Ulang"
   },
@@ -100,6 +103,9 @@
   },
   "enable_notification_mirroring_label": {
     "message": "Aktifkan Pencerminan Notifikasi"
+  },
+  "show_sms_shortcut_label": {
+    "message": "Tampilkan pintasan SMS Pushbullet di popup"
   },
   "color_mode_label": {
     "message": "Mode Warna:"
@@ -208,5 +214,8 @@
   },
   "file": {
     "message": "file"
+  },
+  "open_sms_web_interface": {
+    "message": "Buka antarmuka web SMS Pushbullet"
   }
 }
