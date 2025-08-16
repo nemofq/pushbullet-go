@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   const displayUnreadMirroredCheckbox = document.getElementById('displayUnreadMirrored');
   const displayUnreadMirroredToggle = document.getElementById('displayUnreadMirroredToggle');
   const displayUnreadMirroredContainer = document.getElementById('displayUnreadMirroredContainer');
+  const encryptionPasswordInput = document.getElementById('encryptionPassword');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -72,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Get data from both sync and local storage
   const syncData = await new Promise(resolve => {
-    chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
+    chrome.storage.sync.get(['accessToken', 'devices', 'people', 'encryptionPassword'], resolve);
   });
   const localData = await new Promise(resolve => {
     chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
@@ -108,6 +109,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load notification mirroring setting (default is false/off)
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
     updateNotificationMirroringToggleVisual();
+    
+    // Load encryption password (don't show the actual password, just indicate if set)
+    if (data.encryptionPassword) {
+      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+    }
     
     // Load only browser pushes setting (default is true/on)
     onlyBrowserPushesCheckbox.checked = data.onlyBrowserPushes !== false; // Default to true
@@ -523,6 +529,18 @@ document.addEventListener('DOMContentLoaded', async function() {
       defaultTab: defaultTabSelect.value,
       playSoundOnNotification: playSoundOnNotificationCheckbox.checked
     };
+    
+    // Handle encryption password
+    const encryptionPassword = encryptionPasswordInput.value.trim();
+    let encryptionUpdated = false;
+    if (encryptionPassword) {
+      // Only save if a new password is entered
+      saveData.encryptionPassword = encryptionPassword;
+      encryptionUpdated = true;
+      // Clear the input after saving
+      encryptionPasswordInput.value = '';
+      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+    }
 
     // Split data between sync and local storage
     const syncSaveData = {
@@ -530,6 +548,11 @@ document.addEventListener('DOMContentLoaded', async function() {
       devices: saveData.devices,
       people: saveData.people
     };
+    
+    // Add encryption password to sync if it was updated
+    if (encryptionUpdated) {
+      syncSaveData.encryptionPassword = saveData.encryptionPassword;
+    }
     
     const localSaveData = {
       remoteDeviceId: saveData.remoteDeviceId,
@@ -569,6 +592,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       } else {
         showSaveSuccess();
       }
+      
+      // Notify background about encryption changes if password was updated
+      if (encryptionUpdated) {
+        chrome.runtime.sendMessage({ type: 'encryption_updated' });
+      }
+      
       chrome.runtime.sendMessage({ type: 'token_updated' });
     });
   });
