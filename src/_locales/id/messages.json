@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Unduh File"
   },
-  "push_go_options": {
-    "message": "Opsi Push Go"
-  },
   "access_token_label": {
     "message": "Token Akses:"
   },
@@ -120,7 +117,7 @@
     "message": "Gelap"
   },
   "save_settings_button": {
-    "message": "Simpan Pengaturan"
+    "message": "Simpan"
   },
   "saved": {
     "message": "Tersimpan"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "Otomatis (Bahasa browser)"
+  },
+  "default_tab_label": {
+    "message": "Tab default di popup:"
+  },
+  "general_tab": {
+    "message": "Umum"
+  },
+  "appearance_tab": {
+    "message": "Tampilan"
   }
 }

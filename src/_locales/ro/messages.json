@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Descarcă fișier"
   },
-  "push_go_options": {
-    "message": "Opțiuni Push Go"
-  },
   "access_token_label": {
     "message": "Token de acces:"
   },
@@ -120,7 +117,7 @@
     "message": "Întunecat"
   },
   "save_settings_button": {
-    "message": "Salvează setările"
+    "message": "Salvează"
   },
   "saved": {
     "message": "Salvat"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "Automat (Limba navigatorului)"
+  },
+  "default_tab_label": {
+    "message": "Fila implicită în popup:"
+  },
+  "general_tab": {
+    "message": "General"
+  },
+  "appearance_tab": {
+    "message": "Aspect"
   }
 }

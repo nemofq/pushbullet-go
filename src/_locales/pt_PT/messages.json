@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Descarregar ficheiro"
   },
-  "push_go_options": {
-    "message": "Opções do Push Go"
-  },
   "access_token_label": {
     "message": "Token de acesso:"
   },
@@ -126,7 +123,7 @@
     "message": "Escuro"
   },
   "save_settings_button": {
-    "message": "Guardar definições"
+    "message": "Guardar"
   },
   "saved": {
     "message": "Guardado"
@@ -223,5 +220,14 @@
   },
   "open_sms_web_interface": {
     "message": "Abrir interface web SMS Pushbullet"
+  },
+  "default_tab_label": {
+    "message": "Separador padrão no popup:"
+  },
+  "general_tab": {
+    "message": "Geral"
+  },
+  "appearance_tab": {
+    "message": "Aparência"
   }
 }

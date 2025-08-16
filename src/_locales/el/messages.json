@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Λήψη αρχείου"
   },
-  "push_go_options": {
-    "message": "Επιλογές Push Go"
-  },
   "access_token_label": {
     "message": "Διακριτικό πρόσβασης:"
   },
@@ -120,7 +117,7 @@
     "message": "Σκοτεινό"
   },
   "save_settings_button": {
-    "message": "Αποθήκευση ρυθμίσεων"
+    "message": "Αποθήκευση"
   },
   "saved": {
     "message": "Αποθηκεύτηκε"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "Αυτόματα (Γλώσσα του προγράμματος περιήγησης)"
+  },
+  "default_tab_label": {
+    "message": "Προεπιλεγμένη καρτέλα στο popup:"
+  },
+  "general_tab": {
+    "message": "Γενικά"
+  },
+  "appearance_tab": {
+    "message": "Εμφάνιση"
   }
 }

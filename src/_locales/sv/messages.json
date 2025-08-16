@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Ladda ner fil"
   },
-  "push_go_options": {
-    "message": "Push Go-alternativ"
-  },
   "access_token_label": {
     "message": "Åtkomsttoken:"
   },
@@ -126,7 +123,7 @@
     "message": "Mörkt"
   },
   "save_settings_button": {
-    "message": "Spara inställningar"
+    "message": "Spara"
   },
   "saved": {
     "message": "Sparat"
@@ -223,5 +220,14 @@
   },
   "open_sms_web_interface": {
     "message": "Öppna Pushbullet SMS-webbgränssnitt"
+  },
+  "default_tab_label": {
+    "message": "Standardflik i popup:"
+  },
+  "general_tab": {
+    "message": "Allmänt"
+  },
+  "appearance_tab": {
+    "message": "Utseende"
   }
 }

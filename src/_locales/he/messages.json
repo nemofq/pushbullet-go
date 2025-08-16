@@ -59,9 +59,6 @@
   "download_file": {
     "message": "הורד קובץ"
   },
-  "push_go_options": {
-    "message": "אפשרויות Push Go"
-  },
   "access_token_label": {
     "message": "אסימון גישה:"
   },
@@ -120,7 +117,7 @@
     "message": "כהה"
   },
   "save_settings_button": {
-    "message": "שמור הגדרות"
+    "message": "שמור"
   },
   "saved": {
     "message": "נשמר"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "אוטומטי (שפת הדפדפן)"
+  },
+  "default_tab_label": {
+    "message": "כרטיסיה ברירת מחדל בחלון קופץ:"
+  },
+  "general_tab": {
+    "message": "כללי"
+  },
+  "appearance_tab": {
+    "message": "מראה"
   }
 }

@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Fájl letöltése"
   },
-  "push_go_options": {
-    "message": "Push Go beállítások"
-  },
   "access_token_label": {
     "message": "Hozzáférési token:"
   },
@@ -120,7 +117,7 @@
     "message": "Sötét"
   },
   "save_settings_button": {
-    "message": "Beállítások mentése"
+    "message": "Mentés"
   },
   "saved": {
     "message": "Mentve"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "Automatikus (Böngésző nyelve)"
+  },
+  "default_tab_label": {
+    "message": "Alapértelmezett lap a felugró ablakban:"
+  },
+  "general_tab": {
+    "message": "Általános"
+  },
+  "appearance_tab": {
+    "message": "Megjelenés"
   }
 }

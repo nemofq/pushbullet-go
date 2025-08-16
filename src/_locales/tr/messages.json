@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Dosyayı indir"
   },
-  "push_go_options": {
-    "message": "Push Go Ayarları"
-  },
   "access_token_label": {
     "message": "Erişim Belirteci:"
   },
@@ -126,7 +123,7 @@
     "message": "Koyu"
   },
   "save_settings_button": {
-    "message": "Ayarları Kaydet"
+    "message": "Kaydet"
   },
   "saved": {
     "message": "Kaydedildi"
@@ -223,5 +220,14 @@
   },
   "open_sms_web_interface": {
     "message": "Pushbullet SMS web arayüzünü aç"
+  },
+  "default_tab_label": {
+    "message": "Popup'taki varsayılan sekme:"
+  },
+  "general_tab": {
+    "message": "Genel"
+  },
+  "appearance_tab": {
+    "message": "Görünüm"
   }
 }

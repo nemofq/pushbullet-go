@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Prenesi datoteko"
   },
-  "push_go_options": {
-    "message": "Možnosti Push Go"
-  },
   "access_token_label": {
     "message": "Dostopni žeton:"
   },
@@ -120,7 +117,7 @@
     "message": "Temno"
   },
   "save_settings_button": {
-    "message": "Shrani nastavitve"
+    "message": "Shrani"
   },
   "saved": {
     "message": "Shranjeno"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "Samodejno (Jezik brskalnika)"
+  },
+  "default_tab_label": {
+    "message": "Privzeti zavihek v pojavnem oknu:"
+  },
+  "general_tab": {
+    "message": "Splošno"
+  },
+  "appearance_tab": {
+    "message": "Videz"
   }
 }

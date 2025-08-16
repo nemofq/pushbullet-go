@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Tải xuống tệp"
   },
-  "push_go_options": {
-    "message": "Tùy chọn Push Go"
-  },
   "access_token_label": {
     "message": "Mã truy cập:"
   },
@@ -120,7 +117,7 @@
     "message": "Tối"
   },
   "save_settings_button": {
-    "message": "Lưu cài đặt"
+    "message": "Lưu"
   },
   "saved": {
     "message": "Đã lưu"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "Tự động (Ngôn ngữ trình duyệt)"
+  },
+  "default_tab_label": {
+    "message": "Tab mặc định trong popup:"
+  },
+  "general_tab": {
+    "message": "Chung"
+  },
+  "appearance_tab": {
+    "message": "Giao diện"
   }
 }

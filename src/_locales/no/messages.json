@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Last ned fil"
   },
-  "push_go_options": {
-    "message": "Send Go-alternativer"
-  },
   "access_token_label": {
     "message": "Tilgangsnøkkel:"
   },
@@ -120,7 +117,7 @@
     "message": "Mørk"
   },
   "save_settings_button": {
-    "message": "Lagre innstillinger"
+    "message": "Lagre"
   },
   "saved": {
     "message": "Lagret"
@@ -223,5 +220,14 @@
   },
   "auto_browser_language": {
     "message": "Automatisk (Nettleserens språk)"
+  },
+  "default_tab_label": {
+    "message": "Standard fane i popup:"
+  },
+  "general_tab": {
+    "message": "Generelt"
+  },
+  "appearance_tab": {
+    "message": "Utseende"
   }
 }

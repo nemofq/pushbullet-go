@@ -59,9 +59,6 @@
   "download_file": {
     "message": "Завантажити файл"
   },
-  "push_go_options": {
-    "message": "Параметри Push Go"
-  },
   "access_token_label": {
     "message": "Токен доступу:"
   },
@@ -126,7 +123,7 @@
     "message": "Темний"
   },
   "save_settings_button": {
-    "message": "Зберегти налаштування"
+    "message": "Зберегти"
   },
   "saved": {
     "message": "Збережено"
@@ -223,5 +220,14 @@
   },
   "open_sms_web_interface": {
     "message": "Відкрити веб-інтерфейс SMS Pushbullet"
+  },
+  "default_tab_label": {
+    "message": "Вкладка за замовчуванням у вспливному вікні:"
+  },
+  "general_tab": {
+    "message": "Загальні"
+  },
+  "appearance_tab": {
+    "message": "Зовнішній вигляд"
   }
 }

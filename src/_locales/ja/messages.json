@@ -59,9 +59,6 @@
   "download_file": {
     "message": "ファイルをダウンロード"
   },
-  "push_go_options": {
-    "message": "Push Go オプション"
-  },
   "access_token_label": {
     "message": "アクセス トークン:"
   },
@@ -126,7 +123,7 @@
     "message": "ダーク"
   },
   "save_settings_button": {
-    "message": "設定を保存"
+    "message": "保存"
   },
   "saved": {
     "message": "保存しました"
@@ -223,5 +220,14 @@
   },
   "open_sms_web_interface": {
     "message": "Pushbullet SMS Webインターフェースを開く"
+  },
+  "default_tab_label": {
+    "message": "ポップアップのデフォルトタブ:"
+  },
+  "general_tab": {
+    "message": "一般"
+  },
+  "appearance_tab": {
+    "message": "外観"
   }
 }

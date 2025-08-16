@@ -59,9 +59,6 @@
   "download_file": {
     "message": "파일 다운로드"
   },
-  "push_go_options": {
-    "message": "Push Go 옵션"
-  },
   "access_token_label": {
     "message": "액세스 토큰:"
   },
@@ -126,7 +123,7 @@
     "message": "다크"
   },
   "save_settings_button": {
-    "message": "설정 저장"
+    "message": "저장"
   },
   "saved": {
     "message": "저장됨"
@@ -223,5 +220,14 @@
   },
   "open_sms_web_interface": {
     "message": "Pushbullet 문자 웹 인터페이스 열기"
+  },
+  "default_tab_label": {
+    "message": "팝업의 기본 탭:"
+  },
+  "general_tab": {
+    "message": "일반"
+  },
+  "appearance_tab": {
+    "message": "외관"
   }
 }

@@ -59,9 +59,6 @@
   "download_file": {
     "message": "ดาวน์โหลดไฟล์"
   },
-  "push_go_options": {
-    "message": "ตัวเลือก Push Go"
-  },
   "access_token_label": {
     "message": "โทเค็นการเข้าถึง:"
   },
@@ -126,7 +123,7 @@
     "message": "มืด"
   },
   "save_settings_button": {
-    "message": "บันทึกการตั้งค่า"
+    "message": "บันทึก"
   },
   "saved": {
     "message": "บันทึกแล้ว"
@@ -223,5 +220,14 @@
   },
   "open_sms_web_interface": {
     "message": "เปิดอินเทอร์เฟสเว็บ SMS Pushbullet"
+  },
+  "default_tab_label": {
+    "message": "แท็บเริ่มต้นในป๊อปอัพ:"
+  },
+  "general_tab": {
+    "message": "ทั่วไป"
+  },
+  "appearance_tab": {
+    "message": "รูปลักษณ์"
   }
 }
