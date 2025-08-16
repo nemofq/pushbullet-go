@@ -358,7 +358,7 @@
         <div class="form-group">
           <label for="encryptionPassword" data-i18n="encryption_password_label">End-to-End Encryption Password:</label>
           <input type="password" id="encryptionPassword" placeholder="Optional - for encrypted features" data-i18n-placeholder="encryption_password_placeholder">
-          <small class="help-text" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Must be the same on all devices.</small>
+          <small class="help-text" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your password is never stored. Must be the same on all devices.</small>
         </div>
         <div class="form-group" id="defaultTabGroup" style="display: none;">
           <label for="defaultTab" data-i18n="default_tab_label">Default tab in popup:</label>
@@ -419,6 +419,7 @@
         <div id="appearanceStatus" class="status"></div>
       </div>
   </div>
+  <script src="crypto.js"></script>
   <script src="i18n.js"></script>
   <script src="options.js"></script>
 </body>

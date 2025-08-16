@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'encryptionPassword', 'colorMode', 'languageMode', 'defaultTab'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'userIden', 'colorMode', 'languageMode', 'defaultTab'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -71,9 +71,14 @@ document.addEventListener('DOMContentLoaded', function() {
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
     updateNotificationMirroringToggleVisual();
     
-    // Load encryption password (don't show the actual password, just indicate if set)
-    if (data.encryptionPassword) {
-      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+    // Check if encryption key is already set (stored locally)
+    if (data.userIden) {
+      const keyName = `encryptionKey_${data.userIden}`;
+      chrome.storage.local.get(keyName, function(localData) {
+        if (localData[keyName]) {
+          encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+        }
+      });
     }
     
     // Load only browser pushes setting (default is true/on)
@@ -325,14 +330,37 @@ document.addEventListener('DOMContentLoaded', function() {
       defaultTab: defaultTabSelect.value
     };
     
-    // Handle encryption password
+    // Handle encryption password - derive key and store locally
     const encryptionPassword = encryptionPasswordInput.value.trim();
     if (encryptionPassword) {
-      // Only save if a new password is entered
-      saveData.encryptionPassword = encryptionPassword;
-      // Clear the input after saving
-      encryptionPasswordInput.value = '';
-      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+      // Get userIden from sync storage to derive the key
+      chrome.storage.sync.get('userIden', async function(userData) {
+        if (userData.userIden) {
+          try {
+            // Import crypto module functionality
+            const pbCrypto = new PushbulletCrypto();
+            await pbCrypto.initialize(encryptionPassword, userData.userIden);
+            const derivedKey = await pbCrypto.exportKey();
+            
+            // Store derived key locally (not synced), namespaced by user
+            const keyName = `encryptionKey_${userData.userIden}`;
+            await chrome.storage.local.set({ [keyName]: derivedKey });
+            
+            // Clear the input and update placeholder
+            encryptionPasswordInput.value = '';
+            encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+            
+            // Notify background about encryption changes
+            chrome.runtime.sendMessage({ type: 'encryption_updated' });
+          } catch (error) {
+            console.error('Failed to derive encryption key:', error);
+            showAppearanceSaveError();
+          }
+        } else {
+          console.error('User iden not found - please retrieve devices first');
+          showAppearanceSaveError();
+        }
+      });
     }
 
     chrome.storage.sync.set(saveData, function() {
@@ -348,11 +376,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       } else {
         showAppearanceSaveSuccess();
-      }
-      
-      // Notify background about encryption changes if password was updated
-      if (encryptionPassword) {
-        chrome.runtime.sendMessage({ type: 'encryption_updated' });
       }
       
       chrome.runtime.sendMessage({ type: 'token_updated' });
