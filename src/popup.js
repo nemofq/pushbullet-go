@@ -168,11 +168,18 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    const data = await chrome.storage.sync.get('notificationMirroring');
+    const [mirroringData, defaultTabData] = await Promise.all([
+      chrome.storage.sync.get('notificationMirroring'),
+      chrome.storage.sync.get('defaultTab')
+    ]);
     
-    if (data.notificationMirroring) {
+    if (mirroringData.notificationMirroring) {
       tabSwitcher.style.display = 'flex';
       loadNotifications();
+      
+      // Switch to default tab
+      const defaultTab = defaultTabData.defaultTab || 'push';
+      switchTab(defaultTab);
     } else {
       tabSwitcher.style.display = 'none';
     }
@@ -718,6 +725,15 @@ document.addEventListener('DOMContentLoaded', function() {
           loadNotifications(); // Refresh notifications too
         });
       }
+    }
+    if (areaName === 'sync' && changes.defaultTab) {
+      // Default tab changed, switch to new default if notification mirroring is enabled
+      chrome.storage.sync.get('notificationMirroring').then(data => {
+        if (data.notificationMirroring) {
+          const newDefaultTab = changes.defaultTab.newValue || 'push';
+          switchTab(newDefaultTab);
+        }
+      });
     }
   });
 });

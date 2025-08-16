@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
   const accessTokenInput = document.getElementById('accessToken');
   const remoteDeviceSelect = document.getElementById('remoteDeviceId');
-  const saveButton = document.getElementById('save');
+  const saveGeneralButton = document.getElementById('saveGeneral');
+  const saveAppearanceButton = document.getElementById('saveAppearance');
   const retrieveDevicesButton = document.getElementById('retrieveDevices');
-  const status = document.getElementById('status');
+  const generalStatus = document.getElementById('generalStatus');
+  const appearanceStatus = document.getElementById('appearanceStatus');
   const autoOpenLinksCheckbox = document.getElementById('autoOpenLinks');
   const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
@@ -17,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
+  const defaultTabSelect = document.getElementById('defaultTab');
+  const defaultTabGroup = document.getElementById('defaultTabGroup');
+  
+  // Tab elements
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
   
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -39,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode', 'defaultTab'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -81,6 +89,12 @@ document.addEventListener('DOMContentLoaded', function() {
     colorModeSelect.value = data.colorMode || 'system';
     applyColorMode(colorModeSelect.value);
     
+    // Load default tab setting (default is 'push')
+    defaultTabSelect.value = data.defaultTab || 'push';
+    
+    // Update conditional visibility for default tab option
+    updateDefaultTabVisibility();
+    
     updateRetrieveButton();
   });
   
@@ -95,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
   notificationMirroringToggle.addEventListener('click', function() {
     notificationMirroringCheckbox.checked = !notificationMirroringCheckbox.checked;
     updateNotificationMirroringToggleVisual();
+    updateDefaultTabVisibility();
   });
 
   onlyBrowserPushesToggle.addEventListener('click', function() {
@@ -245,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
     } catch (error) {
       console.error('Error retrieving devices:', error);
-      showStatus(`Error: ${error.message}`, 'error');
+      showGeneralStatus(`Error: ${error.message}`, 'error');
     } finally {
       // Note: Don't re-enable here as showRetrieveSuccess will handle it
       if (retrieveDevicesButton.textContent === window.CustomI18n.getMessage('retrieving')) {
@@ -255,7 +270,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  saveButton.addEventListener('click', function() {
+  // Tab switching functionality
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetTab = this.getAttribute('data-tab');
+      
+      // Remove active class from all tabs and contents
+      tabs.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(content => content.classList.remove('active'));
+      
+      // Add active class to clicked tab and corresponding content
+      this.classList.add('active');
+      document.getElementById(`${targetTab}-content`).classList.add('active');
+    });
+  });
+
+  // Save General Settings
+  saveGeneralButton.addEventListener('click', function() {
     const accessToken = accessTokenInput.value.trim();
     const selectedRemoteDevices = Array.from(remoteDeviceSelect.selectedOptions)
       .map(option => option.value)
@@ -267,13 +298,25 @@ document.addEventListener('DOMContentLoaded', function() {
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
       people: people,
-      autoOpenLinks: autoOpenLinksCheckbox.checked,
-      notificationMirroring: notificationMirroringCheckbox.checked,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
+      autoOpenLinks: autoOpenLinksCheckbox.checked
+    };
+
+    chrome.storage.sync.set(saveData, function() {
+      showGeneralSaveSuccess();
+      chrome.runtime.sendMessage({ type: 'token_updated' });
+    });
+  });
+
+  // Save Appearance Settings
+  saveAppearanceButton.addEventListener('click', function() {
+    const saveData = { 
+      notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
       languageMode: languageModeSelect.value,
-      colorMode: colorModeSelect.value
+      colorMode: colorModeSelect.value,
+      defaultTab: defaultTabSelect.value
     };
 
     chrome.storage.sync.set(saveData, function() {
@@ -285,10 +328,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Language changed, reload the locale and update UI
         window.CustomI18n.changeLanguage(newLanguage).then(() => {
           initializeI18n();
-          showSaveSuccess();
+          showAppearanceSaveSuccess();
         });
       } else {
-        showSaveSuccess();
+        showAppearanceSaveSuccess();
       }
       chrome.runtime.sendMessage({ type: 'token_updated' });
     });
@@ -354,6 +397,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
+  function updateDefaultTabVisibility() {
+    if (notificationMirroringCheckbox.checked) {
+      defaultTabGroup.style.display = 'block';
+    } else {
+      defaultTabGroup.style.display = 'none';
+    }
+  }
+  
   function updateDeviceSelectionStatus() {
     const selectedOptions = Array.from(remoteDeviceSelect.selectedOptions);
     const selectedDevices = selectedOptions.filter(option => option.value);
@@ -375,30 +426,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  function showStatus(message, type) {
-    status.textContent = message;
-    status.className = `status ${type}`;
-    status.style.display = 'block';
+  function showGeneralStatus(message, type) {
+    generalStatus.textContent = message;
+    generalStatus.className = `status ${type}`;
+    generalStatus.style.display = 'block';
     
     setTimeout(() => {
-      status.style.display = 'none';
+      generalStatus.style.display = 'none';
     }, 3000);
   }
 
-  function showSaveSuccess() {
-    const originalContent = saveButton.innerHTML;
+  function showAppearanceStatus(message, type) {
+    appearanceStatus.textContent = message;
+    appearanceStatus.className = `status ${type}`;
+    appearanceStatus.style.display = 'block';
     
-    saveButton.innerHTML = `
+    setTimeout(() => {
+      appearanceStatus.style.display = 'none';
+    }, 3000);
+  }
+
+  function showGeneralSaveSuccess() {
+    const originalContent = saveGeneralButton.innerHTML;
+    
+    saveGeneralButton.innerHTML = `
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
       </svg>
       ${window.CustomI18n.getMessage('saved')}
     `;
-    saveButton.disabled = true;
+    saveGeneralButton.disabled = true;
     
     setTimeout(() => {
-      saveButton.innerHTML = originalContent;
-      saveButton.disabled = false;
+      saveGeneralButton.innerHTML = originalContent;
+      saveGeneralButton.disabled = false;
+    }, 2000);
+  }
+
+  function showAppearanceSaveSuccess() {
+    const originalContent = saveAppearanceButton.innerHTML;
+    
+    saveAppearanceButton.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+      </svg>
+      ${window.CustomI18n.getMessage('saved')}
+    `;
+    saveAppearanceButton.disabled = true;
+    
+    setTimeout(() => {
+      saveAppearanceButton.innerHTML = originalContent;
+      saveAppearanceButton.disabled = false;
     }, 2000);
   }
 

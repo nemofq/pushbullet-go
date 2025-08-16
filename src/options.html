@@ -54,6 +54,16 @@
       --toggle-slider: #ffffff;
     }
 
+    .theme-dark .container,
+    .theme-system.system-dark .container {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-dark .tab:hover:not(.active),
+    .theme-system.system-dark .tab:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
     body { 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
       margin: 0; 
@@ -66,18 +76,12 @@
     }
     .container {
       background: var(--bg-secondary);
-      padding: 25px 30px;
-      border: 1px solid var(--border-primary);
-      max-width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
       width: 100%;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-    h1 {
-      text-align: center;
-      margin: 0 0 15px 0;
-      color: var(--text-primary);
-      font-size: 20px;
-      font-weight: normal;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
     }
     .form-group { 
       margin-bottom: 20px; 
@@ -234,111 +238,171 @@
       color: var(--text-secondary);
       font-size: 12px;
     }
+    
+    /* Tab styles */
+    .tabs {
+      display: flex;
+      background: var(--bg-tertiary);
+    }
+    .tab {
+      flex: 1;
+      padding: 16px 20px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .tab.active {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    .tab:hover:not(.active) {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+    }
+    .tab-content {
+      display: none;
+      background: var(--bg-secondary);
+      padding: 30px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .tab-save-button {
+      margin-top: 25px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 data-i18n="push_go_options">Push Go Options</h1>
-    <div class="form-group">
-      <label for="accessToken" data-i18n="access_token_label">Access Token:</label>
-      <input type="text" id="accessToken" data-i18n-placeholder="access_token_placeholder" placeholder="Enter your Pushbullet access token">
-      <div class="tip">
-        <span data-i18n="visit_link_tip">Visit</span> <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> <span data-i18n="get_access_token_tip">to get your access token.</span>
+    <div class="tabs">
+      <div class="tab active" data-tab="general" data-i18n="general_tab">General</div>
+      <div class="tab" data-tab="appearance" data-i18n="appearance_tab">Appearance</div>
+    </div>
+
+    <!-- General Tab Content -->
+    <div class="tab-content active" id="general-content">
+        <div class="form-group">
+          <label for="accessToken" data-i18n="access_token_label">Access Token:</label>
+          <input type="text" id="accessToken" data-i18n-placeholder="access_token_placeholder" placeholder="Enter your Pushbullet access token">
+          <div class="tip">
+            <span data-i18n="visit_link_tip">Visit</span> <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> <span data-i18n="get_access_token_tip">to get your access token.</span>
+          </div>
+          <button id="retrieveDevices" class="retrieve-button" disabled data-i18n="retrieve_devices_button">Retrieve devices and people</button>
+        </div>
+        <div class="form-group">
+          <label for="remoteDeviceId"><span data-i18n="target_devices_label">Target Devices:</span> <span id="deviceSelectionStatus" class="selection-status" data-i18n="none_selected_all_devices">None selected (to all devices)</span></label>
+          <select id="remoteDeviceId" multiple>
+          </select>
+          <div class="tip" data-i18n="choose_devices_tip">
+            Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
+          </div>
+        </div>
+        <div class="toggle-container">
+          <label class="toggle-label" data-i18n="only_browser_pushes_label">Only notify and show pushes to browsers</label>
+          <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
+          <div class="toggle-switch" id="onlyBrowserPushesToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container">
+          <label class="toggle-label" data-i18n="hide_browser_pushes_label">Hide notification of pushes sent from browsers</label>
+          <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
+          <div class="toggle-switch" id="hideBrowserPushesToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container">
+          <label class="toggle-label" data-i18n="auto_open_links_label">Auto-open in new tab (inactive) when receiving a link</label>
+          <input type="checkbox" id="autoOpenLinks" class="toggle-input">
+          <div class="toggle-switch" id="autoOpenLinksToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        
+        <button id="saveGeneral" class="tab-save-button" data-i18n="save_settings_button">Save</button>
+        <div id="generalStatus" class="status"></div>
       </div>
-      <button id="retrieveDevices" class="retrieve-button" disabled data-i18n="retrieve_devices_button">Retrieve devices and people</button>
-    </div>
-    <div class="form-group">
-      <label for="remoteDeviceId"><span data-i18n="target_devices_label">Target Devices:</span> <span id="deviceSelectionStatus" class="selection-status" data-i18n="none_selected_all_devices">None selected (to all devices)</span></label>
-      <select id="remoteDeviceId" multiple>
-      </select>
-      <div class="tip" data-i18n="choose_devices_tip">
-        Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
+
+      <!-- Appearance Tab Content -->
+      <div class="tab-content" id="appearance-content">
+        <div class="toggle-container">
+          <label class="toggle-label" data-i18n="show_sms_shortcut_label">Show Pushbullet SMS shortcut in popup</label>
+          <input type="checkbox" id="showSmsShortcut" class="toggle-input">
+          <div class="toggle-switch" id="showSmsShortcutToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container">
+          <label class="toggle-label" data-i18n="enable_notification_mirroring_label">Enable Notification Mirroring</label>
+          <input type="checkbox" id="notificationMirroring" class="toggle-input">
+          <div class="toggle-switch" id="notificationMirroringToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="form-group" id="defaultTabGroup" style="display: none;">
+          <label for="defaultTab" data-i18n="default_tab_label">Default tab in popup:</label>
+          <select id="defaultTab">
+            <option value="push" data-i18n="push_button">Push</option>
+            <option value="notification" data-i18n="notification_button">Notification</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="languageMode" data-i18n="language_label">Language:</label>
+          <select id="languageMode">
+            <option value="auto" data-i18n="auto_browser_language">Auto (Browser's language)</option>
+            <option value="id">Bahasa Indonesia</option>
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+            <option value="fr">français</option>
+            <option value="nl">nederlands</option>
+            <option value="no">norsk</option>
+            <option value="tr">türkçe</option>
+            <option value="ca">català</option>
+            <option value="da">dansk</option>
+            <option value="es">español</option>
+            <option value="it">italiano</option>
+            <option value="hu">magyar</option>
+            <option value="pl">polski</option>
+            <option value="pt_BR">português (Brasil)</option>
+            <option value="pt_PT">português (Portugal)</option>
+            <option value="ro">română</option>
+            <option value="sk">slovenčina</option>
+            <option value="sl">slovenščina</option>
+            <option value="fi">suomi</option>
+            <option value="sv">svenska</option>
+            <option value="bg">български</option>
+            <option value="ru">русский</option>
+            <option value="he">עברית</option>
+            <option value="th">ไทย</option>
+            <option value="ar">العربية</option>
+            <option value="zh_CN">中文（简体）</option>
+            <option value="zh_TW">中文（繁體）</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="cs">čeština</option>
+            <option value="el">ελληνικά</option>
+            <option value="uk">українська</option>
+            <option value="vi">tiếng Việt</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="colorMode" data-i18n="color_mode_label">Color Mode:</label>
+          <select id="colorMode">
+            <option value="system" data-i18n="follow_system">Follow system</option>
+            <option value="light" data-i18n="light">Light</option>
+            <option value="dark" data-i18n="dark">Dark</option>
+          </select>
+        </div>
+        
+        <button id="saveAppearance" class="tab-save-button" data-i18n="save_settings_button">Save</button>
+        <div id="appearanceStatus" class="status"></div>
       </div>
-    </div>
-    <div class="toggle-container">
-      <label class="toggle-label" data-i18n="only_browser_pushes_label">Only notify and show pushes to browsers</label>
-      <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
-      <div class="toggle-switch" id="onlyBrowserPushesToggle">
-        <div class="toggle-slider"></div>
-      </div>
-    </div>
-    <div class="toggle-container">
-      <label class="toggle-label" data-i18n="hide_browser_pushes_label">Hide notification of pushes sent from browsers</label>
-      <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
-      <div class="toggle-switch" id="hideBrowserPushesToggle">
-        <div class="toggle-slider"></div>
-      </div>
-    </div>
-    <div class="toggle-container">
-      <label class="toggle-label" data-i18n="auto_open_links_label">Auto-open in new tab (inactive) when receiving a link</label>
-      <input type="checkbox" id="autoOpenLinks" class="toggle-input">
-      <div class="toggle-switch" id="autoOpenLinksToggle">
-        <div class="toggle-slider"></div>
-      </div>
-    </div>
-    <div class="toggle-container">
-      <label class="toggle-label" data-i18n="enable_notification_mirroring_label">Enable Notification Mirroring</label>
-      <input type="checkbox" id="notificationMirroring" class="toggle-input">
-      <div class="toggle-switch" id="notificationMirroringToggle">
-        <div class="toggle-slider"></div>
-      </div>
-    </div>
-    <div class="toggle-container">
-      <label class="toggle-label" data-i18n="show_sms_shortcut_label">Show Pushbullet SMS shortcut in popup</label>
-      <input type="checkbox" id="showSmsShortcut" class="toggle-input">
-      <div class="toggle-switch" id="showSmsShortcutToggle">
-        <div class="toggle-slider"></div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="languageMode" data-i18n="language_label">Language:</label>
-      <select id="languageMode">
-        <option value="auto" data-i18n="auto_browser_language">Auto (Browser's language)</option>
-        <option value="id">Bahasa Indonesia</option>
-        <option value="de">Deutsch</option>
-        <option value="en">English</option>
-        <option value="fr">français</option>
-        <option value="nl">nederlands</option>
-        <option value="no">norsk</option>
-        <option value="tr">türkçe</option>
-        <option value="ca">català</option>
-        <option value="da">dansk</option>
-        <option value="es">español</option>
-        <option value="it">italiano</option>
-        <option value="hu">magyar</option>
-        <option value="pl">polski</option>
-        <option value="pt_BR">português (Brasil)</option>
-        <option value="pt_PT">português (Portugal)</option>
-        <option value="ro">română</option>
-        <option value="sk">slovenčina</option>
-        <option value="sl">slovenščina</option>
-        <option value="fi">suomi</option>
-        <option value="sv">svenska</option>
-        <option value="bg">български</option>
-        <option value="ru">русский</option>
-        <option value="he">עברית</option>
-        <option value="th">ไทย</option>
-        <option value="ar">العربية</option>
-        <option value="zh_CN">中文（简体）</option>
-        <option value="zh_TW">中文（繁體）</option>
-        <option value="ja">日本語</option>
-        <option value="ko">한국어</option>
-        <option value="cs">čeština</option>
-        <option value="el">ελληνικά</option>
-        <option value="uk">українська</option>
-        <option value="vi">tiếng Việt</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="colorMode" data-i18n="color_mode_label">Color Mode:</label>
-      <select id="colorMode">
-        <option value="system" data-i18n="follow_system">Follow system</option>
-        <option value="light" data-i18n="light">Light</option>
-        <option value="dark" data-i18n="dark">Dark</option>
-      </select>
-    </div>
-    <button id="save" data-i18n="save_settings_button">Save Settings</button>
-    <div id="status" class="status"></div>
   </div>
   <script src="i18n.js"></script>
   <script src="options.js"></script>

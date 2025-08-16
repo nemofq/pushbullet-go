@@ -107,6 +107,9 @@
   "show_sms_shortcut_label": {
     "message": "Show Pushbullet SMS shortcut in popup"
   },
+  "default_tab_label": {
+    "message": "Default tab in popup:"
+  },
   "language_label": {
     "message": "Language:"
   },
@@ -126,7 +129,7 @@
     "message": "Dark"
   },
   "save_settings_button": {
-    "message": "Save Settings"
+    "message": "Save"
   },
   "saved": {
     "message": "Saved"
@@ -223,5 +226,17 @@
   },
   "open_sms_web_interface": {
     "message": "Open Pushbullet SMS web interface"
+  },
+  "general_tab": {
+    "message": "General"
+  },
+  "appearance_tab": {
+    "message": "Appearance"
+  },
+  "save_general_settings": {
+    "message": "Save General Settings"
+  },
+  "save_appearance_settings": {
+    "message": "Save Appearance Settings"
   }
 }
