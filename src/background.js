@@ -606,6 +606,13 @@ async function connectWebSocket() {
     try {
       let data = JSON.parse(event.data);
       
+      // Check for encrypted ephemeral without configured crypto - graceful degradation
+      if (data.type === 'push' && data.push && data.push.encrypted === true && !pushbulletCrypto) {
+        // Silently ignore encrypted messages when encryption is not configured
+        console.log('Received encrypted ephemeral but encryption is not configured - ignoring');
+        return;
+      }
+      
       // Process encrypted ephemeral if applicable
       if (pushbulletCrypto && data.type === 'push' && data.push) {
         data = await pushbulletCrypto.processEphemeral(data);
