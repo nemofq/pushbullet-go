@@ -90,6 +90,7 @@ initializeBackgroundI18n().catch(error => {
 
 // Import crypto module
 importScripts('crypto.js');
+// @ts-ignore - PushbulletCrypto is loaded via importScripts
 
 // Initialize encryption if key is stored
 async function initializeEncryption() {
