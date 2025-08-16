@@ -93,6 +93,7 @@ initializeBackgroundI18n().catch(error => {
 
 // Import crypto module
 importScripts('crypto.js');
+// @ts-ignore - PushbulletCrypto is loaded via importScripts
 
 // Offscreen document management functions
 async function createOffscreenDocument() {
