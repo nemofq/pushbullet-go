@@ -244,19 +244,31 @@ async function migrateSpecificFieldsFromSyncToLocal() {
 // Run migration immediately when background script loads
 migrateSpecificFieldsFromSyncToLocal();
 
-// Initialize encryption if password is set
+// Initialize encryption if key is stored
 async function initializeEncryption() {
   try {
-    const data = await chrome.storage.sync.get(['encryptionPassword', 'userIden']);
+    // Get userIden to load the correct key
+    const syncData = await chrome.storage.sync.get('userIden');
+    if (!syncData.userIden) {
+      // No user logged in, clear any encryption
+      if (pushbulletCrypto) {
+        pushbulletCrypto.clear();
+        pushbulletCrypto = null;
+      }
+      return;
+    }
     
-    if (data.encryptionPassword && data.userIden) {
+    const keyName = `encryptionKey_${syncData.userIden}`;
+    const localData = await chrome.storage.local.get(keyName);
+    
+    if (localData[keyName]) {
       if (!pushbulletCrypto) {
         pushbulletCrypto = new PushbulletCrypto();
       }
-      await pushbulletCrypto.initialize(data.encryptionPassword, data.userIden);
+      await pushbulletCrypto.importKey(localData[keyName]);
       console.log('Encryption initialized successfully');
     } else if (pushbulletCrypto) {
-      // Clear encryption if password is removed
+      // Clear encryption if key is removed
       pushbulletCrypto.clear();
       pushbulletCrypto = null;
     }
@@ -361,6 +373,17 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.type) {
     case 'token_updated':
       initializeBackgroundI18n().then(async () => {
+        // Check if token was removed (sign-out)
+        const data = await chrome.storage.sync.get('accessToken');
+        if (!data.accessToken) {
+          // Clear all encryption keys on sign-out
+          const localData = await chrome.storage.local.get(null);
+          const keysToRemove = Object.keys(localData).filter(key => key.startsWith('encryptionKey_'));
+          if (keysToRemove.length > 0) {
+            await chrome.storage.local.remove(keysToRemove);
+            console.log('Cleared encryption keys on sign-out');
+          }
+        }
         initializeExtension();
         await setupContextMenus();
       }).catch(async (error) => {
@@ -436,7 +459,7 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
 });
 
 async function initializeExtension() {
-  const data = await chrome.storage.sync.get(['accessToken', 'encryptionPassword']);
+  const data = await chrome.storage.sync.get('accessToken');
   const localData = await chrome.storage.local.get('lastModified');
   accessToken = data.accessToken;
   
@@ -449,10 +472,8 @@ async function initializeExtension() {
     // Get user info to obtain iden for encryption
     await getUserInfo();
     
-    // Initialize encryption if password is set
-    if (data.encryptionPassword) {
-      await initializeEncryption();
-    }
+    // Initialize encryption if key is stored
+    await initializeEncryption();
     
     connectWebSocket();
   } else {

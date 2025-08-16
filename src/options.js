@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Get data from both sync and local storage
   const syncData = await new Promise(resolve => {
-    chrome.storage.sync.get(['accessToken', 'devices', 'people', 'encryptionPassword'], resolve);
+    chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
     chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
@@ -110,9 +110,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
     updateNotificationMirroringToggleVisual();
     
-    // Load encryption password (don't show the actual password, just indicate if set)
-    if (data.encryptionPassword) {
-      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+    // Check if encryption key is already set (stored locally)
+    if (data.userIden) {
+      const keyName = `encryptionKey_${data.userIden}`;
+      chrome.storage.local.get(keyName, function(localData) {
+        if (localData[keyName]) {
+          encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+        }
+      });
     }
     
     // Load only browser pushes setting (default is true/on)
@@ -530,16 +535,37 @@ document.addEventListener('DOMContentLoaded', async function() {
       playSoundOnNotification: playSoundOnNotificationCheckbox.checked
     };
     
-    // Handle encryption password
+    // Handle encryption password - derive key and store locally
     const encryptionPassword = encryptionPasswordInput.value.trim();
-    let encryptionUpdated = false;
     if (encryptionPassword) {
-      // Only save if a new password is entered
-      saveData.encryptionPassword = encryptionPassword;
-      encryptionUpdated = true;
-      // Clear the input after saving
-      encryptionPasswordInput.value = '';
-      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+      // Get userIden from sync storage to derive the key
+      chrome.storage.sync.get('userIden', async function(userData) {
+        if (userData.userIden) {
+          try {
+            // Import crypto module functionality
+            const pbCrypto = new PushbulletCrypto();
+            await pbCrypto.initialize(encryptionPassword, userData.userIden);
+            const derivedKey = await pbCrypto.exportKey();
+            
+            // Store derived key locally (not synced), namespaced by user
+            const keyName = `encryptionKey_${userData.userIden}`;
+            await chrome.storage.local.set({ [keyName]: derivedKey });
+            
+            // Clear the input and update placeholder
+            encryptionPasswordInput.value = '';
+            encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+            
+            // Notify background about encryption changes
+            chrome.runtime.sendMessage({ type: 'encryption_updated' });
+          } catch (error) {
+            console.error('Failed to derive encryption key:', error);
+            showSaveError();
+          }
+        } else {
+          console.error('User iden not found - please retrieve devices first');
+          showSaveError();
+        }
+      });
     }
 
     // Split data between sync and local storage
@@ -549,10 +575,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       people: saveData.people
     };
     
-    // Add encryption password to sync if it was updated
-    if (encryptionUpdated) {
-      syncSaveData.encryptionPassword = saveData.encryptionPassword;
-    }
     
     const localSaveData = {
       remoteDeviceId: saveData.remoteDeviceId,
@@ -591,11 +613,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
       } else {
         showSaveSuccess();
-      }
-      
-      // Notify background about encryption changes if password was updated
-      if (encryptionUpdated) {
-        chrome.runtime.sendMessage({ type: 'encryption_updated' });
       }
       
       chrome.runtime.sendMessage({ type: 'token_updated' });
