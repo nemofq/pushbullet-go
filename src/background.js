@@ -609,13 +609,19 @@ async function connectWebSocket() {
       // Check for encrypted ephemeral without configured crypto - graceful degradation
       if (data.type === 'push' && data.push && data.push.encrypted === true && !pushbulletCrypto) {
         // Silently ignore encrypted messages when encryption is not configured
-        console.log('Received encrypted ephemeral but encryption is not configured - ignoring');
+        console.warn('Received encrypted ephemeral but encryption is not configured - ignoring');
         return;
       }
       
       // Process encrypted ephemeral if applicable
       if (pushbulletCrypto && data.type === 'push' && data.push) {
         data = await pushbulletCrypto.processEphemeral(data);
+        
+        // Check if decryption failed (push is still encrypted)
+        if (data.push && data.push.encrypted === true) {
+          console.warn('Failed to decrypt ephemeral (wrong password?) - ignoring');
+          return;
+        }
       }
       
       if (data.type === 'nop') {
