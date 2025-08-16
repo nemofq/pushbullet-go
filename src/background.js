@@ -6,6 +6,8 @@ let heartbeatTimer = null;
 let reconnectAttempts = 0;
 let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
+let pushbulletCrypto = null;
+let userIden = null;
 
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
@@ -85,6 +87,30 @@ const CustomI18n = { getMessage, getCurrentLanguage, initializeI18n: initializeB
 initializeBackgroundI18n().catch(error => {
   console.warn('Initial i18n initialization failed, will use Chrome default:', error);
 });
+
+// Import crypto module
+importScripts('crypto.js');
+
+// Initialize encryption if password is set
+async function initializeEncryption() {
+  try {
+    const data = await chrome.storage.sync.get(['encryptionPassword', 'userIden']);
+    
+    if (data.encryptionPassword && data.userIden) {
+      if (!pushbulletCrypto) {
+        pushbulletCrypto = new PushbulletCrypto();
+      }
+      await pushbulletCrypto.initialize(data.encryptionPassword, data.userIden);
+      console.log('Encryption initialized successfully');
+    } else if (pushbulletCrypto) {
+      // Clear encryption if password is removed
+      pushbulletCrypto.clear();
+      pushbulletCrypto = null;
+    }
+  } catch (error) {
+    console.error('Failed to initialize encryption:', error);
+  }
+}
 
 // Network event listeners for immediate reconnection when network comes back
 // Note: In service workers, we rely on navigator.onLine checks in connectWebSocket instead of events
@@ -209,11 +235,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'send_push':
       sendPush(message.data);
       break;
+    case 'encryption_updated':
+      initializeEncryption().then(() => {
+        sendResponse({ success: true });
+      });
+      return true; // Will respond asynchronously
   }
 });
 
 async function initializeExtension() {
-  const data = await chrome.storage.sync.get('accessToken');
+  const data = await chrome.storage.sync.get(['accessToken', 'encryptionPassword']);
   const localData = await chrome.storage.local.get('lastModified');
   accessToken = data.accessToken;
   
@@ -223,9 +254,38 @@ async function initializeExtension() {
   }
   
   if (accessToken) {
+    // Get user info to obtain iden for encryption
+    await getUserInfo();
+    
+    // Initialize encryption if password is set
+    if (data.encryptionPassword) {
+      await initializeEncryption();
+    }
+    
     connectWebSocket();
   } else {
     connectionStatus = 'disconnected';
+  }
+}
+
+async function getUserInfo() {
+  if (!accessToken) return;
+  
+  try {
+    const response = await fetch('https://api.pushbullet.com/v2/users/me', {
+      headers: {
+        'Access-Token': accessToken
+      }
+    });
+    
+    if (response.ok) {
+      const user = await response.json();
+      userIden = user.iden;
+      // Store user iden for encryption
+      await chrome.storage.sync.set({ userIden: user.iden });
+    }
+  } catch (error) {
+    console.error('Failed to get user info:', error);
   }
 }
 
@@ -317,9 +377,14 @@ async function connectWebSocket() {
     refreshPushList(true, false);
   };
   
-  ws.onmessage = (event) => {
+  ws.onmessage = async (event) => {
     try {
-      const data = JSON.parse(event.data);
+      let data = JSON.parse(event.data);
+      
+      // Process encrypted ephemeral if applicable
+      if (pushbulletCrypto && data.type === 'push' && data.push) {
+        data = await pushbulletCrypto.processEphemeral(data);
+      }
       
       if (data.type === 'nop') {
         startHeartbeatMonitor();

@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
   const showSmsShortcutToggle = document.getElementById('showSmsShortcutToggle');
+  const encryptionPasswordInput = document.getElementById('encryptionPassword');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode', 'defaultTab'], function(data) {
+  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'encryptionPassword', 'colorMode', 'languageMode', 'defaultTab'], function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -69,6 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load notification mirroring setting (default is false/off)
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
     updateNotificationMirroringToggleVisual();
+    
+    // Load encryption password (don't show the actual password, just indicate if set)
+    if (data.encryptionPassword) {
+      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+    }
     
     // Load only browser pushes setting (default is true/on)
     onlyBrowserPushesCheckbox.checked = data.onlyBrowserPushes !== false; // Default to true
@@ -310,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Save Appearance Settings
-  saveAppearanceButton.addEventListener('click', function() {
+  saveAppearanceButton.addEventListener('click', async function() {
     const saveData = { 
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
@@ -318,6 +324,16 @@ document.addEventListener('DOMContentLoaded', function() {
       colorMode: colorModeSelect.value,
       defaultTab: defaultTabSelect.value
     };
+    
+    // Handle encryption password
+    const encryptionPassword = encryptionPasswordInput.value.trim();
+    if (encryptionPassword) {
+      // Only save if a new password is entered
+      saveData.encryptionPassword = encryptionPassword;
+      // Clear the input after saving
+      encryptionPasswordInput.value = '';
+      encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+    }
 
     chrome.storage.sync.set(saveData, function() {
       // Check if language has changed
@@ -333,6 +349,12 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         showAppearanceSaveSuccess();
       }
+      
+      // Notify background about encryption changes if password was updated
+      if (encryptionPassword) {
+        chrome.runtime.sendMessage({ type: 'encryption_updated' });
+      }
+      
       chrome.runtime.sendMessage({ type: 'token_updated' });
     });
   });
