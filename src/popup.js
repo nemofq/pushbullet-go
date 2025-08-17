@@ -209,6 +209,13 @@ document.addEventListener('DOMContentLoaded', function() {
       messagesList.style.display = 'flex';
       notificationsList.style.display = 'none';
       sendForm.style.display = 'block';
+      
+      // Ensure push tab scrolls to bottom when switching to it
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          messagesList.scrollTop = messagesList.scrollHeight;
+        });
+      });
     } else {
       pushTab.classList.remove('active');
       notificationTab.classList.add('active');
