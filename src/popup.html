@@ -58,8 +58,7 @@
 
     body { 
       width: 450px; 
-      min-height: 600px;
-      max-height: 100vh;
+      height: 600px;
       margin: 0; 
       font-family: sans-serif; 
       display: flex; 
@@ -79,6 +78,7 @@
       font-size: 15px;
       background: var(--bg-header);
       transition: background-color 0.3s ease, border-color 0.3s ease;
+      flex-shrink: 0;
     }
     .tab-switcher {
       display: flex;
@@ -118,6 +118,7 @@
       padding: 10px;
       display: flex;
       flex-direction: column;
+      min-height: 0;
     }
     .message { 
       margin-bottom: 15px; 
@@ -242,6 +243,7 @@
       padding: 15px;
       background: var(--bg-tertiary);
       transition: background-color 0.3s ease, border-color 0.3s ease;
+      flex-shrink: 0;
     }
     .input-container { 
       display: flex; 

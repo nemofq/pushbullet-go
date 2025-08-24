@@ -676,6 +676,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       body.classList.toggle('system-dark', prefersDark);
     }
+    
+    // Handle responsive sizing for Chrome zoom/scaling
+    // Use window.innerHeight to get the actual available viewport height after zoom is applied
+    body.style.height = window.innerHeight + "px";
   }
 
   function initializeI18n() {
