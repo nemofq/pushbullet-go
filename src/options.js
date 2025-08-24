@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   const accessTokenInput = document.getElementById('accessToken');
   const remoteDeviceSelect = document.getElementById('remoteDeviceId');
-  const saveGeneralButton = document.getElementById('saveGeneral');
-  const saveAppearanceButton = document.getElementById('saveAppearance');
+  const saveSettingsButton = document.getElementById('saveSettings');
   const retrieveDevicesButton = document.getElementById('retrieveDevices');
-  const generalStatus = document.getElementById('generalStatus');
-  const appearanceStatus = document.getElementById('appearanceStatus');
+  const saveStatus = document.getElementById('saveStatus');
   const autoOpenLinksCheckbox = document.getElementById('autoOpenLinks');
   const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
@@ -260,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
     } catch (error) {
       console.error('Error retrieving devices:', error);
-      showGeneralStatus(`Error: ${error.message}`, 'error');
+      showStatus(`Error: ${error.message}`, 'error');
     } finally {
       // Note: Don't re-enable here as showRetrieveSuccess will handle it
       if (retrieveDevicesButton.textContent === window.CustomI18n.getMessage('retrieving')) {
@@ -285,8 +283,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Save General Settings
-  saveGeneralButton.addEventListener('click', function() {
+  // Save All Settings
+  saveSettingsButton.addEventListener('click', function() {
     const accessToken = accessTokenInput.value.trim();
     const selectedRemoteDevices = Array.from(remoteDeviceSelect.selectedOptions)
       .map(option => option.value)
@@ -294,24 +292,15 @@ document.addEventListener('DOMContentLoaded', function() {
       .join(',');
 
     const saveData = { 
+      // General settings
       accessToken: accessToken || '',
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
       people: people,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
-      autoOpenLinks: autoOpenLinksCheckbox.checked
-    };
-
-    chrome.storage.sync.set(saveData, function() {
-      showGeneralSaveSuccess();
-      chrome.runtime.sendMessage({ type: 'token_updated' });
-    });
-  });
-
-  // Save Appearance Settings
-  saveAppearanceButton.addEventListener('click', function() {
-    const saveData = { 
+      autoOpenLinks: autoOpenLinksCheckbox.checked,
+      // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
       languageMode: languageModeSelect.value,
@@ -328,10 +317,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Language changed, reload the locale and update UI
         window.CustomI18n.changeLanguage(newLanguage).then(() => {
           initializeI18n();
-          showAppearanceSaveSuccess();
+          showSaveSuccess();
         });
       } else {
-        showAppearanceSaveSuccess();
+        showSaveSuccess();
       }
       chrome.runtime.sendMessage({ type: 'token_updated' });
     });
@@ -426,57 +415,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  function showGeneralStatus(message, type) {
-    generalStatus.textContent = message;
-    generalStatus.className = `status ${type}`;
-    generalStatus.style.display = 'block';
+  function showStatus(message, type) {
+    saveStatus.textContent = message;
+    saveStatus.className = `status ${type}`;
+    saveStatus.style.display = 'block';
     
     setTimeout(() => {
-      generalStatus.style.display = 'none';
+      saveStatus.style.display = 'none';
     }, 3000);
   }
 
-  function showAppearanceStatus(message, type) {
-    appearanceStatus.textContent = message;
-    appearanceStatus.className = `status ${type}`;
-    appearanceStatus.style.display = 'block';
+  function showSaveSuccess() {
+    const originalContent = saveSettingsButton.innerHTML;
     
-    setTimeout(() => {
-      appearanceStatus.style.display = 'none';
-    }, 3000);
-  }
-
-  function showGeneralSaveSuccess() {
-    const originalContent = saveGeneralButton.innerHTML;
-    
-    saveGeneralButton.innerHTML = `
+    saveSettingsButton.innerHTML = `
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
       </svg>
       ${window.CustomI18n.getMessage('saved')}
     `;
-    saveGeneralButton.disabled = true;
+    saveSettingsButton.disabled = true;
     
     setTimeout(() => {
-      saveGeneralButton.innerHTML = originalContent;
-      saveGeneralButton.disabled = false;
-    }, 2000);
-  }
-
-  function showAppearanceSaveSuccess() {
-    const originalContent = saveAppearanceButton.innerHTML;
-    
-    saveAppearanceButton.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
-      </svg>
-      ${window.CustomI18n.getMessage('saved')}
-    `;
-    saveAppearanceButton.disabled = true;
-    
-    setTimeout(() => {
-      saveAppearanceButton.innerHTML = originalContent;
-      saveAppearanceButton.disabled = false;
+      saveSettingsButton.innerHTML = originalContent;
+      saveSettingsButton.disabled = false;
     }, 2000);
   }
 

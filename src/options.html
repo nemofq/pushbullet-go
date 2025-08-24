@@ -69,7 +69,8 @@
       margin: 0; 
       padding: 40px 20px; 
       display: flex; 
-      justify-content: center; 
+      flex-direction: column;
+      align-items: center; 
       background: var(--bg-primary);
       color: var(--text-primary);
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -179,7 +180,7 @@
       outline: none;
       border-color: var(--border-focus);
     }
-    select:not([multiple]) {
+    select:not([multiple]):not([size]) {
       padding: 12px 40px 12px 12px;
       appearance: none;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -188,12 +189,18 @@
       background-size: 16px;
     }
     
-    .theme-dark select:not([multiple]),
-    .theme-system.system-dark select:not([multiple]) {
+    .theme-dark select:not([multiple]):not([size]),
+    .theme-system.system-dark select:not([multiple]):not([size]) {
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
     }
     select[multiple] {
       height: 120px;
+    }
+    /* Fixed size select (like language selector) should not have dropdown arrow */
+    select[size]:not([size="1"]) {
+      appearance: auto;
+      background-image: none;
+      padding: 12px;
     }
     .toggle-container {
       display: flex;
@@ -276,6 +283,13 @@
     .tab-save-button {
       margin-top: 25px;
     }
+    .save-container {
+      width: 450px;
+      margin-top: 20px;
+    }
+    .save-button {
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -324,9 +338,6 @@
             <div class="toggle-slider"></div>
           </div>
         </div>
-        
-        <button id="saveGeneral" class="tab-save-button" data-i18n="save_settings_button">Save</button>
-        <div id="generalStatus" class="status"></div>
       </div>
 
       <!-- Appearance Tab Content -->
@@ -354,7 +365,7 @@
         </div>
         <div class="form-group">
           <label for="languageMode" data-i18n="language_label">Language:</label>
-          <select id="languageMode">
+          <select id="languageMode" size="4">
             <option value="auto" data-i18n="auto_browser_language">Auto (Browser's language)</option>
             <option value="id">Bahasa Indonesia</option>
             <option value="de">Deutsch</option>
@@ -399,10 +410,13 @@
             <option value="dark" data-i18n="dark">Dark</option>
           </select>
         </div>
-        
-        <button id="saveAppearance" class="tab-save-button" data-i18n="save_settings_button">Save</button>
-        <div id="appearanceStatus" class="status"></div>
       </div>
+  </div>
+  
+  <!-- Save button below container -->
+  <div class="save-container">
+    <button id="saveSettings" class="save-button" data-i18n="save_settings_button">Save Settings</button>
+    <div id="saveStatus" class="status"></div>
   </div>
   <script src="i18n.js"></script>
   <script src="options.js"></script>
