@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Get access token and device config
       const [tokenData, configData] = await Promise.all([
         chrome.storage.sync.get('accessToken'),
-        chrome.storage.sync.get('remoteDeviceId')
+        chrome.storage.local.get('remoteDeviceId')
       ]);
 
       if (!tokenData.accessToken) {
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadAndApplyColorMode() {
-    const data = await chrome.storage.sync.get('colorMode');
+    const data = await chrome.storage.local.get('colorMode');
     const colorMode = data.colorMode || 'system';
     applyColorMode(colorMode);
   }

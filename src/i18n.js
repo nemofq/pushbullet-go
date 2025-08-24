@@ -6,7 +6,7 @@ let isInitialized = false;
 // Initialize the i18n system
 async function initializeI18n() {
   try {
-    const data = await chrome.storage.sync.get('languageMode');
+    const data = await chrome.storage.local.get('languageMode');
     currentLanguage = data.languageMode || 'auto';
     
     if (currentLanguage === 'auto') {
@@ -93,7 +93,7 @@ async function changeLanguage(newLanguage) {
   }
   
   // Save the language preference
-  await chrome.storage.sync.set({ languageMode: newLanguage });
+  await chrome.storage.local.set({ languageMode: newLanguage });
 }
 
 // Function to get current language

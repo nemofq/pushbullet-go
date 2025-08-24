@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   const accessTokenInput = document.getElementById('accessToken');
   const remoteDeviceSelect = document.getElementById('remoteDeviceId');
   const saveSettingsButton = document.getElementById('saveSettings');
@@ -45,7 +45,16 @@ document.addEventListener('DOMContentLoaded', function() {
   let devices = [];
   let people = [];
 
-  chrome.storage.sync.get(['accessToken', 'remoteDeviceId', 'devices', 'people', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode', 'defaultTab'], function(data) {
+  // Get data from both sync and local storage
+  const syncData = await new Promise(resolve => {
+    chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
+  });
+  const localData = await new Promise(resolve => {
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode', 'defaultTab'], resolve);
+  });
+  const data = { ...syncData, ...localData };
+  
+  (function(data) {
     accessTokenInput.value = data.accessToken || '';
     devices = data.devices || [];
     people = data.people || [];
@@ -94,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDefaultTabVisibility();
     
     updateRetrieveButton();
-  });
+  })(data);
   
   accessTokenInput.addEventListener('input', updateRetrieveButton);
   
@@ -308,7 +317,28 @@ document.addEventListener('DOMContentLoaded', function() {
       defaultTab: defaultTabSelect.value
     };
 
-    chrome.storage.sync.set(saveData, function() {
+    // Split data between sync and local storage
+    const syncSaveData = {
+      accessToken: saveData.accessToken,
+      devices: saveData.devices,
+      people: saveData.people
+    };
+    
+    const localSaveData = {
+      remoteDeviceId: saveData.remoteDeviceId,
+      onlyBrowserPushes: saveData.onlyBrowserPushes,
+      hideBrowserPushes: saveData.hideBrowserPushes,
+      autoOpenLinks: saveData.autoOpenLinks,
+      notificationMirroring: saveData.notificationMirroring,
+      showSmsShortcut: saveData.showSmsShortcut,
+      languageMode: saveData.languageMode,
+      colorMode: saveData.colorMode,
+      defaultTab: saveData.defaultTab
+    };
+    
+    // Save to both storages
+    chrome.storage.sync.set(syncSaveData);
+    chrome.storage.local.set(localSaveData, function() {
       // Check if language has changed
       const oldLanguage = window.CustomI18n.getCurrentLanguage();
       const newLanguage = languageModeSelect.value;

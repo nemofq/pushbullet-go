@@ -169,8 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     const [mirroringData, defaultTabData] = await Promise.all([
-      chrome.storage.sync.get('notificationMirroring'),
-      chrome.storage.sync.get('defaultTab')
+      chrome.storage.local.get('notificationMirroring'),
+      chrome.storage.local.get('defaultTab')
     ]);
     
     if (mirroringData.notificationMirroring) {
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
   async function checkSmsShortcut() {
     const [tokenData, smsData] = await Promise.all([
       chrome.storage.sync.get('accessToken'),
-      chrome.storage.sync.get('showSmsShortcut')
+      chrome.storage.local.get('showSmsShortcut')
     ]);
     
     // Only show SMS shortcut if we have an access token and the setting is enabled
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const [receivedData, sentData, configData, localData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.sync.get('onlyBrowserPushes'),
+      chrome.storage.local.get('onlyBrowserPushes'),
       chrome.storage.local.get('chromeDeviceId')
     ]);
     
@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    const configData = await chrome.storage.sync.get('remoteDeviceId');
+    const configData = await chrome.storage.local.get('remoteDeviceId');
     
     const isUrl = isValidUrl(body);
     const pushData = {
@@ -565,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const [tokenData, configData] = await Promise.all([
         chrome.storage.sync.get('accessToken'),
-        chrome.storage.sync.get('remoteDeviceId')
+        chrome.storage.local.get('remoteDeviceId')
       ]);
 
       if (!tokenData.accessToken) {
@@ -649,7 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadAndApplyColorMode() {
-    const data = await chrome.storage.sync.get('colorMode');
+    const data = await chrome.storage.local.get('colorMode');
     const colorMode = data.colorMode || 'system';
     applyColorMode(colorMode);
   }
@@ -710,16 +710,16 @@ document.addEventListener('DOMContentLoaded', function() {
         checkNotificationMirroring();
       });
     }
-    if (areaName === 'sync' && changes.notificationMirroring) {
+    if (areaName === 'local' && changes.notificationMirroring) {
       checkNotificationMirroring();
     }
-    if (areaName === 'sync' && changes.showSmsShortcut) {
+    if (areaName === 'local' && changes.showSmsShortcut) {
       checkSmsShortcut();
     }
-    if (areaName === 'sync' && changes.colorMode) {
+    if (areaName === 'local' && changes.colorMode) {
       loadAndApplyColorMode();
     }
-    if (areaName === 'sync' && changes.languageMode) {
+    if (areaName === 'local' && changes.languageMode) {
       // Language changed, reload locale and reinitialize UI
       if (window.CustomI18n) {
         window.CustomI18n.changeLanguage(changes.languageMode.newValue).then(() => {
@@ -729,9 +729,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     }
-    if (areaName === 'sync' && changes.defaultTab) {
+    if (areaName === 'local' && changes.defaultTab) {
       // Default tab changed, switch to new default if notification mirroring is enabled
-      chrome.storage.sync.get('notificationMirroring').then(data => {
+      chrome.storage.local.get('notificationMirroring').then(data => {
         if (data.notificationMirroring) {
           const newDefaultTab = changes.defaultTab.newValue || 'push';
           switchTab(newDefaultTab);

@@ -41,7 +41,7 @@ function getMessage(messageKey, substitutions = []) {
 // Initialize i18n for background script
 async function initializeBackgroundI18n() {
   try {
-    const data = await chrome.storage.sync.get('languageMode');
+    const data = await chrome.storage.local.get('languageMode');
     currentLanguage = data.languageMode || 'auto';
     
     if (currentLanguage === 'auto') {
@@ -85,6 +85,78 @@ const CustomI18n = { getMessage, getCurrentLanguage, initializeI18n: initializeB
 initializeBackgroundI18n().catch(error => {
   console.warn('Initial i18n initialization failed, will use Chrome default:', error);
 });
+
+// One-time migration from sync to local storage for specific fields
+async function migrateSpecificFieldsFromSyncToLocal() {
+  try {
+    // Check if migration already completed
+    const migrationCheck = await chrome.storage.local.get('migrationFromSyncCompleted_v2');
+    if (migrationCheck.migrationFromSyncCompleted_v2) {
+      return; // Already migrated
+    }
+
+    console.log('Starting migration of specific fields from sync to local storage');
+
+    // Fields to migrate from sync to local
+    const fieldsToMigrate = [
+      'remoteDeviceId',
+      'autoOpenLinks', 
+      'notificationMirroring',
+      'onlyBrowserPushes',
+      'hideBrowserPushes',
+      'showSmsShortcut',
+      'colorMode',
+      'languageMode',
+      'defaultTab'
+    ];
+
+    // Get these specific fields from sync storage
+    const syncData = await chrome.storage.sync.get(fieldsToMigrate);
+
+    // Check if any of the fields exist in sync storage
+    const hasFieldsToMigrate = Object.keys(syncData).length > 0 && 
+                              fieldsToMigrate.some(field => syncData[field] !== undefined);
+
+    if (hasFieldsToMigrate) {
+      console.log(`Migrating ${Object.keys(syncData).length} fields from sync to local storage:`, Object.keys(syncData));
+      
+      // Copy the fields to local storage
+      await chrome.storage.local.set(syncData);
+      
+      // Remove only these specific fields from sync storage
+      await chrome.storage.sync.remove(fieldsToMigrate);
+      
+      console.log('Migration completed successfully');
+    } else {
+      console.log('No relevant fields found in sync storage, skipping migration');
+    }
+
+    // Mark migration as completed (this ensures it only runs once)
+    await chrome.storage.local.set({ migrationFromSyncCompleted_v2: true });
+
+    // Re-initialize extension components to pick up migrated settings
+    if (hasFieldsToMigrate) {
+      console.log('Re-initializing extension after settings migration');
+      
+      // Re-initialize i18n for language settings
+      if (syncData.languageMode !== undefined || syncData.colorMode !== undefined) {
+        await initializeBackgroundI18n();
+      }
+      
+      // Update context menus if relevant settings changed
+      if (syncData.languageMode !== undefined) {
+        await setupContextMenus();
+      }
+    }
+
+  } catch (error) {
+    console.error('Migration failed:', error);
+    // Don't set migration as completed if it failed, so it can retry next time
+  }
+}
+
+// Run migration immediately when background script loads
+migrateSpecificFieldsFromSyncToLocal();
 
 // Network event listeners for immediate reconnection when network comes back
 // Note: In service workers, we rely on navigator.onLine checks in connectWebSocket instead of events
@@ -153,7 +225,7 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace === 'sync' && (changes.devices || changes.people)) {
     await setupContextMenus();
   }
-  if (namespace === 'sync' && changes.languageMode) {
+  if (namespace === 'local' && changes.languageMode) {
     // Language changed, reinitialize i18n and update context menus
     initializeBackgroundI18n().then(async () => {
       await setupContextMenus();
@@ -443,7 +515,7 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
           // Show notifications for new pushes (only if from tickle, meaning real-time)
           if (isFromTickle) {
             // Apply device filtering for notifications (same as popup display)
-            const configData = await chrome.storage.sync.get(['onlyBrowserPushes', 'autoOpenLinks', 'hideBrowserPushes']);
+            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'autoOpenLinks', 'hideBrowserPushes']);
             const localData = await chrome.storage.local.get('chromeDeviceId');
             
             newPushes.forEach(push => {
@@ -543,7 +615,7 @@ function showNotificationForPush(push, autoOpenLinks = false) {
 
 async function handleMirrorNotification(mirrorData) {
   // Check if notification mirroring is enabled
-  const configData = await chrome.storage.sync.get('notificationMirroring');
+  const configData = await chrome.storage.local.get('notificationMirroring');
   if (!configData.notificationMirroring) {
     return;
   }
@@ -1070,7 +1142,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     return;
   }
   
-  const configData = await chrome.storage.sync.get('remoteDeviceId');
+  const configData = await chrome.storage.local.get('remoteDeviceId');
   const menuItemId = info.menuItemId;
   
   // Handle "To selected devices" menu items (uses configured remote devices)
