@@ -336,14 +336,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const messageDiv = document.createElement('div');
       messageDiv.className = `message ${push.messageType}`;
       
-      // Make link-type messages clickable
-      if (push.type === 'link' && push.url) {
-        messageDiv.classList.add('clickable');
-        messageDiv.onclick = () => {
-          window.open(push.url, '_blank');
-        };
-      }
-      
       if (push.title) {
         const titleDiv = document.createElement('div');
         titleDiv.className = 'message-title';
