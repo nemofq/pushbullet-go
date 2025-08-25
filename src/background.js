@@ -386,7 +386,11 @@ async function connectWebSocket() {
     console.log('WebSocket connected successfully');
     startHeartbeatMonitor();
     keepAlive();
-    refreshPushList(true, false);
+    
+    // Don't show notifications on resume if we have no baseline (lastModified=0)
+    // This prevents notification spam from old pushes after Chrome sync/storage loss
+    const shouldShowNotifications = lastModified > 0;
+    refreshPushList(shouldShowNotifications, false);
   };
   
   ws.onmessage = (event) => {
