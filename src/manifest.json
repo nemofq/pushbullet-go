@@ -31,6 +31,15 @@
     }
   },
   "options_page": "options.html",
+  "commands": {
+    "push-current-page": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+P",
+        "mac": "Command+Shift+P"
+      },
+      "description": "__MSG_push_current_page_shortcut_description__"
+    }
+  },
   "web_accessible_resources": [
     {
       "resources": ["_locales/*/messages.json"],

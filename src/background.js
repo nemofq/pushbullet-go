@@ -284,6 +284,30 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+chrome.commands.onCommand.addListener(async (command, tab) => {
+  if (command === 'push-current-page') {
+    if (!accessToken) {
+      console.log('No access token available for keyboard shortcut');
+      return;
+    }
+    
+    // Get the configured remote device IDs (same logic as context menu)
+    const configData = await chrome.storage.local.get('remoteDeviceId');
+    
+    const pageData = {
+      type: 'link',
+      url: tab.url
+    };
+    
+    if (configData.remoteDeviceId) {
+      pageData.device_iden = configData.remoteDeviceId;
+    }
+    
+    await sendPush(pageData);
+    console.log('Page URL pushed via keyboard shortcut:', tab.url);
+  }
+});
+
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
   const localData = await chrome.storage.local.get('lastModified');
