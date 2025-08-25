@@ -290,6 +290,12 @@
     .save-button {
       border-radius: 8px;
     }
+    .sub-option-icon {
+      color: var(--text-tertiary);
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: normal;
+    }
   </style>
 </head>
 <body>
@@ -338,8 +344,11 @@
             <div class="toggle-slider"></div>
           </div>
         </div>
-        <div class="toggle-container" id="autoOpenOnResumeContainer" style="display: none; margin-left: 20px;">
-          <label class="toggle-label" data-i18n="auto_open_on_resume_label">Auto-open even when connection resumes</label>
+        <div class="toggle-container" id="autoOpenOnResumeContainer" style="display: none; margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="auto_open_on_resume_label">Auto-open even when connection resumes</span>
+          </label>
           <input type="checkbox" id="autoOpenOnResume" class="toggle-input">
           <div class="toggle-switch" id="autoOpenOnResumeToggle">
             <div class="toggle-slider"></div>
@@ -364,7 +373,10 @@
           </div>
         </div>
         <div class="form-group" id="defaultTabGroup" style="display: none;">
-          <label for="defaultTab" data-i18n="default_tab_label">Default tab in popup:</label>
+          <label for="defaultTab">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="default_tab_label">Default tab in popup:</span>
+          </label>
           <select id="defaultTab">
             <option value="push" data-i18n="push_button">Push</option>
             <option value="notification" data-i18n="notification_button">Notification</option>
