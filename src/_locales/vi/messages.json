@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Giao diện"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Tự động mở ngay cả khi kết nối được khôi phục"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Gửi URL trang hiện tại đến các thiết bị đã chọn"
   }
 }

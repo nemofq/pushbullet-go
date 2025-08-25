@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "外觀"
+  },
+  "auto_open_on_resume_label": {
+    "message": "連線恢復時也自動開啟"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "將目前頁面網址傳送至選定的裝置"
   }
 }

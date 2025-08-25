@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Aparência"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Abrir automaticamente mesmo quando a conexão for retomada"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Enviar URL da página atual para dispositivos selecionados"
   }
 }

@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Ulkoasu"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Avaa automaattisesti myös kun yhteys palautuu"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Lähetä nykyisen sivun URL valittuihin laitteisiin"
   }
 }

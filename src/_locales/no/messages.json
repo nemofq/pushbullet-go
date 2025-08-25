@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Utseende"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Åpne automatisk selv når tilkoblingen gjenopptas"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Send URL for gjeldende side til valgte enheter"
   }
 }

@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "외관"
+  },
+  "auto_open_on_resume_label": {
+    "message": "연결이 재개될 때도 자동으로 열기"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "현재 페이지 URL을 선택된 장치로 전송"
   }
 }

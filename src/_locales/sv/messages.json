@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Utseende"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Öppna automatiskt även när anslutningen återupprättas"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Skicka aktuell sidas URL till valda enheter"
   }
 }

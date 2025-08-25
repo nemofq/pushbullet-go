@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "外観"
+  },
+  "auto_open_on_resume_label": {
+    "message": "接続が復旧した際も自動的に開く"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "現在のページのURLを選択したデバイスに送信"
   }
 }

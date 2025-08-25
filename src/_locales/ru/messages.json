@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Внешний вид"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Автоматически открывать даже при восстановлении соединения"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Отправить URL текущей страницы на выбранные устройства"
   }
 }

@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Uiterlijk"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Automatisch openen zelfs wanneer verbinding wordt hervat"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Stuur URL van huidige pagina naar geselecteerde apparaten"
   }
 }

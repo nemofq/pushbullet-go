@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "外观"
+  },
+  "auto_open_on_resume_label": {
+    "message": "连接恢复时也自动打开"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "将当前页面 URL 推送到所选设备"
   }
 }

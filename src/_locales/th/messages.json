@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "รูปลักษณ์"
+  },
+  "auto_open_on_resume_label": {
+    "message": "เปิดอัตโนมัติแม้เมื่อการเชื่อมต่อกลับมาอีกครั้ง"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "ส่ง URL ของหน้าปัจจุบันไปยังอุปกรณ์ที่เลือก"
   }
 }

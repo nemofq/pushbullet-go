@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Aparença"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Obrir automàticament fins i tot quan es reprèn la connexió"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Envia l'URL de la pàgina actual als dispositius seleccionats"
   }
 }

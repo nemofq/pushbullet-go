@@ -229,5 +229,11 @@
   },
   "appearance_tab": {
     "message": "Görünüm"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Bağlantı devam ettiğinde bile otomatik aç"
+  },
+  "push_current_page_shortcut_description": {
+    "message": "Mevcut sayfanın URL'sini seçili cihazlara gönder"
   }
 }
