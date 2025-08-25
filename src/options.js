@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const saveStatus = document.getElementById('saveStatus');
   const autoOpenLinksCheckbox = document.getElementById('autoOpenLinks');
   const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
+  const autoOpenOnResumeCheckbox = document.getElementById('autoOpenOnResume');
+  const autoOpenOnResumeToggle = document.getElementById('autoOpenOnResumeToggle');
+  const autoOpenOnResumeContainer = document.getElementById('autoOpenOnResumeContainer');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
@@ -50,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode', 'defaultTab'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode', 'defaultTab'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -72,6 +75,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load auto-open links setting (default is false/off)
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
     updateToggleVisual();
+    
+    // Load auto-open on resume setting (default is false/off)
+    autoOpenOnResumeCheckbox.checked = data.autoOpenOnResume || false;
+    updateAutoOpenOnResumeToggleVisual();
+    
+    // Show/hide the auto-open on resume option based on auto-open links setting
+    updateAutoOpenOnResumeVisibility();
     
     // Load notification mirroring setting (default is false/off)
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
@@ -111,6 +121,12 @@ document.addEventListener('DOMContentLoaded', async function() {
   autoOpenLinksToggle.addEventListener('click', function() {
     autoOpenLinksCheckbox.checked = !autoOpenLinksCheckbox.checked;
     updateToggleVisual();
+    updateAutoOpenOnResumeVisibility();
+  });
+
+  autoOpenOnResumeToggle.addEventListener('click', function() {
+    autoOpenOnResumeCheckbox.checked = !autoOpenOnResumeCheckbox.checked;
+    updateAutoOpenOnResumeToggleVisual();
   });
 
   notificationMirroringToggle.addEventListener('click', function() {
@@ -309,6 +325,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
+      autoOpenOnResume: autoOpenOnResumeCheckbox.checked,
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
@@ -329,6 +346,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       onlyBrowserPushes: saveData.onlyBrowserPushes,
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
+      autoOpenOnResume: saveData.autoOpenOnResume,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
       languageMode: saveData.languageMode,
@@ -381,6 +399,22 @@ document.addEventListener('DOMContentLoaded', async function() {
       autoOpenLinksToggle.classList.add('active');
     } else {
       autoOpenLinksToggle.classList.remove('active');
+    }
+  }
+  
+  function updateAutoOpenOnResumeToggleVisual() {
+    if (autoOpenOnResumeCheckbox.checked) {
+      autoOpenOnResumeToggle.classList.add('active');
+    } else {
+      autoOpenOnResumeToggle.classList.remove('active');
+    }
+  }
+  
+  function updateAutoOpenOnResumeVisibility() {
+    if (autoOpenLinksCheckbox.checked) {
+      autoOpenOnResumeContainer.style.display = 'flex';
+    } else {
+      autoOpenOnResumeContainer.style.display = 'none';
     }
   }
   

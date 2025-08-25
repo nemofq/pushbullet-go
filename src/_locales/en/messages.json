@@ -229,5 +229,8 @@
   },
   "appearance_tab": {
     "message": "Appearance"
+  },
+  "auto_open_on_resume_label": {
+    "message": "Auto-open even when connection resumes"
   }
 }

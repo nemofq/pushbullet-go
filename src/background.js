@@ -380,7 +380,7 @@ async function connectWebSocket() {
     handleReconnection();
   };
   
-  ws.onopen = () => {
+  ws.onopen = async () => {
     connectionStatus = 'connected';
     reconnectAttempts = 0;
     console.log('WebSocket connected successfully');
@@ -390,7 +390,12 @@ async function connectWebSocket() {
     // Don't show notifications on resume if we have no baseline (lastModified=0)
     // This prevents notification spam from old pushes after Chrome sync/storage loss
     const shouldShowNotifications = lastModified > 0;
-    refreshPushList(shouldShowNotifications, false);
+    
+    // Check if auto-open on resume is enabled
+    const configData = await chrome.storage.local.get('autoOpenOnResume');
+    const allowAutoOpenOnResume = configData.autoOpenOnResume || false;
+    
+    refreshPushList(shouldShowNotifications, allowAutoOpenOnResume);
   };
   
   ws.onmessage = (event) => {
