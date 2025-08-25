@@ -528,10 +528,11 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
               }
               
               if (shouldShowPush) {
-                // Check if we should hide notifications from browser pushes
-                let shouldHideNotification = false;
+                // Skip notifications for dismissed pushes
+                let shouldHideNotification = push.dismissed === true;
                 
-                if (configData.hideBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
+                // Check if we should hide notifications from browser pushes
+                if (!shouldHideNotification && configData.hideBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
                   // Hide notification if push is from the Chrome device
                   shouldHideNotification = push.source_device_iden === localData.chromeDeviceId;
                 }
