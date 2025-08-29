@@ -17,6 +17,14 @@ document.addEventListener('DOMContentLoaded', async function() {
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
   const showSmsShortcutToggle = document.getElementById('showSmsShortcutToggle');
+  const requireInteractionCheckbox = document.getElementById('requireInteraction');
+  const requireInteractionToggle = document.getElementById('requireInteractionToggle');
+  const requireInteractionPushesCheckbox = document.getElementById('requireInteractionPushes');
+  const requireInteractionPushesToggle = document.getElementById('requireInteractionPushesToggle');
+  const requireInteractionPushesContainer = document.getElementById('requireInteractionPushesContainer');
+  const requireInteractionMirroredCheckbox = document.getElementById('requireInteractionMirrored');
+  const requireInteractionMirroredToggle = document.getElementById('requireInteractionMirroredToggle');
+  const requireInteractionMirroredContainer = document.getElementById('requireInteractionMirroredContainer');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -53,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'colorMode', 'languageMode', 'defaultTab'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'colorMode', 'languageMode', 'defaultTab'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -99,6 +107,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     showSmsShortcutCheckbox.checked = data.showSmsShortcut || false; // Default to false
     updateShowSmsShortcutToggleVisual();
     
+    // Load require interaction settings (default is false/off)
+    requireInteractionCheckbox.checked = data.requireInteraction || false; // Default to false
+    updateRequireInteractionToggleVisual();
+    requireInteractionPushesCheckbox.checked = data.requireInteractionPushes || false; // Default to false
+    updateRequireInteractionPushesToggleVisual();
+    requireInteractionMirroredCheckbox.checked = data.requireInteractionMirrored || false; // Default to false
+    updateRequireInteractionMirroredToggleVisual();
+    
+    // Show/hide the require interaction sub-options based on main setting
+    updateRequireInteractionVisibility();
+    
     // Load language mode setting (default is 'auto')
     languageModeSelect.value = data.languageMode || 'auto';
     
@@ -111,6 +130,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Update conditional visibility for default tab option
     updateDefaultTabVisibility();
+    
+    // Update conditional visibility for require interaction mirrored option
+    updateRequireInteractionMirroredVisibility();
     
     updateRetrieveButton();
   })(data);
@@ -133,6 +155,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     notificationMirroringCheckbox.checked = !notificationMirroringCheckbox.checked;
     updateNotificationMirroringToggleVisual();
     updateDefaultTabVisibility();
+    updateRequireInteractionMirroredVisibility();
+    
+    // Auto-enable mirrored sub-switch when notification mirroring is enabled and require interaction is on
+    if (notificationMirroringCheckbox.checked && requireInteractionCheckbox.checked) {
+      requireInteractionMirroredCheckbox.checked = true;
+      updateRequireInteractionMirroredToggleVisual();
+    }
   });
 
   onlyBrowserPushesToggle.addEventListener('click', function() {
@@ -148,6 +177,32 @@ document.addEventListener('DOMContentLoaded', async function() {
   showSmsShortcutToggle.addEventListener('click', function() {
     showSmsShortcutCheckbox.checked = !showSmsShortcutCheckbox.checked;
     updateShowSmsShortcutToggleVisual();
+  });
+
+  requireInteractionToggle.addEventListener('click', function() {
+    requireInteractionCheckbox.checked = !requireInteractionCheckbox.checked;
+    updateRequireInteractionToggleVisual();
+    updateRequireInteractionVisibility();
+    
+    // Auto-enable both sub-switches when main switch is turned on
+    if (requireInteractionCheckbox.checked) {
+      requireInteractionPushesCheckbox.checked = true;
+      updateRequireInteractionPushesToggleVisual();
+      if (notificationMirroringCheckbox.checked) {
+        requireInteractionMirroredCheckbox.checked = true;
+        updateRequireInteractionMirroredToggleVisual();
+      }
+    }
+  });
+
+  requireInteractionPushesToggle.addEventListener('click', function() {
+    requireInteractionPushesCheckbox.checked = !requireInteractionPushesCheckbox.checked;
+    updateRequireInteractionPushesToggleVisual();
+  });
+
+  requireInteractionMirroredToggle.addEventListener('click', function() {
+    requireInteractionMirroredCheckbox.checked = !requireInteractionMirroredCheckbox.checked;
+    updateRequireInteractionMirroredToggleVisual();
   });
 
   // Handle color mode changes for immediate preview
@@ -329,6 +384,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
+      requireInteraction: requireInteractionCheckbox.checked,
+      requireInteractionPushes: requireInteractionPushesCheckbox.checked,
+      requireInteractionMirrored: requireInteractionMirroredCheckbox.checked,
       languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value,
       defaultTab: defaultTabSelect.value
@@ -349,6 +407,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       autoOpenOnResume: saveData.autoOpenOnResume,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
+      requireInteraction: saveData.requireInteraction,
+      requireInteractionPushes: saveData.requireInteractionPushes,
+      requireInteractionMirrored: saveData.requireInteractionMirrored,
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab
@@ -455,6 +516,48 @@ document.addEventListener('DOMContentLoaded', async function() {
       defaultTabGroup.style.display = 'block';
     } else {
       defaultTabGroup.style.display = 'none';
+    }
+  }
+  
+  function updateRequireInteractionToggleVisual() {
+    if (requireInteractionCheckbox.checked) {
+      requireInteractionToggle.classList.add('active');
+    } else {
+      requireInteractionToggle.classList.remove('active');
+    }
+  }
+  
+  function updateRequireInteractionPushesToggleVisual() {
+    if (requireInteractionPushesCheckbox.checked) {
+      requireInteractionPushesToggle.classList.add('active');
+    } else {
+      requireInteractionPushesToggle.classList.remove('active');
+    }
+  }
+  
+  function updateRequireInteractionMirroredToggleVisual() {
+    if (requireInteractionMirroredCheckbox.checked) {
+      requireInteractionMirroredToggle.classList.add('active');
+    } else {
+      requireInteractionMirroredToggle.classList.remove('active');
+    }
+  }
+  
+  function updateRequireInteractionVisibility() {
+    if (requireInteractionCheckbox.checked) {
+      requireInteractionPushesContainer.style.display = 'flex';
+      updateRequireInteractionMirroredVisibility();
+    } else {
+      requireInteractionPushesContainer.style.display = 'none';
+      requireInteractionMirroredContainer.style.display = 'none';
+    }
+  }
+  
+  function updateRequireInteractionMirroredVisibility() {
+    if (requireInteractionCheckbox.checked && notificationMirroringCheckbox.checked) {
+      requireInteractionMirroredContainer.style.display = 'flex';
+    } else {
+      requireInteractionMirroredContainer.style.display = 'none';
     }
   }
   

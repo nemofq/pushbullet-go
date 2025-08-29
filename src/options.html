@@ -382,6 +382,33 @@
             <option value="notification" data-i18n="notification_button">Notification</option>
           </select>
         </div>
+        <div class="toggle-container">
+          <label class="toggle-label" data-i18n="require_interaction_label">Require interaction to dismiss notifications in Chrome</label>
+          <input type="checkbox" id="requireInteraction" class="toggle-input">
+          <div class="toggle-switch" id="requireInteractionToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container" id="requireInteractionPushesContainer" style="display: none; margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="pushes_label">Pushes</span>
+          </label>
+          <input type="checkbox" id="requireInteractionPushes" class="toggle-input">
+          <div class="toggle-switch" id="requireInteractionPushesToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container" id="requireInteractionMirroredContainer" style="display: none; margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
+          </label>
+          <input type="checkbox" id="requireInteractionMirrored" class="toggle-input">
+          <div class="toggle-switch" id="requireInteractionMirroredToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
         <div class="form-group">
           <label for="languageMode" data-i18n="language_label">Language:</label>
           <select id="languageMode" size="4">

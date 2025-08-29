@@ -606,7 +606,7 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
   }
 }
 
-function showNotificationForPush(push, autoOpenLinks = false) {
+async function showNotificationForPush(push, autoOpenLinks = false) {
   let notificationBody = '';
   
   if (push.type === 'note') {
@@ -637,6 +637,12 @@ function showNotificationForPush(push, autoOpenLinks = false) {
     notificationOptions.buttons = [
       { title: getMessage('dismiss_button') }
     ];
+  }
+  
+  // Check if require interaction is enabled for pushes
+  const requireInteractionData = await chrome.storage.local.get(['requireInteractionPushes']);
+  if (requireInteractionData.requireInteractionPushes) {
+    notificationOptions.requireInteraction = true;
   }
   
   chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
@@ -718,6 +724,12 @@ async function showMirrorNotification(mirrorData) {
     notificationOptions.buttons = [
       { title: getMessage('dismiss_button') }
     ];
+  }
+  
+  // Check if require interaction is enabled for mirrored notifications
+  const requireInteractionData = await chrome.storage.local.get(['requireInteractionMirrored']);
+  if (requireInteractionData.requireInteractionMirrored) {
+    notificationOptions.requireInteraction = true;
   }
   
   // Create unique notification ID that includes mirror data for identification
