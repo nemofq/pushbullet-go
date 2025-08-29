@@ -790,6 +790,43 @@ chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIn
   }
 });
 
+chrome.notifications.onClosed.addListener(async (notificationId, byUser) => {
+  // Only handle user-initiated closes (not system closes) when setting is enabled
+  if (!byUser) return;
+  
+  // Check if close as dismiss is enabled
+  const closeAsDismissData = await chrome.storage.local.get('closeAsDismiss');
+  if (!closeAsDismissData.closeAsDismiss) return;
+  
+  if (notificationId.startsWith('pushbullet-mirror-')) {
+    // Handle mirror notification close
+    // Check if the notification had dismiss button (only dismiss if it was dismissible)
+    const parts = notificationId.replace('pushbullet-mirror-', '').split('-');
+    if (parts.length >= 3) {
+      const timestamp = parts.pop();
+      const package_name = parts[0];
+      const notification_id = parts.slice(1).join('-');
+      
+      // Check if the notification was dismissible by looking at stored data
+      const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
+      const notifications = existingNotifications.mirrorNotifications || [];
+      const notification = notifications.find(n => 
+        n.package_name === package_name && n.notification_id === notification_id
+      );
+      
+      // Only dismiss if the notification was dismissible (had dismiss button)
+      if (notification && notification.dismissible) {
+        await dismissMirrorNotification(notificationId);
+      }
+    }
+  } else if (notificationId.startsWith('pushbullet-')) {
+    // Handle push notification close
+    // All push notifications have dismiss buttons, so we can safely dismiss
+    const pushIden = notificationId.replace('pushbullet-', '').split('-').slice(0, -1).join('-');
+    await dismissPush(pushIden);
+  }
+});
+
 async function handleDismissedPushes(updatedPushes) {
   const dismissedPushes = updatedPushes.filter(push => push.dismissed === true);
   

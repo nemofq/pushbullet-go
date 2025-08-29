@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const requireInteractionMirroredCheckbox = document.getElementById('requireInteractionMirrored');
   const requireInteractionMirroredToggle = document.getElementById('requireInteractionMirroredToggle');
   const requireInteractionMirroredContainer = document.getElementById('requireInteractionMirroredContainer');
+  const closeAsDismissCheckbox = document.getElementById('closeAsDismiss');
+  const closeAsDismissToggle = document.getElementById('closeAsDismissToggle');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'colorMode', 'languageMode', 'defaultTab'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'colorMode', 'languageMode', 'defaultTab'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -117,6 +119,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Show/hide the require interaction sub-options based on main setting
     updateRequireInteractionVisibility();
+    
+    // Load close as dismiss setting (default is false/off)
+    closeAsDismissCheckbox.checked = data.closeAsDismiss || false; // Default to false
+    updateCloseAsDismissToggleVisual();
     
     // Load language mode setting (default is 'auto')
     languageModeSelect.value = data.languageMode || 'auto';
@@ -203,6 +209,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   requireInteractionMirroredToggle.addEventListener('click', function() {
     requireInteractionMirroredCheckbox.checked = !requireInteractionMirroredCheckbox.checked;
     updateRequireInteractionMirroredToggleVisual();
+  });
+
+  closeAsDismissToggle.addEventListener('click', function() {
+    closeAsDismissCheckbox.checked = !closeAsDismissCheckbox.checked;
+    updateCloseAsDismissToggleVisual();
   });
 
   // Handle color mode changes for immediate preview
@@ -387,6 +398,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteraction: requireInteractionCheckbox.checked,
       requireInteractionPushes: requireInteractionPushesCheckbox.checked,
       requireInteractionMirrored: requireInteractionMirroredCheckbox.checked,
+      closeAsDismiss: closeAsDismissCheckbox.checked,
       languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value,
       defaultTab: defaultTabSelect.value
@@ -410,6 +422,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteraction: saveData.requireInteraction,
       requireInteractionPushes: saveData.requireInteractionPushes,
       requireInteractionMirrored: saveData.requireInteractionMirrored,
+      closeAsDismiss: saveData.closeAsDismiss,
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab
@@ -558,6 +571,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteractionMirroredContainer.style.display = 'flex';
     } else {
       requireInteractionMirroredContainer.style.display = 'none';
+    }
+  }
+  
+  function updateCloseAsDismissToggleVisual() {
+    if (closeAsDismissCheckbox.checked) {
+      closeAsDismissToggle.classList.add('active');
+    } else {
+      closeAsDismissToggle.classList.remove('active');
     }
   }
   

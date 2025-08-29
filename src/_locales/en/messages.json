@@ -244,5 +244,8 @@
   },
   "mirrored_notifications_label": {
     "message": "Mirrored Notifications"
+  },
+  "close_as_dismiss_label": {
+    "message": "Treat native close of Chrome notification as dismiss action"
   }
 }
