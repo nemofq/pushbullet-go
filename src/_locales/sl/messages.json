@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Prikaži števila neprebranih"
+  },
+  "push_this_link": {
+    "message": "Pošlji to povezavo"
   }
 }

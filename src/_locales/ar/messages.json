@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "عرض عدد الرسائل غير المقروءة"
+  },
+  "push_this_link": {
+    "message": "إرسال هذا الرابط"
   }
 }

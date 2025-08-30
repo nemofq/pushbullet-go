@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Mostra els recomptes de no llegits"
+  },
+  "push_this_link": {
+    "message": "Enviar aquest enllaç"
   }
 }

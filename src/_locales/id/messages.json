@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Tampilkan jumlah yang belum dibaca"
+  },
+  "push_this_link": {
+    "message": "Kirim tautan ini"
   }
 }

@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Näytä lukemattomien määrä"
+  },
+  "push_this_link": {
+    "message": "Lähetä tämä linkki"
   }
 }

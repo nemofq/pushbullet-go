@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Display unread counts"
+  },
+  "push_this_link": {
+    "message": "Push this link"
   }
 }

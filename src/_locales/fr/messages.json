@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Afficher le nombre de non lus"
+  },
+  "push_this_link": {
+    "message": "Envoyer ce lien"
   }
 }

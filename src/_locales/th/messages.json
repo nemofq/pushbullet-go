@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "แสดงจำนวนที่ยังไม่อ่าน"
+  },
+  "push_this_link": {
+    "message": "ส่งลิงก์นี้"
   }
 }

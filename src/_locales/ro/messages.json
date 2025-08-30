@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Afișează numărătorile necitite"
+  },
+  "push_this_link": {
+    "message": "Trimite acest link"
   }
 }

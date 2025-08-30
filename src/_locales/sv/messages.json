@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Visa antal olästa"
+  },
+  "push_this_link": {
+    "message": "Skicka denna länk"
   }
 }

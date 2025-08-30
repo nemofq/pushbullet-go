@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Okunmamış sayıları göster"
+  },
+  "push_this_link": {
+    "message": "Bu bağlantıyı gönder"
   }
 }

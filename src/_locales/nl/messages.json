@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Toon aantallen ongelezen"
+  },
+  "push_this_link": {
+    "message": "Deze link verzenden"
   }
 }

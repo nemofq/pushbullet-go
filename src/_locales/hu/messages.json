@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Olvasatlan számok megjelenítése"
+  },
+  "push_this_link": {
+    "message": "Ezen link elküldése"
   }
 }

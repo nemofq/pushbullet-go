@@ -1145,7 +1145,7 @@ async function updateBadge() {
     if (totalCount > 0) {
       const badgeText = totalCount > 99 ? '99+' : totalCount.toString();
       chrome.action.setBadgeText({ text: badgeText });
-      chrome.action.setBadgeBackgroundColor({ color: '#f44336' });
+      chrome.action.setBadgeBackgroundColor({ color: '#d32f2f' });
     } else {
       chrome.action.setBadgeText({ text: '' });
     }
@@ -1316,6 +1316,55 @@ async function setupContextMenus() {
         contexts: ['image']
       });
     });
+    
+    // Create main context menu for link
+    chrome.contextMenus.create({
+      id: 'pushbullet-link',
+      title: getMessage('push_this_link'),
+      contexts: ['link']
+    });
+    
+    // Create sub-entries for link
+    chrome.contextMenus.create({
+      id: 'pushbullet-link-selected',
+      parentId: 'pushbullet-link',
+      title: getMessage('to_selected_devices'),
+      contexts: ['link']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-link-device',
+      parentId: 'pushbullet-link',
+      title: getMessage('choose_device'),
+      contexts: ['link']
+    });
+    
+    chrome.contextMenus.create({
+      id: 'pushbullet-link-people',
+      parentId: 'pushbullet-link',
+      title: getMessage('choose_people'),
+      contexts: ['link']
+    });
+    
+    // Add device options under "Choose device" for link
+    devices.filter(d => d.active).forEach(device => {
+      chrome.contextMenus.create({
+        id: `pushbullet-link-device-${device.iden}`,
+        parentId: 'pushbullet-link-device',
+        title: device.nickname || `${device.manufacturer} ${device.model}`,
+        contexts: ['link']
+      });
+    });
+    
+    // Add people options under "Choose people" for link
+    people.forEach(person => {
+      chrome.contextMenus.create({
+        id: `pushbullet-link-people-${person.email_normalized}`,
+        parentId: 'pushbullet-link-people',
+        title: person.name,
+        contexts: ['link']
+      });
+    });
       
       isSettingUpContextMenus = false;
       resolve();
@@ -1362,6 +1411,18 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     return;
   }
   
+  if (menuItemId === 'pushbullet-link-selected') {
+    const linkData = {
+      type: 'link',
+      url: info.linkUrl
+    };
+    if (configData.remoteDeviceId) {
+      linkData.device_iden = configData.remoteDeviceId;
+    }
+    await sendPush(linkData);
+    return;
+  }
+  
   // Handle device-specific menu items
   if (menuItemId.includes('-device-') && !menuItemId.endsWith('-device')) {
     if (menuItemId.startsWith('pushbullet-page-device-')) {
@@ -1383,6 +1444,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     } else if (menuItemId.startsWith('pushbullet-image-device-')) {
       const deviceId = menuItemId.replace('pushbullet-image-device-', '');
       await handleImageContextMenu(info, deviceId);
+    } else if (menuItemId.startsWith('pushbullet-link-device-')) {
+      const deviceId = menuItemId.replace('pushbullet-link-device-', '');
+      const linkData = {
+        type: 'link',
+        url: info.linkUrl,
+        device_iden: deviceId
+      };
+      await sendPush(linkData);
     }
     return;
   }
@@ -1408,6 +1477,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     } else if (menuItemId.startsWith('pushbullet-image-people-')) {
       const email = menuItemId.replace('pushbullet-image-people-', '');
       await handleImageContextMenuForPeople(info, email);
+    } else if (menuItemId.startsWith('pushbullet-link-people-')) {
+      const email = menuItemId.replace('pushbullet-link-people-', '');
+      const linkData = {
+        type: 'link',
+        url: info.linkUrl,
+        email: email
+      };
+      await sendPush(linkData);
     }
     return;
   }

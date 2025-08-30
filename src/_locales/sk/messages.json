@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Zobraziť počty neprečítaných"
+  },
+  "push_this_link": {
+    "message": "Poslať tento odkaz"
   }
 }

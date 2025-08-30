@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Hiển thị số lượng chưa đọc"
+  },
+  "push_this_link": {
+    "message": "Gửi liên kết này"
   }
 }

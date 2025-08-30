@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Vis antal ulæste"
+  },
+  "push_this_link": {
+    "message": "Send dette link"
   }
 }

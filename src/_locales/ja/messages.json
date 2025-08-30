@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "未読数を表示"
+  },
+  "push_this_link": {
+    "message": "このリンクを送信"
   }
 }

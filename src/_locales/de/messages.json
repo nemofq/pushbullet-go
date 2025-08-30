@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Anzahl ungelesener Nachrichten anzeigen"
+  },
+  "push_this_link": {
+    "message": "Diesen Link senden"
   }
 }

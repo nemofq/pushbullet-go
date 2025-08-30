@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "顯示未讀計數"
+  },
+  "push_this_link": {
+    "message": "推送此鏈結"
   }
 }

@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "הצג מספר לא נקראים"
+  },
+  "push_this_link": {
+    "message": "שלח את הקישור הזה"
   }
 }

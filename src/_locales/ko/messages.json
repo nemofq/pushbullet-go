@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "읽지 않은 수 표시"
+  },
+  "push_this_link": {
+    "message": "이 링크 보내기"
   }
 }

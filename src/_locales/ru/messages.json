@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Показать количество непрочитанных"
+  },
+  "push_this_link": {
+    "message": "Отправить эту ссылку"
   }
 }

@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Показвай броя на непрочетените"
+  },
+  "push_this_link": {
+    "message": "Изпрати този линк"
   }
 }

@@ -250,5 +250,8 @@
   },
   "display_unread_counts_label": {
     "message": "Εμφάνιση αριθμού μη αναγνωσμένων"
+  },
+  "push_this_link": {
+    "message": "Προώθηση αυτού του συνδέσμου"
   }
 }
