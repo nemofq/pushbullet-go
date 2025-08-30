@@ -25,6 +25,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - (New) Notification Mirroring (requires Pushbullet Android app installed and enabled in both Android app and Push Go settings)
 - (New) Dark Mode (follows system by default, or choose manually)
 - (New) Supports i18n with 33 languages
+- (New) Unread count
 
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
