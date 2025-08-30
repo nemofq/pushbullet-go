@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Send aktuelle sides URL til valgte enheder"
+  },
+  "require_interaction_label": {
+    "message": "Kræv interaktion for at skjule Chrome-notifikationer"
+  },
+  "pushes_label": {
+    "message": "Pushes"
+  },
+  "mirrored_notifications_label": {
+    "message": "Spejlede notifikationer"
+  },
+  "close_as_dismiss_label": {
+    "message": "Behandl native lukning af Chrome-notifikation som afvis handling"
+  },
+  "display_unread_counts_label": {
+    "message": "Vis antal ulæste"
   }
 }

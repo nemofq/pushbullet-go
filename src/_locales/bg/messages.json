@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Изпрати URL на текущата страница до избрани устройства"
+  },
+  "require_interaction_label": {
+    "message": "Изисквай взаимодействие за скриване на Chrome известия"
+  },
+  "pushes_label": {
+    "message": "Изпращания"
+  },
+  "mirrored_notifications_label": {
+    "message": "Огледални известия"
+  },
+  "close_as_dismiss_label": {
+    "message": "Третирай естественото затваряне на Chrome известие като действие за отхвърляне"
+  },
+  "display_unread_counts_label": {
+    "message": "Показвай броя на непрочетените"
   }
 }

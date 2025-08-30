@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Mevcut sayfanın URL'sini seçili cihazlara gönder"
+  },
+  "require_interaction_label": {
+    "message": "Chrome bildirimlerini gizlemek için etkileşim gerektir"
+  },
+  "pushes_label": {
+    "message": "İtmeler"
+  },
+  "mirrored_notifications_label": {
+    "message": "Aynalı bildirimler"
+  },
+  "close_as_dismiss_label": {
+    "message": "Chrome bildiriminin yerli kapanışını reddetme eylemi olarak değerlendir"
+  },
+  "display_unread_counts_label": {
+    "message": "Okunmamış sayıları göster"
   }
 }

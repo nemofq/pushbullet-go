@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "現在のページのURLを選択したデバイスに送信"
+  },
+  "require_interaction_label": {
+    "message": "Chrome通知を非表示にするために操作を必要とする"
+  },
+  "pushes_label": {
+    "message": "プッシュ"
+  },
+  "mirrored_notifications_label": {
+    "message": "ミラー通知"
+  },
+  "close_as_dismiss_label": {
+    "message": "Chrome通知のネイティブクローズを却下アクションとして扱う"
+  },
+  "display_unread_counts_label": {
+    "message": "未読数を表示"
   }
 }

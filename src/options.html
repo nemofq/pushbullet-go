@@ -416,6 +416,33 @@
             <div class="toggle-slider"></div>
           </div>
         </div>
+        <div class="toggle-container">
+          <label class="toggle-label" data-i18n="display_unread_counts_label">Display unread counts</label>
+          <input type="checkbox" id="displayUnreadCounts" class="toggle-input">
+          <div class="toggle-switch" id="displayUnreadCountsToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container" id="displayUnreadPushesContainer" style="display: none; margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="pushes_label">Pushes</span>
+          </label>
+          <input type="checkbox" id="displayUnreadPushes" class="toggle-input">
+          <div class="toggle-switch" id="displayUnreadPushesToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container" id="displayUnreadMirroredContainer" style="display: none; margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
+          </label>
+          <input type="checkbox" id="displayUnreadMirrored" class="toggle-input">
+          <div class="toggle-switch" id="displayUnreadMirroredToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
         <div class="form-group">
           <label for="languageMode" data-i18n="language_label">Language:</label>
           <select id="languageMode" size="4">

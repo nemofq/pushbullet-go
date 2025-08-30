@@ -234,6 +234,10 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
       await setupContextMenus();
     });
   }
+  // Update badge when display settings change
+  if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored)) {
+    await updateBadge();
+  }
 });
 
 
@@ -247,7 +251,7 @@ chrome.idle.onStateChanged.addListener((state) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.type) {
     case 'token_updated':
       initializeBackgroundI18n().then(async () => {
@@ -280,6 +284,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
     case 'send_push':
       sendPush(message.data);
+      break;
+    case 'clear_unread_pushes':
+      await clearUnreadPushCount();
+      break;
+    case 'clear_unread_mirrors':
+      await clearUnreadMirrorCount();
       break;
   }
 });
@@ -323,6 +333,9 @@ async function initializeExtension() {
   } else {
     connectionStatus = 'disconnected';
   }
+  
+  // Update badge on initialization
+  await updateBadge();
 }
 
 function resetConnection() {
@@ -640,12 +653,15 @@ async function showNotificationForPush(push, autoOpenLinks = false) {
   }
   
   // Check if require interaction is enabled for pushes
-  const requireInteractionData = await chrome.storage.local.get(['requireInteractionPushes']);
-  if (requireInteractionData.requireInteractionPushes) {
+  const requireInteractionData = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes']);
+  if (requireInteractionData.requireInteraction && requireInteractionData.requireInteractionPushes) {
     notificationOptions.requireInteraction = true;
   }
   
   chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
+  
+  // Increment unread push count
+  await incrementUnreadPushCount();
   
   // Auto-open link pushes in background tabs (only if enabled and notification is created)
   if (push.type === 'link' && push.url && autoOpenLinks) {
@@ -727,8 +743,8 @@ async function showMirrorNotification(mirrorData) {
   }
   
   // Check if require interaction is enabled for mirrored notifications
-  const requireInteractionData = await chrome.storage.local.get(['requireInteractionMirrored']);
-  if (requireInteractionData.requireInteractionMirrored) {
+  const requireInteractionData = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored']);
+  if (requireInteractionData.requireInteraction && requireInteractionData.requireInteractionMirrored) {
     notificationOptions.requireInteraction = true;
   }
   
@@ -736,6 +752,9 @@ async function showMirrorNotification(mirrorData) {
   const notificationId = `pushbullet-mirror-${mirrorData.package_name}-${mirrorData.notification_id}-${Date.now()}`;
   
   chrome.notifications.create(notificationId, notificationOptions);
+  
+  // Increment unread mirrored notification count
+  await incrementUnreadMirrorCount();
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
@@ -1048,6 +1067,91 @@ async function storeSentMessage(push) {
   sentMessages.unshift(push);
   
   await chrome.storage.local.set({ sentMessages: sentMessages.slice(0, 100) });
+}
+
+// Unread count management functions
+async function incrementUnreadPushCount() {
+  try {
+    const data = await chrome.storage.local.get('unreadPushCount');
+    const currentCount = data.unreadPushCount || 0;
+    await chrome.storage.local.set({ unreadPushCount: currentCount + 1 });
+    await updateBadge();
+  } catch (error) {
+    console.error('Failed to increment unread push count:', error);
+  }
+}
+
+async function incrementUnreadMirrorCount() {
+  try {
+    const data = await chrome.storage.local.get('unreadMirrorCount');
+    const currentCount = data.unreadMirrorCount || 0;
+    await chrome.storage.local.set({ unreadMirrorCount: currentCount + 1 });
+    await updateBadge();
+  } catch (error) {
+    console.error('Failed to increment unread mirror count:', error);
+  }
+}
+
+async function clearUnreadPushCount() {
+  try {
+    await chrome.storage.local.set({ unreadPushCount: 0 });
+    await updateBadge();
+  } catch (error) {
+    console.error('Failed to clear unread push count:', error);
+  }
+}
+
+async function clearUnreadMirrorCount() {
+  try {
+    await chrome.storage.local.set({ unreadMirrorCount: 0 });
+    await updateBadge();
+  } catch (error) {
+    console.error('Failed to clear unread mirror count:', error);
+  }
+}
+
+async function updateBadge() {
+  try {
+    // Get display settings and counts
+    const data = await chrome.storage.local.get([
+      'displayUnreadCounts', 
+      'displayUnreadPushes', 
+      'displayUnreadMirrored',
+      'unreadPushCount', 
+      'unreadMirrorCount'
+    ]);
+    
+    // Check if badge display is enabled
+    if (!data.displayUnreadCounts) {
+      chrome.action.setBadgeText({ text: '' });
+      return;
+    }
+    
+    const pushCount = data.unreadPushCount || 0;
+    const mirrorCount = data.unreadMirrorCount || 0;
+    const showPushes = data.displayUnreadPushes !== false; // Default true
+    const showMirrored = data.displayUnreadMirrored !== false; // Default true
+    
+    let totalCount = 0;
+    
+    if (showPushes) {
+      totalCount += pushCount;
+    }
+    if (showMirrored) {
+      totalCount += mirrorCount;
+    }
+    
+    // Set badge text
+    if (totalCount > 0) {
+      const badgeText = totalCount > 99 ? '99+' : totalCount.toString();
+      chrome.action.setBadgeText({ text: badgeText });
+      chrome.action.setBadgeBackgroundColor({ color: '#f44336' });
+    } else {
+      chrome.action.setBadgeText({ text: '' });
+    }
+  } catch (error) {
+    console.error('Failed to update badge:', error);
+  }
 }
 
 async function setupContextMenus() {

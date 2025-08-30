@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Αποστολή URL τρέχουσας σελίδας σε επιλεγμένες συσκευές"
+  },
+  "require_interaction_label": {
+    "message": "Απαίτηση αλληλεπίδρασης για απόκρυψη ειδοποιήσεων Chrome"
+  },
+  "pushes_label": {
+    "message": "Αποστολές"
+  },
+  "mirrored_notifications_label": {
+    "message": "Καθρεπτισμένες ειδοποιήσεις"
+  },
+  "close_as_dismiss_label": {
+    "message": "Αντιμετώπιση εγγενούς κλεισίματος ειδοποίησης Chrome ως ενέργεια απόρριψης"
+  },
+  "display_unread_counts_label": {
+    "message": "Εμφάνιση αριθμού μη αναγνωσμένων"
   }
 }

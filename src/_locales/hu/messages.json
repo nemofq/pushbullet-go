@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Aktuális oldal URL-jének küldése kiválasztott eszközökre"
+  },
+  "require_interaction_label": {
+    "message": "Interakció szükséges a Chrome értesítések elrejtéséhez"
+  },
+  "pushes_label": {
+    "message": "Küldések"
+  },
+  "mirrored_notifications_label": {
+    "message": "Tükrözött értesítések"
+  },
+  "close_as_dismiss_label": {
+    "message": "Chrome értesítés natív bezárásának kezelése elutasítási műveletként"
+  },
+  "display_unread_counts_label": {
+    "message": "Olvasatlan számok megjelenítése"
   }
 }

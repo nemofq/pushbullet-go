@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "ส่ง URL ของหน้าปัจจุบันไปยังอุปกรณ์ที่เลือก"
+  },
+  "require_interaction_label": {
+    "message": "ต้องการการโต้ตอบเพื่อซ่อนการแจ้งเตือนของ Chrome"
+  },
+  "pushes_label": {
+    "message": "การส่ง"
+  },
+  "mirrored_notifications_label": {
+    "message": "การแจ้งเตือนแบบสะท้อน"
+  },
+  "close_as_dismiss_label": {
+    "message": "ถือว่าการปิดการแจ้งเตือน Chrome แบบดั้งเดิมเป็นการปฏิเสธ"
+  },
+  "display_unread_counts_label": {
+    "message": "แสดงจำนวนที่ยังไม่อ่าน"
   }
 }

@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Odeslat URL aktuální stránky na vybraná zařízení"
+  },
+  "require_interaction_label": {
+    "message": "Vyžadovat interakci pro skrytí oznámení Chrome"
+  },
+  "pushes_label": {
+    "message": "Odesláno"
+  },
+  "mirrored_notifications_label": {
+    "message": "Zrcadlená oznámení"
+  },
+  "close_as_dismiss_label": {
+    "message": "Považovat nativní zavření oznámení Chrome za akci zamítnutí"
+  },
+  "display_unread_counts_label": {
+    "message": "Zobrazit počty nepřečtených"
   }
 }

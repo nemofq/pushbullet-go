@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Send URL for gjeldende side til valgte enheter"
+  },
+  "require_interaction_label": {
+    "message": "Krever interaksjon for å skjule Chrome-varsler"
+  },
+  "pushes_label": {
+    "message": "Pushes"
+  },
+  "mirrored_notifications_label": {
+    "message": "Speilvarsler"
+  },
+  "close_as_dismiss_label": {
+    "message": "Behandle native lukking av Chrome-varsel som avvis-handling"
+  },
+  "display_unread_counts_label": {
+    "message": "Vis antall uleste"
   }
 }

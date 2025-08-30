@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "현재 페이지 URL을 선택된 장치로 전송"
+  },
+  "require_interaction_label": {
+    "message": "Chrome 알림을 숨기려면 상호작용 필요"
+  },
+  "pushes_label": {
+    "message": "푸시"
+  },
+  "mirrored_notifications_label": {
+    "message": "미러 알림"
+  },
+  "close_as_dismiss_label": {
+    "message": "Chrome 알림의 네이티브 닫기를 해제 작업으로 처리"
+  },
+  "display_unread_counts_label": {
+    "message": "읽지 않은 수 표시"
   }
 }

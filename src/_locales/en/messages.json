@@ -247,5 +247,8 @@
   },
   "close_as_dismiss_label": {
     "message": "Treat native close of Chrome notification as dismiss action"
+  },
+  "display_unread_counts_label": {
+    "message": "Display unread counts"
   }
 }

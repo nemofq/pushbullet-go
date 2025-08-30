@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Envoyer l'URL de la page actuelle vers les appareils sélectionnés"
+  },
+  "require_interaction_label": {
+    "message": "Exiger une interaction pour masquer les notifications Chrome"
+  },
+  "pushes_label": {
+    "message": "Envois"
+  },
+  "mirrored_notifications_label": {
+    "message": "Notifications miroir"
+  },
+  "close_as_dismiss_label": {
+    "message": "Traiter la fermeture native de la notification Chrome comme action de rejet"
+  },
+  "display_unread_counts_label": {
+    "message": "Afficher le nombre de non lus"
   }
 }

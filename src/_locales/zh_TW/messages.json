@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "將目前頁面網址傳送至選定的裝置"
+  },
+  "require_interaction_label": {
+    "message": "需要互動才能隱藏Chrome通知"
+  },
+  "pushes_label": {
+    "message": "推送"
+  },
+  "mirrored_notifications_label": {
+    "message": "鏡像通知"
+  },
+  "close_as_dismiss_label": {
+    "message": "將Chrome通知的原生關閉視為拒絕操作"
+  },
+  "display_unread_counts_label": {
+    "message": "顯示未讀計數"
   }
 }

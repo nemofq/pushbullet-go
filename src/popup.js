@@ -210,6 +210,9 @@ document.addEventListener('DOMContentLoaded', function() {
       notificationsList.style.display = 'none';
       sendForm.style.display = 'block';
       
+      // Clear unread push count when pushes tab is opened
+      chrome.runtime.sendMessage({ type: 'clear_unread_pushes' });
+      
       // Ensure push tab scrolls to bottom when switching to it
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -223,6 +226,9 @@ document.addEventListener('DOMContentLoaded', function() {
       notificationsList.style.display = 'flex';
       sendForm.style.display = 'none';
       loadNotifications();
+      
+      // Clear unread mirrored notifications count when notifications tab is opened
+      chrome.runtime.sendMessage({ type: 'clear_unread_mirrors' });
     }
   }
 

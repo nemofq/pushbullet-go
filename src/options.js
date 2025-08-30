@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', async function() {
   const requireInteractionMirroredContainer = document.getElementById('requireInteractionMirroredContainer');
   const closeAsDismissCheckbox = document.getElementById('closeAsDismiss');
   const closeAsDismissToggle = document.getElementById('closeAsDismissToggle');
+  const displayUnreadCountsCheckbox = document.getElementById('displayUnreadCounts');
+  const displayUnreadCountsToggle = document.getElementById('displayUnreadCountsToggle');
+  const displayUnreadPushesCheckbox = document.getElementById('displayUnreadPushes');
+  const displayUnreadPushesToggle = document.getElementById('displayUnreadPushesToggle');
+  const displayUnreadPushesContainer = document.getElementById('displayUnreadPushesContainer');
+  const displayUnreadMirroredCheckbox = document.getElementById('displayUnreadMirrored');
+  const displayUnreadMirroredToggle = document.getElementById('displayUnreadMirroredToggle');
+  const displayUnreadMirroredContainer = document.getElementById('displayUnreadMirroredContainer');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -63,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'colorMode', 'languageMode', 'defaultTab'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -124,6 +132,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     closeAsDismissCheckbox.checked = data.closeAsDismiss || false; // Default to false
     updateCloseAsDismissToggleVisual();
     
+    // Load display unread counts settings (default is all enabled)
+    displayUnreadCountsCheckbox.checked = data.displayUnreadCounts !== false; // Default to true
+    updateDisplayUnreadCountsToggleVisual();
+    displayUnreadPushesCheckbox.checked = data.displayUnreadPushes !== false; // Default to true
+    updateDisplayUnreadPushesToggleVisual();
+    displayUnreadMirroredCheckbox.checked = data.displayUnreadMirrored !== false; // Default to true
+    updateDisplayUnreadMirroredToggleVisual();
+    
+    // Show/hide the display unread counts sub-options based on main setting
+    updateDisplayUnreadCountsVisibility();
+    
     // Load language mode setting (default is 'auto')
     languageModeSelect.value = data.languageMode || 'auto';
     
@@ -139,6 +158,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Update conditional visibility for require interaction mirrored option
     updateRequireInteractionMirroredVisibility();
+    
+    // Update conditional visibility for display unread mirrored option
+    updateDisplayUnreadMirroredVisibility();
     
     updateRetrieveButton();
   })(data);
@@ -162,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateNotificationMirroringToggleVisual();
     updateDefaultTabVisibility();
     updateRequireInteractionMirroredVisibility();
+    updateDisplayUnreadMirroredVisibility();
     
     // Auto-enable mirrored sub-switch when notification mirroring is enabled and require interaction is on
     if (notificationMirroringCheckbox.checked && requireInteractionCheckbox.checked) {
@@ -194,26 +217,83 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (requireInteractionCheckbox.checked) {
       requireInteractionPushesCheckbox.checked = true;
       updateRequireInteractionPushesToggleVisual();
-      if (notificationMirroringCheckbox.checked) {
-        requireInteractionMirroredCheckbox.checked = true;
-        updateRequireInteractionMirroredToggleVisual();
-      }
+      requireInteractionMirroredCheckbox.checked = true;
+      updateRequireInteractionMirroredToggleVisual();
     }
   });
 
   requireInteractionPushesToggle.addEventListener('click', function() {
     requireInteractionPushesCheckbox.checked = !requireInteractionPushesCheckbox.checked;
     updateRequireInteractionPushesToggleVisual();
+    
+    // Auto-disable main switch if both sub-switches are off
+    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked) {
+      requireInteractionCheckbox.checked = false;
+      updateRequireInteractionToggleVisual();
+      updateRequireInteractionVisibility();
+    }
   });
 
   requireInteractionMirroredToggle.addEventListener('click', function() {
     requireInteractionMirroredCheckbox.checked = !requireInteractionMirroredCheckbox.checked;
     updateRequireInteractionMirroredToggleVisual();
+    
+    // Auto-disable main switch if both sub-switches are off
+    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked) {
+      requireInteractionCheckbox.checked = false;
+      updateRequireInteractionToggleVisual();
+      updateRequireInteractionVisibility();
+    }
   });
 
   closeAsDismissToggle.addEventListener('click', function() {
     closeAsDismissCheckbox.checked = !closeAsDismissCheckbox.checked;
     updateCloseAsDismissToggleVisual();
+  });
+
+  displayUnreadCountsToggle.addEventListener('click', function() {
+    displayUnreadCountsCheckbox.checked = !displayUnreadCountsCheckbox.checked;
+    updateDisplayUnreadCountsToggleVisual();
+    updateDisplayUnreadCountsVisibility();
+    
+    // Auto-enable both sub-switches when main switch is turned on
+    if (displayUnreadCountsCheckbox.checked) {
+      displayUnreadPushesCheckbox.checked = true;
+      updateDisplayUnreadPushesToggleVisual();
+      displayUnreadMirroredCheckbox.checked = true;
+      updateDisplayUnreadMirroredToggleVisual();
+    }
+    
+    // Auto-disable main switch if both sub-switches are off
+    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+      displayUnreadCountsCheckbox.checked = false;
+      updateDisplayUnreadCountsToggleVisual();
+      updateDisplayUnreadCountsVisibility();
+    }
+  });
+
+  displayUnreadPushesToggle.addEventListener('click', function() {
+    displayUnreadPushesCheckbox.checked = !displayUnreadPushesCheckbox.checked;
+    updateDisplayUnreadPushesToggleVisual();
+    
+    // Auto-disable main switch if both sub-switches are off
+    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+      displayUnreadCountsCheckbox.checked = false;
+      updateDisplayUnreadCountsToggleVisual();
+      updateDisplayUnreadCountsVisibility();
+    }
+  });
+
+  displayUnreadMirroredToggle.addEventListener('click', function() {
+    displayUnreadMirroredCheckbox.checked = !displayUnreadMirroredCheckbox.checked;
+    updateDisplayUnreadMirroredToggleVisual();
+    
+    // Auto-disable main switch if both sub-switches are off
+    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+      displayUnreadCountsCheckbox.checked = false;
+      updateDisplayUnreadCountsToggleVisual();
+      updateDisplayUnreadCountsVisibility();
+    }
   });
 
   // Handle color mode changes for immediate preview
@@ -399,6 +479,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteractionPushes: requireInteractionPushesCheckbox.checked,
       requireInteractionMirrored: requireInteractionMirroredCheckbox.checked,
       closeAsDismiss: closeAsDismissCheckbox.checked,
+      displayUnreadCounts: displayUnreadCountsCheckbox.checked,
+      displayUnreadPushes: displayUnreadPushesCheckbox.checked,
+      displayUnreadMirrored: displayUnreadMirroredCheckbox.checked,
       languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value,
       defaultTab: defaultTabSelect.value
@@ -423,6 +506,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteractionPushes: saveData.requireInteractionPushes,
       requireInteractionMirrored: saveData.requireInteractionMirrored,
       closeAsDismiss: saveData.closeAsDismiss,
+      displayUnreadCounts: saveData.displayUnreadCounts,
+      displayUnreadPushes: saveData.displayUnreadPushes,
+      displayUnreadMirrored: saveData.displayUnreadMirrored,
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab
@@ -579,6 +665,48 @@ document.addEventListener('DOMContentLoaded', async function() {
       closeAsDismissToggle.classList.add('active');
     } else {
       closeAsDismissToggle.classList.remove('active');
+    }
+  }
+  
+  function updateDisplayUnreadCountsToggleVisual() {
+    if (displayUnreadCountsCheckbox.checked) {
+      displayUnreadCountsToggle.classList.add('active');
+    } else {
+      displayUnreadCountsToggle.classList.remove('active');
+    }
+  }
+  
+  function updateDisplayUnreadPushesToggleVisual() {
+    if (displayUnreadPushesCheckbox.checked) {
+      displayUnreadPushesToggle.classList.add('active');
+    } else {
+      displayUnreadPushesToggle.classList.remove('active');
+    }
+  }
+  
+  function updateDisplayUnreadMirroredToggleVisual() {
+    if (displayUnreadMirroredCheckbox.checked) {
+      displayUnreadMirroredToggle.classList.add('active');
+    } else {
+      displayUnreadMirroredToggle.classList.remove('active');
+    }
+  }
+  
+  function updateDisplayUnreadCountsVisibility() {
+    if (displayUnreadCountsCheckbox.checked) {
+      displayUnreadPushesContainer.style.display = 'flex';
+      updateDisplayUnreadMirroredVisibility();
+    } else {
+      displayUnreadPushesContainer.style.display = 'none';
+      displayUnreadMirroredContainer.style.display = 'none';
+    }
+  }
+  
+  function updateDisplayUnreadMirroredVisibility() {
+    if (displayUnreadCountsCheckbox.checked && notificationMirroringCheckbox.checked) {
+      displayUnreadMirroredContainer.style.display = 'flex';
+    } else {
+      displayUnreadMirroredContainer.style.display = 'none';
     }
   }
   

@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Envia l'URL de la pàgina actual als dispositius seleccionats"
+  },
+  "require_interaction_label": {
+    "message": "Requereix interacció per amagar les notificacions del Chrome"
+  },
+  "pushes_label": {
+    "message": "Enviaments"
+  },
+  "mirrored_notifications_label": {
+    "message": "Notificacions duplicades"
+  },
+  "close_as_dismiss_label": {
+    "message": "Tracta el tancament nadiu de la notificació del Chrome com a acció de descartament"
+  },
+  "display_unread_counts_label": {
+    "message": "Mostra els recomptes de no llegits"
   }
 }

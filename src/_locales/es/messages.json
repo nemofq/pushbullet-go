@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Enviar URL de la página actual a los dispositivos seleccionados"
+  },
+  "require_interaction_label": {
+    "message": "Requerir interacción para ocultar notificaciones de Chrome"
+  },
+  "pushes_label": {
+    "message": "Envíos"
+  },
+  "mirrored_notifications_label": {
+    "message": "Notificaciones espejadas"
+  },
+  "close_as_dismiss_label": {
+    "message": "Tratar el cierre nativo de la notificación de Chrome como acción de descartar"
+  },
+  "display_unread_counts_label": {
+    "message": "Mostrar conteos de no leídos"
   }
 }

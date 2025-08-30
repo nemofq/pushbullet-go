@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Kirim URL halaman saat ini ke perangkat yang dipilih"
+  },
+  "require_interaction_label": {
+    "message": "Memerlukan interaksi untuk menyembunyikan notifikasi Chrome"
+  },
+  "pushes_label": {
+    "message": "Push"
+  },
+  "mirrored_notifications_label": {
+    "message": "Notifikasi Cermin"
+  },
+  "close_as_dismiss_label": {
+    "message": "Perlakukan penutupan native notifikasi Chrome sebagai tindakan tolak"
+  },
+  "display_unread_counts_label": {
+    "message": "Tampilkan jumlah yang belum dibaca"
   }
 }

@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Надіслати URL поточної сторінки на обрані пристрої"
+  },
+  "require_interaction_label": {
+    "message": "Вимагати взаємодії для приховування сповіщень Chrome"
+  },
+  "pushes_label": {
+    "message": "Пуші"
+  },
+  "mirrored_notifications_label": {
+    "message": "Дзеркальні сповіщення"
+  },
+  "close_as_dismiss_label": {
+    "message": "Розглядати нативне закриття сповіщення Chrome як дію відхилення"
+  },
+  "display_unread_counts_label": {
+    "message": "Показати кількість непрочитаних"
   }
 }

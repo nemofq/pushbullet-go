@@ -235,5 +235,20 @@
   },
   "push_current_page_shortcut_description": {
     "message": "Отправить URL текущей страницы на выбранные устройства"
+  },
+  "require_interaction_label": {
+    "message": "Требовать взаимодействие для скрытия уведомлений Chrome"
+  },
+  "pushes_label": {
+    "message": "Пуши"
+  },
+  "mirrored_notifications_label": {
+    "message": "Зеркальные уведомления"
+  },
+  "close_as_dismiss_label": {
+    "message": "Рассматривать нативное закрытие уведомления Chrome как действие отклонения"
+  },
+  "display_unread_counts_label": {
+    "message": "Показать количество непрочитанных"
   }
 }
