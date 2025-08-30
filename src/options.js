@@ -191,6 +191,19 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteractionMirroredCheckbox.checked = true;
       updateRequireInteractionMirroredToggleVisual();
     }
+    
+    // Auto-disable Mirrored Notifications under Display unread counts when Enable Notification Mirroring is turned off
+    if (!notificationMirroringCheckbox.checked && displayUnreadMirroredCheckbox.checked) {
+      displayUnreadMirroredCheckbox.checked = false;
+      updateDisplayUnreadMirroredToggleVisual();
+      
+      // Auto-disable main Display unread counts switch if both sub-switches are off
+      if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+        displayUnreadCountsCheckbox.checked = false;
+        updateDisplayUnreadCountsToggleVisual();
+        updateDisplayUnreadCountsVisibility();
+      }
+    }
   });
 
   onlyBrowserPushesToggle.addEventListener('click', function() {
