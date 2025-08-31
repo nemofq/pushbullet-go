@@ -896,6 +896,8 @@ async function dismissPush(pushIden) {
     
     if (response.ok) {
       console.log('Push dismissed successfully');
+      // Decrement unread push count when successfully dismissed
+      await decrementUnreadPushCount();
     } else {
       console.error('Failed to dismiss push:', response.statusText);
     }
@@ -958,6 +960,8 @@ async function dismissMirrorNotification(notificationId) {
     
     if (response.ok) {
       console.log('Mirror notification dismissed successfully');
+      // Decrement unread mirror count when successfully dismissed
+      await decrementUnreadMirrorCount();
     } else {
       console.error('Failed to dismiss mirror notification:', response.statusText);
     }
@@ -1092,12 +1096,34 @@ async function incrementUnreadMirrorCount() {
   }
 }
 
+async function decrementUnreadPushCount() {
+  try {
+    const data = await chrome.storage.local.get('unreadPushCount');
+    const currentCount = Math.max(0, (data.unreadPushCount || 0) - 1);
+    await chrome.storage.local.set({ unreadPushCount: currentCount });
+    await updateBadge();
+  } catch (error) {
+    console.error('Failed to decrement unread push count:', error);
+  }
+}
+
 async function clearUnreadPushCount() {
   try {
     await chrome.storage.local.set({ unreadPushCount: 0 });
     await updateBadge();
   } catch (error) {
     console.error('Failed to clear unread push count:', error);
+  }
+}
+
+async function decrementUnreadMirrorCount() {
+  try {
+    const data = await chrome.storage.local.get('unreadMirrorCount');
+    const currentCount = Math.max(0, (data.unreadMirrorCount || 0) - 1);
+    await chrome.storage.local.set({ unreadMirrorCount: currentCount });
+    await updateBadge();
+  } catch (error) {
+    console.error('Failed to decrement unread mirror count:', error);
   }
 }
 
