@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "שלח את הקישור הזה"
+  },
+  "show_quick_share_label": {
+    "message": "הצג שיתוף מהיר עבור העמוד הנוכחי בחלונית הקופצת"
+  },
+  "send": {
+    "message": "שלח"
   }
 }

@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "推送此链接"
+  },
+  "show_quick_share_label": {
+    "message": "在弹出窗口中显示当前页面的快速分享"
+  },
+  "send": {
+    "message": "发送"
   }
 }

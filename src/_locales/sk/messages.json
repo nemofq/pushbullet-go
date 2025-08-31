@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Poslať tento odkaz"
+  },
+  "show_quick_share_label": {
+    "message": "Zobraziť rýchle zdieľanie pre aktuálnu stránku vo vyskakovacom okne"
+  },
+  "send": {
+    "message": "Odoslať"
   }
 }

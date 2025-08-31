@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Deze link verzenden"
+  },
+  "show_quick_share_label": {
+    "message": "Toon snel delen voor huidige pagina in popup"
+  },
+  "send": {
+    "message": "Verzenden"
   }
 }

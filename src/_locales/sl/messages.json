@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Pošlji to povezavo"
+  },
+  "show_quick_share_label": {
+    "message": "Prikaži hitro deljenje za trenutno stran v pojavnem oknu"
+  },
+  "send": {
+    "message": "Pošlji"
   }
 }

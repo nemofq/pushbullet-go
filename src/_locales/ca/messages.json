@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Enviar aquest enllaç"
+  },
+  "show_quick_share_label": {
+    "message": "Mostra compartir ràpid per a la pàgina actual a la finestra emergent"
+  },
+  "send": {
+    "message": "Enviar"
   }
 }

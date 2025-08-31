@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Ezen link elküldése"
+  },
+  "show_quick_share_label": {
+    "message": "Gyors megosztás megjelenítése a jelenlegi oldalhoz a felugró ablakban"
+  },
+  "send": {
+    "message": "Küldés"
   }
 }

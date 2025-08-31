@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Gửi liên kết này"
+  },
+  "show_quick_share_label": {
+    "message": "Hiển thị chia sẻ nhanh cho trang hiện tại trong popup"
+  },
+  "send": {
+    "message": "Gửi"
   }
 }

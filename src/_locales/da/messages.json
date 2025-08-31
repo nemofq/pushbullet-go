@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Send dette link"
+  },
+  "show_quick_share_label": {
+    "message": "Vis hurtig deling for nuværende side i popup"
+  },
+  "send": {
+    "message": "Send"
   }
 }

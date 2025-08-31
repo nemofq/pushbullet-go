@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Trimite acest link"
+  },
+  "show_quick_share_label": {
+    "message": "Afișează partajarea rapidă pentru pagina curentă în popup"
+  },
+  "send": {
+    "message": "Trimite"
   }
 }

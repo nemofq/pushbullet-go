@@ -255,7 +255,7 @@
     "message": "Push this link"
   },
   "show_quick_share_label": {
-    "message": "Show quick share for current page"
+    "message": "Show quick share for current page in popup"
   },
   "send": {
     "message": "Send"

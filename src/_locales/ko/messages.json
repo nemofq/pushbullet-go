@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "이 링크 보내기"
+  },
+  "show_quick_share_label": {
+    "message": "현재 페이지에 대한 빠른 공유를 팝업에 표시"
+  },
+  "send": {
+    "message": "전송"
   }
 }

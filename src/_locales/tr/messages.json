@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Bu bağlantıyı gönder"
+  },
+  "show_quick_share_label": {
+    "message": "Mevcut sayfa için hızlı paylaşımı popup'ta göster"
+  },
+  "send": {
+    "message": "Gönder"
   }
 }

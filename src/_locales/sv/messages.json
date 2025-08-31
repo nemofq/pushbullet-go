@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Skicka denna länk"
+  },
+  "show_quick_share_label": {
+    "message": "Visa snabbdelning för aktuell sida i popup"
+  },
+  "send": {
+    "message": "Skicka"
   }
 }

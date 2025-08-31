@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "ส่งลิงก์นี้"
+  },
+  "show_quick_share_label": {
+    "message": "แสดงการแชร์อย่างรวดเร็วสำหรับหน้าปัจจุบันในป๊อปอัพ"
+  },
+  "send": {
+    "message": "ส่ง"
   }
 }

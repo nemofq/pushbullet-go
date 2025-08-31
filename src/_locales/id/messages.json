@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Kirim tautan ini"
+  },
+  "show_quick_share_label": {
+    "message": "Tampilkan berbagi cepat untuk halaman saat ini di popup"
+  },
+  "send": {
+    "message": "Kirim"
   }
 }

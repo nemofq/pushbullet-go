@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "このリンクを送信"
+  },
+  "show_quick_share_label": {
+    "message": "現在のページのクイック共有をポップアップに表示"
+  },
+  "send": {
+    "message": "送信"
   }
 }

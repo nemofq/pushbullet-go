@@ -253,5 +253,11 @@
   },
   "push_this_link": {
     "message": "Lähetä tämä linkki"
+  },
+  "show_quick_share_label": {
+    "message": "Näytä pika-jakaminen nykyiselle sivulle ponnahdusikkunassa"
+  },
+  "send": {
+    "message": "Lähetä"
   }
 }
