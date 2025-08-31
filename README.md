@@ -26,6 +26,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - (New) Dark Mode (follows system by default, or choose manually)
 - (New) Supports i18n with 33 languages
 - (New) Unread count
+- (New) Quick share of current tab's link in the popup (default off, enable in options page)
 
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
