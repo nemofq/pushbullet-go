@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
   const showSmsShortcutToggle = document.getElementById('showSmsShortcutToggle');
+  const showQuickShareCheckbox = document.getElementById('showQuickShare');
+  const showQuickShareToggle = document.getElementById('showQuickShareToggle');
   const requireInteractionCheckbox = document.getElementById('requireInteraction');
   const requireInteractionToggle = document.getElementById('requireInteractionToggle');
   const requireInteractionPushesCheckbox = document.getElementById('requireInteractionPushes');
@@ -71,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -116,6 +118,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load SMS shortcut setting (default is false/off)
     showSmsShortcutCheckbox.checked = data.showSmsShortcut || false; // Default to false
     updateShowSmsShortcutToggleVisual();
+    
+    // Load show quick share setting (default is false/off)
+    showQuickShareCheckbox.checked = data.showQuickShare || false; // Default to false
+    updateShowQuickShareToggleVisual();
     
     // Load require interaction settings (default is false/off)
     requireInteractionCheckbox.checked = data.requireInteraction || false; // Default to false
@@ -219,6 +225,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   showSmsShortcutToggle.addEventListener('click', function() {
     showSmsShortcutCheckbox.checked = !showSmsShortcutCheckbox.checked;
     updateShowSmsShortcutToggleVisual();
+  });
+
+  showQuickShareToggle.addEventListener('click', function() {
+    showQuickShareCheckbox.checked = !showQuickShareCheckbox.checked;
+    updateShowQuickShareToggleVisual();
   });
 
   requireInteractionToggle.addEventListener('click', function() {
@@ -488,6 +499,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
+      showQuickShare: showQuickShareCheckbox.checked,
       requireInteraction: requireInteractionCheckbox.checked,
       requireInteractionPushes: requireInteractionPushesCheckbox.checked,
       requireInteractionMirrored: requireInteractionMirroredCheckbox.checked,
@@ -515,6 +527,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       autoOpenOnResume: saveData.autoOpenOnResume,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
+      showQuickShare: saveData.showQuickShare,
       requireInteraction: saveData.requireInteraction,
       requireInteractionPushes: saveData.requireInteractionPushes,
       requireInteractionMirrored: saveData.requireInteractionMirrored,
@@ -620,6 +633,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       showSmsShortcutToggle.classList.add('active');
     } else {
       showSmsShortcutToggle.classList.remove('active');
+    }
+  }
+  
+  function updateShowQuickShareToggleVisual() {
+    if (showQuickShareCheckbox.checked) {
+      showQuickShareToggle.classList.add('active');
+    } else {
+      showQuickShareToggle.classList.remove('active');
     }
   }
   

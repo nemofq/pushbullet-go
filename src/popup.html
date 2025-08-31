@@ -228,7 +228,7 @@
     }
     .send-form { 
       border-top: 1px solid var(--border-primary); 
-      padding: 15px;
+      padding: 0;
       background: var(--bg-tertiary);
       transition: background-color 0.3s ease, border-color 0.3s ease;
       flex-shrink: 0;
@@ -399,6 +399,44 @@
     .sms-shortcut:hover svg {
       fill: var(--button-primary);
     }
+    .quick-share-container {
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--border-primary);
+    }
+    .quick-share-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quick-share-url {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+      font-family: inherit;
+    }
+    .quick-share-button {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-secondary);
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: color 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .quick-share-button:hover {
+      color: var(--button-primary);
+      border-color: var(--button-primary);
+    }
+    .input-container {
+      padding: 10px 15px 15px 15px;
+    }
   </style>
 </head>
 <body>
@@ -437,6 +475,12 @@
   </div>
   
   <div class="send-form">
+    <div id="quickShareContainer" class="quick-share-container" style="display: none;">
+      <div class="quick-share-content">
+        <span class="quick-share-url" id="quickShareUrl"></span>
+        <button id="quickShareSend" class="quick-share-button" data-i18n="send">Send</button>
+      </div>
+    </div>
     <div class="input-container">
       <textarea id="bodyInput" data-i18n-placeholder="type_or_paste_placeholder" placeholder="Type or paste"></textarea>
       <div class="button-group">

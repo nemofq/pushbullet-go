@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const pushTab = document.getElementById('pushTab');
   const notificationTab = document.getElementById('notificationTab');
   const smsShortcut = document.getElementById('smsShortcut');
+  const quickShareContainer = document.getElementById('quickShareContainer');
+  const quickShareUrl = document.getElementById('quickShareUrl');
+  const quickShareSend = document.getElementById('quickShareSend');
 
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -38,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Only load messages after checking access token to ensure proper display
     loadMessages();
     checkNotificationMirroring();
+    checkQuickShare();
     updateConnectionStatus();
   });
   
@@ -67,6 +71,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   sendButton.addEventListener('click', sendMessage);
+  
+  quickShareSend.addEventListener('click', () => {
+    if (quickShareUrl.textContent) {
+      sendLink(quickShareUrl.textContent);
+    }
+  });
   
   bodyInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -200,6 +210,62 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       smsShortcut.style.display = 'none';
     }
+  }
+  
+  async function checkQuickShare() {
+    const [tokenData, quickShareData] = await Promise.all([
+      chrome.storage.sync.get('accessToken'),
+      chrome.storage.local.get('showQuickShare')
+    ]);
+    
+    // Only show quick share if we have an access token and the setting is enabled
+    if (tokenData.accessToken && quickShareData.showQuickShare) {
+      try {
+        // Get current tab URL
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tab && tab.url && (tab.url.startsWith('http://') || tab.url.startsWith('https://'))) {
+          quickShareUrl.textContent = tab.url;
+          quickShareContainer.style.display = 'block';
+        } else {
+          quickShareContainer.style.display = 'none';
+        }
+      } catch (error) {
+        console.log('Could not get active tab URL:', error);
+        quickShareContainer.style.display = 'none';
+      }
+    } else {
+      quickShareContainer.style.display = 'none';
+    }
+  }
+  
+  async function sendLink(url) {
+    const configData = await chrome.storage.local.get('remoteDeviceId');
+    
+    const pushData = {
+      type: 'link',
+      url: url,
+      body: ''
+    };
+    
+    if (configData.remoteDeviceId) {
+      pushData.device_iden = configData.remoteDeviceId;
+    }
+    
+    // Use the background script's sendPush function which handles multiple devices
+    chrome.runtime.sendMessage({ 
+      type: 'send_push', 
+      data: pushData 
+    });
+    
+    // Provide visual feedback
+    const originalText = quickShareSend.textContent;
+    quickShareSend.textContent = '✓';
+    quickShareSend.disabled = true;
+    
+    setTimeout(() => {
+      // Hide the quick share element after sending
+      quickShareContainer.style.display = 'none';
+    }, 1500);
   }
 
   function switchTab(tab) {
@@ -723,6 +789,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (areaName === 'local' && changes.showSmsShortcut) {
       checkSmsShortcut();
+    }
+    if (areaName === 'local' && changes.showQuickShare) {
+      checkQuickShare();
     }
     if (areaName === 'local' && changes.colorMode) {
       loadAndApplyColorMode();
