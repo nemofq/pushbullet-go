@@ -182,6 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
       switchTab(defaultTab);
     } else {
       tabSwitcher.style.display = 'none';
+      // Clear unread push count when viewing pushes without tabs
+      chrome.runtime.sendMessage({ type: 'clear_unread_pushes' });
     }
     checkSmsShortcut();
   }

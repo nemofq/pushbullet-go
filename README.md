@@ -50,7 +50,7 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 1. Get your access token from [Pushbullet settings](https://www.pushbullet.com/#settings/account)
 2. Click the extension icon and enter your token
 3. Start sending and receiving pushes!
-4. (Optional) Select devices in options to filter incoming pushes and set push targets
+4. Customize settings on the options page as needed
 
 ## Permissions
 
