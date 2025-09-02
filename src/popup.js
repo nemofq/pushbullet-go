@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (notification.icon) {
         iconImg.src = `data:image/jpeg;base64,${notification.icon}`;
       } else {
-        iconImg.src = 'icon128.png'; // Fallback icon
+        iconImg.src = 'assets/icon128.png'; // Fallback icon
       }
       iconImg.alt = window.CustomI18n.getMessage('app_icon_alt');
       headerDiv.appendChild(iconImg);

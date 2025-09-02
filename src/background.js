@@ -10,6 +10,9 @@ let keepAliveIntervalId = null;
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
 
+// Offscreen document management
+let isOffscreenDocumentCreated = false;
+
 // Initialize custom i18n for background script
 let cachedMessages = {};
 let currentLanguage = 'auto';
@@ -85,6 +88,84 @@ const CustomI18n = { getMessage, getCurrentLanguage, initializeI18n: initializeB
 initializeBackgroundI18n().catch(error => {
   console.warn('Initial i18n initialization failed, will use Chrome default:', error);
 });
+
+// Offscreen document management functions
+async function createOffscreenDocument() {
+  if (isOffscreenDocumentCreated) {
+    return;
+  }
+
+  try {
+    await chrome.offscreen.createDocument({
+      url: 'offscreen.html',
+      reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+      justification: 'Play notification alert sound'
+    });
+    isOffscreenDocumentCreated = true;
+    console.log('Offscreen document created successfully');
+  } catch (error) {
+    console.error('Failed to create offscreen document:', error);
+  }
+}
+
+async function ensureOffscreenDocument() {
+  try {
+    // Check if offscreen document already exists
+    const existingContexts = await chrome.runtime.getContexts({
+      contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
+    });
+
+    if (existingContexts.length > 0) {
+      isOffscreenDocumentCreated = true;
+      return;
+    }
+
+    await createOffscreenDocument();
+  } catch (error) {
+    console.error('Failed to ensure offscreen document:', error);
+  }
+}
+
+async function playAlertSound() {
+  try {
+    // Check if sound is enabled
+    const soundSettings = await chrome.storage.local.get('playSoundOnNotification');
+    if (soundSettings.playSoundOnNotification === false) {
+      return; // Sound is disabled
+    }
+
+    // Ensure offscreen document exists
+    await ensureOffscreenDocument();
+
+    // Verify offscreen document still exists before sending message
+    const existingContexts = await chrome.runtime.getContexts({
+      contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
+    });
+
+    if (existingContexts.length === 0) {
+      console.warn('Offscreen document not found, recreating...');
+      isOffscreenDocumentCreated = false;
+      await ensureOffscreenDocument();
+    }
+
+    // Send message to offscreen document to play sound
+    if (isOffscreenDocumentCreated) {
+      try {
+        await chrome.runtime.sendMessage({ type: 'PLAY_ALERT_SOUND' });
+      } catch (error) {
+        console.error('Error sending message to offscreen document:', error);
+        // Reset flag and try once more
+        isOffscreenDocumentCreated = false;
+        await ensureOffscreenDocument();
+        if (isOffscreenDocumentCreated) {
+          await chrome.runtime.sendMessage({ type: 'PLAY_ALERT_SOUND' });
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Failed to play alert sound:', error);
+  }
+}
 
 // One-time migration from sync to local storage for specific fields
 async function migrateSpecificFieldsFromSyncToLocal() {
@@ -634,7 +715,7 @@ async function showNotificationForPush(push, autoOpenLinks = false) {
   
   const notificationOptions = {
     type: 'basic',
-    iconUrl: 'icon128.png',
+    iconUrl: 'assets/icon128.png',
     title: push.title || '',
     message: notificationBody
   };
@@ -659,6 +740,9 @@ async function showNotificationForPush(push, autoOpenLinks = false) {
   }
   
   chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
+  
+  // Play alert sound
+  await playAlertSound();
   
   // Increment unread push count
   await incrementUnreadPushCount();
@@ -732,7 +816,7 @@ async function showMirrorNotification(mirrorData) {
   if (mirrorData.icon) {
     notificationOptions.iconUrl = `data:image/jpeg;base64,${mirrorData.icon}`;
   } else {
-    notificationOptions.iconUrl = 'icon128.png';
+    notificationOptions.iconUrl = 'assets/icon128.png';
   }
   
   // Add dismiss button only if dismissible is true
@@ -752,6 +836,9 @@ async function showMirrorNotification(mirrorData) {
   const notificationId = `pushbullet-mirror-${mirrorData.package_name}-${mirrorData.notification_id}-${Date.now()}`;
   
   chrome.notifications.create(notificationId, notificationOptions);
+  
+  // Play alert sound
+  await playAlertSound();
   
   // Increment unread mirrored notification count
   await incrementUnreadMirrorCount();

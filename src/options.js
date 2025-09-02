@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
   const defaultTabSelect = document.getElementById('defaultTab');
   const defaultTabGroup = document.getElementById('defaultTabGroup');
+  const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
+  const playSoundOnNotificationToggle = document.getElementById('playSoundOnNotificationToggle');
   
   // Tab elements
   const tabs = document.querySelectorAll('.tab');
@@ -73,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -158,6 +160,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Load default tab setting (default is 'push')
     defaultTabSelect.value = data.defaultTab || 'push';
+    
+    // Load play sound on notification setting (default is true/enabled)
+    playSoundOnNotificationCheckbox.checked = data.playSoundOnNotification !== false; // Default to true
+    updatePlaySoundOnNotificationToggleVisual();
     
     // Update conditional visibility for default tab option
     updateDefaultTabVisibility();
@@ -318,6 +324,11 @@ document.addEventListener('DOMContentLoaded', async function() {
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
     }
+  });
+
+  playSoundOnNotificationToggle.addEventListener('click', function() {
+    playSoundOnNotificationCheckbox.checked = !playSoundOnNotificationCheckbox.checked;
+    updatePlaySoundOnNotificationToggleVisual();
   });
 
   // Handle color mode changes for immediate preview
@@ -509,7 +520,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadMirrored: displayUnreadMirroredCheckbox.checked,
       languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value,
-      defaultTab: defaultTabSelect.value
+      defaultTab: defaultTabSelect.value,
+      playSoundOnNotification: playSoundOnNotificationCheckbox.checked
     };
 
     // Split data between sync and local storage
@@ -537,7 +549,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadMirrored: saveData.displayUnreadMirrored,
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
-      defaultTab: saveData.defaultTab
+      defaultTab: saveData.defaultTab,
+      playSoundOnNotification: saveData.playSoundOnNotification
     };
     
     // Save to both storages
@@ -741,6 +754,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadMirroredContainer.style.display = 'flex';
     } else {
       displayUnreadMirroredContainer.style.display = 'none';
+    }
+  }
+  
+  function updatePlaySoundOnNotificationToggleVisual() {
+    if (playSoundOnNotificationCheckbox.checked) {
+      playSoundOnNotificationToggle.classList.add('active');
+    } else {
+      playSoundOnNotificationToggle.classList.remove('active');
     }
   }
   
