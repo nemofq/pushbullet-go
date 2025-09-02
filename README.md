@@ -27,6 +27,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - (New) Supports i18n with 33 languages
 - (New) Unread count
 - (New) Quick share of current tab's link in the popup (default off, enable in options page)
+- (New) Play sound on notification (can be disabled in options page)
 
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
@@ -62,6 +63,7 @@ This extension requires the following permissions:
 - **Context Menus**: To add right-click menu options for pushing content
 - **Active Tab**: To access current page's URL for context menu actions
 - **Host Access**: To communicate with Pushbullet API servers
+- **Offscreen**: To play notification sound
 
 ## Privacy
 
