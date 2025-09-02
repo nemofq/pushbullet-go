@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Send"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Spill av lyd ved varsling"
   }
 }

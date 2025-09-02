@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Gửi"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Phát âm thanh khi thông báo"
   }
 }

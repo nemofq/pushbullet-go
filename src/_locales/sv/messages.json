@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Skicka"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Spela ljud vid notis"
   }
 }

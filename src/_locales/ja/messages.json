@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "送信"
+  },
+  "play_sound_on_notification_label": {
+    "message": "通知時に音を再生"
   }
 }

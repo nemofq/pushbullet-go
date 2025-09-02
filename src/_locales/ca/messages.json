@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Enviar"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Reproduir so en la notificació"
   }
 }

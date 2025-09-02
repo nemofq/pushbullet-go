@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "전송"
+  },
+  "play_sound_on_notification_label": {
+    "message": "알림 시 소리 재생"
   }
 }

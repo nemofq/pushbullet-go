@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Надіслати"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Відтворити звук при сповіщенні"
   }
 }

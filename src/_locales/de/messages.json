@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Senden"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Ton bei Benachrichtigung abspielen"
   }
 }

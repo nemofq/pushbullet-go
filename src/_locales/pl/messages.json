@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Wyślij"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Odtwórz dźwięk przy powiadomieniu"
   }
 }

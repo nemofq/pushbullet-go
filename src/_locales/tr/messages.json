@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Gönder"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Bildirimde ses çal"
   }
 }

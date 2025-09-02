@@ -259,5 +259,8 @@
   },
   "send": {
     "message": "Trimite"
+  },
+  "play_sound_on_notification_label": {
+    "message": "Redă sunet la notificare"
   }
 }
