@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Toista ääni ilmoituksessa"
+  },
+  "clear_push_history": {
+    "message": "Tyhjennä paikallinen push-historia"
+  },
+  "clear_mirror_history": {
+    "message": "Tyhjennä paikallinen ilmoitushistoria"
   }
 }

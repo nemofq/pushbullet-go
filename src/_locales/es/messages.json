@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Reproducir sonido en la notificación"
+  },
+  "clear_push_history": {
+    "message": "Borrar historial local de push"
+  },
+  "clear_mirror_history": {
+    "message": "Borrar historial local de notificaciones"
   }
 }

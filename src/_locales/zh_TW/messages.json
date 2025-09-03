@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "通知時播放聲音"
+  },
+  "clear_push_history": {
+    "message": "清除本地推送紀錄"
+  },
+  "clear_mirror_history": {
+    "message": "清除本地通知紀錄"
   }
 }

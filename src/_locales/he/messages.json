@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "השמע צליל בהודעה"
+  },
+  "clear_push_history": {
+    "message": "נקה היסטוריית push מקומית"
+  },
+  "clear_mirror_history": {
+    "message": "נקה היסטוריית הודעות מקומית"
   }
 }

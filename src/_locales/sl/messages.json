@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Predvajaj zvok ob obvestilu"
+  },
+  "clear_push_history": {
+    "message": "Počisti lokalno zgodovino push"
+  },
+  "clear_mirror_history": {
+    "message": "Počisti lokalno zgodovino obvestil"
   }
 }

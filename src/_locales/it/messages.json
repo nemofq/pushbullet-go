@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Riproduci suono alla notifica"
+  },
+  "clear_push_history": {
+    "message": "Cancella cronologia push locale"
+  },
+  "clear_mirror_history": {
+    "message": "Cancella cronologia notifiche locale"
   }
 }

@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Spill av lyd ved varsling"
+  },
+  "clear_push_history": {
+    "message": "Slett lokal push-historikk"
+  },
+  "clear_mirror_history": {
+    "message": "Slett lokal varslingshistorikk"
   }
 }

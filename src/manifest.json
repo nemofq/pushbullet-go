@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Push Go for Pushbullet",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "A lightweight, open-source extension for cross-device pushes via Pushbullet API.",
   "homepage_url": "https://nemofq.github.io/pushbullet-go/",
   "default_locale": "en",

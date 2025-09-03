@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "เล่นเสียงเมื่อมีการแจ้งเตือน"
+  },
+  "clear_push_history": {
+    "message": "ล้างประวัติ push ในเครื่อง"
+  },
+  "clear_mirror_history": {
+    "message": "ล้างประวัติการแจ้งเตือนในเครื่อง"
   }
 }

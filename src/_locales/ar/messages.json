@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "تشغيل الصوت عند الإشعار"
+  },
+  "clear_push_history": {
+    "message": "مسح سجل الإرسال المحلي"
+  },
+  "clear_mirror_history": {
+    "message": "مسح سجل الإشعارات المحلية"
   }
 }

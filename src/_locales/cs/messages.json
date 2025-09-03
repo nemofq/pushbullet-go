@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Přehrát zvuk při oznámení"
+  },
+  "clear_push_history": {
+    "message": "Vymazat místní historii push"
+  },
+  "clear_mirror_history": {
+    "message": "Vymazat místní historii oznámení"
   }
 }

@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Afspil lyd ved notifikation"
+  },
+  "clear_push_history": {
+    "message": "Ryd lokal push historik"
+  },
+  "clear_mirror_history": {
+    "message": "Ryd lokal notifikationshistorik"
   }
 }

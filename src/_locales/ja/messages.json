@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "通知時に音を再生"
+  },
+  "clear_push_history": {
+    "message": "ローカルpush履歴を消去"
+  },
+  "clear_mirror_history": {
+    "message": "ローカル通知履歴を消去"
   }
 }

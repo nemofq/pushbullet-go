@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "알림 시 소리 재생"
+  },
+  "clear_push_history": {
+    "message": "로컬 push 기록 지우기"
+  },
+  "clear_mirror_history": {
+    "message": "로컬 알림 기록 지우기"
   }
 }

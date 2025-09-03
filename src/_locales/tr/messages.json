@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Bildirimde ses çal"
+  },
+  "clear_push_history": {
+    "message": "Yerel push geçmişini temizle"
+  },
+  "clear_mirror_history": {
+    "message": "Yerel bildirim geçmişini temizle"
   }
 }

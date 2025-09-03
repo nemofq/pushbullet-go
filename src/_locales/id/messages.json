@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Putar suara pada notifikasi"
+  },
+  "clear_push_history": {
+    "message": "Hapus riwayat push lokal"
+  },
+  "clear_mirror_history": {
+    "message": "Hapus riwayat notifikasi lokal"
   }
 }
