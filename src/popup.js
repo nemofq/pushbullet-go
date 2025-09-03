@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
       sendLink(quickShareUrl.textContent);
     }
   });
+
   
   bodyInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -278,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
       notificationsList.style.display = 'none';
       sendForm.style.display = 'block';
       
+      
       // Clear unread push count when pushes tab is opened
       chrome.runtime.sendMessage({ type: 'clear_unread_pushes' });
       
@@ -293,6 +295,8 @@ document.addEventListener('DOMContentLoaded', function() {
       messagesList.style.display = 'none';
       notificationsList.style.display = 'flex';
       sendForm.style.display = 'none';
+      
+      
       loadNotifications();
       
       // Clear unread mirrored notifications count when notifications tab is opened
@@ -385,6 +389,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     messagesList.innerHTML = '';
+    
+    // Add clear history button as first element when we have messages and API token
+    const tokenData = await chrome.storage.sync.get('accessToken');
+    if (tokenData.accessToken) {
+      const clearButton = document.createElement('button');
+      clearButton.className = 'clear-history-button';
+      clearButton.textContent = window.CustomI18n.getMessage('clear_push_history');
+      clearButton.onclick = () => {
+        chrome.runtime.sendMessage({ type: 'clear_push_history' });
+      };
+      messagesList.appendChild(clearButton);
+    }
     
     allMessages.reverse().forEach(push => {
       const messageRowDiv = document.createElement('div');
@@ -505,6 +521,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     notificationsList.innerHTML = '';
+    
+    // Add clear history button as first element when we have notifications and API token
+    const tokenData = await chrome.storage.sync.get('accessToken');
+    if (tokenData.accessToken) {
+      const clearButton = document.createElement('button');
+      clearButton.className = 'clear-history-button';
+      clearButton.textContent = window.CustomI18n.getMessage('clear_mirror_history');
+      clearButton.onclick = () => {
+        chrome.runtime.sendMessage({ type: 'clear_mirror_history' });
+      };
+      notificationsList.appendChild(clearButton);
+    }
     
     // Sort by timestamp (oldest to newest as requested)
     notifications.sort((a, b) => (a.created || 0) - (b.created || 0));

@@ -372,6 +372,12 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     case 'clear_unread_mirrors':
       await clearUnreadMirrorCount();
       break;
+    case 'clear_push_history':
+      await clearPushHistory();
+      break;
+    case 'clear_mirror_history':
+      await clearMirrorHistory();
+      break;
   }
 });
 
@@ -1714,5 +1720,31 @@ function getImageFileName(url) {
     // Fallback filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     return `image-${timestamp}.jpg`;
+  }
+}
+
+async function clearPushHistory() {
+  try {
+    await chrome.storage.local.set({ 
+      pushes: [],
+      unreadPushCount: 0 
+    });
+    await updateBadge();
+    console.log('Push history cleared');
+  } catch (error) {
+    console.error('Failed to clear push history:', error);
+  }
+}
+
+async function clearMirrorHistory() {
+  try {
+    await chrome.storage.local.set({ 
+      mirrorNotifications: [],
+      unreadMirrorCount: 0 
+    });
+    await updateBadge();
+    console.log('Mirror notification history cleared');
+  } catch (error) {
+    console.error('Failed to clear mirror history:', error);
   }
 }

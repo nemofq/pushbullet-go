@@ -262,5 +262,11 @@
   },
   "play_sound_on_notification_label": {
     "message": "Play sound on notification"
+  },
+  "clear_push_history": {
+    "message": "Clear local push history"
+  },
+  "clear_mirror_history": {
+    "message": "Clear local notification history"
   }
 }
