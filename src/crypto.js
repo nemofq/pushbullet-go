@@ -55,7 +55,7 @@ class PushbulletCrypto {
       passwordKey,
       { name: 'AES-GCM', length: 256 },
       true, // extractable for export
-      ['decrypt']
+      ['encrypt', 'decrypt']
     );
 
     return key;
@@ -85,10 +85,54 @@ class PushbulletCrypto {
       keyBuffer,
       { name: 'AES-GCM', length: 256 },
       true,
-      ['decrypt']
+      ['encrypt', 'decrypt']
     );
   }
 
+
+  /**
+   * Encrypt a message
+   * @param {object|string} message - Message to encrypt
+   * @returns {string} Base64 encoded encrypted message
+   */
+  async encrypt(message) {
+    if (!this.encryptionKey) {
+      throw new Error('Encryption not initialized');
+    }
+
+    // Convert message to JSON string if it's an object
+    const messageStr = typeof message === 'string' ? message : JSON.stringify(message);
+    const encoder = new TextEncoder();
+    const messageBuffer = encoder.encode(messageStr);
+
+    // Generate random IV (96 bits / 12 bytes)
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+
+    // Encrypt the message
+    const encrypted = await crypto.subtle.encrypt(
+      {
+        name: 'AES-GCM',
+        iv: iv
+      },
+      this.encryptionKey,
+      messageBuffer
+    );
+
+    // Extract the tag (last 16 bytes) and ciphertext
+    const encryptedArray = new Uint8Array(encrypted);
+    const tag = encryptedArray.slice(-16);
+    const ciphertext = encryptedArray.slice(0, -16);
+
+    // Combine: version(1) + tag(16) + iv(12) + ciphertext
+    const version = new Uint8Array([49]); // '1' in ASCII
+    const combined = new Uint8Array(version.length + tag.length + iv.length + ciphertext.length);
+    combined.set(version, 0);
+    combined.set(tag, 1);
+    combined.set(iv, 17);
+    combined.set(ciphertext, 29);
+
+    return this.arrayBufferToBase64(combined.buffer);
+  }
 
   /**
    * Decrypt an encrypted message
@@ -146,6 +190,24 @@ class PushbulletCrypto {
    */
   isEncrypted(push) {
     return push && push.encrypted === true && push.ciphertext;
+  }
+
+  /**
+   * Prepare data for encrypted sending
+   * @param {object} data - Data to encrypt
+   * @returns {object} Encrypted push object
+   */
+  async prepareEncryptedPush(data) {
+    if (!this.encryptionKey) {
+      throw new Error('Encryption not initialized');
+    }
+
+    const ciphertext = await this.encrypt(data);
+    
+    return {
+      encrypted: true,
+      ciphertext: ciphertext
+    };
   }
 
   /**

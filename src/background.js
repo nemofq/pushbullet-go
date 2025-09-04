@@ -1130,15 +1130,22 @@ async function dismissMirrorNotification(notificationId) {
       return;
     }
     
+    let dismissalPush = {
+      type: 'dismissal',
+      package_name: notification.package_name,
+      notification_id: notification.notification_id,
+      notification_tag: notification.notification_tag,
+      source_user_iden: notification.source_user_iden
+    };
+    
+    // Encrypt dismissal if E2E is enabled
+    if (pushbulletCrypto) {
+      dismissalPush = await pushbulletCrypto.prepareEncryptedPush(dismissalPush);
+    }
+    
     const dismissalData = {
       type: 'push',
-      push: {
-        type: 'dismissal',
-        package_name: notification.package_name,
-        notification_id: notification.notification_id,
-        notification_tag: notification.notification_tag,
-        source_user_iden: notification.source_user_iden
-      }
+      push: dismissalPush
     };
     
     const response = await fetch('https://api.pushbullet.com/v2/ephemerals', {
