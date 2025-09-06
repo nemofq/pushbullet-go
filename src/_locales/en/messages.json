@@ -101,15 +101,6 @@
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
   },
-  "encryption_password_label": {
-    "message": "End-to-end encryption password"
-  },
-  "encryption_password_placeholder": {
-    "message": "Optional"
-  },
-  "encryption_help_text": {
-    "message": "Enable encryption for Notification Mirroring. Your password is never stored. Must be the same on all devices."
-  },
   "show_sms_shortcut_label": {
     "message": "Show Pushbullet SMS shortcut in popup"
   },
@@ -277,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Clear local notification history"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Password is set (enter new to change)"
+  },
+  "encryption_password_label": {
+    "message": "End-to-end encryption password"
+  },
+  "encryption_password_placeholder": {
+    "message": "Optional"
+  },
+  "encryption_help_text": {
+    "message": "Enable encryption for Notification Mirroring. Your password is never stored. Must be the same on all devices."
   }
 }

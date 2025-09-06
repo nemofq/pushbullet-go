@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       const keyName = `encryptionKey_${data.userIden}`;
       chrome.storage.local.get(keyName, function(localData) {
         if (localData[keyName]) {
-          encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+          encryptionPasswordInput.placeholder = chrome.i18n.getMessage('encryption_password_set_placeholder');
         }
       });
     }
@@ -579,7 +579,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             // Clear the input and update placeholder
             encryptionPasswordInput.value = '';
-            encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+            encryptionPasswordInput.placeholder = chrome.i18n.getMessage('encryption_password_set_placeholder');
             
             // Notify background about encryption changes
             chrome.runtime.sendMessage({ type: 'encryption_updated' });

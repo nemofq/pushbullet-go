@@ -382,7 +382,10 @@
           </div>
         </div>
         <div class="form-group" id="encryptionPasswordGroup" style="display: none;">
-          <label for="encryptionPassword" data-i18n="encryption_password_label">End-to-End Encryption Password:</label>
+          <label for="encryptionPassword">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="encryption_password_label">End-to-End Encryption Password:</span>
+          </label>
           <input type="password" id="encryptionPassword" placeholder="Optional - for encrypted features" data-i18n-placeholder="encryption_password_placeholder">
           <div class="tip" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your password is never stored. Must be the same on all devices.</div>
         </div>
