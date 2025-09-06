@@ -11,8 +11,6 @@ let pushbulletCrypto = null;
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
 
-// Offscreen document management
-let isOffscreenDocumentCreated = false;
 
 // Initialize custom i18n for background script
 let cachedMessages = {};
@@ -94,43 +92,6 @@ initializeBackgroundI18n().catch(error => {
 importScripts('crypto.js');
 // @ts-ignore - PushbulletCrypto is loaded via importScripts
 
-// Offscreen document management functions
-async function createOffscreenDocument() {
-  if (isOffscreenDocumentCreated) {
-    return;
-  }
-
-  try {
-    await chrome.offscreen.createDocument({
-      url: 'offscreen.html',
-      reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
-      justification: 'Play notification alert sound'
-    });
-    isOffscreenDocumentCreated = true;
-    console.log('Offscreen document created successfully');
-  } catch (error) {
-    console.error('Failed to create offscreen document:', error);
-  }
-}
-
-async function ensureOffscreenDocument() {
-  try {
-    // Check if offscreen document already exists
-    const existingContexts = await chrome.runtime.getContexts({
-      contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
-    });
-
-    if (existingContexts.length > 0) {
-      isOffscreenDocumentCreated = true;
-      return;
-    }
-
-    await createOffscreenDocument();
-  } catch (error) {
-    console.error('Failed to ensure offscreen document:', error);
-  }
-}
-
 async function playAlertSound() {
   try {
     // Check if sound is enabled
@@ -139,33 +100,31 @@ async function playAlertSound() {
       return; // Sound is disabled
     }
 
-    // Ensure offscreen document exists
-    await ensureOffscreenDocument();
-
-    // Verify offscreen document still exists before sending message
+    // Check if offscreen document exists
     const existingContexts = await chrome.runtime.getContexts({
       contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
     });
 
+    // Create offscreen document if it doesn't exist
     if (existingContexts.length === 0) {
-      console.warn('Offscreen document not found, recreating...');
-      isOffscreenDocumentCreated = false;
-      await ensureOffscreenDocument();
+      try {
+        await chrome.offscreen.createDocument({
+          url: 'offscreen.html',
+          reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+          justification: 'Play notification alert sound'
+        });
+        console.log('Offscreen document created for audio playback');
+      } catch (error) {
+        // If creation fails (e.g., already exists), log and continue
+        console.warn('Could not create offscreen document:', error.message);
+      }
     }
 
     // Send message to offscreen document to play sound
-    if (isOffscreenDocumentCreated) {
-      try {
-        await chrome.runtime.sendMessage({ type: 'PLAY_ALERT_SOUND' });
-      } catch (error) {
-        console.error('Error sending message to offscreen document:', error);
-        // Reset flag and try once more
-        isOffscreenDocumentCreated = false;
-        await ensureOffscreenDocument();
-        if (isOffscreenDocumentCreated) {
-          await chrome.runtime.sendMessage({ type: 'PLAY_ALERT_SOUND' });
-        }
-      }
+    try {
+      await chrome.runtime.sendMessage({ type: 'PLAY_ALERT_SOUND' });
+    } catch (error) {
+      console.error('Error sending message to offscreen document:', error);
     }
   } catch (error) {
     console.error('Failed to play alert sound:', error);
