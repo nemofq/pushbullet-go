@@ -101,6 +101,15 @@
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
   },
+  "encryption_password_label": {
+    "message": "End-to-end encryption password"
+  },
+  "encryption_password_placeholder": {
+    "message": "Optional"
+  },
+  "encryption_help_text": {
+    "message": "Enable encryption for Notification Mirroring. Your password is never stored. Must be the same on all devices."
+  },
   "show_sms_shortcut_label": {
     "message": "Show Pushbullet SMS shortcut in popup"
   },

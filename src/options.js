@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const displayUnreadMirroredCheckbox = document.getElementById('displayUnreadMirrored');
   const displayUnreadMirroredToggle = document.getElementById('displayUnreadMirroredToggle');
   const displayUnreadMirroredContainer = document.getElementById('displayUnreadMirroredContainer');
+  const encryptionPasswordInput = document.getElementById('encryptionPassword');
+  const encryptionPasswordGroup = document.getElementById('encryptionPasswordGroup');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Get data from both sync and local storage
   const syncData = await new Promise(resolve => {
-    chrome.storage.sync.get(['accessToken', 'devices', 'people'], resolve);
+    chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
     chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
@@ -108,6 +110,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load notification mirroring setting (default is false/off)
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
     updateNotificationMirroringToggleVisual();
+    
+    // Check if encryption key is already set (stored locally)
+    if (data.userIden) {
+      const keyName = `encryptionKey_${data.userIden}`;
+      chrome.storage.local.get(keyName, function(localData) {
+        if (localData[keyName]) {
+          encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+        }
+      });
+    }
     
     // Load only browser pushes setting (default is true/on)
     onlyBrowserPushesCheckbox.checked = data.onlyBrowserPushes !== false; // Default to true
@@ -420,11 +432,36 @@ document.addEventListener('DOMContentLoaded', async function() {
           name: chat.with.name
         }));
       
+      // Fetch user info for encryption
+      let userIden = null;
+      try {
+        const userResponse = await fetch('https://api.pushbullet.com/v2/users/me', {
+          headers: {
+            'Access-Token': accessToken
+          }
+        });
+        
+        if (userResponse.ok) {
+          const user = await userResponse.json();
+          userIden = user.iden;
+          console.log('User info retrieved successfully for encryption');
+        } else {
+          console.warn('Failed to fetch user info:', userResponse.status, userResponse.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+      
       // Save Chrome device ID to local storage for reference
       const chromeDevice = devices.find(device => device.active && device.type === 'chrome');
       const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
       
-      await chrome.storage.sync.set({ devices: devices, people: people });
+      // Save all data including userIden for encryption
+      const syncData = { devices: devices, people: people };
+      if (userIden) {
+        syncData.userIden = userIden;
+      }
+      await chrome.storage.sync.set(syncData);
       await chrome.storage.local.set({ chromeDeviceId: chromeDeviceId });
       
       // Check if we need to fetch initial pushes (only if we haven't done it before)
@@ -523,6 +560,39 @@ document.addEventListener('DOMContentLoaded', async function() {
       defaultTab: defaultTabSelect.value,
       playSoundOnNotification: playSoundOnNotificationCheckbox.checked
     };
+    
+    // Handle encryption password - derive key and store locally
+    const encryptionPassword = encryptionPasswordInput.value.trim();
+    if (encryptionPassword) {
+      // Get userIden from sync storage to derive the key
+      chrome.storage.sync.get('userIden', async function(userData) {
+        if (userData.userIden) {
+          try {
+            // Import crypto module functionality
+            const pbCrypto = new PushbulletCrypto();
+            await pbCrypto.initialize(encryptionPassword, userData.userIden);
+            const derivedKey = await pbCrypto.exportKey();
+            
+            // Store derived key locally (not synced), namespaced by user
+            const keyName = `encryptionKey_${userData.userIden}`;
+            await chrome.storage.local.set({ [keyName]: derivedKey });
+            
+            // Clear the input and update placeholder
+            encryptionPasswordInput.value = '';
+            encryptionPasswordInput.placeholder = 'Password is set (enter new to change)';
+            
+            // Notify background about encryption changes
+            chrome.runtime.sendMessage({ type: 'encryption_updated' });
+          } catch (error) {
+            console.error('Failed to derive encryption key:', error);
+            showStatus('Encryption setup failed. Please check your password and try again.', 'error');
+          }
+        } else {
+          console.error('User iden not found - please retrieve devices first');
+          showStatus('Encryption setup failed. Please retrieve devices and people first.', 'error');
+        }
+      });
+    }
 
     // Split data between sync and local storage
     const syncSaveData = {
@@ -530,6 +600,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       devices: saveData.devices,
       people: saveData.people
     };
+    
     
     const localSaveData = {
       remoteDeviceId: saveData.remoteDeviceId,
@@ -569,6 +640,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       } else {
         showSaveSuccess();
       }
+      
       chrome.runtime.sendMessage({ type: 'token_updated' });
     });
   });
@@ -620,8 +692,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   function updateNotificationMirroringToggleVisual() {
     if (notificationMirroringCheckbox.checked) {
       notificationMirroringToggle.classList.add('active');
+      encryptionPasswordGroup.style.display = 'block';
     } else {
       notificationMirroringToggle.classList.remove('active');
+      encryptionPasswordGroup.style.display = 'none';
     }
   }
   
@@ -812,6 +886,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       saveSettingsButton.disabled = false;
     }, 2000);
   }
+
 
   function showRetrieveSuccess() {
     const originalContent = window.CustomI18n.getMessage('retrieve_devices_button');

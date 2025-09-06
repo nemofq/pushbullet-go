@@ -93,7 +93,8 @@
       color: var(--text-primary);
       font-size: 14px;
     }
-    input[type="text"] { 
+    input[type="text"],
+    input[type="password"] { 
       width: 100%; 
       padding: 12px; 
       border: 1px solid var(--border-secondary); 
@@ -103,7 +104,8 @@
       color: var(--text-primary);
       transition: border-color 0.3s ease, background-color 0.3s ease;
     }
-    input[type="text"]:focus {
+    input[type="text"]:focus,
+    input[type="password"]:focus {
       outline: none;
       border-color: var(--border-focus);
     }
@@ -379,6 +381,11 @@
             <div class="toggle-slider"></div>
           </div>
         </div>
+        <div class="form-group" id="encryptionPasswordGroup" style="display: none;">
+          <label for="encryptionPassword" data-i18n="encryption_password_label">End-to-End Encryption Password:</label>
+          <input type="password" id="encryptionPassword" placeholder="Optional - for encrypted features" data-i18n-placeholder="encryption_password_placeholder">
+          <div class="tip" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your password is never stored. Must be the same on all devices.</div>
+        </div>
         <div class="form-group" id="defaultTabGroup" style="display: none;">
           <label for="defaultTab">
             <span class="sub-option-icon">↳</span>
@@ -512,6 +519,7 @@
     <button id="saveSettings" class="save-button" data-i18n="save_settings_button">Save Settings</button>
     <div id="saveStatus" class="status"></div>
   </div>
+  <script src="crypto.js"></script>
   <script src="i18n.js"></script>
   <script src="options.js"></script>
 </body>
