@@ -1815,6 +1815,7 @@ async function clearPushHistory() {
   try {
     await chrome.storage.local.set({ 
       pushes: [],
+      sentMessages: [],
       unreadPushCount: 0 
     });
     await updateBadge();
