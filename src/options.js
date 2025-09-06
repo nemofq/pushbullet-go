@@ -431,11 +431,36 @@ document.addEventListener('DOMContentLoaded', async function() {
           name: chat.with.name
         }));
       
+      // Fetch user info for encryption
+      let userIden = null;
+      try {
+        const userResponse = await fetch('https://api.pushbullet.com/v2/users/me', {
+          headers: {
+            'Access-Token': accessToken
+          }
+        });
+        
+        if (userResponse.ok) {
+          const user = await userResponse.json();
+          userIden = user.iden;
+          console.log('User info retrieved successfully for encryption');
+        } else {
+          console.warn('Failed to fetch user info:', userResponse.status, userResponse.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+      
       // Save Chrome device ID to local storage for reference
       const chromeDevice = devices.find(device => device.active && device.type === 'chrome');
       const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
       
-      await chrome.storage.sync.set({ devices: devices, people: people });
+      // Save all data including userIden for encryption
+      const syncData = { devices: devices, people: people };
+      if (userIden) {
+        syncData.userIden = userIden;
+      }
+      await chrome.storage.sync.set(syncData);
       await chrome.storage.local.set({ chromeDeviceId: chromeDeviceId });
       
       // Check if we need to fetch initial pushes (only if we haven't done it before)

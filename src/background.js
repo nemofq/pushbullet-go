@@ -7,7 +7,6 @@ let reconnectAttempts = 0;
 let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
 let pushbulletCrypto = null;
-let userIden = null;
 
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
@@ -470,10 +469,7 @@ async function initializeExtension() {
   }
   
   if (accessToken) {
-    // Get user info to obtain iden for encryption
-    await getUserInfo();
-    
-    // Initialize encryption if key is stored
+    // Initialize encryption if key is stored (userIden should be available from options page)
     await initializeEncryption();
     
     connectWebSocket();
@@ -485,26 +481,6 @@ async function initializeExtension() {
   await updateBadge();
 }
 
-async function getUserInfo() {
-  if (!accessToken) return;
-  
-  try {
-    const response = await fetch('https://api.pushbullet.com/v2/users/me', {
-      headers: {
-        'Access-Token': accessToken
-      }
-    });
-    
-    if (response.ok) {
-      const user = await response.json();
-      userIden = user.iden;
-      // Store user iden for encryption
-      await chrome.storage.sync.set({ userIden: user.iden });
-    }
-  } catch (error) {
-    console.error('Failed to get user info:', error);
-  }
-}
 
 function resetConnection() {
   // Clean up everything completely
@@ -1140,7 +1116,13 @@ async function dismissMirrorNotification(notificationId) {
     
     // Encrypt dismissal if E2E is enabled
     if (pushbulletCrypto) {
-      dismissalPush = await pushbulletCrypto.prepareEncryptedPush(dismissalPush);
+      try {
+        dismissalPush = await pushbulletCrypto.prepareEncryptedPush(dismissalPush);
+      } catch (error) {
+        console.error('Failed to encrypt dismissal push:', error);
+        // Continue with unencrypted dismissal - important not to block dismissal functionality
+        console.warn('Sending unencrypted dismissal due to encryption failure');
+      }
     }
     
     const dismissalData = {
