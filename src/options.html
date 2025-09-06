@@ -93,16 +93,6 @@
       color: var(--text-primary);
       font-size: 14px;
     }
-    .help-text {
-      display: block;
-      margin-top: 5px;
-      font-size: 12px;
-      color: #666;
-      line-height: 1.4;
-    }
-    .dark-mode .help-text {
-      color: #999;
-    }
     input[type="text"],
     input[type="password"] { 
       width: 100%; 
@@ -391,10 +381,10 @@
             <div class="toggle-slider"></div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="encryptionPasswordGroup" style="display: none;">
           <label for="encryptionPassword" data-i18n="encryption_password_label">End-to-End Encryption Password:</label>
           <input type="password" id="encryptionPassword" placeholder="Optional - for encrypted features" data-i18n-placeholder="encryption_password_placeholder">
-          <small class="help-text" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your password is never stored. Must be the same on all devices.</small>
+          <div class="tip" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your password is never stored. Must be the same on all devices.</div>
         </div>
         <div class="form-group" id="defaultTabGroup" style="display: none;">
           <label for="defaultTab">

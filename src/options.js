@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   const displayUnreadMirroredToggle = document.getElementById('displayUnreadMirroredToggle');
   const displayUnreadMirroredContainer = document.getElementById('displayUnreadMirroredContainer');
   const encryptionPasswordInput = document.getElementById('encryptionPassword');
+  const encryptionPasswordGroup = document.getElementById('encryptionPasswordGroup');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
   const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
@@ -584,11 +585,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             chrome.runtime.sendMessage({ type: 'encryption_updated' });
           } catch (error) {
             console.error('Failed to derive encryption key:', error);
-            showSaveError();
+            showStatus('Encryption setup failed. Please check your password and try again.', 'error');
           }
         } else {
           console.error('User iden not found - please retrieve devices first');
-          showSaveError();
+          showStatus('Encryption setup failed. Please retrieve devices and people first.', 'error');
         }
       });
     }
@@ -691,8 +692,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   function updateNotificationMirroringToggleVisual() {
     if (notificationMirroringCheckbox.checked) {
       notificationMirroringToggle.classList.add('active');
+      encryptionPasswordGroup.style.display = 'block';
     } else {
       notificationMirroringToggle.classList.remove('active');
+      encryptionPasswordGroup.style.display = 'none';
     }
   }
   
@@ -883,6 +886,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       saveSettingsButton.disabled = false;
     }, 2000);
   }
+
 
   function showRetrieveSuccess() {
     const originalContent = window.CustomI18n.getMessage('retrieve_devices_button');
