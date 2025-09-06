@@ -28,6 +28,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - (New) Unread count
 - (New) Quick share of current tab's link in the popup (default off, enable in options page)
 - (New) Play sound on notification (can be disabled in options page)
+- (New) End-to-end encryption for notification mirroring
 
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
