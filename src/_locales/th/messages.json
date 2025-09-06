@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "ล้างประวัติการแจ้งเตือนในเครื่อง"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "รหัสผ่านถูกตั้งแล้ว (ใส่ใหม่เพื่อเปลี่ยน)"
+  },
+  "encryption_password_label": {
+    "message": "รหัสผ่านเข้ารหัสแบบ end-to-end"
+  },
+  "encryption_password_placeholder": {
+    "message": "ไม่บังคับ"
+  },
+  "encryption_help_text": {
+    "message": "เปิดใช้การเข้ารหัสสำหรับการมิเรอร์การแจ้งเตือน รหัสผ่านของคุณไม่เคยถูกเก็บไว้ ต้องเหมือนกันในทุกอุปกรณ์"
   }
 }

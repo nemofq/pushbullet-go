@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "مسح سجل الإشعارات المحلية"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "تم تعيين كلمة المرور (أدخل جديدة للتغيير)"
+  },
+  "encryption_password_label": {
+    "message": "كلمة مرور التشفير الشامل"
+  },
+  "encryption_password_placeholder": {
+    "message": "اختياري"
+  },
+  "encryption_help_text": {
+    "message": "تفعيل التشفير لنسخ الإشعارات. كلمة المرور لا يتم حفظها أبداً. يجب أن تكون نفسها على جميع الأجهزة."
   }
 }

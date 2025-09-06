@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Počisti lokalno zgodovino obvestil"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Geslo je nastavljeno (vnesite novo za spremembo)"
+  },
+  "encryption_password_label": {
+    "message": "Geslo za end-to-end šifriranje"
+  },
+  "encryption_password_placeholder": {
+    "message": "Neobvezno"
+  },
+  "encryption_help_text": {
+    "message": "Omogoči šifriranje za zrcaljenje obvestil. Vaše geslo nikoli ni shranjeno. Mora biti enako na vseh napravah."
   }
 }

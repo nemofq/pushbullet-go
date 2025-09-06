@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Lokale meldingsgeschiedenis wissen"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Wachtwoord ingesteld (voer nieuw in om te wijzigen)"
+  },
+  "encryption_password_label": {
+    "message": "End-to-end versleuteling wachtwoord"
+  },
+  "encryption_password_placeholder": {
+    "message": "Optioneel"
+  },
+  "encryption_help_text": {
+    "message": "Versleuteling inschakelen voor Melding Spiegelen. Uw wachtwoord wordt nooit opgeslagen. Moet hetzelfde zijn op alle apparaten."
   }
 }

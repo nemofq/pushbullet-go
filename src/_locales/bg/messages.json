@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Изчисти локалната история на известията"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Паролата е зададена (въведете нова за промяна)"
+  },
+  "encryption_password_label": {
+    "message": "Парола за шифроване от край до край"
+  },
+  "encryption_password_placeholder": {
+    "message": "По избор"
+  },
+  "encryption_help_text": {
+    "message": "Активирайте шифроване за отразяване на известия. Паролата ви никога не се съхранява. Трябва да е същата на всички устройства."
   }
 }

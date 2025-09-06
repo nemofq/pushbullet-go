@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "清除本地通知记录"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "密码已设置（输入新密码以更改）"
+  },
+  "encryption_password_label": {
+    "message": "端到端加密密码"
+  },
+  "encryption_password_placeholder": {
+    "message": "可选"
+  },
+  "encryption_help_text": {
+    "message": "为通知镜像启用加密。您的密码永远不会被存储。在所有设备上必须相同。"
   }
 }

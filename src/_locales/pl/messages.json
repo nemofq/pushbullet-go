@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Wyczyść lokalną historię powiadomień"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Hasło ustawione (wprowadź nowe, aby zmienić)"
+  },
+  "encryption_password_label": {
+    "message": "Hasło szyfrowania end-to-end"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opcjonalne"
+  },
+  "encryption_help_text": {
+    "message": "Włącz szyfrowanie dla duplikowania powiadomień. Twoje hasło nigdy nie jest przechowywane. Musi być takie samo na wszystkich urządzeniach."
   }
 }

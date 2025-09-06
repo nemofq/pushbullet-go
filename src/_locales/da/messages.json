@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Ryd lokal notifikationshistorik"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Adgangskode er indstillet (indtast ny for at ændre)"
+  },
+  "encryption_password_label": {
+    "message": "End-to-end krypteringsadgangskode"
+  },
+  "encryption_password_placeholder": {
+    "message": "Valgfrit"
+  },
+  "encryption_help_text": {
+    "message": "Aktivér kryptering for notifikationsspejling. Din adgangskode gemmes aldrig. Skal være den samme på alle enheder."
   }
 }

@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Εκκαθάριση τοπικού ιστορικού ειδοποιήσεων"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Ο κωδικός είναι ορισμένος (εισάγετε νέο για αλλαγή)"
+  },
+  "encryption_password_label": {
+    "message": "Κωδικός κρυπτογράφησης από άκρο σε άκρο"
+  },
+  "encryption_password_placeholder": {
+    "message": "Προαιρετικό"
+  },
+  "encryption_help_text": {
+    "message": "Ενεργοποίηση κρυπτογράφησης για καθρεπτισμό ειδοποιήσεων. Ο κωδικός σας δεν αποθηκεύεται ποτέ. Πρέπει να είναι ο ίδιος σε όλες τις συσκευές."
   }
 }

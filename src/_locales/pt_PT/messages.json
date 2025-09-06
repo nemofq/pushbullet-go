@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Limpar histórico local de notificações"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Palavra-passe definida (introduza nova para alterar)"
+  },
+  "encryption_password_label": {
+    "message": "Palavra-passe de encriptação ponta-a-ponta"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opcional"
+  },
+  "encryption_help_text": {
+    "message": "Activar encriptação para Espelhamento de Notificações. A sua palavra-passe nunca é armazenada. Deve ser igual em todos os dispositivos."
   }
 }

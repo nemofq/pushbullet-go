@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Limpar histórico local de notificações"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Senha definida (digite nova para alterar)"
+  },
+  "encryption_password_label": {
+    "message": "Senha de criptografia ponta a ponta"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opcional"
+  },
+  "encryption_help_text": {
+    "message": "Habilitar criptografia para Espelhamento de Notificações. Sua senha nunca é armazenada. Deve ser a mesma em todos os dispositivos."
   }
 }

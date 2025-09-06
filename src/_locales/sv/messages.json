@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Rensa lokal notishistorik"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Lösenord är inställt (ange nytt för att ändra)"
+  },
+  "encryption_password_label": {
+    "message": "End-to-end krypteringslösenord"
+  },
+  "encryption_password_placeholder": {
+    "message": "Valfritt"
+  },
+  "encryption_help_text": {
+    "message": "Aktivera kryptering för aviseringsspegel. Ditt lösenord sparas aldrig. Måste vara samma på alla enheter."
   }
 }

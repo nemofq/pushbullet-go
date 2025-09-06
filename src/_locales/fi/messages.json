@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Tyhjennä paikallinen ilmoitushistoria"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Salasana on asetettu (syötä uusi vaihtaaksesi)"
+  },
+  "encryption_password_label": {
+    "message": "Päästä-päähän -salaussalasana"
+  },
+  "encryption_password_placeholder": {
+    "message": "Valinnainen"
+  },
+  "encryption_help_text": {
+    "message": "Ota käyttöön salaus ilmoitusten peilaukselle. Salasanaasi ei tallenneta koskaan. Sen pitää olla sama kaikissa laitteissa."
   }
 }

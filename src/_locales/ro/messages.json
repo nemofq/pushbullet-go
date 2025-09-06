@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Sterge istoricul notificărilor locale"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Parola este setată (introduceți una nouă pentru a schimba)"
+  },
+  "encryption_password_label": {
+    "message": "Parola de criptare end-to-end"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opțional"
+  },
+  "encryption_help_text": {
+    "message": "Activează criptarea pentru Oglindirea Notificărilor. Parola ta nu este niciodată stocată. Trebuie să fie aceeași pe toate dispozitivele."
   }
 }

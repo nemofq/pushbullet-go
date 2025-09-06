@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Esborrar historial local de notificacions"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Contrasenya establerta (introdueix nova per canviar)"
+  },
+  "encryption_password_label": {
+    "message": "Contrasenya de xifratge extrem a extrem"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opcional"
+  },
+  "encryption_help_text": {
+    "message": "Activa el xifratge per a la duplicació de notificacions. La teva contrasenya mai es desa. Ha de ser la mateixa en tots els dispositius."
   }
 }

@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Slett lokal varslingshistorikk"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Passord er satt (skriv inn nytt for å endre)"
+  },
+  "encryption_password_label": {
+    "message": "Ende-til-ende-krypteringspassord"
+  },
+  "encryption_password_placeholder": {
+    "message": "Valgfritt"
+  },
+  "encryption_help_text": {
+    "message": "Aktiver kryptering for varselspeiling. Passordet ditt lagres aldri. Må være det samme på alle enheter."
   }
 }

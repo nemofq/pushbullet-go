@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Xóa lịch sử thông báo cục bộ"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Mật khẩu đã được đặt (nhập mới để thay đổi)"
+  },
+  "encryption_password_label": {
+    "message": "Mật khẩu mã hóa end-to-end"
+  },
+  "encryption_password_placeholder": {
+    "message": "Tùy chọn"
+  },
+  "encryption_help_text": {
+    "message": "Bật mã hóa cho Phản chiếu Thông báo. Mật khẩu của bạn không bao giờ được lưu trữ. Phải giống nhau trên tất cả thiết bị."
   }
 }

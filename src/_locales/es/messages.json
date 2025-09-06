@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Borrar historial local de notificaciones"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Contraseña establecida (ingresa nueva para cambiar)"
+  },
+  "encryption_password_label": {
+    "message": "Contraseña de cifrado extremo a extremo"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opcional"
+  },
+  "encryption_help_text": {
+    "message": "Habilitar cifrado para el espejo de notificaciones. Tu contraseña nunca se almacena. Debe ser la misma en todos los dispositivos."
   }
 }

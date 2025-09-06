@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Cancella cronologia notifiche locale"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Password impostata (inserisci una nuova per cambiare)"
+  },
+  "encryption_password_label": {
+    "message": "Password di crittografia end-to-end"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opzionale"
+  },
+  "encryption_help_text": {
+    "message": "Abilita la crittografia per il mirroring delle notifiche. La tua password non viene mai memorizzata. Deve essere la stessa su tutti i dispositivi."
   }
 }

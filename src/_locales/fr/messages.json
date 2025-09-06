@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Effacer l'historique local des notifications"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Mot de passe défini (entrez un nouveau pour changer)"
+  },
+  "encryption_password_label": {
+    "message": "Mot de passe de chiffrement de bout en bout"
+  },
+  "encryption_password_placeholder": {
+    "message": "Optionnel"
+  },
+  "encryption_help_text": {
+    "message": "Activer le chiffrement pour le mirroring des notifications. Votre mot de passe n'est jamais stocké. Doit être identique sur tous les appareils."
   }
 }

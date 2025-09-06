@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "נקה היסטוריית הודעות מקומית"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "הסיסמה נקבעה (הזן חדשה כדי לשנות)"
+  },
+  "encryption_password_label": {
+    "message": "סיסמת הצפנה מקצה לקצה"
+  },
+  "encryption_password_placeholder": {
+    "message": "אופציונלי"
+  },
+  "encryption_help_text": {
+    "message": "אפשר הצפנה לשיקוף התראות. הסיסמה שלך לעולם לא נשמרת. חייבת להיות זהה בכל המכשירים."
   }
 }

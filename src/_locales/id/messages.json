@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Hapus riwayat notifikasi lokal"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Kata sandi telah diatur (masukkan yang baru untuk mengubah)"
+  },
+  "encryption_password_label": {
+    "message": "Kata sandi enkripsi ujung-ke-ujung"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opsional"
+  },
+  "encryption_help_text": {
+    "message": "Aktifkan enkripsi untuk Pencerminan Notifikasi. Kata sandi Anda tidak pernah disimpan. Harus sama di semua perangkat."
   }
 }

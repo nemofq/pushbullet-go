@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Очистити локальну історію сповіщень"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Пароль встановлено (введіть новий для зміни)"
+  },
+  "encryption_password_label": {
+    "message": "Пароль наскрізного шифрування"
+  },
+  "encryption_password_placeholder": {
+    "message": "Необов'язково"
+  },
+  "encryption_help_text": {
+    "message": "Увімкнути шифрування для дзеркалення сповіщень. Ваш пароль ніколи не зберігається. Повинен бути однаковим на всіх пристроях."
   }
 }

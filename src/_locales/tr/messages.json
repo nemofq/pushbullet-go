@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Yerel bildirim geçmişini temizle"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Şifre ayarlandı (değiştirmek için yeni girin)"
+  },
+  "encryption_password_label": {
+    "message": "Uçtan uca şifreleme parolası"
+  },
+  "encryption_password_placeholder": {
+    "message": "İsteğe bağlı"
+  },
+  "encryption_help_text": {
+    "message": "Bildirim Yansıtma için şifrelemeyi etkinleştir. Şifreniz asla saklanmaz. Tüm cihazlarda aynı olmalıdır."
   }
 }

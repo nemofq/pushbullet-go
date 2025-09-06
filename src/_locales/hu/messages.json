@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Helyi értesítési előzmények törlése"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Jelszó beállítva (új megadása a változtatáshoz)"
+  },
+  "encryption_password_label": {
+    "message": "Végpontok közötti titkosítási jelszó"
+  },
+  "encryption_password_placeholder": {
+    "message": "Opcionális"
+  },
+  "encryption_help_text": {
+    "message": "Titkosítás engedélyezése az értesítéstükrözéshez. A jelszava soha nem tárolódik. Ugyanannak kell lennie minden eszközön."
   }
 }

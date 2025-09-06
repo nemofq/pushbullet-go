@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "로컬 알림 기록 지우기"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "비밀번호가 설정됨 (변경하려면 새로 입력)"
+  },
+  "encryption_password_label": {
+    "message": "종단간 암호화 비밀번호"
+  },
+  "encryption_password_placeholder": {
+    "message": "선택사항"
+  },
+  "encryption_help_text": {
+    "message": "알림 미러링에 대해 암호화를 활성화합니다. 비밀번호는 저장되지 않습니다. 모든 기기에서 동일해야 합니다."
   }
 }

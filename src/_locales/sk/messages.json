@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Vymazať lokálnu históriu oznámení"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Heslo je nastavené (zadajte nové pre zmenu)"
+  },
+  "encryption_password_label": {
+    "message": "Heslo end-to-end šifrovania"
+  },
+  "encryption_password_placeholder": {
+    "message": "Voliteľné"
+  },
+  "encryption_help_text": {
+    "message": "Povoliť šifrovanie pre zrkadlenie upozornení. Vaše heslo sa nikdy neuloží. Musí byť rovnaké na všetkých zariadeniach."
   }
 }

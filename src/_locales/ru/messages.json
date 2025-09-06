@@ -268,5 +268,17 @@
   },
   "clear_mirror_history": {
     "message": "Очистить локальную историю уведомлений"
+  },
+  "encryption_password_set_placeholder": {
+    "message": "Пароль установлен (введите новый для изменения)"
+  },
+  "encryption_password_label": {
+    "message": "Пароль сквозного шифрования"
+  },
+  "encryption_password_placeholder": {
+    "message": "Необязательно"
+  },
+  "encryption_help_text": {
+    "message": "Включить шифрование для зеркалирования уведомлений. Ваш пароль никогда не сохраняется. Должен быть одинаковым на всех устройствах."
   }
 }
