@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const quickShareContainer = document.getElementById('quickShareContainer');
   const quickShareUrl = document.getElementById('quickShareUrl');
   const quickShareSend = document.getElementById('quickShareSend');
+  const logoLink = document.getElementById('logoLink');
 
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -76,6 +77,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (quickShareUrl.textContent) {
       sendLink(quickShareUrl.textContent);
     }
+  });
+
+  logoLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: 'https://www.pushbullet.com/#people/me' });
   });
 
   

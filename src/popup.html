@@ -453,13 +453,24 @@
     .clear-history-button:hover {
       color: var(--copy-button-hover);
     }
+    .logo-link {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 15px;
+      transition: color 0.3s ease;
+      user-select: none;
+    }
+    .logo-link:hover {
+      color: var(--button-primary);
+    }
   </style>
 </head>
 <body>
   <div class="header">
     <div style="display: flex; align-items: center;">
       <div id="connectionStatus" class="status disconnected"></div>
-      <span>Push Go</span>
+      <a id="logoLink" class="logo-link" href="#" target="_blank">Push Go</a>
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
       <a id="smsShortcut" class="sms-shortcut" href="https://www.pushbullet.com/#sms/" target="_blank" style="display: none;" data-i18n-title="open_sms_web_interface">
