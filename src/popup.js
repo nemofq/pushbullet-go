@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check access token first, then handle other initializations
   checkAccessToken().then(() => {
     // Only load messages after checking access token to ensure proper display
-    loadMessages();
+    debouncedLoadMessages();
     checkNotificationMirroring();
     checkQuickShare();
     updateConnectionStatus();
@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 200);
   
   let lastConnectionStatus = null;
+  let loadMessagesTimeout = null;
+  let loadNotificationsTimeout = null;
   setInterval(updateConnectionStatus, 2000);
 
   retryButton.addEventListener('click', () => {
@@ -192,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (mirroringData.notificationMirroring) {
       tabSwitcher.style.display = 'flex';
-      loadNotifications();
+      debouncedLoadNotifications();
       
       // Switch to default tab
       const defaultTab = defaultTabData.defaultTab || 'push';
@@ -303,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
       sendForm.style.display = 'none';
       
       
-      loadNotifications();
+      debouncedLoadNotifications();
       
       // Clear unread mirrored notifications count when notifications tab is opened
       chrome.runtime.sendMessage({ type: 'clear_unread_mirrors' });
@@ -344,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Only refresh content when transitioning from disconnected to connected
             if (lastConnectionStatus === 'disconnected' || lastConnectionStatus === null) {
               console.log('Connection restored - refreshing content');
-              loadMessages();
+              debouncedLoadMessages();
               checkNotificationMirroring();
             }
           }
@@ -353,6 +355,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     });
+  }
+
+  function debouncedLoadMessages() {
+    if (loadMessagesTimeout) {
+      clearTimeout(loadMessagesTimeout);
+    }
+    loadMessagesTimeout = setTimeout(() => {
+      loadMessages();
+      loadMessagesTimeout = null;
+    }, 16); // Optimized for smooth 60fps updates
+  }
+
+  function debouncedLoadNotifications() {
+    if (loadNotificationsTimeout) {
+      clearTimeout(loadNotificationsTimeout);
+    }
+    loadNotificationsTimeout = setTimeout(() => {
+      loadNotifications();
+      loadNotificationsTimeout = null;
+    }, 16); // Optimized for smooth 60fps updates
   }
 
   async function loadMessages() {
@@ -386,15 +408,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (allMessages.length === 0) {
       // Only show "No messages yet" if we have access token, otherwise show empty
       const tokenData = await chrome.storage.sync.get('accessToken');
+      const fragment = document.createDocumentFragment();
       if (tokenData.accessToken) {
-        messagesList.innerHTML = `<div class="no-messages">${window.CustomI18n.getMessage('no_messages_yet')}</div>`;
-      } else {
-        messagesList.innerHTML = '';
+        const noMessagesDiv = document.createElement('div');
+        noMessagesDiv.className = 'no-messages';
+        noMessagesDiv.textContent = window.CustomI18n.getMessage('no_messages_yet');
+        fragment.appendChild(noMessagesDiv);
       }
+      messagesList.replaceChildren(fragment);
       return;
     }
 
-    messagesList.innerHTML = '';
+    // Build content in DocumentFragment to avoid visible flashing
+    const fragment = document.createDocumentFragment();
     
     // Add clear history button as first element when we have messages and API token
     const tokenData = await chrome.storage.sync.get('accessToken');
@@ -405,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
       clearButton.onclick = () => {
         chrome.runtime.sendMessage({ type: 'clear_push_history' });
       };
-      messagesList.appendChild(clearButton);
+      fragment.appendChild(clearButton);
     }
     
     allMessages.reverse().forEach(push => {
@@ -500,8 +526,11 @@ document.addEventListener('DOMContentLoaded', function() {
       
       messageRowDiv.appendChild(timestampDiv);
       messageRowDiv.appendChild(messageContentDiv);
-      messagesList.appendChild(messageRowDiv);
+      fragment.appendChild(messageRowDiv);
     });
+    
+    // Replace content atomically to prevent flashing
+    messagesList.replaceChildren(fragment);
     
     // Ensure scroll to bottom after DOM updates
     requestAnimationFrame(() => {
@@ -518,15 +547,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (notifications.length === 0) {
       // Only show "No notifications received" if we have access token, otherwise show empty
       const tokenData = await chrome.storage.sync.get('accessToken');
+      const fragment = document.createDocumentFragment();
       if (tokenData.accessToken) {
-        notificationsList.innerHTML = `<div class="no-messages">${window.CustomI18n.getMessage('no_notifications_received')}</div>`;
-      } else {
-        notificationsList.innerHTML = '';
+        const noNotificationsDiv = document.createElement('div');
+        noNotificationsDiv.className = 'no-messages';
+        noNotificationsDiv.textContent = window.CustomI18n.getMessage('no_notifications_received');
+        fragment.appendChild(noNotificationsDiv);
       }
+      notificationsList.replaceChildren(fragment);
       return;
     }
 
-    notificationsList.innerHTML = '';
+    // Build content in DocumentFragment to avoid visible flashing
+    const fragment = document.createDocumentFragment();
     
     // Add clear history button as first element when we have notifications and API token
     const tokenData = await chrome.storage.sync.get('accessToken');
@@ -537,7 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
       clearButton.onclick = () => {
         chrome.runtime.sendMessage({ type: 'clear_mirror_history' });
       };
-      notificationsList.appendChild(clearButton);
+      fragment.appendChild(clearButton);
     }
     
     // Sort by timestamp (oldest to newest as requested)
@@ -604,8 +637,11 @@ document.addEventListener('DOMContentLoaded', function() {
         cardDiv.appendChild(bodyDiv);
       }
       
-      notificationsList.appendChild(cardDiv);
+      fragment.appendChild(cardDiv);
     });
+    
+    // Replace content atomically to prevent flashing
+    notificationsList.replaceChildren(fragment);
     
     // Scroll to bottom to show newest notifications
     requestAnimationFrame(() => {
@@ -644,8 +680,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     bodyInput.value = '';
-    
-    setTimeout(loadMessages, 1000);
   }
 
 
@@ -688,8 +722,6 @@ document.addEventListener('DOMContentLoaded', function() {
         bodyInput.disabled = false;
         sendButton.disabled = false;
       }, 2000);
-
-      setTimeout(loadMessages, 1000);
 
     } catch (error) {
       bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + ' ' + window.CustomI18n.getMessage('upload_failed_retry');
@@ -807,14 +839,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local' && (changes.pushes || changes.sentMessages)) {
-      loadMessages();
+      debouncedLoadMessages();
     }
     if (areaName === 'local' && changes.mirrorNotifications) {
-      loadNotifications();
+      debouncedLoadNotifications();
     }
     if (areaName === 'sync' && changes.accessToken) {
       checkAccessToken().then(() => {
-        loadMessages();
+        debouncedLoadMessages();
         checkNotificationMirroring();
       });
     }
@@ -835,8 +867,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (window.CustomI18n) {
         window.CustomI18n.changeLanguage(changes.languageMode.newValue).then(() => {
           initializeI18n();
-          loadMessages(); // Refresh messages to update any UI text
-          loadNotifications(); // Refresh notifications too
+          debouncedLoadMessages(); // Refresh messages to update any UI text
+          debouncedLoadNotifications(); // Refresh notifications too
         });
       }
     }
