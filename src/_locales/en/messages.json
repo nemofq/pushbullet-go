@@ -102,6 +102,9 @@
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
   },
+  "suppress_when_locked_label": {
+    "message": "Don't show notifications when the computer is locked"
+  },
   "show_sms_shortcut_label": {
     "message": "Show Pushbullet SMS shortcut in popup"
   },
@@ -233,6 +236,12 @@
   },
   "auto_open_on_resume_label": {
     "message": "Auto-open even when connection resumes"
+  },
+  "auto_open_on_unlock_label": {
+    "message": "Auto-open on unlock (links received while locked)"
+  },
+  "auto_open_on_unlock_limit_label": {
+    "message": "On unlock, open newest N links only (0 = all)."
   },
   "push_current_page_shortcut_description": {
     "message": "Push current page URL to selected devices"

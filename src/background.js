@@ -7,6 +7,10 @@ let reconnectAttempts = 0;
 let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
 let pushbulletCrypto = null;
+let sessionState = 'active';
+let idleTrackingInitialized = false;
+let drainPromise = null;
+const pendingAutoOpenMax = 300; // safety cap to avoid unbounded queue growth
 
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
@@ -91,6 +95,121 @@ initializeBackgroundI18n().catch(error => {
 // Import crypto module
 importScripts('crypto.js');
 // @ts-ignore - PushbulletCrypto is loaded via importScripts
+
+// Helper to read lock/auto-open preferences on demand
+async function getLockPrefs() {
+  const s = await chrome.storage.local.get([
+    'suppressWhenLocked',
+    'autoOpenLinks',
+    'autoOpenOnUnlock',
+    'autoOpenOnUnlockLimit'
+  ]);
+  const limitNum = parseInt(s.autoOpenOnUnlockLimit, 10);
+  return {
+    suppressWhenLocked: !!s.suppressWhenLocked,
+    autoOpenLinks: !!s.autoOpenLinks,
+    autoOpenOnUnlock: !!s.autoOpenOnUnlock,
+    autoOpenOnUnlockLimit: Number.isNaN(limitNum) ? 10 : limitNum
+  };
+}
+
+function initIdleTracking() {
+  if (idleTrackingInitialized) return;
+  idleTrackingInitialized = true;
+
+  // 1) Authoritative, continuous state comes from the event stream
+  chrome.idle.onStateChanged.addListener((state) => {
+    sessionState = state;
+    if (state === 'active' && connectionStatus === 'disconnected' && accessToken) {
+      reconnectAttempts = 0;
+      connectWebSocket();
+    }
+    if (state === 'active') {
+      drainPendingAutoOpenLinks();
+    }
+  });
+
+  // 2) One-time seed to initialize sessionState at startup
+  try {
+    // Seed sessionState once; do not initiate connection here to avoid duplicates
+    chrome.idle.queryState(60, (state) => {
+      sessionState = state;
+    });
+  } catch (e) {
+    console.warn('idle.queryState seed failed:', e);
+  }
+}
+
+// Queue retention: keep last 24 hours; safety-capped to avoid unbounded growth
+async function queuePendingAutoOpenLink(push) {
+  try {
+    const data = await chrome.storage.local.get('pendingAutoOpen');
+    const list = Array.isArray(data.pendingAutoOpen) ? data.pendingAutoOpen : [];
+    if (!list.some(item => item.iden === push.iden)) {
+      if (!isValidAutoOpenUrl(push.url)) {
+        return;
+      }
+      list.push({ iden: push.iden, url: push.url, ts: Date.now() });
+      const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+      const pruned = list.filter(it => (it.ts || 0) >= cutoff);
+      const capped = pruned.length > pendingAutoOpenMax ? pruned.slice(-pendingAutoOpenMax) : pruned;
+      await chrome.storage.local.set({ pendingAutoOpen: capped });
+    }
+  } catch (e) {
+    console.warn('queuePendingAutoOpenLink failed:', e);
+  }
+}
+
+async function drainPendingAutoOpenLinks() {
+  if (drainPromise) return drainPromise;
+  drainPromise = _drainPendingAutoOpenLinksImpl();
+  try {
+    await drainPromise;
+  } finally {
+    drainPromise = null;
+  }
+}
+
+async function _drainPendingAutoOpenLinksImpl() {
+  try {
+    const cfg = await chrome.storage.local.get(['autoOpenLinks','autoOpenOnUnlock','autoOpenOnUnlockLimit','pendingAutoOpen']);
+    if (!cfg.autoOpenLinks || !cfg.autoOpenOnUnlock) return;
+    const list = Array.isArray(cfg.pendingAutoOpen) ? cfg.pendingAutoOpen : [];
+    if (list.length === 0) return;
+    // Deduplicate by iden (FIFO)
+    const seen = new Set();
+    const unique = [];
+    for (const item of list) {
+      if (!item || !item.url || seen.has(item.iden)) continue;
+      seen.add(item.iden);
+      unique.push(item);
+    }
+    let limit = parseInt(cfg.autoOpenOnUnlockLimit, 10);
+    if (Number.isNaN(limit)) limit = 10;
+    if (limit < 0) limit = 0;
+    const subset = limit > 0 ? unique.slice(-limit) : unique;
+    for (const item of subset) {
+      if (!isValidAutoOpenUrl(item.url)) continue;
+      try {
+        await chrome.tabs.create({ url: item.url, active: false });
+      } catch (e) {
+        console.warn('drainPendingAutoOpenLinks: tab open failed', e);
+      }
+    }
+    await chrome.storage.local.set({ pendingAutoOpen: [] });
+  } catch (e) {
+    console.warn('drainPendingAutoOpenLinks failed:', e);
+  }
+}
+
+function isValidAutoOpenUrl(url) {
+  try {
+    const u = new URL(url);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 
 async function playAlertSound() {
   try {
@@ -241,6 +360,11 @@ async function initializeEncryption() {
 // Consolidated auto-reconnection logic: check connection status periodically
 setInterval(async () => {
   try {
+    // Skip periodic reconnects while intentionally locked
+    if (sessionState === 'locked') {
+      const lockData = await chrome.storage.local.get('suppressWhenLocked');
+      if (lockData.suppressWhenLocked) return;
+    }
     const data = await chrome.storage.sync.get('accessToken');
     if (data.accessToken && connectionStatus === 'disconnected' && !ws) {
       // Auto-reconnect scenarios:
@@ -289,11 +413,13 @@ chrome.runtime.onStartup.addListener(() => {
 // Initialize immediately when service worker starts
 console.log('Service worker starting - initializing extension');
 initializeBackgroundI18n().then(async () => {
+  initIdleTracking();
   initializeExtension();
   await setupContextMenus();
 }).catch(async (error) => {
   console.error('Failed to initialize extension on startup:', error);
   // Fallback initialization without custom i18n
+  initIdleTracking();
   initializeExtension();
   await setupContextMenus();
 });
@@ -315,18 +441,11 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored)) {
     await updateBadge();
   }
+  // No cached settings — read on demand in call sites.
 });
 
 
-chrome.idle.onStateChanged.addListener((state) => {
-  if (state === 'active' && connectionStatus === 'disconnected' && accessToken) {
-    console.log('System resumed from idle - triggering reconnection');
-    // Reset attempts counter to allow fresh reconnection
-    reconnectAttempts = 0;
-    // Use existing reconnection logic directly
-    connectWebSocket();
-  }
-});
+
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.type) {
@@ -468,7 +587,15 @@ async function connectWebSocket() {
     connectionStatus = 'disconnected';
     return;
   }
-  
+  try {
+    const prefs = await getLockPrefs();
+    if (sessionState === 'locked' && prefs.suppressWhenLocked) {
+      connectionStatus = 'disconnected';
+      return; // Skip connecting while locked if user opted in
+    }
+  } catch (e) {
+    console.warn('connectWebSocket: prefs read failed', e);
+  }
   // Clean up existing connection
   if (ws) {
     ws.close();
@@ -609,13 +736,22 @@ function startHeartbeatMonitor() {
   }, 35000);
 }
 
-function handleReconnection() {
+async function handleReconnection() {
   if (!accessToken) {
     console.log('No access token available for reconnection');
     connectionStatus = 'disconnected';
     return;
   }
-  
+  try {
+    const prefs = await getLockPrefs();
+    if (sessionState === 'locked' && prefs.suppressWhenLocked) {
+    connectionStatus = 'disconnected';
+    return; // Do not attempt reconnects while locked if user opted in
+    }
+  } catch (e) {
+    console.warn('handleReconnection: prefs read failed', e);
+  }
+
   reconnectAttempts++;
   console.log(`Reconnection attempt ${reconnectAttempts}/${maxReconnectAttempts}`);
   
@@ -741,6 +877,19 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
 }
 
 async function showNotificationForPush(push, autoOpenLinks = false) {
+  // Global suppression while locked: do not show Chrome notifications for pushes
+  try {
+    const prefs = await getLockPrefs();
+    if (prefs.suppressWhenLocked && sessionState === 'locked') {
+      if (push.type === 'link' && push.url && prefs.autoOpenLinks && prefs.autoOpenOnUnlock) {
+        await queuePendingAutoOpenLink(push);
+      }
+      return;
+    }
+  } catch (e) {
+    console.warn('showNotificationForPush: prefs read failed', e);
+  }
+
   let notificationBody = '';
   
   if (push.type === 'note') {
@@ -789,7 +938,17 @@ async function showNotificationForPush(push, autoOpenLinks = false) {
   
   // Auto-open link pushes in background tabs (only if enabled and notification is created)
   if (push.type === 'link' && push.url && autoOpenLinks) {
-    chrome.tabs.create({ url: push.url, active: false });
+    if (sessionState === 'active') {
+      if (isValidAutoOpenUrl(push.url)) {
+        chrome.tabs.create({ url: push.url, active: false });
+      }
+    } else if (sessionState === 'locked') {
+      // Queue only when specifically locked (not idle)
+      const cfg = await chrome.storage.local.get('autoOpenOnUnlock');
+      if (cfg.autoOpenOnUnlock) {
+        await queuePendingAutoOpenLink(push);
+      }
+    }
   }
 }
 
@@ -798,6 +957,14 @@ async function handleMirrorNotification(mirrorData) {
   const configData = await chrome.storage.local.get('notificationMirroring');
   if (!configData.notificationMirroring) {
     return;
+  }
+  try {
+    const prefs = await getLockPrefs();
+    if (prefs.suppressWhenLocked && sessionState === 'locked') {
+      return; // Do not store or show suppressed mirrors while locked
+    }
+  } catch (e) {
+    console.warn('handleMirrorNotification: prefs read failed', e);
   }
 
   // Check if this is a dismissal notification

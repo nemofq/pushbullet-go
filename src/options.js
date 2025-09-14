@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   const autoOpenOnResumeCheckbox = document.getElementById('autoOpenOnResume');
   const autoOpenOnResumeToggle = document.getElementById('autoOpenOnResumeToggle');
   const autoOpenOnResumeContainer = document.getElementById('autoOpenOnResumeContainer');
+  const autoOpenOnUnlockCheckbox = document.getElementById('autoOpenOnUnlock');
+  const autoOpenOnUnlockToggle = document.getElementById('autoOpenOnUnlockToggle');
+  const autoOpenOnUnlockContainer = document.getElementById('autoOpenOnUnlockContainer');
+  const autoOpenOnUnlockLimitInput = document.getElementById('autoOpenOnUnlockLimit');
+  const autoOpenOnUnlockLimitGroup = document.getElementById('autoOpenOnUnlockLimitGroup');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
@@ -27,6 +32,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const requireInteractionMirroredCheckbox = document.getElementById('requireInteractionMirrored');
   const requireInteractionMirroredToggle = document.getElementById('requireInteractionMirroredToggle');
   const requireInteractionMirroredContainer = document.getElementById('requireInteractionMirroredContainer');
+  const suppressWhenLockedCheckbox = document.getElementById('suppressWhenLocked');
+  const suppressWhenLockedToggle = document.getElementById('suppressWhenLockedToggle');
   const closeAsDismissCheckbox = document.getElementById('closeAsDismiss');
   const closeAsDismissToggle = document.getElementById('closeAsDismissToggle');
   const displayUnreadCountsCheckbox = document.getElementById('displayUnreadCounts');
@@ -77,7 +84,30 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
+    chrome.storage.local.get([
+      'remoteDeviceId',
+      'autoOpenLinks',
+      'autoOpenOnResume',
+      'autoOpenOnUnlock',
+      'autoOpenOnUnlockLimit',
+      'notificationMirroring',
+      'onlyBrowserPushes',
+      'hideBrowserPushes',
+      'showSmsShortcut',
+      'showQuickShare',
+      'requireInteraction',
+      'requireInteractionPushes',
+      'requireInteractionMirrored',
+      'closeAsDismiss',
+      'displayUnreadCounts',
+      'displayUnreadPushes',
+      'displayUnreadMirrored',
+      'colorMode',
+      'languageMode',
+      'defaultTab',
+      'playSoundOnNotification',
+      'suppressWhenLocked'
+    ], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -110,12 +140,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
     updateToggleVisual();
     
-    // Load auto-open on resume setting (default is false/off)
+    // Load auto-open on resume/unlock settings (default is false/off)
     autoOpenOnResumeCheckbox.checked = data.autoOpenOnResume || false;
     updateAutoOpenOnResumeToggleVisual();
+    autoOpenOnUnlockCheckbox.checked = data.autoOpenOnUnlock || false;
+    updateAutoOpenOnUnlockToggleVisual();
+
+    // Load auto-open on unlock limit (default 10; clamp 0..50; 0 means unlimited)
+    let unlockLimit = parseInt(data.autoOpenOnUnlockLimit, 10);
+    if (Number.isNaN(unlockLimit)) unlockLimit = 10;
+    unlockLimit = Math.max(0, Math.min(50, unlockLimit));
+    autoOpenOnUnlockLimitInput.value = String(unlockLimit);
     
-    // Show/hide the auto-open on resume option based on auto-open links setting
+    // Show/hide the auto-open sub-options based on auto-open links setting
     updateAutoOpenOnResumeVisibility();
+    updateAutoOpenOnUnlockLimitVisibility();
     
     // Load notification mirroring setting (default is false/off)
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
@@ -169,9 +208,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDisplayUnreadPushesToggleVisual();
     displayUnreadMirroredCheckbox.checked = data.displayUnreadMirrored !== false; // Default to true
     updateDisplayUnreadMirroredToggleVisual();
-    
+
     // Show/hide the display unread counts sub-options based on main setting
     updateDisplayUnreadCountsVisibility();
+
+    // Load lock awareness setting (default is false/off)
+    suppressWhenLockedCheckbox.checked = data.suppressWhenLocked || false;
+    updateSuppressWhenLockedToggleVisual();
     
     // Load language mode setting (default is 'auto')
     languageModeSelect.value = data.languageMode || 'auto';
@@ -213,11 +256,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     autoOpenLinksCheckbox.checked = !autoOpenLinksCheckbox.checked;
     updateToggleVisual();
     updateAutoOpenOnResumeVisibility();
+    updateAutoOpenOnUnlockLimitVisibility();
   });
 
   autoOpenOnResumeToggle.addEventListener('click', function() {
     autoOpenOnResumeCheckbox.checked = !autoOpenOnResumeCheckbox.checked;
     updateAutoOpenOnResumeToggleVisual();
+  });
+
+  autoOpenOnUnlockToggle.addEventListener('click', function() {
+    autoOpenOnUnlockCheckbox.checked = !autoOpenOnUnlockCheckbox.checked;
+    updateAutoOpenOnUnlockToggleVisual();
+    updateAutoOpenOnUnlockLimitVisibility();
+  });
+
+  autoOpenOnUnlockLimitInput.addEventListener('change', function() {
+    let v = parseInt(autoOpenOnUnlockLimitInput.value, 10);
+    if (Number.isNaN(v)) v = 10;
+    v = Math.max(0, Math.min(50, v));
+    autoOpenOnUnlockLimitInput.value = String(v);
   });
 
   notificationMirroringToggle.addEventListener('click', function() {
@@ -245,6 +302,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateDisplayUnreadCountsVisibility();
       }
     }
+  });
+
+  suppressWhenLockedToggle.addEventListener('click', function() {
+    suppressWhenLockedCheckbox.checked = !suppressWhenLockedCheckbox.checked;
+    updateSuppressWhenLockedToggleVisual();
   });
 
   onlyBrowserPushesToggle.addEventListener('click', function() {
@@ -668,6 +730,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       autoOpenOnResume: autoOpenOnResumeCheckbox.checked,
+      autoOpenOnUnlock: autoOpenOnUnlockCheckbox.checked,
+      autoOpenOnUnlockLimit: parseInt(autoOpenOnUnlockLimitInput.value, 10) || 10,
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
@@ -682,7 +746,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value,
       defaultTab: defaultTabSelect.value,
-      playSoundOnNotification: playSoundOnNotificationCheckbox.checked
+      playSoundOnNotification: playSoundOnNotificationCheckbox.checked,
+      suppressWhenLocked: suppressWhenLockedCheckbox.checked
     };
     
     // Handle encryption password - derive key and store locally
@@ -732,6 +797,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
       autoOpenOnResume: saveData.autoOpenOnResume,
+      autoOpenOnUnlock: saveData.autoOpenOnUnlock,
+      autoOpenOnUnlockLimit: saveData.autoOpenOnUnlockLimit,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
       showQuickShare: saveData.showQuickShare,
@@ -745,7 +812,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab,
-      playSoundOnNotification: saveData.playSoundOnNotification
+      playSoundOnNotification: saveData.playSoundOnNotification,
+      suppressWhenLocked: saveData.suppressWhenLocked
     };
     
     // Save to both storages
@@ -815,11 +883,29 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
+  function updateAutoOpenOnUnlockToggleVisual() {
+    if (autoOpenOnUnlockCheckbox.checked) {
+      autoOpenOnUnlockToggle.classList.add('active');
+    } else {
+      autoOpenOnUnlockToggle.classList.remove('active');
+    }
+  }
+  
   function updateAutoOpenOnResumeVisibility() {
     if (autoOpenLinksCheckbox.checked) {
       autoOpenOnResumeContainer.style.display = 'flex';
+      autoOpenOnUnlockContainer.style.display = 'flex';
     } else {
       autoOpenOnResumeContainer.style.display = 'none';
+      autoOpenOnUnlockContainer.style.display = 'none';
+    }
+  }
+
+  function updateAutoOpenOnUnlockLimitVisibility() {
+    if (autoOpenLinksCheckbox.checked && autoOpenOnUnlockCheckbox.checked) {
+      autoOpenOnUnlockLimitGroup.style.display = 'flex';
+    } else {
+      autoOpenOnUnlockLimitGroup.style.display = 'none';
     }
   }
   
@@ -832,6 +918,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       encryptionPasswordGroup.style.display = 'none';
     }
   }
+
+  function updateSuppressWhenLockedToggleVisual() {
+    if (suppressWhenLockedCheckbox.checked) {
+      suppressWhenLockedToggle.classList.add('active');
+    } else {
+      suppressWhenLockedToggle.classList.remove('active');
+    }
+  }
+
+  
   
   function updateOnlyBrowserPushesToggleVisual() {
     if (onlyBrowserPushesCheckbox.checked) {
