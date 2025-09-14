@@ -82,7 +82,17 @@ document.addEventListener('DOMContentLoaded', async function() {
   const data = { ...syncData, ...localData };
   
   (function(data) {
-    accessTokenInput.value = data.accessToken || '';
+    // Handle access token display like encryption password
+    if (data.accessToken) {
+      accessTokenInput.type = 'password';
+      accessTokenInput.placeholder = chrome.i18n.getMessage('access_token_set_placeholder');
+      accessTokenInput.value = '';
+      // Store the actual token in a data attribute for later use
+      accessTokenInput.dataset.hasToken = 'true';
+    } else {
+      accessTokenInput.value = '';
+      accessTokenInput.dataset.hasToken = 'false';
+    }
     devices = data.devices || [];
     people = data.people || [];
     populateDeviceSelects();
@@ -189,7 +199,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateRetrieveButton();
   })(data);
   
-  accessTokenInput.addEventListener('input', updateRetrieveButton);
+  accessTokenInput.addEventListener('input', function() {
+    // When user starts typing, change to text type for new input
+    if (accessTokenInput.type === 'password' && accessTokenInput.value) {
+      accessTokenInput.type = 'text';
+      accessTokenInput.placeholder = chrome.i18n.getMessage('access_token_placeholder');
+    }
+    updateRetrieveButton();
+  });
   
   // Handle toggle clicks
   autoOpenLinksToggle.addEventListener('click', function() {
@@ -354,7 +371,15 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 
   retrieveDevicesButton.addEventListener('click', async function() {
-    const accessToken = accessTokenInput.value.trim();
+    // Get access token - either from new input or existing stored
+    let accessToken = accessTokenInput.value.trim();
+    if (!accessToken && accessTokenInput.dataset.hasToken === 'true') {
+      // Use stored token
+      const existingData = await new Promise(resolve => {
+        chrome.storage.sync.get(['accessToken'], resolve);
+      });
+      accessToken = existingData.accessToken || '';
+    }
     if (!accessToken) return;
     
     retrieveDevicesButton.disabled = true;
@@ -527,16 +552,30 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 
   // Save All Settings
-  saveSettingsButton.addEventListener('click', function() {
-    const accessToken = accessTokenInput.value.trim();
+  saveSettingsButton.addEventListener('click', async function() {
+    // Handle access token - only update if user entered a new one
+    let accessTokenToSave;
+    if (accessTokenInput.value.trim()) {
+      // User entered a new token
+      accessTokenToSave = accessTokenInput.value.trim();
+    } else if (accessTokenInput.dataset.hasToken === 'true') {
+      // Keep existing token (don't save empty string)
+      const existingData = await new Promise(resolve => {
+        chrome.storage.sync.get(['accessToken'], resolve);
+      });
+      accessTokenToSave = existingData.accessToken || '';
+    } else {
+      accessTokenToSave = '';
+    }
+
     const selectedRemoteDevices = Array.from(remoteDeviceSelect.selectedOptions)
       .map(option => option.value)
       .filter(value => value)
       .join(',');
 
-    const saveData = { 
+    const saveData = {
       // General settings
-      accessToken: accessToken || '',
+      accessToken: accessTokenToSave,
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
       people: people,
@@ -640,7 +679,15 @@ document.addEventListener('DOMContentLoaded', async function() {
       } else {
         showSaveSuccess();
       }
-      
+
+      // Update access token field display after saving
+      if (accessTokenToSave) {
+        accessTokenInput.type = 'password';
+        accessTokenInput.value = '';
+        accessTokenInput.placeholder = chrome.i18n.getMessage('access_token_set_placeholder');
+        accessTokenInput.dataset.hasToken = 'true';
+      }
+
       chrome.runtime.sendMessage({ type: 'token_updated' });
     });
   });
@@ -661,8 +708,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   
   function updateRetrieveButton() {
-    const hasToken = accessTokenInput.value.trim().length > 0;
-    retrieveDevicesButton.disabled = !hasToken;
+    // Check if we have a token (either new input or existing stored)
+    const hasNewInput = accessTokenInput.value.trim().length > 0;
+    const hasStoredToken = accessTokenInput.dataset.hasToken === 'true';
+    retrieveDevicesButton.disabled = !hasNewInput && !hasStoredToken;
   }
   
   function updateToggleVisual() {

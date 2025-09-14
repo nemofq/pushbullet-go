@@ -310,7 +310,10 @@
     <!-- General Tab Content -->
     <div class="tab-content active" id="general-content">
         <div class="form-group">
-          <label for="accessToken" data-i18n="access_token_label">Access Token:</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label for="accessToken" style="margin: 0;" data-i18n="access_token_label">Access Token:</label>
+            <a href="#" id="oauthLink" style="font-size: 14px; color: var(--button-primary); text-decoration: none;" data-i18n="authenticate_via_oauth">Authenticate via OAuth</a>
+          </div>
           <input type="text" id="accessToken" data-i18n-placeholder="access_token_placeholder" placeholder="Enter your Pushbullet access token">
           <div class="tip">
             <span data-i18n="visit_link_tip">Visit</span> <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> <span data-i18n="get_access_token_tip">to get your access token.</span>

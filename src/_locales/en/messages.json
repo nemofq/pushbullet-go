@@ -66,7 +66,7 @@
     "message": "Enter your Pushbullet access token"
   },
   "visit_link_tip": {
-    "message": "Visit"
+    "message": "Or visit"
   },
   "get_access_token_tip": {
     "message": "to get your access token."
@@ -271,6 +271,12 @@
   },
   "encryption_password_set_placeholder": {
     "message": "Password is set (enter new to change)"
+  },
+  "access_token_set_placeholder": {
+    "message": "Access token is set (enter new to change)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Authenticate via OAuth"
   },
   "encryption_password_label": {
     "message": "End-to-end encryption password"
