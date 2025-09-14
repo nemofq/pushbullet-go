@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "为通知镜像启用加密。您的密码永远不会被存储。在所有设备上必须相同。"
+  },
+  "access_token_set_placeholder": {
+    "message": "访问令牌已设置（输入新的以更改）"
+  },
+  "authenticate_via_oauth": {
+    "message": "通过 OAuth 验证"
+  },
+  "oauth_error": {
+    "message": "OAuth 错误："
   }
 }

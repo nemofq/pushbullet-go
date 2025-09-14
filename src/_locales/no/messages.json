@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Aktiver kryptering for varselspeiling. Passordet ditt lagres aldri. Må være det samme på alle enheter."
+  },
+  "access_token_set_placeholder": {
+    "message": "Tilgangstoken er satt (skriv inn ny for å endre)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autentiser via OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth feil:"
   }
 }

@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Versleuteling inschakelen voor Melding Spiegelen. Uw wachtwoord wordt nooit opgeslagen. Moet hetzelfde zijn op alle apparaten."
+  },
+  "access_token_set_placeholder": {
+    "message": "Toegangstoken is ingesteld (voer nieuwe in om te wijzigen)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Authenticeren via OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth fout:"
   }
 }

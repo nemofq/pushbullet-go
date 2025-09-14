@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Activează criptarea pentru Oglindirea Notificărilor. Parola ta nu este niciodată stocată. Trebuie să fie aceeași pe toate dispozitivele."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token de acces setat (introduceți unul nou pentru a schimba)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autentifică prin OAuth"
+  },
+  "oauth_error": {
+    "message": "Eroare OAuth:"
   }
 }

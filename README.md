@@ -50,9 +50,9 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 
 ## Setup
 
-1. Get your access token from [Pushbullet settings](https://www.pushbullet.com/#settings/account)
-2. Click the extension icon and enter your token
-3. Start sending and receiving pushes!
+1. Click the extension icon and select "Open Settings"
+2. Enter access token via OAuth authentication or manually (from [Pushbullet settings](https://www.pushbullet.com/#settings/account))
+3. Click retrieve button and start sending and receiving pushes!
 4. Customize settings on the options page as needed
 
 ## Permissions
@@ -65,6 +65,7 @@ This extension requires the following permissions:
 - **Active Tab**: To access current page's URL for context menu actions
 - **Host Access**: To communicate with Pushbullet API servers
 - **Offscreen**: To play notification sound
+- **Tabs**: To complete OAuth process
 
 ## Privacy
 

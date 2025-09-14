@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Activer le chiffrement pour le mirroring des notifications. Votre mot de passe n'est jamais stocké. Doit être identique sur tous les appareils."
+  },
+  "access_token_set_placeholder": {
+    "message": "Jeton d'accès défini (saisissez-en un nouveau pour changer)"
+  },
+  "authenticate_via_oauth": {
+    "message": "S'authentifier via OAuth"
+  },
+  "oauth_error": {
+    "message": "Erreur OAuth :"
   }
 }

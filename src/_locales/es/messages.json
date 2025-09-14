@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Habilitar cifrado para el espejo de notificaciones. Tu contraseña nunca se almacena. Debe ser la misma en todos los dispositivos."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token de acceso configurado (introduce uno nuevo para cambiar)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autenticar vía OAuth"
+  },
+  "oauth_error": {
+    "message": "Error de OAuth:"
   }
 }

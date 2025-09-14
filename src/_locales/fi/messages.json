@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Ota käyttöön salaus ilmoitusten peilaukselle. Salasanaasi ei tallenneta koskaan. Sen pitää olla sama kaikissa laitteissa."
+  },
+  "access_token_set_placeholder": {
+    "message": "Käyttöoikeustunnus on asetettu (syötä uusi vaihtaaksesi)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Tunnistaudu OAuth:n kautta"
+  },
+  "oauth_error": {
+    "message": "OAuth-virhe:"
   }
 }

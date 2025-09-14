@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Titkosítás engedélyezése az értesítéstükrözéshez. A jelszava soha nem tárolódik. Ugyanannak kell lennie minden eszközön."
+  },
+  "access_token_set_placeholder": {
+    "message": "Hozzáférési token beállítva (új megadása a változtatáshoz)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Hitelesítés OAuth-on keresztül"
+  },
+  "oauth_error": {
+    "message": "OAuth hiba:"
   }
 }

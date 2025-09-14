@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "알림 미러링에 대해 암호화를 활성화합니다. 비밀번호는 저장되지 않습니다. 모든 기기에서 동일해야 합니다."
+  },
+  "access_token_set_placeholder": {
+    "message": "액세스 토큰이 설정됨 (변경하려면 새 것을 입력하세요)"
+  },
+  "authenticate_via_oauth": {
+    "message": "OAuth로 인증"
+  },
+  "oauth_error": {
+    "message": "OAuth 오류:"
   }
 }

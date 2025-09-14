@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "通知ミラーリングの暗号化を有効化。パスワードは保存されません。すべてのデバイスで同じである必要があります。"
+  },
+  "access_token_set_placeholder": {
+    "message": "アクセストークンが設定されています（変更するには新しいものを入力）"
+  },
+  "authenticate_via_oauth": {
+    "message": "OAuthで認証"
+  },
+  "oauth_error": {
+    "message": "OAuthエラー:"
   }
 }

@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Bật mã hóa cho Phản chiếu Thông báo. Mật khẩu của bạn không bao giờ được lưu trữ. Phải giống nhau trên tất cả thiết bị."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token truy cập đã được thiết lập (nhập token mới để thay đổi)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Xác thực qua OAuth"
+  },
+  "oauth_error": {
+    "message": "Lỗi OAuth:"
   }
 }

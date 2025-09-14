@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Активирайте шифроване за отразяване на известия. Паролата ви никога не се съхранява. Трябва да е същата на всички устройства."
+  },
+  "access_token_set_placeholder": {
+    "message": "Токенът за достъп е зададен (въведете нов за промяна)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Автентикиране чрез OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth грешка:"
   }
 }

@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Omogoči šifriranje za zrcaljenje obvestil. Vaše geslo nikoli ni shranjeno. Mora biti enako na vseh napravah."
+  },
+  "access_token_set_placeholder": {
+    "message": "Dostopni žeton je nastavljen (vnesite novega za spremembo)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Overi prek OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth napaka:"
   }
 }

@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Activar encriptação para Espelhamento de Notificações. A sua palavra-passe nunca é armazenada. Deve ser igual em todos os dispositivos."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token de acesso configurado (introduzir novo para alterar)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autenticar via OAuth"
+  },
+  "oauth_error": {
+    "message": "Erro OAuth:"
   }
 }

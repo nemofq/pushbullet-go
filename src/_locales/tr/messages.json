@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Bildirim Yansıtma için şifrelemeyi etkinleştir. Şifreniz asla saklanmaz. Tüm cihazlarda aynı olmalıdır."
+  },
+  "access_token_set_placeholder": {
+    "message": "Erişim simgesi ayarlandı (değiştirmek için yenisini girin)"
+  },
+  "authenticate_via_oauth": {
+    "message": "OAuth ile kimlik doğrula"
+  },
+  "oauth_error": {
+    "message": "OAuth hatası:"
   }
 }

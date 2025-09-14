@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Povolit šifrování pro zrcadlení oznámení. Vaše heslo se nikdy neuloží. Musí být stejné na všech zařízeních."
+  },
+  "access_token_set_placeholder": {
+    "message": "Přístupový token je nastaven (zadejte nový pro změnu)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autentizovat pomocí OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth chyba:"
   }
 }

@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Abilita la crittografia per il mirroring delle notifiche. La tua password non viene mai memorizzata. Deve essere la stessa su tutti i dispositivi."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token di accesso impostato (inserisci nuovo per modificare)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autenticare tramite OAuth"
+  },
+  "oauth_error": {
+    "message": "Errore OAuth:"
   }
 }

@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Aktivér kryptering for notifikationsspejling. Din adgangskode gemmes aldrig. Skal være den samme på alle enheder."
+  },
+  "access_token_set_placeholder": {
+    "message": "Adgangstoken er indstillet (indtast ny for at ændre)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autentificer via OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth fejl:"
   }
 }

@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "為通知映射啟用加密。您的密碼永遠不會被儲存。在所有裝置上必須相同。"
+  },
+  "access_token_set_placeholder": {
+    "message": "存取權杖已設定（輸入新的以變更）"
+  },
+  "authenticate_via_oauth": {
+    "message": "透過 OAuth 驗證"
+  },
+  "oauth_error": {
+    "message": "OAuth 錯誤："
   }
 }

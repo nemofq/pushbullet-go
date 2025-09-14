@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Verschlüsselung für Benachrichtigungsspiegelung aktivieren. Ihr Passwort wird niemals gespeichert. Muss auf allen Geräten gleich sein."
+  },
+  "access_token_set_placeholder": {
+    "message": "Zugriffstoken ist gesetzt (neuen eingeben zum Ändern)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Über OAuth authentifizieren"
+  },
+  "oauth_error": {
+    "message": "OAuth Fehler:"
   }
 }

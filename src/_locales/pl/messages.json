@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Włącz szyfrowanie dla duplikowania powiadomień. Twoje hasło nigdy nie jest przechowywane. Musi być takie samo na wszystkich urządzeniach."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token dostępu jest ustawiony (wprowadź nowy aby zmienić)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Uwierzytelnij przez OAuth"
+  },
+  "oauth_error": {
+    "message": "Błąd OAuth:"
   }
 }

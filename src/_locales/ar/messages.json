@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "تفعيل التشفير لنسخ الإشعارات. كلمة المرور لا يتم حفظها أبداً. يجب أن تكون نفسها على جميع الأجهزة."
+  },
+  "access_token_set_placeholder": {
+    "message": "تم تعيين رمز الوصول (أدخل جديد للتغيير)"
+  },
+  "authenticate_via_oauth": {
+    "message": "المصادقة عبر OAuth"
+  },
+  "oauth_error": {
+    "message": "خطأ OAuth:"
   }
 }

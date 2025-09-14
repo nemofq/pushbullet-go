@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Aktivera kryptering för aviseringsspegel. Ditt lösenord sparas aldrig. Måste vara samma på alla enheter."
+  },
+  "access_token_set_placeholder": {
+    "message": "Åtkomsttoken är inställd (ange ny för att ändra)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autentisera via OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth-fel:"
   }
 }

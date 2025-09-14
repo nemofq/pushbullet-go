@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "אפשר הצפנה לשיקוף התראות. הסיסמה שלך לעולם לא נשמרת. חייבת להיות זהה בכל המכשירים."
+  },
+  "access_token_set_placeholder": {
+    "message": "אסימון הגישה הוגדר (הזן חדש כדי לשנות)"
+  },
+  "authenticate_via_oauth": {
+    "message": "אמת באמצעות OAuth"
+  },
+  "oauth_error": {
+    "message": "שגיאת OAuth:"
   }
 }

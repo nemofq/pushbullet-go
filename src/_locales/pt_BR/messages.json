@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Habilitar criptografia para Espelhamento de Notificações. Sua senha nunca é armazenada. Deve ser a mesma em todos os dispositivos."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token de acesso configurado (digite novo para alterar)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autenticar via OAuth"
+  },
+  "oauth_error": {
+    "message": "Erro OAuth:"
   }
 }

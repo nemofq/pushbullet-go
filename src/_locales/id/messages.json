@@ -280,5 +280,14 @@
   },
   "encryption_help_text": {
     "message": "Aktifkan enkripsi untuk Pencerminan Notifikasi. Kata sandi Anda tidak pernah disimpan. Harus sama di semua perangkat."
+  },
+  "access_token_set_placeholder": {
+    "message": "Token akses telah ditetapkan (masukkan yang baru untuk mengubah)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Autentikasi melalui OAuth"
+  },
+  "oauth_error": {
+    "message": "Kesalahan OAuth:"
   }
 }
