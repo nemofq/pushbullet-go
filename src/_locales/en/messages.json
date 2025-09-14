@@ -80,6 +80,9 @@
   "retrieved": {
     "message": "Retrieved"
   },
+  "oauth_error": {
+    "message": "OAuth error:"
+  },
   "target_devices_label": {
     "message": "Target Devices:"
   },
