@@ -66,7 +66,7 @@
     "message": "请输入 Pushbullet 访问令牌"
   },
   "visit_link_tip": {
-    "message": "访问"
+    "message": "或访问"
   },
   "get_access_token_tip": {
     "message": "以获取访问令牌。"

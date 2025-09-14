@@ -80,9 +80,7 @@
   "retrieved": {
     "message": "Retrieved"
   },
-  "oauth_error": {
-    "message": "OAuth error:"
-  },
+
   "target_devices_label": {
     "message": "Target Devices:"
   },
@@ -275,12 +273,6 @@
   "encryption_password_set_placeholder": {
     "message": "Password is set (enter new to change)"
   },
-  "access_token_set_placeholder": {
-    "message": "Access token is set (enter new to change)"
-  },
-  "authenticate_via_oauth": {
-    "message": "Authenticate via OAuth"
-  },
   "encryption_password_label": {
     "message": "End-to-end encryption password"
   },
@@ -289,5 +281,14 @@
   },
   "encryption_help_text": {
     "message": "Enable encryption for Notification Mirroring. Your password is never stored. Must be the same on all devices."
+  },
+  "access_token_set_placeholder": {
+    "message": "Access token is set (enter new to change)"
+  },
+  "authenticate_via_oauth": {
+    "message": "Authenticate via OAuth"
+  },
+  "oauth_error": {
+    "message": "OAuth error:"
   }
 }

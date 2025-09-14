@@ -66,7 +66,7 @@
     "message": "Nhập mã truy cập Pushbullet"
   },
   "visit_link_tip": {
-    "message": "Truy cập"
+    "message": "Hoặc truy cập"
   },
   "get_access_token_tip": {
     "message": "để lấy mã truy cập."

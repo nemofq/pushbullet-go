@@ -66,7 +66,7 @@
     "message": "Indtast din Pushbullet-adgangstoken"
   },
   "visit_link_tip": {
-    "message": "Besøg"
+    "message": "Eller besøg"
   },
   "get_access_token_tip": {
     "message": "for at få din adgangstoken."
