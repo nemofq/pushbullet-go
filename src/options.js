@@ -481,13 +481,19 @@ document.addEventListener('DOMContentLoaded', async function() {
       const chromeDevice = devices.find(device => device.active && device.type === 'chrome');
       const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
       
-      // Save all data including userIden for encryption
-      const syncData = { devices: devices, people: people };
+      // Save all data including userIden for encryption and the access token
+      const syncData = { devices: devices, people: people, accessToken: accessToken };
       if (userIden) {
         syncData.userIden = userIden;
       }
       await chrome.storage.sync.set(syncData);
       await chrome.storage.local.set({ chromeDeviceId: chromeDeviceId });
+
+      // Update access token field display after saving (same as "Save" button behavior)
+      accessTokenInput.type = 'password';
+      accessTokenInput.value = '';
+      accessTokenInput.placeholder = chrome.i18n.getMessage('access_token_set_placeholder');
+      accessTokenInput.dataset.hasToken = 'true';
       
       // Check if we need to fetch initial pushes (only if we haven't done it before)
       const existingData = await chrome.storage.local.get('lastModified');
