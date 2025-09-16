@@ -102,6 +102,9 @@
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
   },
+  "suppress_when_locked_label": {
+    "message": "Don't show notifications when the computer is locked"
+  },
   "show_sms_shortcut_label": {
     "message": "Show Pushbullet SMS shortcut in popup"
   },

@@ -7,6 +7,9 @@ let reconnectAttempts = 0;
 let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
 let pushbulletCrypto = null;
+let sessionState = 'active';
+let idleTrackingInitialized = false;
+let refreshNeededAfterUnlock = false;
 
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
@@ -91,6 +94,59 @@ initializeBackgroundI18n().catch(error => {
 // Import crypto module
 importScripts('crypto.js');
 // @ts-ignore - PushbulletCrypto is loaded via importScripts
+
+// Helper to read lock/auto-open preferences on demand
+async function getLockPrefs() {
+  const s = await chrome.storage.local.get('suppressWhenLocked');
+  return {
+    suppressWhenLocked: !!s.suppressWhenLocked
+  };
+}
+
+function initIdleTracking() {
+  if (idleTrackingInitialized) return;
+  idleTrackingInitialized = true;
+
+  // 1) Authoritative, continuous state comes from the event stream
+  chrome.idle.onStateChanged.addListener((state) => {
+    sessionState = state;
+    if (state === 'active' && connectionStatus === 'disconnected' && accessToken) {
+      reconnectAttempts = 0;
+      connectWebSocket();
+    }
+    if (state === 'active') {
+      handleRefreshAfterUnlock();
+    }
+  });
+
+  // 2) One-time seed to initialize sessionState at startup
+  try {
+    // Seed sessionState once; do not initiate connection here to avoid duplicates
+    chrome.idle.queryState(60, (state) => {
+      sessionState = state;
+      if (state === 'active') {
+        handleRefreshAfterUnlock();
+      }
+    });
+  } catch (e) {
+    console.warn('idle.queryState seed failed:', e);
+  }
+}
+
+async function handleRefreshAfterUnlock() {
+  if (!refreshNeededAfterUnlock) {
+    return;
+  }
+  refreshNeededAfterUnlock = false;
+  try {
+    const data = await chrome.storage.local.get('autoOpenOnResume');
+    const allowAutoOpenOnResume = !!data.autoOpenOnResume;
+    await refreshPushList(true, allowAutoOpenOnResume);
+  } catch (e) {
+    console.warn('handleRefreshAfterUnlock: refresh failed', e);
+    refreshNeededAfterUnlock = true;
+  }
+}
 
 async function playAlertSound() {
   try {
@@ -241,6 +297,11 @@ async function initializeEncryption() {
 // Consolidated auto-reconnection logic: check connection status periodically
 setInterval(async () => {
   try {
+    // Skip periodic reconnects while intentionally locked
+    if (sessionState === 'locked') {
+      const lockData = await chrome.storage.local.get('suppressWhenLocked');
+      if (lockData.suppressWhenLocked) return;
+    }
     const data = await chrome.storage.sync.get('accessToken');
     if (data.accessToken && connectionStatus === 'disconnected' && !ws) {
       // Auto-reconnect scenarios:
@@ -289,11 +350,13 @@ chrome.runtime.onStartup.addListener(() => {
 // Initialize immediately when service worker starts
 console.log('Service worker starting - initializing extension');
 initializeBackgroundI18n().then(async () => {
+  initIdleTracking();
   initializeExtension();
   await setupContextMenus();
 }).catch(async (error) => {
   console.error('Failed to initialize extension on startup:', error);
   // Fallback initialization without custom i18n
+  initIdleTracking();
   initializeExtension();
   await setupContextMenus();
 });
@@ -314,17 +377,6 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
   // Update badge when display settings change
   if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored)) {
     await updateBadge();
-  }
-});
-
-
-chrome.idle.onStateChanged.addListener((state) => {
-  if (state === 'active' && connectionStatus === 'disconnected' && accessToken) {
-    console.log('System resumed from idle - triggering reconnection');
-    // Reset attempts counter to allow fresh reconnection
-    reconnectAttempts = 0;
-    // Use existing reconnection logic directly
-    connectWebSocket();
   }
 });
 
@@ -468,7 +520,15 @@ async function connectWebSocket() {
     connectionStatus = 'disconnected';
     return;
   }
-  
+  try {
+    const prefs = await getLockPrefs();
+    if (sessionState === 'locked' && prefs.suppressWhenLocked) {
+      connectionStatus = 'disconnected';
+      return; // Skip connecting while locked if user opted in
+    }
+  } catch (e) {
+    console.warn('connectWebSocket: prefs read failed', e);
+  }
   // Clean up existing connection
   if (ws) {
     ws.close();
@@ -563,6 +623,15 @@ async function connectWebSocket() {
       if (data.type === 'nop') {
         startHeartbeatMonitor();
       } else if (data.type === 'tickle' && data.subtype === 'push') {
+        try {
+          const prefs = await getLockPrefs();
+          if (prefs.suppressWhenLocked && sessionState === 'locked') {
+            refreshNeededAfterUnlock = true;
+            return;
+          }
+        } catch (e) {
+          console.warn('tickle suppress check failed:', e);
+        }
         refreshPushList(true);
       } else if (data.type === 'push' && data.push && data.push.type === 'mirror') {
         handleMirrorNotification(data.push);
@@ -609,13 +678,22 @@ function startHeartbeatMonitor() {
   }, 35000);
 }
 
-function handleReconnection() {
+async function handleReconnection() {
   if (!accessToken) {
     console.log('No access token available for reconnection');
     connectionStatus = 'disconnected';
     return;
   }
-  
+  try {
+    const prefs = await getLockPrefs();
+    if (sessionState === 'locked' && prefs.suppressWhenLocked) {
+    connectionStatus = 'disconnected';
+    return; // Do not attempt reconnects while locked if user opted in
+    }
+  } catch (e) {
+    console.warn('handleReconnection: prefs read failed', e);
+  }
+
   reconnectAttempts++;
   console.log(`Reconnection attempt ${reconnectAttempts}/${maxReconnectAttempts}`);
   
@@ -741,6 +819,16 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
 }
 
 async function showNotificationForPush(push, autoOpenLinks = false) {
+  // Global suppression while locked: do not show Chrome notifications for pushes
+  try {
+    const prefs = await getLockPrefs();
+    if (prefs.suppressWhenLocked && sessionState === 'locked') {
+      return;
+    }
+  } catch (e) {
+    console.warn('showNotificationForPush: prefs read failed', e);
+  }
+
   let notificationBody = '';
   
   if (push.type === 'note') {
@@ -799,6 +887,15 @@ async function handleMirrorNotification(mirrorData) {
   if (!configData.notificationMirroring) {
     return;
   }
+  let suppressChromeNotification = false;
+  try {
+    const prefs = await getLockPrefs();
+    if (prefs.suppressWhenLocked && sessionState === 'locked') {
+      suppressChromeNotification = true;
+    }
+  } catch (e) {
+    console.warn('handleMirrorNotification: prefs read failed', e);
+  }
 
   // Check if this is a dismissal notification
   if (mirrorData.type === 'dismissal') {
@@ -831,8 +928,13 @@ async function handleMirrorNotification(mirrorData) {
     mirrorNotifications: notifications.slice(0, 100) 
   });
 
-  // Create Chrome notification
-  await showMirrorNotification(mirrorData);
+  // Increment unread mirrored notification count even if UI is suppressed
+  await incrementUnreadMirrorCount();
+
+  // Create Chrome notification unless we're suppressing UI while locked
+  if (!suppressChromeNotification) {
+    await showMirrorNotification(mirrorData);
+  }
 }
 
 async function showMirrorNotification(mirrorData) {
@@ -879,9 +981,6 @@ async function showMirrorNotification(mirrorData) {
   
   // Play alert sound
   await playAlertSound();
-  
-  // Increment unread mirrored notification count
-  await incrementUnreadMirrorCount();
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {

@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const requireInteractionMirroredCheckbox = document.getElementById('requireInteractionMirrored');
   const requireInteractionMirroredToggle = document.getElementById('requireInteractionMirroredToggle');
   const requireInteractionMirroredContainer = document.getElementById('requireInteractionMirroredContainer');
+  const suppressWhenLockedCheckbox = document.getElementById('suppressWhenLocked');
+  const suppressWhenLockedToggle = document.getElementById('suppressWhenLockedToggle');
   const closeAsDismissCheckbox = document.getElementById('closeAsDismiss');
   const closeAsDismissToggle = document.getElementById('closeAsDismissToggle');
   const displayUnreadCountsCheckbox = document.getElementById('displayUnreadCounts');
@@ -77,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'suppressWhenLocked'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -172,6 +174,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Show/hide the display unread counts sub-options based on main setting
     updateDisplayUnreadCountsVisibility();
+
+    // Load lock awareness setting (default is false/off)
+    suppressWhenLockedCheckbox.checked = data.suppressWhenLocked || false;
+    updateSuppressWhenLockedToggleVisual();
     
     // Load language mode setting (default is 'auto')
     languageModeSelect.value = data.languageMode || 'auto';
@@ -245,6 +251,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateDisplayUnreadCountsVisibility();
       }
     }
+  });
+
+  suppressWhenLockedToggle.addEventListener('click', function() {
+    suppressWhenLockedCheckbox.checked = !suppressWhenLockedCheckbox.checked;
+    updateSuppressWhenLockedToggleVisual();
   });
 
   onlyBrowserPushesToggle.addEventListener('click', function() {
@@ -676,7 +687,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       languageMode: languageModeSelect.value,
       colorMode: colorModeSelect.value,
       defaultTab: defaultTabSelect.value,
-      playSoundOnNotification: playSoundOnNotificationCheckbox.checked
+      playSoundOnNotification: playSoundOnNotificationCheckbox.checked,
+      suppressWhenLocked: suppressWhenLockedCheckbox.checked
     };
     
     // Handle encryption password - derive key and store locally
@@ -739,7 +751,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab,
-      playSoundOnNotification: saveData.playSoundOnNotification
+      playSoundOnNotification: saveData.playSoundOnNotification,
+      suppressWhenLocked: saveData.suppressWhenLocked
     };
     
     // Save to both storages
@@ -826,6 +839,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       encryptionPasswordGroup.style.display = 'none';
     }
   }
+
+  function updateSuppressWhenLockedToggleVisual() {
+    if (suppressWhenLockedCheckbox.checked) {
+      suppressWhenLockedToggle.classList.add('active');
+    } else {
+      suppressWhenLockedToggle.classList.remove('active');
+    }
+  }
+
+  
   
   function updateOnlyBrowserPushesToggleVisual() {
     if (onlyBrowserPushesCheckbox.checked) {
