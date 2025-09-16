@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load auto-open on resume setting (default is false/off)
     autoOpenOnResumeCheckbox.checked = data.autoOpenOnResume || false;
     updateAutoOpenOnResumeToggleVisual();
-
-    // Show/hide the auto-open on resume option based on auto-open links settin
+    
+    // Show/hide the auto-open on resume option based on auto-open links setting
     updateAutoOpenOnResumeVisibility();
     
     // Load notification mirroring setting (default is false/off)
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDisplayUnreadPushesToggleVisual();
     displayUnreadMirroredCheckbox.checked = data.displayUnreadMirrored !== false; // Default to true
     updateDisplayUnreadMirroredToggleVisual();
-
+    
     // Show/hide the display unread counts sub-options based on main setting
     updateDisplayUnreadCountsVisibility();
 

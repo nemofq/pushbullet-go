@@ -378,11 +378,7 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored)) {
     await updateBadge();
   }
-  // No cached settings — read on demand in call sites.
 });
-
-
-
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.type) {
