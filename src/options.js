@@ -549,75 +549,69 @@ document.addEventListener('DOMContentLoaded', async function() {
       e.preventDefault();
 
       // OAuth parameters
-      const clientId = 'VTCyJrhrZ7tDuDGJmcjimtsBSW0GDkjY';
-      const redirectUri = 'https://www.pushbullet.com/login-success';
+      const clientId = 'KvjVLv9nrb2jNftJwZ9QWwwNXc1h8Qvb';
+      // Use Chrome's identity redirect URL
+      const redirectUri = chrome.identity.getRedirectURL();
       const responseType = 'token';
-
+      
       // Build OAuth URL
       const authUrl = `https://www.pushbullet.com/authorize?` +
         `client_id=${encodeURIComponent(clientId)}&` +
         `redirect_uri=${encodeURIComponent(redirectUri)}&` +
         `response_type=${responseType}`;
 
-      // Open OAuth page in a new tab
-      chrome.tabs.create({ url: authUrl }, function(tab) {
-        const authTabId = tab.id;
-
-        // Listen for tab updates to detect when OAuth is complete
-        const tabUpdateListener = function(tabId, changeInfo, tab) {
-          if (tabId === authTabId && changeInfo.url) {
-            // Check if we've reached the success page with the access token
-            if (changeInfo.url.startsWith(redirectUri)) {
-              // Extract access token from URL fragment
-              const url = new URL(changeInfo.url);
-              const hashParams = new URLSearchParams(url.hash.substring(1));
-              const queryParams = new URLSearchParams(url.search);
-              const accessToken = hashParams.get('access_token');
-
-              // Check for errors in query string (for deny case) or hash fragment
-              const error = queryParams.get('error') || hashParams.get('error');
-
-              if (accessToken) {
-                // Fill in the access token field
-                accessTokenInput.value = accessToken;
-                accessTokenInput.type = 'text';
-                accessTokenInput.dataset.hasToken = 'false';
-
-                // Enable the retrieve devices button
-                retrieveDevicesButton.disabled = false;
-
-                // Close the OAuth tab
-                chrome.tabs.remove(authTabId);
-
-                // Remove the listener
-                chrome.tabs.onUpdated.removeListener(tabUpdateListener);
-              } else if (error) {
-                // Handle OAuth error
-                const errorPrefix = window.CustomI18n.getMessage('oauth_error') || 'OAuth error:';
-                showStatus(`${errorPrefix} ${error}`, 'error');
-
-                // Close the OAuth tab
-                chrome.tabs.remove(authTabId);
-
-                // Remove the listener
-                chrome.tabs.onUpdated.removeListener(tabUpdateListener);
-              }
+      // Launch the web auth flow
+      chrome.identity.launchWebAuthFlow(
+        {
+          url: authUrl,
+          interactive: true
+        },
+        function(responseUrl) {
+          if (chrome.runtime.lastError) {
+            // Handle errors (user cancelled, network error, etc.)
+            const errorMessage = chrome.runtime.lastError.message;
+            console.error('OAuth error:', chrome.runtime.lastError);
+            if (errorMessage && !errorMessage.includes('User cancelled')) {
+              const errorPrefix = window.CustomI18n.getMessage('oauth_error') || 'OAuth error:';
+              showStatus(`${errorPrefix} ${errorMessage}`, 'error');
             }
+            return;
           }
-        };
 
-        // Add the listener
-        chrome.tabs.onUpdated.addListener(tabUpdateListener);
+          if (responseUrl) {
+            console.log('Final redirect URL:', responseUrl); // Debug log
 
-        // Also listen for tab removal in case user closes it manually
-        const tabRemovedListener = function(removedTabId) {
-          if (removedTabId === authTabId) {
-            chrome.tabs.onUpdated.removeListener(tabUpdateListener);
-            chrome.tabs.onRemoved.removeListener(tabRemovedListener);
+            // Extract access token from URL fragment (Pushbullet returns it in the hash)
+            const url = new URL(responseUrl);
+            const hashParams = new URLSearchParams(url.hash.substring(1));
+            const accessToken = hashParams.get('access_token');
+
+            // Also check query params for errors
+            const queryParams = new URLSearchParams(url.search);
+            const error = queryParams.get('error') || hashParams.get('error');
+
+            if (accessToken) {
+              console.log('Access token retrieved successfully');
+              // Fill in the access token field
+              accessTokenInput.value = accessToken;
+              accessTokenInput.type = 'text';
+              accessTokenInput.dataset.hasToken = 'false';
+
+              // Enable the retrieve devices button
+              retrieveDevicesButton.disabled = false;
+            } else if (error) {
+              // Handle OAuth error
+              const errorPrefix = window.CustomI18n.getMessage('oauth_error') || 'OAuth error:';
+              showStatus(`${errorPrefix} ${error}`, 'error');
+            } else {
+              console.warn('No access token found in response URL');
+              showStatus('Failed to retrieve access token', 'error');
+            }
+          } else {
+            console.warn('Authorization flow cancelled or failed.');
           }
-        };
-        chrome.tabs.onRemoved.addListener(tabRemovedListener);
-      });
+        }
+      );
     });
   }
 
