@@ -148,15 +148,6 @@ async function handleRefreshAfterUnlock() {
   }
 }
 
-function isValidAutoOpenUrl(url) {
-  try {
-    const u = new URL(url);
-    return u.protocol === 'http:' || u.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
-
 async function playAlertSound() {
   try {
     // Check if sound is enabled
@@ -890,9 +881,7 @@ async function showNotificationForPush(push, autoOpenLinks = false) {
   
   // Auto-open link pushes in background tabs (only if enabled and notification is created)
   if (push.type === 'link' && push.url && autoOpenLinks) {
-    if (sessionState === 'active' && isValidAutoOpenUrl(push.url)) {
-      chrome.tabs.create({ url: push.url, active: false });
-    }
+    chrome.tabs.create({ url: push.url, active: false });
   }
 }
 

@@ -23,7 +23,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - (New) Filter to only show and notify pushes sent to browsers
 - (New) Control notifications from browser-sourced pushes (useful for multi-browser use case)
 - (New) Notification Mirroring (requires Pushbullet Android app installed and enabled in both Android app and Push Go settings)
-- (New) Lock awareness: suppress notifications while locked, optional auto‑open of link pushes after unlock
+- (New) Lock awareness: suppress notifications while locked
 - (New) Dark Mode (follows system by default, or choose manually)
 - (New) Supports i18n with 33 languages
 - (New) Unread count

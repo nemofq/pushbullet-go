@@ -79,28 +79,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get([
-      'remoteDeviceId',
-      'autoOpenLinks',
-      'autoOpenOnResume',
-      'notificationMirroring',
-      'onlyBrowserPushes',
-      'hideBrowserPushes',
-      'showSmsShortcut',
-      'showQuickShare',
-      'requireInteraction',
-      'requireInteractionPushes',
-      'requireInteractionMirrored',
-      'closeAsDismiss',
-      'displayUnreadCounts',
-      'displayUnreadPushes',
-      'displayUnreadMirrored',
-      'colorMode',
-      'languageMode',
-      'defaultTab',
-      'playSoundOnNotification',
-      'suppressWhenLocked'
-    ], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'suppressWhenLocked'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -133,11 +112,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
     updateToggleVisual();
     
-    // Load auto-open on resume/unlock settings (default is false/off)
+    // Load auto-open on resume setting (default is false/off)
     autoOpenOnResumeCheckbox.checked = data.autoOpenOnResume || false;
     updateAutoOpenOnResumeToggleVisual();
 
-    // Show/hide the auto-open sub-option based on auto-open links setting
+    // Show/hide the auto-open on resume option based on auto-open links settin
     updateAutoOpenOnResumeVisibility();
     
     // Load notification mirroring setting (default is false/off)
