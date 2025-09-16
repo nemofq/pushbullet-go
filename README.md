@@ -33,20 +33,16 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
 
+### Recommended
+
 Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/push-go/dghndapbehjdbhiffbckojkhoennbofg) or:
 
-### Method 1: Install from Source
-1. Download and unzip the source code from this repository
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable "Developer mode" in the top right
-4. Click "Load unpacked" and select the `/src` folder from the unzipped source code
+#### Manual
 
-### Method 2: Install from Release
-1. Download the extension (crx file) from the `release/` folder
+1. Download and unzip the extension from the `release/` folder
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top right
-4. Drag the crx file from Step 1 to the page to install
-5. Click "Keep this extension" at the top of extension page (in three-dot menus)
+4. Click "Load unpacked" and select the `/src` folder from unzipped
 
 ## Setup
 
@@ -65,7 +61,7 @@ This extension requires the following permissions:
 - **Active Tab**: To access current page's URL for context menu actions
 - **Host Access**: To communicate with Pushbullet API servers
 - **Offscreen**: To play notification sound
-- **Tabs**: To complete OAuth process
+- **Identity**: To complete OAuth process
 
 ## Privacy
 
