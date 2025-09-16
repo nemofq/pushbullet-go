@@ -891,10 +891,11 @@ async function handleMirrorNotification(mirrorData) {
   if (!configData.notificationMirroring) {
     return;
   }
+  let suppressChromeNotification = false;
   try {
     const prefs = await getLockPrefs();
     if (prefs.suppressWhenLocked && sessionState === 'locked') {
-      return; // Do not store or show suppressed mirrors while locked
+      suppressChromeNotification = true;
     }
   } catch (e) {
     console.warn('handleMirrorNotification: prefs read failed', e);
@@ -931,8 +932,13 @@ async function handleMirrorNotification(mirrorData) {
     mirrorNotifications: notifications.slice(0, 100) 
   });
 
-  // Create Chrome notification
-  await showMirrorNotification(mirrorData);
+  // Increment unread mirrored notification count even if UI is suppressed
+  await incrementUnreadMirrorCount();
+
+  // Create Chrome notification unless we're suppressing UI while locked
+  if (!suppressChromeNotification) {
+    await showMirrorNotification(mirrorData);
+  }
 }
 
 async function showMirrorNotification(mirrorData) {
@@ -979,9 +985,6 @@ async function showMirrorNotification(mirrorData) {
   
   // Play alert sound
   await playAlertSound();
-  
-  // Increment unread mirrored notification count
-  await incrementUnreadMirrorCount();
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
