@@ -37,7 +37,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 
 Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/push-go/dghndapbehjdbhiffbckojkhoennbofg) or:
 
-#### Manual
+### Manual
 
 1. Download and unzip the extension from the `release/` folder
 2. Open Chrome and navigate to `chrome://extensions/`
