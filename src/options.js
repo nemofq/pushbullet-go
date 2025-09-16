@@ -9,11 +9,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   const autoOpenOnResumeCheckbox = document.getElementById('autoOpenOnResume');
   const autoOpenOnResumeToggle = document.getElementById('autoOpenOnResumeToggle');
   const autoOpenOnResumeContainer = document.getElementById('autoOpenOnResumeContainer');
-  const autoOpenOnUnlockCheckbox = document.getElementById('autoOpenOnUnlock');
-  const autoOpenOnUnlockToggle = document.getElementById('autoOpenOnUnlockToggle');
-  const autoOpenOnUnlockContainer = document.getElementById('autoOpenOnUnlockContainer');
-  const autoOpenOnUnlockLimitInput = document.getElementById('autoOpenOnUnlockLimit');
-  const autoOpenOnUnlockLimitGroup = document.getElementById('autoOpenOnUnlockLimitGroup');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
@@ -88,8 +83,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       'remoteDeviceId',
       'autoOpenLinks',
       'autoOpenOnResume',
-      'autoOpenOnUnlock',
-      'autoOpenOnUnlockLimit',
       'notificationMirroring',
       'onlyBrowserPushes',
       'hideBrowserPushes',
@@ -143,18 +136,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load auto-open on resume/unlock settings (default is false/off)
     autoOpenOnResumeCheckbox.checked = data.autoOpenOnResume || false;
     updateAutoOpenOnResumeToggleVisual();
-    autoOpenOnUnlockCheckbox.checked = data.autoOpenOnUnlock || false;
-    updateAutoOpenOnUnlockToggleVisual();
 
-    // Load auto-open on unlock limit (default 10; clamp 0..50; 0 means unlimited)
-    let unlockLimit = parseInt(data.autoOpenOnUnlockLimit, 10);
-    if (Number.isNaN(unlockLimit)) unlockLimit = 10;
-    unlockLimit = Math.max(0, Math.min(50, unlockLimit));
-    autoOpenOnUnlockLimitInput.value = String(unlockLimit);
-    
-    // Show/hide the auto-open sub-options based on auto-open links setting
+    // Show/hide the auto-open sub-option based on auto-open links setting
     updateAutoOpenOnResumeVisibility();
-    updateAutoOpenOnUnlockLimitVisibility();
     
     // Load notification mirroring setting (default is false/off)
     notificationMirroringCheckbox.checked = data.notificationMirroring || false;
@@ -256,25 +240,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     autoOpenLinksCheckbox.checked = !autoOpenLinksCheckbox.checked;
     updateToggleVisual();
     updateAutoOpenOnResumeVisibility();
-    updateAutoOpenOnUnlockLimitVisibility();
   });
 
   autoOpenOnResumeToggle.addEventListener('click', function() {
     autoOpenOnResumeCheckbox.checked = !autoOpenOnResumeCheckbox.checked;
     updateAutoOpenOnResumeToggleVisual();
-  });
-
-  autoOpenOnUnlockToggle.addEventListener('click', function() {
-    autoOpenOnUnlockCheckbox.checked = !autoOpenOnUnlockCheckbox.checked;
-    updateAutoOpenOnUnlockToggleVisual();
-    updateAutoOpenOnUnlockLimitVisibility();
-  });
-
-  autoOpenOnUnlockLimitInput.addEventListener('change', function() {
-    let v = parseInt(autoOpenOnUnlockLimitInput.value, 10);
-    if (Number.isNaN(v)) v = 10;
-    v = Math.max(0, Math.min(50, v));
-    autoOpenOnUnlockLimitInput.value = String(v);
   });
 
   notificationMirroringToggle.addEventListener('click', function() {
@@ -730,8 +700,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       autoOpenOnResume: autoOpenOnResumeCheckbox.checked,
-      autoOpenOnUnlock: autoOpenOnUnlockCheckbox.checked,
-      autoOpenOnUnlockLimit: parseInt(autoOpenOnUnlockLimitInput.value, 10) || 10,
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
@@ -797,8 +765,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
       autoOpenOnResume: saveData.autoOpenOnResume,
-      autoOpenOnUnlock: saveData.autoOpenOnUnlock,
-      autoOpenOnUnlockLimit: saveData.autoOpenOnUnlockLimit,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
       showQuickShare: saveData.showQuickShare,
@@ -883,29 +849,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
-  function updateAutoOpenOnUnlockToggleVisual() {
-    if (autoOpenOnUnlockCheckbox.checked) {
-      autoOpenOnUnlockToggle.classList.add('active');
-    } else {
-      autoOpenOnUnlockToggle.classList.remove('active');
-    }
-  }
-  
   function updateAutoOpenOnResumeVisibility() {
     if (autoOpenLinksCheckbox.checked) {
       autoOpenOnResumeContainer.style.display = 'flex';
-      autoOpenOnUnlockContainer.style.display = 'flex';
     } else {
       autoOpenOnResumeContainer.style.display = 'none';
-      autoOpenOnUnlockContainer.style.display = 'none';
-    }
-  }
-
-  function updateAutoOpenOnUnlockLimitVisibility() {
-    if (autoOpenLinksCheckbox.checked && autoOpenOnUnlockCheckbox.checked) {
-      autoOpenOnUnlockLimitGroup.style.display = 'flex';
-    } else {
-      autoOpenOnUnlockLimitGroup.style.display = 'none';
     }
   }
   

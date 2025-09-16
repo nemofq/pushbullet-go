@@ -9,8 +9,7 @@ let keepAliveIntervalId = null;
 let pushbulletCrypto = null;
 let sessionState = 'active';
 let idleTrackingInitialized = false;
-let drainPromise = null;
-const pendingAutoOpenMax = 300; // safety cap to avoid unbounded queue growth
+let refreshNeededAfterUnlock = false;
 
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
@@ -98,18 +97,9 @@ importScripts('crypto.js');
 
 // Helper to read lock/auto-open preferences on demand
 async function getLockPrefs() {
-  const s = await chrome.storage.local.get([
-    'suppressWhenLocked',
-    'autoOpenLinks',
-    'autoOpenOnUnlock',
-    'autoOpenOnUnlockLimit'
-  ]);
-  const limitNum = parseInt(s.autoOpenOnUnlockLimit, 10);
+  const s = await chrome.storage.local.get('suppressWhenLocked');
   return {
-    suppressWhenLocked: !!s.suppressWhenLocked,
-    autoOpenLinks: !!s.autoOpenLinks,
-    autoOpenOnUnlock: !!s.autoOpenOnUnlock,
-    autoOpenOnUnlockLimit: Number.isNaN(limitNum) ? 10 : limitNum
+    suppressWhenLocked: !!s.suppressWhenLocked
   };
 }
 
@@ -125,7 +115,7 @@ function initIdleTracking() {
       connectWebSocket();
     }
     if (state === 'active') {
-      drainPendingAutoOpenLinks();
+      handleRefreshAfterUnlock();
     }
   });
 
@@ -134,71 +124,27 @@ function initIdleTracking() {
     // Seed sessionState once; do not initiate connection here to avoid duplicates
     chrome.idle.queryState(60, (state) => {
       sessionState = state;
+      if (state === 'active') {
+        handleRefreshAfterUnlock();
+      }
     });
   } catch (e) {
     console.warn('idle.queryState seed failed:', e);
   }
 }
 
-// Queue retention: keep last 24 hours; safety-capped to avoid unbounded growth
-async function queuePendingAutoOpenLink(push) {
-  try {
-    const data = await chrome.storage.local.get('pendingAutoOpen');
-    const list = Array.isArray(data.pendingAutoOpen) ? data.pendingAutoOpen : [];
-    if (!list.some(item => item.iden === push.iden)) {
-      if (!isValidAutoOpenUrl(push.url)) {
-        return;
-      }
-      list.push({ iden: push.iden, url: push.url, ts: Date.now() });
-      const cutoff = Date.now() - 24 * 60 * 60 * 1000;
-      const pruned = list.filter(it => (it.ts || 0) >= cutoff);
-      const capped = pruned.length > pendingAutoOpenMax ? pruned.slice(-pendingAutoOpenMax) : pruned;
-      await chrome.storage.local.set({ pendingAutoOpen: capped });
-    }
-  } catch (e) {
-    console.warn('queuePendingAutoOpenLink failed:', e);
+async function handleRefreshAfterUnlock() {
+  if (!refreshNeededAfterUnlock) {
+    return;
   }
-}
-
-async function drainPendingAutoOpenLinks() {
-  if (drainPromise) return drainPromise;
-  drainPromise = _drainPendingAutoOpenLinksImpl();
+  refreshNeededAfterUnlock = false;
   try {
-    await drainPromise;
-  } finally {
-    drainPromise = null;
-  }
-}
-
-async function _drainPendingAutoOpenLinksImpl() {
-  try {
-    const cfg = await chrome.storage.local.get(['autoOpenLinks','autoOpenOnUnlock','autoOpenOnUnlockLimit','pendingAutoOpen']);
-    if (!cfg.autoOpenLinks || !cfg.autoOpenOnUnlock) return;
-    const list = Array.isArray(cfg.pendingAutoOpen) ? cfg.pendingAutoOpen : [];
-    if (list.length === 0) return;
-    // Deduplicate by iden (FIFO)
-    const seen = new Set();
-    const unique = [];
-    for (const item of list) {
-      if (!item || !item.url || seen.has(item.iden)) continue;
-      seen.add(item.iden);
-      unique.push(item);
-    }
-    let limit = parseInt(cfg.autoOpenOnUnlockLimit, 10);
-    if (Number.isNaN(limit)) limit = 10;
-    if (limit < 0) limit = 0;
-    const subset = limit > 0 ? unique.slice(-limit) : unique;
-    for (const item of subset) {
-      if (!isValidAutoOpenUrl(item.url)) continue;
-      try {
-        await chrome.tabs.create({ url: item.url, active: false });
-      } catch (e) {
-        console.warn('drainPendingAutoOpenLinks: tab open failed', e);
-      }
-    }
-    await chrome.storage.local.set({ pendingAutoOpen: [] });
+    const data = await chrome.storage.local.get('autoOpenOnResume');
+    const allowAutoOpenOnResume = !!data.autoOpenOnResume;
+    await refreshPushList(true, allowAutoOpenOnResume);
   } catch (e) {
-    console.warn('drainPendingAutoOpenLinks failed:', e);
+    console.warn('handleRefreshAfterUnlock: refresh failed', e);
+    refreshNeededAfterUnlock = true;
   }
 }
 
@@ -690,6 +636,15 @@ async function connectWebSocket() {
       if (data.type === 'nop') {
         startHeartbeatMonitor();
       } else if (data.type === 'tickle' && data.subtype === 'push') {
+        try {
+          const prefs = await getLockPrefs();
+          if (prefs.suppressWhenLocked && sessionState === 'locked') {
+            refreshNeededAfterUnlock = true;
+            return;
+          }
+        } catch (e) {
+          console.warn('tickle suppress check failed:', e);
+        }
         refreshPushList(true);
       } else if (data.type === 'push' && data.push && data.push.type === 'mirror') {
         handleMirrorNotification(data.push);
@@ -881,9 +836,6 @@ async function showNotificationForPush(push, autoOpenLinks = false) {
   try {
     const prefs = await getLockPrefs();
     if (prefs.suppressWhenLocked && sessionState === 'locked') {
-      if (push.type === 'link' && push.url && prefs.autoOpenLinks && prefs.autoOpenOnUnlock) {
-        await queuePendingAutoOpenLink(push);
-      }
       return;
     }
   } catch (e) {
@@ -938,16 +890,8 @@ async function showNotificationForPush(push, autoOpenLinks = false) {
   
   // Auto-open link pushes in background tabs (only if enabled and notification is created)
   if (push.type === 'link' && push.url && autoOpenLinks) {
-    if (sessionState === 'active') {
-      if (isValidAutoOpenUrl(push.url)) {
-        chrome.tabs.create({ url: push.url, active: false });
-      }
-    } else if (sessionState === 'locked') {
-      // Queue only when specifically locked (not idle)
-      const cfg = await chrome.storage.local.get('autoOpenOnUnlock');
-      if (cfg.autoOpenOnUnlock) {
-        await queuePendingAutoOpenLink(push);
-      }
+    if (sessionState === 'active' && isValidAutoOpenUrl(push.url)) {
+      chrome.tabs.create({ url: push.url, active: false });
     }
   }
 }
