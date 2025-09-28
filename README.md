@@ -71,10 +71,6 @@ This extension stores everything locally and does not transmit any information b
 
 This project uses the [AGPL-3.0 license](https://github.com/nemofq/pushbullet-go?tab=AGPL-3.0-1-ov-file). If you have any feature requests or feedback, feel free to create an issue or pull request.
 
-## Support
-
-This is a hobby project, you can buy me a coffee to support: https://buymeacoffee.com/nemofq
-
 ## One More Thing
 
 If you're also an iOS+Pushbullet user, you may find these Shortcuts useful:
