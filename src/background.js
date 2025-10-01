@@ -7,6 +7,7 @@ let reconnectAttempts = 0;
 let maxReconnectAttempts = 5;
 let keepAliveIntervalId = null;
 let pushbulletCrypto = null;
+let currentIdleState = 'active';
 
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
@@ -92,12 +93,24 @@ initializeBackgroundI18n().catch(error => {
 importScripts('crypto.js');
 // @ts-ignore - PushbulletCrypto is loaded via importScripts
 
+// Initialize idle state on extension load
+chrome.idle.queryState(60, (state) => {
+  currentIdleState = state;
+  console.log('Initial idle state:', state);
+});
+
 async function playAlertSound() {
   try {
     // Check if sound is enabled
     const soundSettings = await chrome.storage.local.get('playSoundOnNotification');
     if (soundSettings.playSoundOnNotification === false) {
       return; // Sound is disabled
+    }
+
+    // Check if screen is locked
+    if (currentIdleState === 'locked') {
+      console.log('Screen is locked - suppressing notification sound');
+      return;
     }
 
     // Check if offscreen document exists
@@ -319,6 +332,9 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
 
 
 chrome.idle.onStateChanged.addListener((state) => {
+  console.log('Idle state changed to:', state);
+  currentIdleState = state;
+
   if (state === 'active' && connectionStatus === 'disconnected' && accessToken) {
     console.log('System resumed from idle - triggering reconnection');
     // Reset attempts counter to allow fresh reconnection
