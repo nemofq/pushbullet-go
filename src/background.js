@@ -503,7 +503,8 @@ async function connectWebSocket() {
   
   connectionStatus = 'connecting';
   console.log(`Connecting to WebSocket... (attempt ${reconnectAttempts + 1})`);
-  
+  await updateBadge();
+
   // Check network connectivity before attempting connection
   if (!navigator.onLine) {
     console.log('No network connectivity - postponing WebSocket connection');
@@ -516,19 +517,21 @@ async function connectWebSocket() {
   ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
   
   // Set up error handler immediately - treat errors as disconnection
-  ws.onerror = (event) => {
+  ws.onerror = async (event) => {
     console.log('WebSocket error occurred - treating as disconnected:', {
       type: event.type,
       target: event.target?.readyState,
       timestamp: new Date().toISOString()
     });
     connectionStatus = 'disconnected';
+    await updateBadge();
     handleReconnection();
   };
   
   // Centralized WebSocket close handling
-  const handleWebSocketClose = (event) => {
+  const handleWebSocketClose = async (event) => {
     connectionStatus = 'disconnected';
+    await updateBadge();
     // Only log unexpected closures for debugging
     if (event.code !== 1000 && event.code !== 1001) {
       console.log('WebSocket closed unexpectedly:', event.code, event.reason || 'No reason provided');
@@ -540,6 +543,7 @@ async function connectWebSocket() {
     connectionStatus = 'connected';
     reconnectAttempts = 0;
     console.log('WebSocket connected successfully');
+    await updateBadge();
     startHeartbeatMonitor();
     keepAlive();
     
@@ -613,14 +617,15 @@ function startHeartbeatMonitor() {
   }
   
   // Start 35-second timer (5 seconds buffer over 30s heartbeat)
-  heartbeatTimer = setTimeout(() => {
+  heartbeatTimer = setTimeout(async () => {
     console.log('Heartbeat timeout - no nop message received');
     connectionStatus = 'disconnected';
-    
+    await updateBadge();
+
     if (ws) {
       ws.close();
     }
-    
+
     handleReconnection();
   }, 35000);
 }
@@ -1294,15 +1299,22 @@ async function clearUnreadMirrorCount() {
 
 async function updateBadge() {
   try {
+    // PRIORITY 1: Show ERR badge when disconnected
+    if (connectionStatus === 'disconnected') {
+      chrome.action.setBadgeText({ text: 'OFF' });
+      chrome.action.setBadgeBackgroundColor({ color: '#d32f2f' });
+      return;
+    }
+
     // Get display settings and counts
     const data = await chrome.storage.local.get([
-      'displayUnreadCounts', 
-      'displayUnreadPushes', 
+      'displayUnreadCounts',
+      'displayUnreadPushes',
       'displayUnreadMirrored',
-      'unreadPushCount', 
+      'unreadPushCount',
       'unreadMirrorCount'
     ]);
-    
+
     // Check if badge display is enabled
     if (!data.displayUnreadCounts) {
       chrome.action.setBadgeText({ text: '' });
