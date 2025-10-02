@@ -811,7 +811,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle responsive sizing for Chrome zoom/scaling
     // Use window.innerHeight to get the actual available viewport height after zoom is applied
-    body.style.height = window.innerHeight + "px";
+    requestAnimationFrame(() => {
+      body.style.height = window.innerHeight + "px";
+    });
   }
 
   function initializeI18n() {
