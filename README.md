@@ -1,9 +1,10 @@
 # Pushbullet Go
+
+[![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/dghndapbehjdbhiffbckojkhoennbofg)](https://chromewebstore.google.com/detail/push-go-for-pushbullet/dghndapbehjdbhiffbckojkhoennbofg) [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/dghndapbehjdbhiffbckojkhoennbofg)](https://chromewebstore.google.com/detail/push-go-for-pushbullet/dghndapbehjdbhiffbckojkhoennbofg) [![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/dghndapbehjdbhiffbckojkhoennbofg)](https://chromewebstore.google.com/detail/push-go-for-pushbullet/dghndapbehjdbhiffbckojkhoennbofg)
+
 > **Note 1**: The extension name has been changed to "Push Go" due to Chrome Web Store policy.
 >
 > **Note 2**: This is a third-party, open-source client for Pushbullet API. Not affiliated with or endorsed by the service.
-
-![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/dghndapbehjdbhiffbckojkhoennbofg?link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fpush-go-for-pushbullet%2Fdghndapbehjdbhiffbckojkhoennbofg) ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/dghndapbehjdbhiffbckojkhoennbofg?link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fpush-go-for-pushbullet%2Fdghndapbehjdbhiffbckojkhoennbofg) ![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/dghndapbehjdbhiffbckojkhoennbofg?link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fpush-go-for-pushbullet%2Fdghndapbehjdbhiffbckojkhoennbofg)
 
 ![Pushbullet Go](screenshots/1_popup.png)
 
