@@ -9,6 +9,8 @@ A lightweight Chrome extension for Pushbullet that enables receiving and sending
 
 This extension is compatible with Manifest V3, making it an alternative to the official extension which no longer works.
 
+[![](https://developer.chrome.com/static/docs/webstore/branding/image/UV4C4ybeBTsZt43U4xis.png)](https://chromewebstore.google.com/detail/push-go-for-pushbullet/dghndapbehjdbhiffbckojkhoennbofg)
+
 ## Features
 
 Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
