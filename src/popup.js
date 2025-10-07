@@ -97,11 +97,11 @@ document.addEventListener('DOMContentLoaded', function() {
   bodyInput.addEventListener('paste', async (e) => {
     const items = e.clipboardData.items;
     const files = [];
-    
+
     // Collect all files from clipboard
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      
+
       if (item.kind === 'file') {
         const file = item.getAsFile();
         if (file) {
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     }
-    
+
     // Only proceed if exactly one file is pasted
     if (files.length === 1) {
       e.preventDefault();
@@ -123,6 +123,46 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 2500);
     }
     // If no files, let default paste behavior continue
+  });
+
+  // Drag-and-drop event handlers for the entire popup
+  document.body.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.body.classList.add('dragging');
+  });
+
+  document.body.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Remove class when leaving the window entirely
+    if (e.clientX === 0 || e.clientY === 0 ||
+        e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+      document.body.classList.remove('dragging');
+    }
+  });
+
+  document.body.addEventListener('dragend', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.body.classList.remove('dragging');
+  });
+
+  document.body.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.body.classList.remove('dragging');
+
+    const files = Array.from(e.dataTransfer.files);
+
+    if (files.length === 1) {
+      await handleFilePaste(files[0]);
+    } else if (files.length > 1) {
+      bodyInput.placeholder = window.CustomI18n.getMessage('paste_one_file');
+      setTimeout(() => {
+        bodyInput.placeholder = window.CustomI18n.getMessage('type_or_paste_placeholder');
+      }, 2500);
+    }
   });
 
   sendFileButton.addEventListener('click', () => {

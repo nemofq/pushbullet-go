@@ -36,7 +36,7 @@
     "message": "未收到通知"
   },
   "paste_one_file": {
-    "message": "一次粘贴一张图片/文件。"
+    "message": "一次推送一张图片/文件。"
   },
   "copy_link": {
     "message": "复制链接"

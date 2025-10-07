@@ -56,18 +56,23 @@
       --status-disconnected: #f44336;
     }
 
-    body { 
-      width: 450px; 
+    body {
+      width: 450px;
       height: 600px;
-      margin: 0; 
-      font-family: sans-serif; 
-      display: flex; 
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
       flex-direction: column;
       position: relative;
       background: var(--bg-primary);
       color: var(--text-primary);
       transition: background-color 0.3s ease, color 0.3s ease;
       overflow: hidden;
+    }
+    body.dragging textarea {
+      border: 2px solid var(--button-primary);
+      padding: 9px 11px; /* Compensate for border increase (from 1px to 2px) */
+      background: var(--bg-secondary);
     }
     .header { 
       padding: 12px; 
