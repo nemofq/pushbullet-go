@@ -261,7 +261,7 @@ setInterval(async () => {
       // 2. Fresh extension start - initializeExtension should handle this, but as backup
       if (reconnectAttempts >= maxReconnectAttempts) {
         console.log('Auto-reconnection: periodic retry after max attempts reached');
-        resetConnection(); // Reset attempts counter for fresh start
+        await resetConnection(); // Reset attempts counter for fresh start
         connectWebSocket();
       }
       // For disable/enable scenario, initializeExtension() should handle the connection
@@ -384,6 +384,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       } else {
         console.log('No access token available for manual reconnection');
         connectionStatus = 'disconnected';
+        await updateBadge();
       }
       break;
     case 'send_push':
@@ -450,14 +451,15 @@ async function initializeExtension() {
     connectWebSocket();
   } else {
     connectionStatus = 'disconnected';
+    await updateBadge();
   }
-  
+
   // Update badge on initialization
   await updateBadge();
 }
 
 
-function resetConnection() {
+async function resetConnection() {
   // Clean up everything completely
   if (ws) {
     ws.close();
@@ -476,12 +478,14 @@ function resetConnection() {
   
   reconnectAttempts = 0;
   connectionStatus = 'disconnected';
+  await updateBadge();
   console.log('Connection reset - fresh start');
 }
 
 async function connectWebSocket() {
   if (!accessToken) {
     connectionStatus = 'disconnected';
+    await updateBadge();
     return;
   }
   
@@ -630,10 +634,11 @@ function startHeartbeatMonitor() {
   }, 35000);
 }
 
-function handleReconnection() {
+async function handleReconnection() {
   if (!accessToken) {
     console.log('No access token available for reconnection');
     connectionStatus = 'disconnected';
+    await updateBadge();
     return;
   }
   
@@ -659,6 +664,7 @@ function handleReconnection() {
   } else {
     console.log('Max individual reconnection attempts reached (25s total) - periodic check will take over');
     connectionStatus = 'disconnected';
+    await updateBadge();
   }
 }
 
@@ -1299,8 +1305,8 @@ async function clearUnreadMirrorCount() {
 
 async function updateBadge() {
   try {
-    // PRIORITY 1: Show ERR badge when disconnected
-    if (connectionStatus === 'disconnected') {
+    // PRIORITY 1: Show OFF badge when not connected
+    if (connectionStatus !== 'connected') {
       chrome.action.setBadgeText({ text: 'OFF' });
       chrome.action.setBadgeBackgroundColor({ color: '#d32f2f' });
       return;
