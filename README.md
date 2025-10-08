@@ -19,7 +19,7 @@ This extension is compatible with Manifest V3, making it an alternative to the o
 Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 
 - Receive and send pushes
-- Push files/images by pasting or uploading (in standalone window due to Chrome's restriction)
+- Push files/images by pasting, dragging, or uploading (in standalone window due to Chrome's restriction)
 - Push current page's URL, selected text, or images from context menu with device/people selection
 - Control which devices to push to by selecting devices
 - Notifications for received pushes with buttons to open links and dismiss
