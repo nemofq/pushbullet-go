@@ -17,8 +17,33 @@
       --progress-fill: #4caf50;
     }
 
-    .theme-dark,
-    .theme-system.system-dark {
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --border-primary: #555555;
+        --border-hover: #4caf50;
+        --button-hover-text: #4caf50;
+        --progress-bg: #404040;
+        --progress-fill: #4caf50;
+      }
+    }
+
+    .theme-light {
+      --bg-primary: #ffffff;
+      --bg-secondary: #ffffff;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+      --border-primary: #cccccc;
+      --border-hover: #4caf50;
+      --button-hover-text: #4caf50;
+      --progress-bg: #f0f0f0;
+      --progress-fill: #4caf50;
+    }
+
+    .theme-dark {
       --bg-primary: #1a1a1a;
       --bg-secondary: #2d2d2d;
       --text-primary: #ffffff;

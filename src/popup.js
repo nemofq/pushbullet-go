@@ -836,19 +836,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function applyColorMode(mode) {
     const body = document.body;
-    
+
     // Remove existing theme classes
     body.classList.remove('theme-light', 'theme-dark', 'theme-system');
-    
-    // Add new theme class
-    body.classList.add(`theme-${mode}`);
-    
-    // For system mode, detect user's preference
-    if (mode === 'system') {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      body.classList.toggle('system-dark', prefersDark);
+
+    // Add new theme class (or nothing for system mode, :root handles it)
+    if (mode !== 'system') {
+      body.classList.add(`theme-${mode}`);
     }
-    
+
     // Handle responsive sizing for Chrome zoom/scaling
     // Use window.innerHeight to get the actual available viewport height after zoom is applied
     requestAnimationFrame(() => {

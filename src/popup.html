@@ -30,8 +30,59 @@
       --status-disconnected: #f44336;
     }
 
-    .theme-dark,
-    .theme-system.system-dark {
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --bg-tertiary: #242424;
+        --bg-header: #1a1a1a;
+        --bg-message-sent: #4caf50;
+        --bg-message-received: #2d2d2d;
+        --bg-message-received-hover: #353535;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-tertiary: #999999;
+        --text-white: #ffffff;
+        --text-link: #64b5f6;
+        --text-link-sent: #f0f0f0;
+        --border-primary: #404040;
+        --border-secondary: #555555;
+        --button-primary: #4caf50;
+        --button-primary-hover: #45a049;
+        --copy-button: #666666;
+        --copy-button-hover: #4caf50;
+        --status-connected: #4caf50;
+        --status-connecting: #ff9800;
+        --status-disconnected: #f44336;
+      }
+    }
+
+    .theme-light {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --bg-tertiary: #f9f9f9;
+      --bg-header: #ffffff;
+      --bg-message-sent: #68BF78;
+      --bg-message-received: #f0f0f0;
+      --bg-message-received-hover: #e8e8e8;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --text-white: #ffffff;
+      --text-link: #1976d2;
+      --text-link-sent: #f0f0f0;
+      --border-primary: #eeeeee;
+      --border-secondary: #dddddd;
+      --button-primary: #4caf50;
+      --button-primary-hover: #45a049;
+      --copy-button: #cccccc;
+      --copy-button-hover: #4caf50;
+      --status-connected: #4caf50;
+      --status-connecting: #ff9800;
+      --status-disconnected: #f44336;
+    }
+
+    .theme-dark {
       --bg-primary: #1a1a1a;
       --bg-secondary: #2d2d2d;
       --bg-tertiary: #242424;
