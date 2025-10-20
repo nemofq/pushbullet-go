@@ -158,9 +158,11 @@ async function migrateSpecificFieldsFromSyncToLocal() {
     // Fields to migrate from sync to local
     const fieldsToMigrate = [
       'remoteDeviceId',
-      'autoOpenLinks', 
+      'autoOpenLinks',
       'notificationMirroring',
       'onlyBrowserPushes',
+      'showOtherDevicePushes',
+      'showNoTargetPushes',
       'hideBrowserPushes',
       'showSmsShortcut',
       'colorMode',
@@ -709,16 +711,25 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
           // Show notifications for new pushes (only if from tickle, meaning real-time)
           if (isFromTickle) {
             // Apply device filtering for notifications (same as popup display)
-            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'autoOpenLinks', 'hideBrowserPushes']);
+            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'autoOpenLinks', 'hideBrowserPushes']);
             const localData = await chrome.storage.local.get('chromeDeviceId');
-            
+
             newPushes.forEach(push => {
-              // Apply "Only notify and show pushes to browsers" filter
-              let shouldShowPush = true;
-              
-              if (configData.onlyBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
-                // Only show pushes targeted to the Chrome device
-                shouldShowPush = push.target_device_iden === localData.chromeDeviceId;
+              // Apply new flexible push filtering
+              let shouldShowPush = false;
+
+              // Check if push should be shown based on target device
+              const targetDeviceIden = push.target_device_iden;
+
+              if (targetDeviceIden === localData.chromeDeviceId) {
+                // Push is targeted to current Chrome device
+                shouldShowPush = configData.onlyBrowserPushes !== false; // Default is true
+              } else if (targetDeviceIden && targetDeviceIden !== localData.chromeDeviceId) {
+                // Push is targeted to other device
+                shouldShowPush = configData.showOtherDevicePushes === true; // Default is false
+              } else if (!targetDeviceIden) {
+                // Push has no target device (sent to all)
+                shouldShowPush = configData.showNoTargetPushes === true; // Default is false
               }
               
               if (shouldShowPush) {

@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
   const onlyBrowserPushesToggle = document.getElementById('onlyBrowserPushesToggle');
+  const showOtherDevicePushesCheckbox = document.getElementById('showOtherDevicePushes');
+  const showOtherDevicePushesToggle = document.getElementById('showOtherDevicePushesToggle');
+  const showNoTargetPushesCheckbox = document.getElementById('showNoTargetPushes');
+  const showNoTargetPushesToggle = document.getElementById('showNoTargetPushesToggle');
   const hideBrowserPushesCheckbox = document.getElementById('hideBrowserPushes');
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
@@ -77,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -134,7 +138,39 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load only browser pushes setting (default is true/on)
     onlyBrowserPushesCheckbox.checked = data.onlyBrowserPushes !== false; // Default to true
     updateOnlyBrowserPushesToggleVisual();
-    
+
+    // Migration logic for new filter settings
+    if (data.showOtherDevicePushes === undefined || data.showNoTargetPushes === undefined) {
+      // First time loading after update - perform migration
+      if (data.onlyBrowserPushes === false) {
+        // Old setting was OFF - meant "show all pushes"
+        // New system: need ALL THREE switches ON (including flipping the first one)
+        onlyBrowserPushesCheckbox.checked = true;  // FLIP: false → true
+        showOtherDevicePushesCheckbox.checked = true;
+        showNoTargetPushesCheckbox.checked = true;
+      } else {
+        // Old setting was ON/undefined - meant "only Chrome"
+        // New system: only first switch ON
+        onlyBrowserPushesCheckbox.checked = true;  // Keep as true
+        showOtherDevicePushesCheckbox.checked = false;
+        showNoTargetPushesCheckbox.checked = false;
+      }
+      // Save ALL THREE migrated values immediately (including the corrected onlyBrowserPushes)
+      chrome.storage.local.set({
+        onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
+        showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
+        showNoTargetPushes: showNoTargetPushesCheckbox.checked
+      });
+      // Update visual for first switch since we may have flipped it
+      updateOnlyBrowserPushesToggleVisual();
+    } else {
+      // Load existing values
+      showOtherDevicePushesCheckbox.checked = data.showOtherDevicePushes || false;
+      showNoTargetPushesCheckbox.checked = data.showNoTargetPushes || false;
+    }
+    updateShowOtherDevicePushesToggleVisual();
+    updateShowNoTargetPushesToggleVisual();
+
     // Load hide browser pushes setting (default is false/off)
     hideBrowserPushesCheckbox.checked = data.hideBrowserPushes || false; // Default to false
     updateHideBrowserPushesToggleVisual();
@@ -250,6 +286,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   onlyBrowserPushesToggle.addEventListener('click', function() {
     onlyBrowserPushesCheckbox.checked = !onlyBrowserPushesCheckbox.checked;
     updateOnlyBrowserPushesToggleVisual();
+  });
+
+  showOtherDevicePushesToggle.addEventListener('click', function() {
+    showOtherDevicePushesCheckbox.checked = !showOtherDevicePushesCheckbox.checked;
+    updateShowOtherDevicePushesToggleVisual();
+  });
+
+  showNoTargetPushesToggle.addEventListener('click', function() {
+    showNoTargetPushesCheckbox.checked = !showNoTargetPushesCheckbox.checked;
+    updateShowNoTargetPushesToggleVisual();
   });
 
   hideBrowserPushesToggle.addEventListener('click', function() {
@@ -659,6 +705,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       devices: devices,
       people: people,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
+      showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
+      showNoTargetPushes: showNoTargetPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       autoOpenOnResume: autoOpenOnResumeCheckbox.checked,
@@ -723,6 +771,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const localSaveData = {
       remoteDeviceId: saveData.remoteDeviceId,
       onlyBrowserPushes: saveData.onlyBrowserPushes,
+      showOtherDevicePushes: saveData.showOtherDevicePushes,
+      showNoTargetPushes: saveData.showNoTargetPushes,
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
       autoOpenOnResume: saveData.autoOpenOnResume,
@@ -834,7 +884,23 @@ document.addEventListener('DOMContentLoaded', async function() {
       onlyBrowserPushesToggle.classList.remove('active');
     }
   }
-  
+
+  function updateShowOtherDevicePushesToggleVisual() {
+    if (showOtherDevicePushesCheckbox.checked) {
+      showOtherDevicePushesToggle.classList.add('active');
+    } else {
+      showOtherDevicePushesToggle.classList.remove('active');
+    }
+  }
+
+  function updateShowNoTargetPushesToggleVisual() {
+    if (showNoTargetPushesCheckbox.checked) {
+      showNoTargetPushesToggle.classList.add('active');
+    } else {
+      showNoTargetPushesToggle.classList.remove('active');
+    }
+  }
+
   function updateHideBrowserPushesToggleVisual() {
     if (hideBrowserPushesCheckbox.checked) {
       hideBrowserPushesToggle.classList.add('active');

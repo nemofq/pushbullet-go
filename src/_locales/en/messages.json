@@ -290,5 +290,17 @@
   },
   "oauth_error": {
     "message": "OAuth error:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Only notify and show pushes for the following"
+  },
+  "current_chrome_devices_label": {
+    "message": "Current device - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Other devices"
+  },
+  "pushes_without_target_label": {
+    "message": "Pushes without target device"
   }
 }

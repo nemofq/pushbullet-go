@@ -421,17 +421,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const [receivedData, sentData, configData, localData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.local.get('onlyBrowserPushes'),
+      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes']),
       chrome.storage.local.get('chromeDeviceId')
     ]);
-    
-    // Get received messages (filtered by "Only notify and show pushes to browsers" if set)
+
+    // Get received messages (filtered by new flexible filtering settings)
     let receivedMessages = receivedData.pushes || [];
-    if (configData.onlyBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
-      receivedMessages = receivedMessages.filter(push => 
-        push.target_device_iden === localData.chromeDeviceId
-      );
-    }
+    receivedMessages = receivedMessages.filter(push => {
+      const targetDeviceIden = push.target_device_iden;
+
+      if (targetDeviceIden === localData.chromeDeviceId) {
+        // Push is targeted to current Chrome device
+        return configData.onlyBrowserPushes !== false; // Default is true
+      } else if (targetDeviceIden && targetDeviceIden !== localData.chromeDeviceId) {
+        // Push is targeted to other device
+        return configData.showOtherDevicePushes === true; // Default is false
+      } else if (!targetDeviceIden) {
+        // Push has no target device (sent to all)
+        return configData.showNoTargetPushes === true; // Default is false
+      }
+
+      return false;
+    });
     
     // Get sent messages
     const sentMessages = sentData.sentMessages || [];

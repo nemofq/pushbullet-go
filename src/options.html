@@ -391,10 +391,36 @@
             Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
           </div>
         </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="only_browser_pushes_label">Only notify and show pushes to browsers</label>
+        <div class="form-group">
+          <label data-i18n="only_notify_show_pushes_title">Only notify and show pushes for the following</label>
+        </div>
+        <div class="toggle-container" style="margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="current_chrome_devices_label">Current device - Chrome(s)</span>
+          </label>
           <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
           <div class="toggle-switch" id="onlyBrowserPushesToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container" style="margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="other_devices_label">Other devices</span>
+          </label>
+          <input type="checkbox" id="showOtherDevicePushes" class="toggle-input">
+          <div class="toggle-switch" id="showOtherDevicePushesToggle">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="toggle-container" style="margin-left: 0px;">
+          <label class="toggle-label">
+            <span class="sub-option-icon">↳</span>
+            <span data-i18n="pushes_without_target_label">Pushes without target device</span>
+          </label>
+          <input type="checkbox" id="showNoTargetPushes" class="toggle-input">
+          <div class="toggle-switch" id="showNoTargetPushesToggle">
             <div class="toggle-slider"></div>
           </div>
         </div>
