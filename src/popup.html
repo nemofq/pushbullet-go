@@ -434,6 +434,59 @@
       word-wrap: normal;
       line-height: 1.4;
     }
+    .notification-actions {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .notification-copy-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+    .notification-copy-button svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--copy-button);
+      transition: fill 0.2s ease;
+    }
+    .notification-copy-button:hover {
+      background: rgba(76, 175, 80, 0.1);
+    }
+    .notification-copy-button:hover svg {
+      fill: var(--copy-button-hover);
+    }
+    .notification-delete-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+    .notification-delete-button svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--copy-button);
+      transition: fill 0.2s ease;
+    }
+    .notification-delete-button:hover {
+      background: rgba(244, 67, 54, 0.1);
+    }
+    .notification-delete-button:hover svg {
+      fill: #f44336;
+    }
     .sms-shortcut {
       display: flex;
       align-items: center;

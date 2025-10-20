@@ -404,6 +404,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     case 'clear_mirror_history':
       await clearMirrorHistory();
       break;
+    case 'delete_notification':
+      await deleteNotification(message.id);
+      break;
     case 'encryption_updated':
       initializeEncryption().then(() => {
         sendResponse({ success: true });
@@ -846,8 +849,9 @@ async function handleMirrorNotification(mirrorData) {
 
   // Extract needed fields for storage
   const notificationData = {
-    created: mirrorData.created && typeof mirrorData.created === 'number' && mirrorData.created > 0 
-      ? mirrorData.created 
+    id: crypto.randomUUID(), // Generate unique ID for reliable deletion
+    created: mirrorData.created && typeof mirrorData.created === 'number' && mirrorData.created > 0
+      ? mirrorData.created
       : Date.now() / 1000,  // Use current time in seconds if websocket timestamp is invalid
     icon: mirrorData.icon,
     title: mirrorData.title,
@@ -1831,13 +1835,28 @@ async function clearPushHistory() {
 
 async function clearMirrorHistory() {
   try {
-    await chrome.storage.local.set({ 
+    await chrome.storage.local.set({
       mirrorNotifications: [],
-      unreadMirrorCount: 0 
+      unreadMirrorCount: 0
     });
     await updateBadge();
     console.log('Mirror notification history cleared');
   } catch (error) {
     console.error('Failed to clear mirror history:', error);
+  }
+}
+
+async function deleteNotification(id) {
+  try {
+    const data = await chrome.storage.local.get('mirrorNotifications');
+    let notifications = data.mirrorNotifications || [];
+
+    // Filter out the notification with the matching unique ID
+    notifications = notifications.filter(notification => notification.id !== id);
+
+    await chrome.storage.local.set({ mirrorNotifications: notifications });
+    console.log('Notification deleted:', id);
+  } catch (error) {
+    console.error('Failed to delete notification:', error);
   }
 }

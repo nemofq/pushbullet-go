@@ -687,7 +687,40 @@ document.addEventListener('DOMContentLoaded', function() {
         bodyDiv.textContent = notification.body;
         cardDiv.appendChild(bodyDiv);
       }
-      
+
+      // Actions section with copy and delete buttons
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'notification-actions';
+
+      // Copy button (only if notification has body)
+      if (notification.body) {
+        const copyButton = document.createElement('button');
+        copyButton.className = 'notification-copy-button';
+        copyButton.title = window.CustomI18n.getMessage('copy_notification');
+        copyButton.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>';
+        copyButton.onclick = (e) => {
+          e.stopPropagation();
+          navigator.clipboard.writeText(notification.body);
+        };
+        actionsDiv.appendChild(copyButton);
+      }
+
+      // Delete button
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'notification-delete-button';
+      deleteButton.title = window.CustomI18n.getMessage('delete_notification');
+      deleteButton.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>';
+      deleteButton.onclick = (e) => {
+        e.stopPropagation();
+        chrome.runtime.sendMessage({
+          type: 'delete_notification',
+          id: notification.id
+        });
+      };
+
+      actionsDiv.appendChild(deleteButton);
+      cardDiv.appendChild(actionsDiv);
+
       fragment.appendChild(cardDiv);
     });
     

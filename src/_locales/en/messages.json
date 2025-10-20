@@ -302,5 +302,11 @@
   },
   "pushes_without_target_label": {
     "message": "Pushes without target device"
+  },
+  "delete_notification": {
+    "message": "Delete notification"
+  },
+  "copy_notification": {
+    "message": "Copy notification"
   }
 }
