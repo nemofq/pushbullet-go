@@ -21,7 +21,8 @@
   ],
   "host_permissions": [
     "https://api.pushbullet.com/*",
-    "https://*.pushbulletusercontent.com/*"
+    "https://*.pushbulletusercontent.com/*",
+    "https://*.pushbulletusercontent2.com/*"
   ],
   "background": {
     "service_worker": "background.js"
