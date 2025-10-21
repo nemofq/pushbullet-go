@@ -880,9 +880,9 @@ async function handleMirrorNotification(mirrorData) {
     dismissible: mirrorData.dismissible
   };
 
-  // Extract verification code (5 or 6 digits) from body if present
+  // Extract verification code (5-8 digits) from body if present
   if (notificationData.body) {
-    const codeMatch = notificationData.body.match(/\b\d{5,6}\b/);
+    const codeMatch = notificationData.body.match(/\b\d{5,8}\b/);
     if (codeMatch) {
       notificationData.verificationCode = codeMatch[0];
     }
