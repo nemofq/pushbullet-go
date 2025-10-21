@@ -437,7 +437,8 @@
     .notification-actions {
       display: flex;
       gap: 4px;
-      margin-top: 6px;
+      margin-top: 4px;
+      margin-bottom: -4px;
       align-items: center;
       justify-content: flex-end;
     }
@@ -579,6 +580,7 @@
     .verification-code-button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       background: var(--bg-secondary);
       color: var(--text-primary);
@@ -590,6 +592,7 @@
       font-weight: 500;
       margin-top: 8px;
       margin-bottom: 4px;
+      min-width: 95px;
       transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
     }
     .verification-code-button:hover {
