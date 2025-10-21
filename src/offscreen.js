@@ -1,22 +1,49 @@
-// Handle messages from the service worker
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'PLAY_ALERT_SOUND') {
-    const audio = document.getElementById('alertSound');
-    
-    // Play the sound
-    audio.play()
-      .then(() => {
-        console.log('Alert sound played successfully');
-        sendResponse({ success: true });
-      })
-      .catch(error => {
-        console.error('Error playing alert sound:', error);
-        sendResponse({ success: false, error: error.message });
-      });
-    
-    // Return true to indicate we will respond asynchronously
-    return true;
-  }
-});
+chrome.runtime.onMessage.addListener(handleMessages);
 
-console.log('Offscreen document ready for audio playback');
+async function handleMessages(message) {
+  if (message.target !== 'offscreen-doc') {
+    return;
+  }
+
+  switch (message.type) {
+    case 'copy-data-to-clipboard':
+      handleClipboardWrite(message.data);
+      break;
+    case 'PLAY_ALERT_SOUND':
+      await handleAudioPlayback();
+      break;
+    default:
+      console.warn(`Unexpected message type received: '${message.type}'.`);
+  }
+}
+
+const textEl = document.querySelector('#text');
+
+async function handleClipboardWrite(data) {
+  try {
+    if (typeof data !== 'string') {
+      throw new TypeError(
+        `Value provided must be a 'string', got '${typeof data}'.`
+      );
+    }
+
+    textEl.value = data;
+    textEl.select();
+    document.execCommand('copy');
+  } finally {
+    window.close();
+  }
+}
+
+async function handleAudioPlayback() {
+  try {
+    const audio = document.getElementById('alertSound');
+    await audio.play();
+    console.log('Alert sound played successfully');
+  } catch (error) {
+    console.error('Error playing alert sound:', error);
+  }
+  // Don't close window for audio - let it persist for multiple notifications
+}
+
+console.log('Offscreen document ready');

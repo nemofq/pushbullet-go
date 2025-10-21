@@ -120,28 +120,44 @@ async function playAlertSound() {
 
     // Create offscreen document if it doesn't exist
     if (existingContexts.length === 0) {
-      try {
-        await chrome.offscreen.createDocument({
-          url: 'offscreen.html',
-          reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
-          justification: 'Play notification alert sound'
-        });
-        console.log('Offscreen document created for audio playback');
-      } catch (error) {
-        // If creation fails (e.g., already exists), log and continue
-        console.warn('Could not create offscreen document:', error.message);
-      }
+      await chrome.offscreen.createDocument({
+        url: 'offscreen.html',
+        reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK, chrome.offscreen.Reason.CLIPBOARD],
+        justification: 'Play notification alert sound and copy verification code to the clipboard.'
+      });
     }
 
     // Send message to offscreen document to play sound
-    try {
-      await chrome.runtime.sendMessage({ type: 'PLAY_ALERT_SOUND' });
-    } catch (error) {
-      console.error('Error sending message to offscreen document:', error);
-    }
+    chrome.runtime.sendMessage({
+      type: 'PLAY_ALERT_SOUND',
+      target: 'offscreen-doc'
+    });
   } catch (error) {
     console.error('Failed to play alert sound:', error);
   }
+}
+
+async function copyToClipboard(value) {
+  // Check if offscreen document exists
+  const existingContexts = await chrome.runtime.getContexts({
+    contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
+  });
+
+  // Create offscreen document if it doesn't exist
+  if (existingContexts.length === 0) {
+    await chrome.offscreen.createDocument({
+      url: 'offscreen.html',
+      reasons: [chrome.offscreen.Reason.CLIPBOARD],
+      justification: 'Copy verification code to the clipboard.'
+    });
+  }
+
+  // Send message to offscreen document
+  chrome.runtime.sendMessage({
+    type: 'copy-data-to-clipboard',
+    target: 'offscreen-doc',
+    data: value
+  });
 }
 
 // One-time migration from sync to local storage for specific fields
@@ -875,70 +891,97 @@ async function handleMirrorNotification(mirrorData) {
   // Store in local storage (keep latest 100)
   const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
   const notifications = existingNotifications.mirrorNotifications || [];
-  
+
   notifications.unshift(notificationData);
-  await chrome.storage.local.set({ 
-    mirrorNotifications: notifications.slice(0, 100) 
+  await chrome.storage.local.set({
+    mirrorNotifications: notifications.slice(0, 100)
   });
 
   // Create Chrome notification
-  await showMirrorNotification(mirrorData);
+  await showMirrorNotification(notificationData);
 }
 
-async function showMirrorNotification(mirrorData) {
-  const appName = mirrorData.application_name || mirrorData.package_name || getMessage('unknown_app');
-  
+async function showMirrorNotification(notificationData) {
+  const appName = notificationData.application_name || notificationData.package_name || getMessage('unknown_app');
+
   let message = '';
-  if (mirrorData.title) {
-    message += `${mirrorData.title}\n`;
+  if (notificationData.title) {
+    message += `${notificationData.title}\n`;
   }
-  if (mirrorData.body) {
-    message += `${mirrorData.body}`;
+  if (notificationData.body) {
+    message += `${notificationData.body}`;
   }
-  
+
   const notificationOptions = {
     type: 'basic',
     title: appName,
     message: message.trim() || getMessage('new_notification')
   };
-  
+
   // Handle base64 icon if available
-  if (mirrorData.icon) {
-    notificationOptions.iconUrl = `data:image/jpeg;base64,${mirrorData.icon}`;
+  if (notificationData.icon) {
+    notificationOptions.iconUrl = `data:image/jpeg;base64,${notificationData.icon}`;
   } else {
     notificationOptions.iconUrl = 'assets/icon128.png';
   }
-  
-  // Add dismiss button only if dismissible is true
-  if (mirrorData.dismissible) {
-    notificationOptions.buttons = [
-      { title: getMessage('dismiss_button') }
-    ];
+
+  // Add buttons based on verification code and dismissible status
+  const buttons = [];
+
+  if (notificationData.verificationCode) {
+    buttons.push({ title: getMessage('copy_code') });
   }
-  
+
+  if (notificationData.dismissible) {
+    buttons.push({ title: getMessage('dismiss_button') });
+  }
+
+  if (buttons.length > 0) {
+    notificationOptions.buttons = buttons;
+  }
+
   // Check if require interaction is enabled for mirrored notifications
   const requireInteractionData = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored']);
   if (requireInteractionData.requireInteraction && requireInteractionData.requireInteractionMirrored) {
     notificationOptions.requireInteraction = true;
   }
-  
-  // Create unique notification ID that includes mirror data for identification
-  const notificationId = `pushbullet-mirror-${mirrorData.package_name}-${mirrorData.notification_id}-${Date.now()}`;
-  
+
+  // Use the UUID as notification ID for easy lookup
+  const notificationId = `pushbullet-mirror-${notificationData.id}`;
+
   chrome.notifications.create(notificationId, notificationOptions);
-  
+
   // Play alert sound
   await playAlertSound();
-  
+
   // Increment unread mirrored notification count
   await incrementUnreadMirrorCount();
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
   if (notificationId.startsWith('pushbullet-mirror-')) {
-    // Handle mirror notification button clicks
-    if (buttonIndex === 0) {
-      // Dismiss button clicked for mirror notification
+    // Extract UUID from notification ID
+    const uuid = notificationId.replace('pushbullet-mirror-', '');
+
+    // Find the notification by UUID
+    const data = await chrome.storage.local.get('mirrorNotifications');
+    const mirrorNotifications = data.mirrorNotifications || [];
+    const notification = mirrorNotifications.find(n => n.id === uuid);
+
+    if (!notification) {
+      console.error('Mirror notification not found:', uuid);
+      return;
+    }
+
+    // Check if notification has verification code
+    const hasVerificationCode = notification.verificationCode;
+
+    // Handle button clicks based on whether verification code is present
+    if (hasVerificationCode && buttonIndex === 0) {
+      // Copy code button clicked
+      await copyToClipboard(notification.verificationCode);
+    } else if ((hasVerificationCode && buttonIndex === 1) || (!hasVerificationCode && buttonIndex === 0)) {
+      // Dismiss button clicked
       await dismissMirrorNotification(notificationId);
       chrome.notifications.clear(notificationId);
     }
@@ -995,25 +1038,17 @@ chrome.notifications.onClosed.addListener(async (notificationId, byUser) => {
   if (!closeAsDismissData.closeAsDismiss) return;
   
   if (notificationId.startsWith('pushbullet-mirror-')) {
-    // Handle mirror notification close
-    // Check if the notification had dismiss button (only dismiss if it was dismissible)
-    const parts = notificationId.replace('pushbullet-mirror-', '').split('-');
-    if (parts.length >= 3) {
-      const timestamp = parts.pop();
-      const package_name = parts[0];
-      const notification_id = parts.slice(1).join('-');
-      
-      // Check if the notification was dismissible by looking at stored data
-      const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
-      const notifications = existingNotifications.mirrorNotifications || [];
-      const notification = notifications.find(n => 
-        n.package_name === package_name && n.notification_id === notification_id
-      );
-      
-      // Only dismiss if the notification was dismissible (had dismiss button)
-      if (notification && notification.dismissible) {
-        await dismissMirrorNotification(notificationId);
-      }
+    // Extract UUID from notification ID
+    const uuid = notificationId.replace('pushbullet-mirror-', '');
+
+    // Find the notification by UUID
+    const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
+    const notifications = existingNotifications.mirrorNotifications || [];
+    const notification = notifications.find(n => n.id === uuid);
+
+    // Only dismiss if the notification was dismissible (had dismiss button)
+    if (notification && notification.dismissible) {
+      await dismissMirrorNotification(notificationId);
     }
   } else if (notificationId.startsWith('pushbullet-')) {
     // Handle push notification close
@@ -1085,33 +1120,18 @@ async function dismissPush(pushIden) {
 
 async function dismissMirrorNotification(notificationId) {
   if (!accessToken) return;
-  
+
   try {
-    // Parse notification ID to extract mirror notification data
-    // Format: pushbullet-mirror-{package_name}-{notification_id}-{timestamp}
-    const parts = notificationId.replace('pushbullet-mirror-', '').split('-');
-    
-    if (parts.length < 3) {
-      console.error('Invalid mirror notification ID format');
-      return;
-    }
-    
-    // Extract package_name and notification_id (timestamp is the last part)
-    const timestamp = parts.pop(); // Remove timestamp
-    const package_name = parts[0];
-    const notification_id = parts.slice(1).join('-'); // Rejoin remaining parts as notification_id might contain dashes
-    
-    // Find the stored mirror notification to get complete data
+    // Extract UUID from notification ID
+    const uuid = notificationId.replace('pushbullet-mirror-', '');
+
+    // Find the stored mirror notification by UUID
     const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
     const notifications = existingNotifications.mirrorNotifications || [];
-    
-    // Find matching notification based on package_name and notification_id
-    const notification = notifications.find(n => 
-      n.package_name === package_name && n.notification_id === notification_id
-    );
-    
+    const notification = notifications.find(n => n.id === uuid);
+
     if (!notification) {
-      console.error('Mirror notification not found in storage');
+      console.error('Mirror notification not found in storage:', uuid);
       return;
     }
     
@@ -1162,28 +1182,24 @@ async function dismissMirrorNotification(notificationId) {
 
 async function handleMirrorDismissal(dismissalData) {
   try {
-    // Since notification IDs now include timestamps, we need to find and clear all matching notifications
-    // by iterating through active notifications and matching by package_name and notification_id
+    // Find matching notification in storage by package_name and notification_id
+    const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
+    const notifications = existingNotifications.mirrorNotifications || [];
+    const notification = notifications.find(n =>
+      n.package_name === dismissalData.package_name &&
+      n.notification_id === dismissalData.notification_id
+    );
+
+    if (!notification) {
+      console.log('No matching notification found for dismissal');
+      return;
+    }
+
+    // Clear the Chrome notification using the UUID
+    const notificationId = `pushbullet-mirror-${notification.id}`;
     const allNotifications = await chrome.notifications.getAll();
-    
-    const matchingNotificationIds = Object.keys(allNotifications).filter(notificationId => {
-      if (!notificationId.startsWith('pushbullet-mirror-')) return false;
-      
-      // Parse the notification ID to extract package_name and notification_id
-      const parts = notificationId.replace('pushbullet-mirror-', '').split('-');
-      if (parts.length < 3) return false;
-      
-      // Extract package_name and notification_id (timestamp is the last part)
-      parts.pop(); // Remove timestamp
-      const package_name = parts[0];
-      const notification_id = parts.slice(1).join('-');
-      
-      return package_name === dismissalData.package_name && 
-             notification_id === dismissalData.notification_id;
-    });
-    
-    // Clear all matching notifications
-    for (const notificationId of matchingNotificationIds) {
+
+    if (allNotifications[notificationId]) {
       console.log(`Clearing mirror notification for dismissal: ${dismissalData.package_name}`);
       await chrome.notifications.clear(notificationId);
     }

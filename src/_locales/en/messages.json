@@ -311,5 +311,8 @@
   },
   "copied": {
     "message": "Copied"
+  },
+  "copy_code": {
+    "message": "Copy code"
   }
 }
