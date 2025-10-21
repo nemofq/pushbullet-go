@@ -17,7 +17,8 @@
     "contextMenus",
     "activeTab",
     "offscreen",
-    "identity"
+    "identity",
+    "clipboardWrite"
   ],
   "host_permissions": [
     "https://api.pushbullet.com/*",

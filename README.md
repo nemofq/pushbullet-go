@@ -34,6 +34,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - (New) Quick share of current tab's link in the popup (default off, enable in options page)
 - (New) Play sound on notification (can be disabled in options page)
 - (New) End-to-end encryption for notification mirroring
+- (New) Extract and copy the verification code from mirrored notification
 
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
@@ -67,6 +68,7 @@ This extension requires the following permissions:
 - **Host Access**: To communicate with Pushbullet API servers
 - **Offscreen**: To play notification sound
 - **Identity**: To complete OAuth process
+- **clipboardWrite**: To copy the verification code in Chrome notification
 
 ## Privacy
 
