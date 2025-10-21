@@ -708,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Show "Copied" feedback
           const originalHTML = button.innerHTML;
-          button.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg><span class="code-text">${window.CustomI18n.getMessage('copied')}</span>`;
+          button.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg><span class="status-text">${window.CustomI18n.getMessage('copied')}</span>`;
           button.style.pointerEvents = 'none';
 
           setTimeout(() => {
