@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth napaka:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Obvešča in prikaži pushes samo za naslednje"
+  },
+  "current_chrome_devices_label": {
+    "message": "Trenutna naprava - Chrome"
+  },
+  "other_devices_label": {
+    "message": "Druge naprave"
+  },
+  "pushes_without_target_label": {
+    "message": "Pushes brez ciljne naprave"
+  },
+  "delete_notification": {
+    "message": "Izbriši obvestilo"
+  },
+  "copy_notification": {
+    "message": "Kopiraj obvestilo"
+  },
+  "copied": {
+    "message": "Kopirano"
+  },
+  "copy_code": {
+    "message": "Kopiraj kodo"
   }
 }

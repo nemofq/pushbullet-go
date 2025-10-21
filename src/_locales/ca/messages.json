@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "Error OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Només notificar i mostrar enviaments per als següents"
+  },
+  "current_chrome_devices_label": {
+    "message": "Dispositiu actual - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Altres dispositius"
+  },
+  "pushes_without_target_label": {
+    "message": "Enviaments sense dispositiu destinatari"
+  },
+  "delete_notification": {
+    "message": "Eliminar notificació"
+  },
+  "copy_notification": {
+    "message": "Copiar notificació"
+  },
+  "copied": {
+    "message": "Copiat"
+  },
+  "copy_code": {
+    "message": "Copiar codi"
   }
 }

@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "שגיאת OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "הצג והתרה רק עבור הדחיפות הבאות"
+  },
+  "current_chrome_devices_label": {
+    "message": "מכשיר נוכחי - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "מכשירים אחרים"
+  },
+  "pushes_without_target_label": {
+    "message": "דחיפות ללא מכשיר יעד"
+  },
+  "delete_notification": {
+    "message": "מחק התראה"
+  },
+  "copy_notification": {
+    "message": "העתק התראה"
+  },
+  "copied": {
+    "message": "הועתק"
+  },
+  "copy_code": {
+    "message": "העתק קוד"
   }
 }

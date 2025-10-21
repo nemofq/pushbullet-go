@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "Erreur OAuth :"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Notifier et afficher uniquement les pushs pour"
+  },
+  "current_chrome_devices_label": {
+    "message": "Appareil actuel - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Autres appareils"
+  },
+  "pushes_without_target_label": {
+    "message": "Pushs sans appareil cible"
+  },
+  "delete_notification": {
+    "message": "Supprimer la notification"
+  },
+  "copy_notification": {
+    "message": "Copier la notification"
+  },
+  "copied": {
+    "message": "Copié"
+  },
+  "copy_code": {
+    "message": "Copier code"
   }
 }

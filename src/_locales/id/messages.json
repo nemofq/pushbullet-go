@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "Kesalahan OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Hanya beri tahu dan tampilkan push untuk berikut ini"
+  },
+  "current_chrome_devices_label": {
+    "message": "Perangkat saat ini - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Perangkat lain"
+  },
+  "pushes_without_target_label": {
+    "message": "Push tanpa perangkat target"
+  },
+  "delete_notification": {
+    "message": "Hapus notifikasi"
+  },
+  "copy_notification": {
+    "message": "Salin notifikasi"
+  },
+  "copied": {
+    "message": "Tersalin"
+  },
+  "copy_code": {
+    "message": "Salin kode"
   }
 }

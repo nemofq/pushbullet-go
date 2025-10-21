@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "خطأ OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "إشعار وعرض الإرسالات فقط للتالي"
+  },
+  "current_chrome_devices_label": {
+    "message": "الجهاز الحالي - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "الأجهزة الأخرى"
+  },
+  "pushes_without_target_label": {
+    "message": "الإرسالات بدون جهاز مستهدف"
+  },
+  "delete_notification": {
+    "message": "حذف الإشعار"
+  },
+  "copy_notification": {
+    "message": "نسخ الإشعار"
+  },
+  "copied": {
+    "message": "تم النسخ"
+  },
+  "copy_code": {
+    "message": "نسخ الرمز"
   }
 }

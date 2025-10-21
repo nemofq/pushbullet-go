@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth chyba:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Upozorniť a zobraziť push iba pre nasledujúce"
+  },
+  "current_chrome_devices_label": {
+    "message": "Aktuálne zariadenie - Chrome"
+  },
+  "other_devices_label": {
+    "message": "Iné zariadenia"
+  },
+  "pushes_without_target_label": {
+    "message": "Push bez cieľového zariadenia"
+  },
+  "delete_notification": {
+    "message": "Odstrániť upozornenie"
+  },
+  "copy_notification": {
+    "message": "Kopírovať upozornenie"
+  },
+  "copied": {
+    "message": "Skopírované"
+  },
+  "copy_code": {
+    "message": "Kopírovať kód"
   }
 }

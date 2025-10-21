@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "Eroare OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Notifică și arată push-uri doar pentru următoarele"
+  },
+  "current_chrome_devices_label": {
+    "message": "Dispozitiv curent - Chrome(uri)"
+  },
+  "other_devices_label": {
+    "message": "Alte dispozitive"
+  },
+  "pushes_without_target_label": {
+    "message": "Push-uri fără dispozitiv țintă"
+  },
+  "delete_notification": {
+    "message": "Șterge notificarea"
+  },
+  "copy_notification": {
+    "message": "Copiază notificarea"
+  },
+  "copied": {
+    "message": "Copiat"
+  },
+  "copy_code": {
+    "message": "Copiază cod"
   }
 }

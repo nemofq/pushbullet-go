@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth 错误："
+  },
+  "only_notify_show_pushes_title": {
+    "message": "仅通知和显示以下推送"
+  },
+  "current_chrome_devices_label": {
+    "message": "当前设备 - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "其他设备"
+  },
+  "pushes_without_target_label": {
+    "message": "无目标设备的推送"
+  },
+  "delete_notification": {
+    "message": "删除通知"
+  },
+  "copy_notification": {
+    "message": "复制通知"
+  },
+  "copied": {
+    "message": "已复制"
+  },
+  "copy_code": {
+    "message": "复制验证码"
   }
 }

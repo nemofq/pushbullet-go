@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth грешка:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Показвай известия само за следните изпращания"
+  },
+  "current_chrome_devices_label": {
+    "message": "Текущо устройство - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Други устройства"
+  },
+  "pushes_without_target_label": {
+    "message": "Изпращания без целево устройство"
+  },
+  "delete_notification": {
+    "message": "Изтрий известието"
+  },
+  "copy_notification": {
+    "message": "Копирай известието"
+  },
+  "copied": {
+    "message": "Копирано"
+  },
+  "copy_code": {
+    "message": "Копирай код"
   }
 }

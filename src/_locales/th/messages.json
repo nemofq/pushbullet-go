@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "ข้อผิดพลาด OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "แจ้งเตือนและแสดงพุชเฉพาะสำหรับรายการต่อไปนี้"
+  },
+  "current_chrome_devices_label": {
+    "message": "อุปกรณ์ปัจจุบัน - Chrome"
+  },
+  "other_devices_label": {
+    "message": "อุปกรณ์อื่นๆ"
+  },
+  "pushes_without_target_label": {
+    "message": "พุชที่ไม่มีอุปกรณ์เป้าหมาย"
+  },
+  "delete_notification": {
+    "message": "ลบการแจ้งเตือน"
+  },
+  "copy_notification": {
+    "message": "คัดลอกการแจ้งเตือน"
+  },
+  "copied": {
+    "message": "คัดลอกแล้ว"
+  },
+  "copy_code": {
+    "message": "คัดลอกโค้ด"
   }
 }

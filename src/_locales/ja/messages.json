@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuthエラー:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "以下のプッシュのみ通知して表示"
+  },
+  "current_chrome_devices_label": {
+    "message": "現在のデバイス - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "他のデバイス"
+  },
+  "pushes_without_target_label": {
+    "message": "ターゲットデバイスなしのプッシュ"
+  },
+  "delete_notification": {
+    "message": "通知を削除"
+  },
+  "copy_notification": {
+    "message": "通知をコピー"
+  },
+  "copied": {
+    "message": "コピー済"
+  },
+  "copy_code": {
+    "message": "コードコピー"
   }
 }

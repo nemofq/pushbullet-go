@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "Σφάλμα OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Μόνο ειδοποίηση και εμφάνιση προωθήσεων για τα ακόλουθα"
+  },
+  "current_chrome_devices_label": {
+    "message": "Τρέχουσα συσκευή - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Άλλες συσκευές"
+  },
+  "pushes_without_target_label": {
+    "message": "Προωθήσεις χωρίς συσκευή-στόχο"
+  },
+  "delete_notification": {
+    "message": "Διαγραφή ειδοποίησης"
+  },
+  "copy_notification": {
+    "message": "Αντιγραφή ειδοποίησης"
+  },
+  "copied": {
+    "message": "Αντιγράφηκε"
+  },
+  "copy_code": {
+    "message": "Αντιγραφή κωδ."
   }
 }

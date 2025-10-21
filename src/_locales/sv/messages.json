@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth-fel:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Meddela och visa endast pushes för följande"
+  },
+  "current_chrome_devices_label": {
+    "message": "Aktuell enhet - Chrome"
+  },
+  "other_devices_label": {
+    "message": "Andra enheter"
+  },
+  "pushes_without_target_label": {
+    "message": "Pushes utan målenhet"
+  },
+  "delete_notification": {
+    "message": "Ta bort avisering"
+  },
+  "copy_notification": {
+    "message": "Kopiera avisering"
+  },
+  "copied": {
+    "message": "Kopierad"
+  },
+  "copy_code": {
+    "message": "Kopiera kod"
   }
 }

@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "Ошибка OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Уведомлять и показывать push только для следующих"
+  },
+  "current_chrome_devices_label": {
+    "message": "Текущее устройство - Chrome"
+  },
+  "other_devices_label": {
+    "message": "Другие устройства"
+  },
+  "pushes_without_target_label": {
+    "message": "Push без целевого устройства"
+  },
+  "delete_notification": {
+    "message": "Удалить уведомление"
+  },
+  "copy_notification": {
+    "message": "Копировать уведомление"
+  },
+  "copied": {
+    "message": "Скопировано"
+  },
+  "copy_code": {
+    "message": "Копировать код"
   }
 }

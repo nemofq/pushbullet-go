@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth hiba:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Értesítés és megjelenítés csak a következőknél"
+  },
+  "current_chrome_devices_label": {
+    "message": "Jelenlegi eszköz - Chrome(ok)"
+  },
+  "other_devices_label": {
+    "message": "Egyéb eszközök"
+  },
+  "pushes_without_target_label": {
+    "message": "Céleszköz nélküli küldések"
+  },
+  "delete_notification": {
+    "message": "Értesítés törlése"
+  },
+  "copy_notification": {
+    "message": "Értesítés másolása"
+  },
+  "copied": {
+    "message": "Másolva"
+  },
+  "copy_code": {
+    "message": "Kód másolása"
   }
 }

@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth 오류:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "다음 푸시만 알림 및 표시"
+  },
+  "current_chrome_devices_label": {
+    "message": "현재 기기 - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "다른 기기"
+  },
+  "pushes_without_target_label": {
+    "message": "대상 기기 없는 푸시"
+  },
+  "delete_notification": {
+    "message": "알림 삭제"
+  },
+  "copy_notification": {
+    "message": "알림 복사"
+  },
+  "copied": {
+    "message": "복사됨"
+  },
+  "copy_code": {
+    "message": "인증코드 복사"
   }
 }

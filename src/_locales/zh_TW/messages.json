@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth 錯誤："
+  },
+  "only_notify_show_pushes_title": {
+    "message": "僅通知和顯示以下推送"
+  },
+  "current_chrome_devices_label": {
+    "message": "目前裝置 - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "其他裝置"
+  },
+  "pushes_without_target_label": {
+    "message": "無目標裝置的推送"
+  },
+  "delete_notification": {
+    "message": "刪除通知"
+  },
+  "copy_notification": {
+    "message": "複製通知"
+  },
+  "copied": {
+    "message": "已複製"
+  },
+  "copy_code": {
+    "message": "複製驗證碼"
   }
 }

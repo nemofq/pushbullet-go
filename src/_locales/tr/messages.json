@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth hatası:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Yalnızca şunlar için bildirim ve gösterim"
+  },
+  "current_chrome_devices_label": {
+    "message": "Geçerli cihaz - Chrome"
+  },
+  "other_devices_label": {
+    "message": "Diğer cihazlar"
+  },
+  "pushes_without_target_label": {
+    "message": "Hedef cihaz olmayan bildirimler"
+  },
+  "delete_notification": {
+    "message": "Bildirimi sil"
+  },
+  "copy_notification": {
+    "message": "Bildirimi kopyala"
+  },
+  "copied": {
+    "message": "Kopyalandı"
+  },
+  "copy_code": {
+    "message": "Kodu kopyala"
   }
 }

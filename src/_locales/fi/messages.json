@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth-virhe:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Ilmoita ja näytä pushit vain seuraaville"
+  },
+  "current_chrome_devices_label": {
+    "message": "Nykyinen laite - Chrome(t)"
+  },
+  "other_devices_label": {
+    "message": "Muut laitteet"
+  },
+  "pushes_without_target_label": {
+    "message": "Pushit ilman kohdelaitetta"
+  },
+  "delete_notification": {
+    "message": "Poista ilmoitus"
+  },
+  "copy_notification": {
+    "message": "Kopioi ilmoitus"
+  },
+  "copied": {
+    "message": "Kopioitu"
+  },
+  "copy_code": {
+    "message": "Kopioi koodi"
   }
 }

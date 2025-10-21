@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth fejl:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Underret og vis kun pushes for følgende"
+  },
+  "current_chrome_devices_label": {
+    "message": "Nuværende enhed - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Andre enheder"
+  },
+  "pushes_without_target_label": {
+    "message": "Pushes uden målenhed"
+  },
+  "delete_notification": {
+    "message": "Slet notifikation"
+  },
+  "copy_notification": {
+    "message": "Kopiér notifikation"
+  },
+  "copied": {
+    "message": "Kopieret"
+  },
+  "copy_code": {
+    "message": "Kopiér kode"
   }
 }

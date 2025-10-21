@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "OAuth fout:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Alleen melden en tonen voor de volgende pushes"
+  },
+  "current_chrome_devices_label": {
+    "message": "Huidig apparaat - Chrome(s)"
+  },
+  "other_devices_label": {
+    "message": "Andere apparaten"
+  },
+  "pushes_without_target_label": {
+    "message": "Pushes zonder doelapparaat"
+  },
+  "delete_notification": {
+    "message": "Melding verwijderen"
+  },
+  "copy_notification": {
+    "message": "Melding kopiëren"
+  },
+  "copied": {
+    "message": "Gekopieerd"
+  },
+  "copy_code": {
+    "message": "Code kopiëren"
   }
 }

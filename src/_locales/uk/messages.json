@@ -289,5 +289,29 @@
   },
   "oauth_error": {
     "message": "Помилка OAuth:"
+  },
+  "only_notify_show_pushes_title": {
+    "message": "Сповіщати та показувати push лише для наступних"
+  },
+  "current_chrome_devices_label": {
+    "message": "Поточний пристрій - Chrome"
+  },
+  "other_devices_label": {
+    "message": "Інші пристрої"
+  },
+  "pushes_without_target_label": {
+    "message": "Push без цільового пристрою"
+  },
+  "delete_notification": {
+    "message": "Видалити сповіщення"
+  },
+  "copy_notification": {
+    "message": "Копіювати сповіщення"
+  },
+  "copied": {
+    "message": "Скопійовано"
+  },
+  "copy_code": {
+    "message": "Копіювати код"
   }
 }
