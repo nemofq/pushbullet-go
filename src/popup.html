@@ -441,6 +441,9 @@
       align-items: center;
       justify-content: flex-end;
     }
+    .notification-actions.has-verification-code {
+      justify-content: space-between;
+    }
     .notification-copy-button {
       background: none;
       border: none;
@@ -572,6 +575,59 @@
     }
     .logo-link:hover {
       color: var(--button-primary);
+    }
+    .verification-code-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-secondary);
+      padding: 6px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 8px;
+      margin-bottom: 4px;
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    }
+    .verification-code-button:hover {
+      background: var(--bg-message-received-hover);
+      border-color: var(--button-primary);
+      transform: translateY(-1px);
+    }
+    .verification-code-button:active {
+      transform: translateY(0);
+    }
+    /* Light mode: bright green button */
+    .theme-light .verification-code-button {
+      background: #4caf50;
+      color: #ffffff;
+      border: none;
+    }
+    .theme-light .verification-code-button:hover {
+      background: #45a049;
+      border: none;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not(.theme-dark) .verification-code-button {
+        background: #4caf50;
+        color: #ffffff;
+        border: none;
+      }
+      :root:not(.theme-dark) .verification-code-button:hover {
+        background: #45a049;
+        border: none;
+      }
+    }
+    .verification-code-button .code-text {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .verification-code-button svg {
+      flex-shrink: 0;
     }
   </style>
 </head>

@@ -688,9 +688,41 @@ document.addEventListener('DOMContentLoaded', function() {
         cardDiv.appendChild(bodyDiv);
       }
 
-      // Actions section with copy and delete buttons
+      // Actions section with verification code, copy and delete buttons
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'notification-actions';
+
+      // Verification code button (if code is present) - on the left
+      if (notification.verificationCode) {
+        actionsDiv.classList.add('has-verification-code');
+
+        const codeButton = document.createElement('button');
+        codeButton.className = 'verification-code-button';
+        codeButton.dataset.code = notification.verificationCode;
+        codeButton.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M5.41,21L6.12,17H2.12L2.47,15H6.47L7.53,9H3.53L3.88,7H7.88L8.59,3H10.59L9.88,7H15.88L16.59,3H18.59L17.88,7H21.88L21.53,9H17.53L16.47,15H20.47L20.12,17H16.12L15.41,21H13.41L14.12,17H8.12L7.41,21H5.41M9.53,9L8.47,15H14.47L15.53,9H9.53Z"/></svg><span class="code-text">${notification.verificationCode}</span>`;
+        codeButton.onclick = (e) => {
+          e.stopPropagation();
+          const button = e.currentTarget;
+          const code = button.dataset.code;
+          navigator.clipboard.writeText(code);
+
+          // Show "Copied" feedback
+          const originalHTML = button.innerHTML;
+          button.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg><span class="code-text">${window.CustomI18n.getMessage('copied')}</span>`;
+          button.style.pointerEvents = 'none';
+
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.style.pointerEvents = '';
+          }, 1500);
+        };
+        actionsDiv.appendChild(codeButton);
+      }
+
+      // Right side buttons wrapper
+      const rightButtonsDiv = document.createElement('div');
+      rightButtonsDiv.style.display = 'flex';
+      rightButtonsDiv.style.gap = '4px';
 
       // Copy button (only if notification has body)
       if (notification.body) {
@@ -702,14 +734,14 @@ document.addEventListener('DOMContentLoaded', function() {
           e.stopPropagation();
           navigator.clipboard.writeText(notification.body);
         };
-        actionsDiv.appendChild(copyButton);
+        rightButtonsDiv.appendChild(copyButton);
       }
 
       // Delete button
       const deleteButton = document.createElement('button');
       deleteButton.className = 'notification-delete-button';
       deleteButton.title = window.CustomI18n.getMessage('delete_notification');
-      deleteButton.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>';
+      deleteButton.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg>';
       deleteButton.onclick = (e) => {
         e.stopPropagation();
         chrome.runtime.sendMessage({
@@ -718,7 +750,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       };
 
-      actionsDiv.appendChild(deleteButton);
+      rightButtonsDiv.appendChild(deleteButton);
+      actionsDiv.appendChild(rightButtonsDiv);
       cardDiv.appendChild(actionsDiv);
 
       fragment.appendChild(cardDiv);

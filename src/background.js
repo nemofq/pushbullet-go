@@ -864,6 +864,14 @@ async function handleMirrorNotification(mirrorData) {
     dismissible: mirrorData.dismissible
   };
 
+  // Extract verification code (5 or 6 digits) from body if present
+  if (notificationData.body) {
+    const codeMatch = notificationData.body.match(/\b\d{5,6}\b/);
+    if (codeMatch) {
+      notificationData.verificationCode = codeMatch[0];
+    }
+  }
+
   // Store in local storage (keep latest 100)
   const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
   const notifications = existingNotifications.mirrorNotifications || [];

@@ -308,5 +308,8 @@
   },
   "copy_notification": {
     "message": "Copy notification"
+  },
+  "copied": {
+    "message": "Copied"
   }
 }
