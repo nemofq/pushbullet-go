@@ -310,8 +310,5 @@
   },
   "copied": {
     "message": "已复制"
-  },
-  "copy_code": {
-    "message": "复制验证码"
   }
 }

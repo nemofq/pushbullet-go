@@ -25,7 +25,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - Notifications for received pushes with buttons to open links and dismiss
 - Auto-open received link in a new tab (default off, enable in options page)
 - Stores 100 latest pushes locally (full history available on Pushbullet website)
-- (New) Filter to only show and notify pushes sent to browsers
+- (New) Filter to show and notify pushes by target device
 - (New) Control notifications from browser-sourced pushes (useful for multi-browser use case)
 - (New) Notification Mirroring (requires Pushbullet Android app installed and enabled in both Android app and Push Go settings)
 - (New) Dark Mode (follows system by default, or choose manually)
@@ -34,7 +34,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 - (New) Quick share of current tab's link in the popup (default off, enable in options page)
 - (New) Play sound on notification (can be disabled in options page)
 - (New) End-to-end encryption for notification mirroring
-- (New) Extract and copy the verification code from mirrored notification
+- (New) Extract verification code from mirrored notification (click to copy in the popup)
 
 ## Installation
 > **Note 3**: Requires Chrome 116+ for using `chrome.idle` API to maintain connection to Pushbullet's WebSocket server.
@@ -68,7 +68,6 @@ This extension requires the following permissions:
 - **Host Access**: To communicate with Pushbullet API servers
 - **Offscreen**: To play notification sound
 - **Identity**: To complete OAuth process
-- **clipboardWrite**: To copy the verification code in Chrome notification
 
 ## Privacy
 

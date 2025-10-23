@@ -122,8 +122,8 @@ async function playAlertSound() {
     if (existingContexts.length === 0) {
       await chrome.offscreen.createDocument({
         url: 'offscreen.html',
-        reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK, chrome.offscreen.Reason.CLIPBOARD],
-        justification: 'Play notification alert sound and copy verification code to the clipboard.'
+        reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+        justification: 'Play notification alert sound.'
       });
     }
 
@@ -137,28 +137,6 @@ async function playAlertSound() {
   }
 }
 
-async function copyToClipboard(value) {
-  // Check if offscreen document exists
-  const existingContexts = await chrome.runtime.getContexts({
-    contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
-  });
-
-  // Create offscreen document if it doesn't exist
-  if (existingContexts.length === 0) {
-    await chrome.offscreen.createDocument({
-      url: 'offscreen.html',
-      reasons: [chrome.offscreen.Reason.CLIPBOARD],
-      justification: 'Copy verification code to the clipboard.'
-    });
-  }
-
-  // Send message to offscreen document
-  chrome.runtime.sendMessage({
-    type: 'copy-data-to-clipboard',
-    target: 'offscreen-doc',
-    data: value
-  });
-}
 
 // One-time migration from sync to local storage for specific fields
 async function migrateSpecificFieldsFromSyncToLocal() {
@@ -925,19 +903,11 @@ async function showMirrorNotification(notificationData) {
     notificationOptions.iconUrl = 'assets/icon128.png';
   }
 
-  // Add buttons based on verification code and dismissible status
-  const buttons = [];
-
-  if (notificationData.verificationCode) {
-    buttons.push({ title: getMessage('copy_code') });
-  }
-
+  // Add dismiss button if notification is dismissible
   if (notificationData.dismissible) {
-    buttons.push({ title: getMessage('dismiss_button') });
-  }
-
-  if (buttons.length > 0) {
-    notificationOptions.buttons = buttons;
+    notificationOptions.buttons = [
+      { title: getMessage('dismiss_button') }
+    ];
   }
 
   // Check if require interaction is enabled for mirrored notifications
@@ -960,28 +930,8 @@ async function showMirrorNotification(notificationData) {
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
   if (notificationId.startsWith('pushbullet-mirror-')) {
-    // Extract UUID from notification ID
-    const uuid = notificationId.replace('pushbullet-mirror-', '');
-
-    // Find the notification by UUID
-    const data = await chrome.storage.local.get('mirrorNotifications');
-    const mirrorNotifications = data.mirrorNotifications || [];
-    const notification = mirrorNotifications.find(n => n.id === uuid);
-
-    if (!notification) {
-      console.error('Mirror notification not found:', uuid);
-      return;
-    }
-
-    // Check if notification has verification code
-    const hasVerificationCode = notification.verificationCode;
-
-    // Handle button clicks based on whether verification code is present
-    if (hasVerificationCode && buttonIndex === 0) {
-      // Copy code button clicked
-      await copyToClipboard(notification.verificationCode);
-    } else if ((hasVerificationCode && buttonIndex === 1) || (!hasVerificationCode && buttonIndex === 0)) {
-      // Dismiss button clicked
+    // Dismiss button clicked (always at index 0)
+    if (buttonIndex === 0) {
       await dismissMirrorNotification(notificationId);
       chrome.notifications.clear(notificationId);
     }
