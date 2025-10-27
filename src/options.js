@@ -573,7 +573,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
       
       populateDeviceSelects();
-      
+
+      // Notify background script to establish connection
+      chrome.runtime.sendMessage({ type: 'token_updated' });
+
       showRetrieveSuccess();
       
     } catch (error) {
