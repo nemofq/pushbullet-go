@@ -407,12 +407,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 16); // Optimized for smooth 60fps updates
   }
 
-  function debouncedLoadNotifications() {
+  function debouncedLoadNotifications(preserveScrollTop = null) {
     if (loadNotificationsTimeout) {
       clearTimeout(loadNotificationsTimeout);
     }
     loadNotificationsTimeout = setTimeout(() => {
-      loadNotifications();
+      loadNotifications(preserveScrollTop);
       loadNotificationsTimeout = null;
     }, 16); // Optimized for smooth 60fps updates
   }
@@ -591,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  async function loadNotifications() {
+  async function loadNotifications(preserveScrollTop = null) {
     const data = await chrome.storage.local.get('mirrorNotifications');
     const notifications = data.mirrorNotifications || [];
 
@@ -759,11 +759,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Replace content atomically to prevent flashing
     notificationsList.replaceChildren(fragment);
-    
-    // Scroll to bottom to show newest notifications
+
+    // Conditionally restore scroll position or scroll to bottom
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        notificationsList.scrollTop = notificationsList.scrollHeight;
+        if (preserveScrollTop !== null) {
+          notificationsList.scrollTop = preserveScrollTop; // Preserve position after deletion
+        } else {
+          notificationsList.scrollTop = notificationsList.scrollHeight; // Scroll to bottom for new notifications
+        }
       });
     });
   }
@@ -959,7 +963,13 @@ document.addEventListener('DOMContentLoaded', function() {
       debouncedLoadMessages();
     }
     if (areaName === 'local' && changes.mirrorNotifications) {
-      debouncedLoadNotifications();
+      // Only preserve scroll position when deleting (array shrinks), otherwise scroll to bottom for new notifications
+      const oldLength = changes.mirrorNotifications.oldValue?.length || 0;
+      const newLength = changes.mirrorNotifications.newValue?.length || 0;
+      const isDeleting = newLength < oldLength;
+
+      const savedScrollTop = isDeleting ? notificationsList.scrollTop : null;
+      debouncedLoadNotifications(savedScrollTop);
     }
     if (areaName === 'sync' && changes.accessToken) {
       checkAccessToken().then(() => {
