@@ -1574,7 +1574,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (menuItemId === 'pushbullet-page-selected') {
     const pageData = {
       type: 'link',
-      url: tab.url
+      url: tab.url,
+      title: tab.title
     };
     if (configData.remoteDeviceId) {
       pageData.device_iden = configData.remoteDeviceId;
@@ -1619,6 +1620,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       const pageData = {
         type: 'link',
         url: tab.url,
+        title: tab.title,
         device_iden: deviceId
       };
       await sendPush(pageData);
@@ -1652,6 +1654,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       const pageData = {
         type: 'link',
         url: tab.url,
+        title: tab.title,
         email: email
       };
       await sendPush(pageData);
