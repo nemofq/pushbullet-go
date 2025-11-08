@@ -415,19 +415,20 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
       console.log('No access token available for keyboard shortcut');
       return;
     }
-    
+
     // Get the configured remote device IDs (same logic as context menu)
     const configData = await chrome.storage.local.get('remoteDeviceId');
-    
+
     const pageData = {
       type: 'link',
-      url: tab.url
+      url: tab.url,
+      title: tab.title
     };
-    
+
     if (configData.remoteDeviceId) {
       pageData.device_iden = configData.remoteDeviceId;
     }
-    
+
     await sendPush(pageData);
     console.log('Page URL pushed via keyboard shortcut:', tab.url);
   }

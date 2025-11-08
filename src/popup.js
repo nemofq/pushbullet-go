@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.storage.sync.get('accessToken'),
       chrome.storage.local.get('showQuickShare')
     ]);
-    
+
     // Only show quick share if we have an access token and the setting is enabled
     if (tokenData.accessToken && quickShareData.showQuickShare) {
       try {
@@ -274,6 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         if (tab && tab.url && (tab.url.startsWith('http://') || tab.url.startsWith('https://'))) {
           quickShareUrl.textContent = tab.url;
+          quickShareUrl.dataset.title = tab.title || '';
           quickShareContainer.style.display = 'block';
         } else {
           quickShareContainer.style.display = 'none';
@@ -289,28 +290,34 @@ document.addEventListener('DOMContentLoaded', function() {
   
   async function sendLink(url) {
     const configData = await chrome.storage.local.get('remoteDeviceId');
-    
+
     const pushData = {
       type: 'link',
       url: url,
       body: ''
     };
-    
+
+    // Add title if available
+    const title = quickShareUrl.dataset.title;
+    if (title) {
+      pushData.title = title;
+    }
+
     if (configData.remoteDeviceId) {
       pushData.device_iden = configData.remoteDeviceId;
     }
-    
+
     // Use the background script's sendPush function which handles multiple devices
-    chrome.runtime.sendMessage({ 
-      type: 'send_push', 
-      data: pushData 
+    chrome.runtime.sendMessage({
+      type: 'send_push',
+      data: pushData
     });
-    
+
     // Provide visual feedback
     const originalText = quickShareSend.textContent;
     quickShareSend.textContent = '✓';
     quickShareSend.disabled = true;
-    
+
     setTimeout(() => {
       // Hide the quick share element after sending
       quickShareContainer.style.display = 'none';
