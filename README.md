@@ -64,7 +64,7 @@ This extension requires the following permissions:
 - **Idle**: To maintain the connection to receive pushes in real time
 - **Notifications**: To display push notifications
 - **Context Menus**: To add right-click menu options for pushing content
-- **Active Tab**: To access current page's URL for context menu actions
+- **Active Tab**: To access current page's URL and title for context menu and keyboard shortcut actions
 - **Host Access**: To communicate with Pushbullet API servers
 - **Offscreen**: To play notification sound
 - **Identity**: To complete OAuth process
