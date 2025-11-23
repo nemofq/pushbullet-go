@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Kopier varsel"
   },
+  "delete_push": {
+    "message": "Slett push"
+  },
   "copied": {
     "message": "Kopiert"
   }

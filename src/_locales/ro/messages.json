@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Copiază notificarea"
   },
+  "delete_push": {
+    "message": "Șterge push-ul"
+  },
   "copied": {
     "message": "Copiat"
   }

@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Sao chép thông báo"
   },
+  "delete_push": {
+    "message": "Xóa push"
+  },
   "copied": {
     "message": "Đã sao chép"
   }

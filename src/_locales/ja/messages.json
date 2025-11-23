@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "通知をコピー"
   },
+  "delete_push": {
+    "message": "プッシュを削除"
+  },
   "copied": {
     "message": "コピー済"
   }

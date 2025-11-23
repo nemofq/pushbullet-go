@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Bildirimi kopyala"
   },
+  "delete_push": {
+    "message": "Push'u sil"
+  },
   "copied": {
     "message": "Kopyalandı"
   }

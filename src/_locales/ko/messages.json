@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "알림 복사"
   },
+  "delete_push": {
+    "message": "푸시 삭제"
+  },
   "copied": {
     "message": "복사됨"
   }

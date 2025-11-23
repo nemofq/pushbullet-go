@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "העתק התראה"
   },
+  "delete_push": {
+    "message": "מחק דחיפה"
+  },
   "copied": {
     "message": "הועתק"
   }

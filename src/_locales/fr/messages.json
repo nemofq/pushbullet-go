@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Copier la notification"
   },
+  "delete_push": {
+    "message": "Supprimer le push"
+  },
   "copied": {
     "message": "Copié"
   }

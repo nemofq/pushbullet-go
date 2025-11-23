@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Melding kopiëren"
   },
+  "delete_push": {
+    "message": "Push verwijderen"
+  },
   "copied": {
     "message": "Gekopieerd"
   }

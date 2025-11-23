@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Kopírovať upozornenie"
   },
+  "delete_push": {
+    "message": "Odstrániť push"
+  },
   "copied": {
     "message": "Skopírované"
   }

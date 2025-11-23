@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Kopiera avisering"
   },
+  "delete_push": {
+    "message": "Ta bort push"
+  },
   "copied": {
     "message": "Kopierad"
   }

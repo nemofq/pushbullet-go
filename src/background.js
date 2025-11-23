@@ -401,6 +401,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     case 'delete_notification':
       await deleteNotification(message.id);
       break;
+    case 'delete_push':
+      await deletePush(message.iden);
+      break;
     case 'encryption_updated':
       initializeEncryption().then(() => {
         sendResponse({ success: true });
@@ -1836,5 +1839,19 @@ async function deleteNotification(id) {
     console.log('Notification deleted:', id);
   } catch (error) {
     console.error('Failed to delete notification:', error);
+  }
+}
+
+async function deletePush(iden) {
+  try {
+    const data = await chrome.storage.local.get(['pushes', 'sentMessages']);
+
+    const pushes = (data.pushes || []).filter(p => p.iden !== iden);
+    const sentMessages = (data.sentMessages || []).filter(m => m.iden !== iden);
+
+    await chrome.storage.local.set({ pushes, sentMessages });
+    console.log('Push deleted:', iden);
+  } catch (error) {
+    console.error('Failed to delete push:', error);
   }
 }

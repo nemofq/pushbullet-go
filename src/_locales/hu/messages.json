@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Értesítés másolása"
   },
+  "delete_push": {
+    "message": "Push törlése"
+  },
   "copied": {
     "message": "Másolva"
   }

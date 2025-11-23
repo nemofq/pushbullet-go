@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Копирай известието"
   },
+  "delete_push": {
+    "message": "Изтрий изпращането"
+  },
   "copied": {
     "message": "Копирано"
   }

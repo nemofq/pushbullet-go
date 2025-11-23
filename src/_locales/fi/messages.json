@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Kopioi ilmoitus"
   },
+  "delete_push": {
+    "message": "Poista push"
+  },
   "copied": {
     "message": "Kopioitu"
   }

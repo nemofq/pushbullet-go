@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "複製通知"
   },
+  "delete_push": {
+    "message": "刪除推送"
+  },
   "copied": {
     "message": "已複製"
   }

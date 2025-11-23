@@ -404,12 +404,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function debouncedLoadMessages() {
+  function debouncedLoadMessages(preserveScrollTop = null) {
     if (loadMessagesTimeout) {
       clearTimeout(loadMessagesTimeout);
     }
     loadMessagesTimeout = setTimeout(() => {
-      loadMessages();
+      loadMessages(preserveScrollTop);
       loadMessagesTimeout = null;
     }, 16); // Optimized for smooth 60fps updates
   }
@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 16); // Optimized for smooth 60fps updates
   }
 
-  async function loadMessages() {
+  async function loadMessages(preserveScrollTop = null) {
     const [receivedData, sentData, configData, localData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
@@ -572,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (push.messageType === 'received' && ((push.type === 'note' && push.body) || (push.type === 'link' && push.url))) {
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-button';
-        copyButton.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>';
+        copyButton.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>';
         copyButton.title = push.type === 'link' ? window.CustomI18n.getMessage('copy_link') : window.CustomI18n.getMessage('copy_message');
         copyButton.onclick = (e) => {
           e.stopPropagation();
@@ -581,6 +581,20 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         messageContentDiv.appendChild(copyButton);
       }
+
+      // Add delete button for all pushes
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'push-delete-button';
+      deleteButton.innerHTML = '<svg viewBox="3 2 18 20" fill="currentColor"><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg>';
+      deleteButton.title = window.CustomI18n.getMessage('delete_push');
+      deleteButton.onclick = (e) => {
+        e.stopPropagation();
+        chrome.runtime.sendMessage({
+          type: 'delete_push',
+          iden: push.iden
+        });
+      };
+      messageContentDiv.appendChild(deleteButton);
       
       messageRowDiv.appendChild(timestampDiv);
       messageRowDiv.appendChild(messageContentDiv);
@@ -589,11 +603,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Replace content atomically to prevent flashing
     messagesList.replaceChildren(fragment);
-    
-    // Ensure scroll to bottom after DOM updates
+
+    // Conditionally restore scroll position or scroll to bottom
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        messagesList.scrollTop = messagesList.scrollHeight;
+        if (preserveScrollTop !== null) {
+          messagesList.scrollTop = preserveScrollTop;
+        } else {
+          messagesList.scrollTop = messagesList.scrollHeight;
+        }
       });
     });
   }
@@ -993,7 +1011,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local' && (changes.pushes || changes.sentMessages)) {
-      debouncedLoadMessages();
+      // Detect if deleting (either array shrinks)
+      const oldPushesLen = changes.pushes?.oldValue?.length || 0;
+      const newPushesLen = changes.pushes?.newValue?.length || 0;
+      const oldSentLen = changes.sentMessages?.oldValue?.length || 0;
+      const newSentLen = changes.sentMessages?.newValue?.length || 0;
+      const isDeleting = (changes.pushes && newPushesLen < oldPushesLen) ||
+                         (changes.sentMessages && newSentLen < oldSentLen);
+
+      const savedScrollTop = isDeleting ? messagesList.scrollTop : null;
+      debouncedLoadMessages(savedScrollTop);
     }
     if (areaName === 'local' && changes.mirrorNotifications) {
       // Only preserve scroll position when deleting (array shrinks), otherwise scroll to bottom for new notifications

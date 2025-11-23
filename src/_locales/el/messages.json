@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Αντιγραφή ειδοποίησης"
   },
+  "delete_push": {
+    "message": "Διαγραφή προώθησης"
+  },
   "copied": {
     "message": "Αντιγράφηκε"
   }

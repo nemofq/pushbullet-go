@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "Salin notifikasi"
   },
+  "delete_push": {
+    "message": "Hapus push"
+  },
   "copied": {
     "message": "Tersalin"
   }

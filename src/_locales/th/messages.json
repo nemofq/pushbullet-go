@@ -308,6 +308,9 @@
   "copy_notification": {
     "message": "คัดลอกการแจ้งเตือน"
   },
+  "delete_push": {
+    "message": "ลบ push"
+  },
   "copied": {
     "message": "คัดลอกแล้ว"
   }
