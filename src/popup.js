@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
       bodyDiv.className = 'message-body';
       
       if (push.type === 'note') {
-        bodyDiv.textContent = push.body || '';
+        parseTextWithLinks(push.body || '', bodyDiv, 'message-link');
       } else if (push.type === 'link') {
         if (push.body) {
           bodyDiv.textContent = push.body;
@@ -818,6 +818,32 @@ document.addEventListener('DOMContentLoaded', function() {
       return true;
     } catch (_) {
       return false;
+    }
+  }
+
+  function parseTextWithLinks(text, container, linkClass) {
+    const urlRegex = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
+    let lastIndex = 0;
+    let match;
+
+    while ((match = urlRegex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        container.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+      }
+
+      const link = document.createElement('a');
+      const url = match[1];
+      link.href = url.toLowerCase().startsWith('www.') ? 'https://' + url : url;
+      link.textContent = url;
+      link.className = linkClass;
+      link.target = '_blank';
+      container.appendChild(link);
+
+      lastIndex = urlRegex.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      container.appendChild(document.createTextNode(text.slice(lastIndex)));
     }
   }
 
