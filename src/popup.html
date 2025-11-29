@@ -580,17 +580,22 @@
       padding: 10px 15px 15px 15px;
     }
     .clear-history-button {
-      background: none;
       border: none;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-primary);
       cursor: pointer;
       color: var(--text-tertiary);
       font-size: 12px;
-      padding: 4px 6px;
-      margin: 0 auto 12px auto;
+      padding: 10px 6px;
+      margin: -10px -10px 12px -10px;
       transition: color 0.2s ease;
-      text-decoration: underline;
+      text-decoration: none;
       display: block;
-      width: fit-content;
+      width: calc(100% + 20px);
+      position: sticky;
+      top: -10px;
+      left: -10px;
+      right: -10px;
     }
     .clear-history-button:hover {
       color: var(--copy-button-hover);
