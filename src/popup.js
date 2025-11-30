@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const quickShareUrl = document.getElementById('quickShareUrl');
   const quickShareSend = document.getElementById('quickShareSend');
   const logoLink = document.getElementById('logoLink');
+  const clearNotificationsButton = document.getElementById('clearNotificationsButton');
 
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -86,7 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.tabs.create({ url: 'https://www.pushbullet.com/#people/me' });
   });
 
-  
+  clearNotificationsButton.addEventListener('click', () => {
+    chrome.runtime.sendMessage({ type: 'clear_mirror_history' });
+  });
+
   bodyInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -326,18 +330,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function switchTab(tab) {
     const sendForm = document.querySelector('.send-form');
-    
+    const clearNotificationsBar = document.getElementById('clearNotificationsBar');
+
     if (tab === 'push') {
       pushTab.classList.add('active');
       notificationTab.classList.remove('active');
       messagesList.style.display = 'flex';
       notificationsList.style.display = 'none';
       sendForm.style.display = 'block';
-      
-      
+      clearNotificationsBar.style.display = 'none';
+
+
       // Clear unread push count when pushes tab is opened
       chrome.runtime.sendMessage({ type: 'clear_unread_pushes' });
-      
+
       // Ensure push tab scrolls to bottom when switching to it
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -350,7 +356,8 @@ document.addEventListener('DOMContentLoaded', function() {
       messagesList.style.display = 'none';
       notificationsList.style.display = 'flex';
       sendForm.style.display = 'none';
-      
+      clearNotificationsBar.style.display = 'flex';
+
       
       debouncedLoadNotifications();
       
@@ -636,19 +643,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Build content in DocumentFragment to avoid visible flashing
     const fragment = document.createDocumentFragment();
-    
-    // Add clear history button as first element when we have notifications and API token
-    const tokenData = await chrome.storage.sync.get('accessToken');
-    if (tokenData.accessToken) {
-      const clearButton = document.createElement('button');
-      clearButton.className = 'clear-history-button';
-      clearButton.textContent = window.CustomI18n.getMessage('clear_mirror_history');
-      clearButton.onclick = () => {
-        chrome.runtime.sendMessage({ type: 'clear_mirror_history' });
-      };
-      fragment.appendChild(clearButton);
-    }
-    
+
     // Sort by timestamp (oldest to newest as requested)
     notifications.sort((a, b) => (a.created || 0) - (b.created || 0));
     
