@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Push Go for Pushbullet",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxM7/ABgzJriKpUyf7k2LD5KXYv9QSIoPc73fXC8f/HhdNVAHuKAAz/Nfzv+Z51LO21c7d7K2/aKRzUPXl4ZgxBO54Y4/DIBWkcnfhPTxBwggHRvzsrJFavBv/GSbuLW0BlddDkQwLKtRVWvKAmvUWAp41+C11eoomBT4Jo+n3Szmmz2AJ8xExZX+tAHAs3QrrqBfw1ejBWk82ss32+IVpOUewNl8TdOPlRtDW77O+dc+CsvxNS8Pm67ajgiZRDZiu6dxwqxgK4OnBrXW5v47MrnGyRdE5h7tFPUAY17t5eeh/n0v9FHdy1Dta45DJOeGjG5tEt0wgaR5N+cajsJP2QIDAQAB",
   "description": "A lightweight, open-source extension for cross-device pushes via Pushbullet API.",
   "homepage_url": "https://nemofq.github.io/pushbullet-go/",
