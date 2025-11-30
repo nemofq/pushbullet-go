@@ -1124,6 +1124,8 @@ async function dismissMirrorNotification(notificationId) {
     
     if (response.ok) {
       console.log('Mirror notification dismissed successfully');
+      // Remove from popup
+      await deleteNotification(uuid)
       // Decrement unread mirror count when successfully dismissed
       await decrementUnreadMirrorCount();
     } else {
@@ -1156,6 +1158,8 @@ async function handleMirrorDismissal(dismissalData) {
     if (allNotifications[notificationId]) {
       console.log(`Clearing mirror notification for dismissal: ${dismissalData.package_name}`);
       await chrome.notifications.clear(notificationId);
+      // Remove from popup
+      await deleteNotification(notification.id)
     }
   } catch (error) {
     console.error('Error handling mirror dismissal:', error);
@@ -1311,7 +1315,8 @@ async function updateBadge() {
       'displayUnreadPushes',
       'displayUnreadMirrored',
       'unreadPushCount',
-      'unreadMirrorCount'
+      'unreadMirrorCount',
+      'mirrorNotifications'
     ]);
 
     // Check if badge display is enabled
@@ -1324,6 +1329,7 @@ async function updateBadge() {
     const mirrorCount = data.unreadMirrorCount || 0;
     const showPushes = data.displayUnreadPushes !== false; // Default true
     const showMirrored = data.displayUnreadMirrored !== false; // Default true
+    const mirrorNotificationsLength = (data.mirrorNotifications || []).length;
     
     let totalCount = 0;
     
@@ -1331,6 +1337,7 @@ async function updateBadge() {
       totalCount += pushCount;
     }
     if (showMirrored) {
+      mirrorCount = Math.min(mirrorCount, mirrorNotificationsLength);
       totalCount += mirrorCount;
     }
     
@@ -1837,6 +1844,8 @@ async function deleteNotification(id) {
 
     await chrome.storage.local.set({ mirrorNotifications: notifications });
     console.log('Notification deleted:', id);
+    // Update badge count
+    await updateBadge();
   } catch (error) {
     console.error('Failed to delete notification:', error);
   }
