@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=nemofq&project=pushbullet-go&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 # Pushbullet Go
 
 [![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/dghndapbehjdbhiffbckojkhoennbofg)](https://chromewebstore.google.com/detail/push-go-for-pushbullet/dghndapbehjdbhiffbckojkhoennbofg) [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/dghndapbehjdbhiffbckojkhoennbofg)](https://chromewebstore.google.com/detail/push-go-for-pushbullet/dghndapbehjdbhiffbckojkhoennbofg) [![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/dghndapbehjdbhiffbckojkhoennbofg)](https://chromewebstore.google.com/detail/push-go-for-pushbullet/dghndapbehjdbhiffbckojkhoennbofg)
