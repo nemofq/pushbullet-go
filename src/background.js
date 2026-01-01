@@ -156,6 +156,7 @@ async function migrateSpecificFieldsFromSyncToLocal() {
       'notificationMirroring',
       'onlyBrowserPushes',
       'showOtherDevicePushes',
+      'selectedOtherDeviceIds',
       'showNoTargetPushes',
       'hideBrowserPushes',
       'showSmsShortcut',
@@ -712,7 +713,7 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
           // Show notifications for new pushes (only if from tickle, meaning real-time)
           if (isFromTickle) {
             // Apply device filtering for notifications (same as popup display)
-            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'autoOpenLinks', 'hideBrowserPushes']);
+            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'hideBrowserPushes']);
             const localData = await chrome.storage.local.get('chromeDeviceId');
 
             newPushes.forEach(push => {
@@ -727,7 +728,21 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
                 shouldShowPush = configData.onlyBrowserPushes !== false; // Default is true
               } else if (targetDeviceIden && targetDeviceIden !== localData.chromeDeviceId) {
                 // Push is targeted to other device
-                shouldShowPush = configData.showOtherDevicePushes === true; // Default is false
+                if (configData.showOtherDevicePushes === true) {
+                  // Check if specific devices are selected
+                  const selectedIds = configData.selectedOtherDeviceIds || '';
+
+                  if (!selectedIds) {
+                    // Empty means all other devices (backward compatible)
+                    shouldShowPush = true;
+                  } else {
+                    // Check if this device is in the selected list
+                    const deviceIds = selectedIds.split(',').map(id => id.trim());
+                    shouldShowPush = deviceIds.includes(targetDeviceIden);
+                  }
+                } else {
+                  shouldShowPush = false;
+                }
               } else if (!targetDeviceIden) {
                 // Push has no target device (sent to all)
                 shouldShowPush = configData.showNoTargetPushes === true; // Default is false

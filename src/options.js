@@ -50,7 +50,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const defaultTabGroup = document.getElementById('defaultTabGroup');
   const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
   const playSoundOnNotificationToggle = document.getElementById('playSoundOnNotificationToggle');
-  
+  const otherDeviceSelect = document.getElementById('otherDeviceIds');
+  const otherDeviceListGroup = document.getElementById('otherDeviceListGroup');
+
   // Tab elements
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
@@ -81,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -170,6 +172,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     updateShowOtherDevicePushesToggleVisual();
     updateShowNoTargetPushesToggleVisual();
+
+    // Populate other device list and load selections
+    if (data.selectedOtherDeviceIds !== undefined && data.selectedOtherDeviceIds !== '') {
+      // Mark that we have a stored selection so populateOtherDeviceSelect doesn't select all
+      otherDeviceSelect.dataset.hasStoredSelection = 'true';
+      populateOtherDeviceSelect();
+      const selectedIds = data.selectedOtherDeviceIds.split(',').map(id => id.trim()).filter(id => id);
+      Array.from(otherDeviceSelect.options).forEach(option => {
+        option.selected = selectedIds.includes(option.value);
+      });
+    } else {
+      // No stored selection or empty (means all devices) - let populateOtherDeviceSelect select all by default
+      otherDeviceSelect.dataset.hasStoredSelection = 'false';
+      populateOtherDeviceSelect();
+    }
+    // Show/hide other device list based on toggle state
+    updateOtherDeviceListVisibility();
 
     // Load hide browser pushes setting (default is false/off)
     hideBrowserPushesCheckbox.checked = data.hideBrowserPushes || false; // Default to false
@@ -291,6 +310,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   showOtherDevicePushesToggle.addEventListener('click', function() {
     showOtherDevicePushesCheckbox.checked = !showOtherDevicePushesCheckbox.checked;
     updateShowOtherDevicePushesToggleVisual();
+    updateOtherDeviceListVisibility();
   });
 
   showNoTargetPushesToggle.addEventListener('click', function() {
@@ -709,6 +729,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       people: people,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
+      selectedOtherDeviceIds: getSelectedOtherDeviceIds(),
       showNoTargetPushes: showNoTargetPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
@@ -775,6 +796,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       remoteDeviceId: saveData.remoteDeviceId,
       onlyBrowserPushes: saveData.onlyBrowserPushes,
       showOtherDevicePushes: saveData.showOtherDevicePushes,
+      selectedOtherDeviceIds: saveData.selectedOtherDeviceIds,
       showNoTargetPushes: saveData.showNoTargetPushes,
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
@@ -826,7 +848,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   function populateDeviceSelects() {
     remoteDeviceSelect.innerHTML = '';
-    
+
     devices.forEach(device => {
       if (device.active) {
         const remoteOption = document.createElement('option');
@@ -835,8 +857,56 @@ document.addEventListener('DOMContentLoaded', async function() {
         remoteDeviceSelect.appendChild(remoteOption);
       }
     });
-    
+
     updateDeviceSelectionStatus();
+
+    // Also populate the other device select
+    populateOtherDeviceSelect();
+  }
+
+  function populateOtherDeviceSelect() {
+    otherDeviceSelect.innerHTML = '';
+
+    // Filter out Chrome devices and get only active devices
+    const otherDevices = devices.filter(device =>
+      device.active && device.type !== 'chrome'
+    );
+
+    otherDevices.forEach(device => {
+      const option = document.createElement('option');
+      option.value = device.iden;
+      option.textContent = device.nickname || `${device.manufacturer} ${device.model}`;
+      otherDeviceSelect.appendChild(option);
+    });
+
+    // By default, select all devices (backward compatible)
+    const hasStoredSelection = otherDeviceSelect.dataset.hasStoredSelection === 'true';
+    if (!hasStoredSelection) {
+      Array.from(otherDeviceSelect.options).forEach(option => {
+        option.selected = true;
+      });
+    }
+  }
+
+  function updateOtherDeviceListVisibility() {
+    if (showOtherDevicePushesCheckbox.checked) {
+      otherDeviceListGroup.style.display = 'block';
+    } else {
+      otherDeviceListGroup.style.display = 'none';
+    }
+  }
+
+  function getSelectedOtherDeviceIds() {
+    const selectedOptions = Array.from(otherDeviceSelect.selectedOptions);
+    const totalDevices = otherDeviceSelect.options.length;
+
+    // If all selected or none selected, return empty (means all, backward compatible)
+    if (selectedOptions.length === 0 || selectedOptions.length === totalDevices) {
+      return '';
+    }
+
+    // Return comma-separated IDs
+    return selectedOptions.map(opt => opt.value).filter(v => v).join(',');
   }
   
   function updateRetrieveButton() {
