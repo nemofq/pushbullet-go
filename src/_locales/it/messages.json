@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Copiato"
+  },
+  "choose_other_devices_tip": {
+    "message": "Seleziona per quali altri dispositivi mostrare le notifiche. Tieni premuto Ctrl/Cmd per selezionarne più di uno."
   }
 }

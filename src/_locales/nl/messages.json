@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Gekopieerd"
+  },
+  "choose_other_devices_tip": {
+    "message": "Selecteer voor welke andere apparaten meldingen moeten worden weergegeven. Houd Ctrl/Cmd ingedrukt om meerdere te selecteren."
   }
 }

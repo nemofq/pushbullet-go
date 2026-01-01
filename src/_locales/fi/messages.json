@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Kopioitu"
+  },
+  "choose_other_devices_tip": {
+    "message": "Valitse, millä muilla laitteilla ilmoitukset näytetään. Pidä Ctrl/Cmd painettuna valitaksesi useita."
   }
 }

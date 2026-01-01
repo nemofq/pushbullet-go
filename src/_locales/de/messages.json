@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Kopiert"
+  },
+  "choose_other_devices_tip": {
+    "message": "Wählen Sie aus, für welche anderen Geräte Benachrichtigungen angezeigt werden sollen. Halten Sie Strg/Cmd gedrückt, um mehrere auszuwählen."
   }
 }

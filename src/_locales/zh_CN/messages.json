@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "已复制"
+  },
+  "choose_other_devices_tip": {
+    "message": "选择要显示通知的其他设备。按住 Ctrl/Cmd 可选择多个设备。"
   }
 }

@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Másolva"
+  },
+  "choose_other_devices_tip": {
+    "message": "Válaszd ki, mely eszközökön jelenjenek meg az értesítések. Tartsd nyomva a Ctrl/Cmd gombot több eszköz kiválasztásához."
   }
 }

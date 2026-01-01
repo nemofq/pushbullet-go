@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Kopyalandı"
+  },
+  "choose_other_devices_tip": {
+    "message": "Bildirim gösterecek diğer cihazları seçin. Birden fazla seçmek için Ctrl/Cmd tuşuna basılı tutun."
   }
 }

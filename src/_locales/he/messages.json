@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "הועתק"
+  },
+  "choose_other_devices_tip": {
+    "message": "בחר באילו מכשירים אחרים להציג התראות. החזק Ctrl/Cmd לבחירת מספר מכשירים."
   }
 }

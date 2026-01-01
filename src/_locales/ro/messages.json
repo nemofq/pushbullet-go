@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Copiat"
+  },
+  "choose_other_devices_tip": {
+    "message": "Selectează ce alte dispozitive să afișeze notificări. Ține apăsat Ctrl/Cmd pentru a selecta mai multe."
   }
 }

@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "コピー済"
+  },
+  "choose_other_devices_tip": {
+    "message": "通知を表示する他のデバイスを選択してください。複数選択するには Ctrl/Cmd を押したままにしてください。"
   }
 }

@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Zkopírováno"
+  },
+  "choose_other_devices_tip": {
+    "message": "Vyberte další zařízení, pro která se mají zobrazovat oznámení. Podržte Ctrl/Cmd pro výběr více zařízení."
   }
 }

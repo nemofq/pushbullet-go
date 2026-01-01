@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Kopieret"
+  },
+  "choose_other_devices_tip": {
+    "message": "Vælg hvilke andre enheder der skal vise notifikationer. Hold Ctrl/Cmd nede for at vælge flere."
   }
 }

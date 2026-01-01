@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Tersalin"
+  },
+  "choose_other_devices_tip": {
+    "message": "Pilih perangkat lain mana yang akan menampilkan notifikasi. Tahan Ctrl/Cmd untuk memilih beberapa."
   }
 }

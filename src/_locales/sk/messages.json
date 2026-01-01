@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Skopírované"
+  },
+  "choose_other_devices_tip": {
+    "message": "Vyberte iné zariadenia, na ktorých sa majú zobrazovať upozornenia. Podržte Ctrl/Cmd na výber viacerých."
   }
 }

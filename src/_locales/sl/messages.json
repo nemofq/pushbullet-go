@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Kopirano"
+  },
+  "choose_other_devices_tip": {
+    "message": "Izberite druge naprave, na katerih naj se prikažejo obvestila. Držite Ctrl/Cmd za izbiro več naprav."
   }
 }

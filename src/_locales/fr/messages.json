@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Copié"
+  },
+  "choose_other_devices_tip": {
+    "message": "Sélectionnez les autres appareils pour lesquels afficher les notifications. Maintenez Ctrl/Cmd enfoncé pour en sélectionner plusieurs."
   }
 }

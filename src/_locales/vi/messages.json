@@ -313,5 +313,8 @@
   },
   "copied": {
     "message": "Đã sao chép"
+  },
+  "choose_other_devices_tip": {
+    "message": "Chọn thiết bị nào khác sẽ hiển thị thông báo. Giữ Ctrl/Cmd để chọn nhiều thiết bị."
   }
 }
