@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const autoOpenOnResumeCheckbox = document.getElementById('autoOpenOnResume');
   const autoOpenOnResumeToggle = document.getElementById('autoOpenOnResumeToggle');
   const autoOpenOnResumeContainer = document.getElementById('autoOpenOnResumeContainer');
+  const hideNotificationOnAutoOpenCheckbox = document.getElementById('hideNotificationOnAutoOpen');
+  const hideNotificationOnAutoOpenToggle = document.getElementById('hideNotificationOnAutoOpenToggle');
+  const hideNotificationOnAutoOpenContainer = document.getElementById('hideNotificationOnAutoOpenContainer');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
@@ -83,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -119,7 +122,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load auto-open on resume setting (default is false/off)
     autoOpenOnResumeCheckbox.checked = data.autoOpenOnResume || false;
     updateAutoOpenOnResumeToggleVisual();
-    
+
+    // Load hide notification on auto-open setting (default is false/off)
+    hideNotificationOnAutoOpenCheckbox.checked = data.hideNotificationOnAutoOpen || false;
+    updateHideNotificationOnAutoOpenToggleVisual();
+
     // Show/hide the auto-open on resume option based on auto-open links setting
     updateAutoOpenOnResumeVisibility();
     
@@ -273,6 +280,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   autoOpenOnResumeToggle.addEventListener('click', function() {
     autoOpenOnResumeCheckbox.checked = !autoOpenOnResumeCheckbox.checked;
     updateAutoOpenOnResumeToggleVisual();
+  });
+
+  hideNotificationOnAutoOpenToggle.addEventListener('click', function() {
+    hideNotificationOnAutoOpenCheckbox.checked = !hideNotificationOnAutoOpenCheckbox.checked;
+    updateHideNotificationOnAutoOpenToggleVisual();
   });
 
   notificationMirroringToggle.addEventListener('click', function() {
@@ -734,6 +746,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       autoOpenOnResume: autoOpenOnResumeCheckbox.checked,
+      hideNotificationOnAutoOpen: hideNotificationOnAutoOpenCheckbox.checked,
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
@@ -801,6 +814,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
       autoOpenOnResume: saveData.autoOpenOnResume,
+      hideNotificationOnAutoOpen: saveData.hideNotificationOnAutoOpen,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
       showQuickShare: saveData.showQuickShare,
@@ -931,12 +945,22 @@ document.addEventListener('DOMContentLoaded', async function() {
       autoOpenOnResumeToggle.classList.remove('active');
     }
   }
-  
+
+  function updateHideNotificationOnAutoOpenToggleVisual() {
+    if (hideNotificationOnAutoOpenCheckbox.checked) {
+      hideNotificationOnAutoOpenToggle.classList.add('active');
+    } else {
+      hideNotificationOnAutoOpenToggle.classList.remove('active');
+    }
+  }
+
   function updateAutoOpenOnResumeVisibility() {
     if (autoOpenLinksCheckbox.checked) {
       autoOpenOnResumeContainer.style.display = 'flex';
+      hideNotificationOnAutoOpenContainer.style.display = 'flex';
     } else {
       autoOpenOnResumeContainer.style.display = 'none';
+      hideNotificationOnAutoOpenContainer.style.display = 'none';
     }
   }
   

@@ -713,7 +713,7 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
           // Show notifications for new pushes (only if from tickle, meaning real-time)
           if (isFromTickle) {
             // Apply device filtering for notifications (same as popup display)
-            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'hideBrowserPushes']);
+            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
             const localData = await chrome.storage.local.get('chromeDeviceId');
 
             newPushes.forEach(push => {
@@ -759,7 +759,7 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
                 }
                 
                 if (!shouldHideNotification) {
-                  showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks);
+                  showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false);
                 }
               }
             });
@@ -794,55 +794,65 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
   }
 }
 
-async function showNotificationForPush(push, autoOpenLinks = false) {
-  let notificationBody = '';
-  
-  if (push.type === 'note') {
-    notificationBody = push.body || getMessage('new_note');
-  } else if (push.type === 'link') {
-    notificationBody = push.body || push.url || getMessage('new_link');
-  } else if (push.type === 'file') {
-    notificationBody = push.body || `${getMessage('file_prefix')}${push.file_name}` || getMessage('new_file');
-  } else {
-    notificationBody = push.body || getMessage('new_push');
+async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false) {
+  // Determine if this push will actually be auto-opened
+  const willAutoOpen = push.type === 'link' && push.url && autoOpenLinks;
+
+  // Skip notification creation if both conditions are met:
+  // 1. hideNotificationOnAutoOpen is enabled
+  // 2. This is a link push that will be auto-opened
+  const shouldSkipNotification = willAutoOpen && hideNotificationOnAutoOpen;
+
+  if (!shouldSkipNotification) {
+    let notificationBody = '';
+
+    if (push.type === 'note') {
+      notificationBody = push.body || getMessage('new_note');
+    } else if (push.type === 'link') {
+      notificationBody = push.body || push.url || getMessage('new_link');
+    } else if (push.type === 'file') {
+      notificationBody = push.body || `${getMessage('file_prefix')}${push.file_name}` || getMessage('new_file');
+    } else {
+      notificationBody = push.body || getMessage('new_push');
+    }
+
+    const notificationOptions = {
+      type: 'basic',
+      iconUrl: 'assets/icon128.png',
+      title: push.title || '',
+      message: notificationBody
+    };
+
+    // Add buttons based on push type
+    if (push.type === 'link' || push.type === 'file') {
+      notificationOptions.buttons = [
+        { title: getMessage('open_button') },
+        { title: getMessage('dismiss_button') }
+      ];
+    } else {
+      // For note and other types, only add dismiss button
+      notificationOptions.buttons = [
+        { title: getMessage('dismiss_button') }
+      ];
+    }
+
+    // Check if require interaction is enabled for pushes
+    const requireInteractionData = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes']);
+    if (requireInteractionData.requireInteraction && requireInteractionData.requireInteractionPushes) {
+      notificationOptions.requireInteraction = true;
+    }
+
+    chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
+
+    // Increment unread push count
+    await incrementUnreadPushCount();
   }
-  
-  const notificationOptions = {
-    type: 'basic',
-    iconUrl: 'assets/icon128.png',
-    title: push.title || '',
-    message: notificationBody
-  };
-  
-  // Add buttons based on push type
-  if (push.type === 'link' || push.type === 'file') {
-    notificationOptions.buttons = [
-      { title: getMessage('open_button') },
-      { title: getMessage('dismiss_button') }
-    ];
-  } else {
-    // For note and other types, only add dismiss button
-    notificationOptions.buttons = [
-      { title: getMessage('dismiss_button') }
-    ];
-  }
-  
-  // Check if require interaction is enabled for pushes
-  const requireInteractionData = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes']);
-  if (requireInteractionData.requireInteraction && requireInteractionData.requireInteractionPushes) {
-    notificationOptions.requireInteraction = true;
-  }
-  
-  chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
-  
-  // Play alert sound
+
+  // Play alert sound (happens whenever push is processed, respects global sound setting)
   await playAlertSound();
-  
-  // Increment unread push count
-  await incrementUnreadPushCount();
-  
-  // Auto-open link pushes in background tabs (only if enabled and notification is created)
-  if (push.type === 'link' && push.url && autoOpenLinks) {
+
+  // Auto-open link pushes in background tabs (happens regardless of notification)
+  if (willAutoOpen) {
     chrome.tabs.create({ url: push.url, active: false });
   }
 }

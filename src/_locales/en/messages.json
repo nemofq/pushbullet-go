@@ -233,6 +233,9 @@
   "auto_open_on_resume_label": {
     "message": "Auto-open even when connection resumes"
   },
+  "hide_notification_on_auto_open_label": {
+    "message": "Hide notification when it has auto-opened"
+  },
   "push_current_page_shortcut_description": {
     "message": "Push current page URL to selected devices"
   },
