@@ -2,11 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="color-scheme" content="light dark">
   <title>Pushbullet</title>
   <style>
     :root {
       /* Light theme */
+      color-scheme: light dark;
       --bg-primary: #ffffff;
       --bg-secondary: #f5f5f5;
       --bg-tertiary: #f9f9f9;
@@ -59,6 +59,7 @@
     }
 
     .theme-light {
+      color-scheme: light;
       --bg-primary: #ffffff;
       --bg-secondary: #f5f5f5;
       --bg-tertiary: #f9f9f9;
@@ -84,6 +85,7 @@
     }
 
     .theme-dark {
+      color-scheme: dark;
       --bg-primary: #1a1a1a;
       --bg-secondary: #2d2d2d;
       --bg-tertiary: #242424;
@@ -121,27 +123,32 @@
       transition: background-color 0.3s ease, color 0.3s ease;
       overflow: hidden;
     }
+
     body.dragging textarea {
       border: 2px solid var(--button-primary);
-      padding: 9px 11px; /* Compensate for border increase (from 1px to 2px) */
+      padding: 9px 11px;
+      /* Compensate for border increase (from 1px to 2px) */
       background: var(--bg-secondary);
     }
-    .header { 
-      padding: 12px; 
-      border-bottom: 1px solid var(--border-primary); 
-      display: flex; 
-      align-items: center; 
+
+    .header {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-primary);
+      display: flex;
+      align-items: center;
       justify-content: space-between;
       font-size: 15px;
       background: var(--bg-header);
       transition: background-color 0.3s ease, border-color 0.3s ease;
       flex-shrink: 0;
     }
+
     .tab-switcher {
       display: flex;
       align-items: center;
       gap: 8px;
     }
+
     .tab-button {
       background: none;
       border: 1px solid transparent;
@@ -152,103 +159,132 @@
       border-radius: 4px;
       transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
     }
+
     .tab-button.active {
       color: var(--text-primary);
       background: var(--bg-secondary);
       border: 1px solid var(--border-primary);
     }
+
     .tab-button:hover {
       color: var(--text-primary);
     }
-    .status { 
-      width: 13px; 
-      height: 13px; 
-      border-radius: 50%; 
+
+    .status {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
       margin-right: 9px;
     }
-    .status.connected { background: var(--status-connected); }
-    .status.connecting { background: var(--status-connecting); }
-    .status.disconnected { background: var(--status-disconnected); }
-    .messages { 
-      flex: 1; 
-      overflow-y: auto; 
+
+    .status.connected {
+      background: var(--status-connected);
+    }
+
+    .status.connecting {
+      background: var(--status-connecting);
+    }
+
+    .status.disconnected {
+      background: var(--status-disconnected);
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
       padding: 10px;
       display: flex;
       flex-direction: column;
       min-height: 0;
     }
-    .message { 
-      margin-bottom: 15px; 
-      padding: 10px; 
-      border-radius: 8px; 
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 8px;
       background: var(--bg-secondary);
       max-width: 300px;
       width: fit-content;
       transition: background-color 0.3s ease;
     }
-    .message.sent { 
-      background: var(--bg-message-sent); 
+
+    .message.sent {
+      background: var(--bg-message-sent);
       color: var(--text-white);
     }
-    .message.received { 
+
+    .message.received {
       background: var(--bg-message-received);
     }
+
     .message-row {
       display: flex;
       flex-direction: column;
       margin-bottom: 15px;
     }
+
     .message-row.received {
       align-items: flex-start;
     }
+
     .message-row.sent {
       align-items: flex-end;
     }
+
     .message-content {
       display: flex;
       align-items: flex-start;
       max-width: calc(100% - 70px);
     }
+
     .message-row.received .message-content {
       flex-direction: row;
       margin-left: 10px;
       margin-right: 60px;
     }
+
     .message-row.sent .message-content {
       flex-direction: row-reverse;
       margin-left: 60px;
       margin-right: 10px;
     }
-    .message-timestamp { 
-      font-size: 11px; 
-      color: var(--text-tertiary); 
+
+    .message-timestamp {
+      font-size: 11px;
+      color: var(--text-tertiary);
       margin-bottom: 5px;
       flex-shrink: 0;
       line-height: 1.4;
     }
+
     .message-row.received .message-timestamp {
       margin-left: 10px;
       text-align: left;
     }
+
     .message-row.sent .message-timestamp {
       margin-right: 10px;
       text-align: right;
     }
-    .message-title { 
-      font-weight: bold; 
+
+    .message-title {
+      font-weight: bold;
       margin-bottom: 5px;
       font-size: 14px;
     }
+
     .message.sent .message-title {
       color: var(--text-white);
     }
-    .message-body { 
+
+    .message-body {
       word-wrap: break-word;
       word-break: break-word;
       white-space: pre-wrap;
       font-size: 14px;
       max-width: 100%;
     }
+
     .copy-button {
       background: none;
       border: none;
@@ -263,16 +299,20 @@
       align-items: center;
       justify-content: center;
     }
+
     .copy-button svg {
       width: 14px;
       height: 14px;
     }
+
     .message-row:hover .copy-button {
       opacity: 1;
     }
+
     .copy-button:hover {
       color: var(--copy-button-hover);
     }
+
     .push-delete-button {
       background: none;
       border: none;
@@ -287,48 +327,58 @@
       align-items: center;
       justify-content: center;
     }
+
     .push-delete-button svg {
       width: 14px;
       height: 14px;
     }
+
     .message-row:hover .push-delete-button {
       opacity: 1;
     }
+
     .push-delete-button:hover {
       color: #f44336;
     }
-    .message-link { 
-      color: var(--text-link); 
+
+    .message-link {
+      color: var(--text-link);
       text-decoration: none;
     }
+
     .message.sent .message-link {
       color: var(--text-link-sent);
     }
-    .message-link:hover { 
+
+    .message-link:hover {
       text-decoration: underline;
     }
-    .message-image { 
-      max-width: 100%; 
-      border-radius: 4px; 
+
+    .message-image {
+      max-width: 100%;
+      border-radius: 4px;
       cursor: pointer;
     }
-    .send-form { 
-      border-top: 1px solid var(--border-primary); 
+
+    .send-form {
+      border-top: 1px solid var(--border-primary);
       padding: 0;
       background: var(--bg-tertiary);
       transition: background-color 0.3s ease, border-color 0.3s ease;
       flex-shrink: 0;
     }
-    .input-container { 
-      display: flex; 
+
+    .input-container {
+      display: flex;
       align-items: flex-end;
       gap: 8px;
     }
-    textarea { 
-      flex: 1; 
-      padding: 10px 12px; 
-      border: 1px solid var(--border-secondary); 
-      border-radius: 10px; 
+
+    textarea {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border-secondary);
+      border-radius: 10px;
       resize: none;
       height: 20px;
       font-family: inherit;
@@ -338,20 +388,23 @@
       line-height: 1.2;
       transition: border-color 0.3s ease, background-color 0.3s ease;
     }
+
     textarea:focus {
       outline: none;
       border-color: var(--button-primary);
     }
+
     .button-group {
       display: flex;
       gap: 4px;
     }
-    .icon-button { 
-      background: var(--button-primary); 
-      color: var(--text-white); 
-      border: none; 
-      padding: 10px; 
-      border-radius: 10px; 
+
+    .icon-button {
+      background: var(--button-primary);
+      color: var(--text-white);
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -360,25 +413,30 @@
       height: 40px;
       transition: background-color 0.3s ease;
     }
-    .icon-button:hover { 
+
+    .icon-button:hover {
       background: var(--button-primary-hover);
     }
+
     .icon-button svg {
       width: 18px;
       height: 18px;
     }
-    .no-messages { 
-      text-align: center; 
-      color: var(--text-secondary); 
+
+    .no-messages {
+      text-align: center;
+      color: var(--text-secondary);
       margin-top: 50px;
     }
+
     .setup-guide {
       display: none;
       text-align: center;
       padding: 20px;
       color: var(--text-secondary);
       position: absolute;
-      top: 80px; /* Below header */
+      top: 80px;
+      /* Below header */
       bottom: 0;
       left: 0;
       right: 0;
@@ -386,20 +444,24 @@
       justify-content: center;
       align-items: center;
     }
+
     .setup-guide.show {
       display: flex;
     }
+
     .setup-guide h3 {
       margin: 0 0 15px 0;
       color: var(--text-primary);
       font-weight: normal;
       font-size: 16px;
     }
+
     .setup-guide p {
       margin: 0 0 20px 0;
       font-size: 14px;
       line-height: 1.4;
     }
+
     .setup-button {
       background: var(--button-primary);
       color: var(--text-white);
@@ -410,12 +472,15 @@
       font-size: 14px;
       transition: background-color 0.3s ease;
     }
+
     .setup-button:hover {
       background: var(--button-primary-hover);
     }
+
     #retryConnection:hover {
       background: var(--button-primary-hover) !important;
     }
+
     .notification-card {
       margin-bottom: 12px;
       padding: 12px;
@@ -424,18 +489,21 @@
       border: 1px solid var(--border-primary);
       transition: background-color 0.3s ease, border-color 0.3s ease;
     }
+
     .notification-header {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 8px;
     }
+
     .notification-icon {
       width: 24px;
       height: 24px;
       border-radius: 4px;
       flex-shrink: 0;
     }
+
     .notification-app {
       font-weight: bold;
       font-size: 13px;
@@ -446,24 +514,28 @@
       white-space: nowrap;
       min-width: 0;
     }
+
     .notification-timestamp {
       font-size: 11px;
       color: var(--text-tertiary);
       flex-shrink: 0;
       margin-left: 8px;
     }
+
     .notification-title {
       font-weight: bold;
       margin-bottom: 4px;
       font-size: 14px;
       color: var(--text-primary);
     }
+
     .notification-body {
       font-size: 13px;
       color: var(--text-secondary);
       word-wrap: normal;
       line-height: 1.4;
     }
+
     .notification-actions {
       display: flex;
       gap: 4px;
@@ -472,9 +544,11 @@
       align-items: center;
       justify-content: flex-end;
     }
+
     .notification-actions.has-verification-code {
       justify-content: space-between;
     }
+
     .notification-copy-button {
       background: none;
       border: none;
@@ -486,18 +560,22 @@
       justify-content: center;
       transition: background-color 0.2s ease;
     }
+
     .notification-copy-button svg {
       width: 14px;
       height: 14px;
       fill: var(--copy-button);
       transition: fill 0.2s ease;
     }
+
     .notification-copy-button:hover {
       background: rgba(76, 175, 80, 0.1);
     }
+
     .notification-copy-button:hover svg {
       fill: var(--copy-button-hover);
     }
+
     .notification-delete-button {
       background: none;
       border: none;
@@ -509,18 +587,22 @@
       justify-content: center;
       transition: background-color 0.2s ease;
     }
+
     .notification-delete-button svg {
       width: 16px;
       height: 16px;
       fill: var(--copy-button);
       transition: fill 0.2s ease;
     }
+
     .notification-delete-button:hover {
       background: rgba(244, 67, 54, 0.1);
     }
+
     .notification-delete-button:hover svg {
       fill: #f44336;
     }
+
     .sms-shortcut {
       display: flex;
       align-items: center;
@@ -532,25 +614,31 @@
       border-radius: 4px;
       transition: color 0.3s ease;
     }
+
     .sms-shortcut svg {
       fill: var(--text-secondary);
       transition: fill 0.3s ease;
     }
+
     .sms-shortcut:hover {
       color: var(--button-primary);
     }
+
     .sms-shortcut:hover svg {
       fill: var(--button-primary);
     }
+
     .quick-share-container {
       padding: 10px 15px;
       border-bottom: 1px solid var(--border-primary);
     }
+
     .quick-share-content {
       display: flex;
       align-items: center;
       gap: 8px;
     }
+
     .quick-share-url {
       flex: 1;
       font-size: 13px;
@@ -561,6 +649,7 @@
       min-width: 0;
       font-family: inherit;
     }
+
     .quick-share-button {
       background: transparent;
       color: var(--text-secondary);
@@ -573,13 +662,16 @@
       transition: color 0.2s, border-color 0.2s;
       flex-shrink: 0;
     }
+
     .quick-share-button:hover {
       color: var(--button-primary);
       border-color: var(--button-primary);
     }
+
     .input-container {
       padding: 10px 15px 15px 15px;
     }
+
     .clear-history-button {
       background: none;
       border: none;
@@ -593,9 +685,11 @@
       display: block;
       width: fit-content;
     }
+
     .clear-history-button:hover {
       color: var(--copy-button-hover);
     }
+
     .clear-notifications-bar {
       border-top: 1px solid var(--border-primary);
       background: var(--bg-tertiary);
@@ -606,6 +700,7 @@
       flex-shrink: 0;
       transition: background-color 0.3s ease, border-color 0.3s ease;
     }
+
     .clear-notifications-button {
       background: none;
       border: none;
@@ -615,9 +710,11 @@
       transition: color 0.2s ease;
       padding: 0;
     }
+
     .clear-notifications-button:hover {
       color: var(--copy-button-hover);
     }
+
     .logo-link {
       text-decoration: none;
       color: inherit;
@@ -626,9 +723,11 @@
       transition: color 0.3s ease;
       user-select: none;
     }
+
     .logo-link:hover {
       color: var(--button-primary);
     }
+
     .verification-code-button {
       display: inline-flex;
       align-items: center;
@@ -647,53 +746,63 @@
       min-width: 95px;
       transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
     }
+
     .verification-code-button:hover {
       background: var(--bg-message-received-hover);
       border-color: var(--button-primary);
       transform: translateY(-1px);
     }
+
     .verification-code-button:active {
       transform: translateY(0);
     }
+
     /* Light mode: bright green button */
     .theme-light .verification-code-button {
       background: #4caf50;
       color: #ffffff;
       border: none;
     }
+
     .theme-light .verification-code-button:hover {
       background: #45a049;
       border: none;
     }
+
     @media (prefers-color-scheme: light) {
       :root:not(.theme-dark) .verification-code-button {
         background: #4caf50;
         color: #ffffff;
         border: none;
       }
+
       :root:not(.theme-dark) .verification-code-button:hover {
         background: #45a049;
         border: none;
       }
     }
+
     .verification-code-button .code-text {
       font-family: 'Courier New', Consolas, Monaco, monospace;
       font-weight: 600;
       letter-spacing: 0.5px;
       line-height: 1.2;
     }
+
     .verification-code-button .status-text {
       font-family: sans-serif;
       font-weight: 600;
       letter-spacing: normal;
       line-height: 1.2;
     }
+
     .verification-code-button svg {
       flex-shrink: 0;
       transform: translateY(-1px);
     }
   </style>
 </head>
+
 <body>
   <div class="header">
     <div style="display: flex; align-items: center;">
@@ -701,9 +810,12 @@
       <a id="logoLink" class="logo-link" href="#" target="_blank">Push Go</a>
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
-      <a id="smsShortcut" class="sms-shortcut" href="https://www.pushbullet.com/#sms/" target="_blank" style="display: none;" data-i18n-title="open_sms_web_interface">
+      <a id="smsShortcut" class="sms-shortcut" href="https://www.pushbullet.com/#sms/" target="_blank"
+        style="display: none;" data-i18n-title="open_sms_web_interface">
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="14" height="14" viewBox="0 0 24 24">
-          <path d="M 5 3 C 3.9069372 3 3 3.9069372 3 5 L 3 19 C 3 20.093063 3.9069372 21 5 21 L 19 21 C 20.093063 21 21 20.093063 21 19 L 21 12 L 19 12 L 19 19 L 5 19 L 5 5 L 12 5 L 12 3 L 5 3 z M 14 3 L 14 5 L 17.585938 5 L 8.2929688 14.292969 L 9.7070312 15.707031 L 19 6.4140625 L 19 10 L 21 10 L 21 3 L 14 3 z"></path>
+          <path
+            d="M 5 3 C 3.9069372 3 3 3.9069372 3 5 L 3 19 C 3 20.093063 3.9069372 21 5 21 L 19 21 C 20.093063 21 21 20.093063 21 19 L 21 12 L 19 12 L 19 19 L 5 19 L 5 5 L 12 5 L 12 3 L 5 3 z M 14 3 L 14 5 L 17.585938 5 L 8.2929688 14.292969 L 9.7070312 15.707031 L 19 6.4140625 L 19 10 L 21 10 L 21 3 L 14 3 z">
+          </path>
         </svg>
         <span data-i18n="sms_button">SMS</span>
       </a>
@@ -711,20 +823,23 @@
         <button id="pushTab" class="tab-button active" data-i18n="push_button">Push</button>
         <button id="notificationTab" class="tab-button" data-i18n="notification_button">Notification</button>
       </div>
-      <button id="retryConnection" style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;" title="Retry connection" data-i18n="reconnect_button">
+      <button id="retryConnection"
+        style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;"
+        title="Retry connection" data-i18n="reconnect_button">
         Reconnect
       </button>
     </div>
   </div>
-  
+
   <div class="messages" id="messagesList">
   </div>
-  
+
   <div class="messages" id="notificationsList" style="display: none;">
   </div>
 
   <div class="clear-notifications-bar" id="clearNotificationsBar">
-    <button id="clearNotificationsButton" class="clear-notifications-button" data-i18n="clear_mirror_history">Clear notification</button>
+    <button id="clearNotificationsButton" class="clear-notifications-button" data-i18n="clear_mirror_history">Clear
+      notification</button>
   </div>
 
   <div class="setup-guide" id="setupGuide">
@@ -732,7 +847,7 @@
     <p data-i18n="setup_configure_token">Configure your Pushbullet access token to start using the extension.</p>
     <button class="setup-button" id="openOptionsButton" data-i18n="open_settings_button">Open Settings</button>
   </div>
-  
+
   <div class="send-form">
     <div id="quickShareContainer" class="quick-share-container" style="display: none;">
       <div class="quick-share-content">
@@ -745,19 +860,20 @@
       <div class="button-group">
         <button id="sendButton" class="icon-button" data-i18n-title="send_message_title" title="Send message">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
           </svg>
         </button>
         <button id="sendFileButton" class="icon-button" data-i18n-title="send_file_title" title="Send file/image">
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
           </svg>
         </button>
       </div>
     </div>
   </div>
-  
+
   <script src="i18n.js"></script>
   <script src="popup.js"></script>
 </body>
+
 </html>

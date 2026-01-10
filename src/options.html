@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Push Go Options</title>
   <style>
     :root {
       /* Light theme */
+      color-scheme: light dark;
       --bg-primary: #ffffff;
       --bg-secondary: #ffffff;
       --bg-tertiary: #f9f9f9;
@@ -56,6 +58,7 @@
     }
 
     .theme-light {
+      color-scheme: light;
       --bg-primary: #ffffff;
       --bg-secondary: #ffffff;
       --bg-tertiary: #f9f9f9;
@@ -80,6 +83,7 @@
     }
 
     .theme-dark {
+      color-scheme: dark;
       --bg-primary: #1a1a1a;
       --bg-secondary: #2d2d2d;
       --bg-tertiary: #242424;
@@ -115,9 +119,11 @@
       :root .container {
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
       }
+
       :root .tab:hover:not(.active) {
         background: rgba(255, 255, 255, 0.1);
       }
+
       :root select:not([multiple]):not([size]) {
         background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
       }
@@ -127,17 +133,18 @@
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
     }
 
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-      margin: 0; 
-      padding: 40px 20px; 
-      display: flex; 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
       flex-direction: column;
-      align-items: center; 
+      align-items: center;
       background: var(--bg-primary);
       color: var(--text-primary);
       transition: background-color 0.3s ease, color 0.3s ease;
     }
+
     .container {
       background: var(--bg-secondary);
       border-radius: 12px;
@@ -147,37 +154,42 @@
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       overflow: hidden;
     }
-    .form-group { 
-      margin-bottom: 20px; 
+
+    .form-group {
+      margin-bottom: 20px;
     }
-    label { 
-      display: block; 
-      margin-bottom: 8px; 
+
+    label {
+      display: block;
+      margin-bottom: 8px;
       color: var(--text-primary);
       font-size: 14px;
     }
+
     input[type="text"],
-    input[type="password"] { 
-      width: 100%; 
-      padding: 12px; 
-      border: 1px solid var(--border-secondary); 
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-secondary);
       font-size: 14px;
       box-sizing: border-box;
       background: var(--bg-primary);
       color: var(--text-primary);
       transition: border-color 0.3s ease, background-color 0.3s ease;
     }
+
     input[type="text"]:focus,
     input[type="password"]:focus {
       outline: none;
       border-color: var(--border-focus);
     }
-    button { 
-      background: var(--button-primary); 
-      color: white; 
-      border: none; 
-      padding: 12px 24px; 
-      cursor: pointer; 
+
+    button {
+      background: var(--button-primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
       font-size: 14px;
       width: 100%;
       display: flex;
@@ -186,51 +198,62 @@
       gap: 6px;
       transition: background-color 0.2s;
     }
-    button:hover { 
-      background: var(--button-primary-hover); 
+
+    button:hover {
+      background: var(--button-primary-hover);
     }
+
     button:disabled {
       background: var(--button-disabled);
       cursor: not-allowed;
     }
+
     .retrieve-button {
       margin-top: 10px;
       margin-bottom: 20px;
     }
+
     button svg {
       width: 16px;
       height: 16px;
     }
-    .status { 
-      margin-top: 15px; 
-      padding: 12px; 
-      display: none; 
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      display: none;
       text-align: center;
       font-size: 14px;
     }
-    .success { 
-      background: var(--success-bg); 
-      color: var(--success-text); 
-      border: 1px solid var(--success-border); 
+
+    .success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
     }
-    .error { 
-      background: var(--error-bg); 
-      color: var(--error-text); 
-      border: 1px solid var(--error-border); 
+
+    .error {
+      background: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid var(--error-border);
     }
+
     .tip {
       font-size: 12px;
       color: var(--text-secondary);
       margin-top: 5px;
       line-height: 1.4;
     }
+
     .tip a {
       color: var(--button-primary);
       text-decoration: none;
     }
+
     .tip a:hover {
       text-decoration: underline;
     }
+
     select {
       width: 100%;
       padding: 12px;
@@ -241,10 +264,12 @@
       color: var(--text-primary);
       transition: border-color 0.3s ease, background-color 0.3s ease;
     }
+
     select:focus {
       outline: none;
       border-color: var(--border-focus);
     }
+
     select:not([multiple]):not([size]) {
       padding: 12px 40px 12px 12px;
       appearance: none;
@@ -253,30 +278,35 @@
       background-position: right 12px center;
       background-size: 16px;
     }
-    
+
     .theme-dark select:not([multiple]):not([size]),
     .theme-system.system-dark select:not([multiple]):not([size]) {
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
     }
+
     select[multiple] {
       height: 120px;
     }
+
     /* Fixed size select (like language selector) should not have dropdown arrow */
     select[size]:not([size="1"]) {
       appearance: auto;
       background-image: none;
       padding: 12px;
     }
+
     .toggle-container {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
     }
+
     .toggle-label {
       margin: 0;
       flex: 1;
     }
+
     .toggle-switch {
       position: relative;
       width: 50px;
@@ -286,9 +316,11 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
+
     .toggle-switch.active {
       background: var(--toggle-active);
     }
+
     .toggle-slider {
       position: absolute;
       top: 2px;
@@ -299,23 +331,27 @@
       border-radius: 50%;
       transition: transform 0.3s;
     }
+
     .toggle-switch.active .toggle-slider {
       transform: translateX(26px);
     }
+
     .toggle-input {
       display: none;
     }
+
     .selection-status {
       font-weight: normal;
       color: var(--text-secondary);
       font-size: 12px;
     }
-    
+
     /* Tab styles */
     .tabs {
       display: flex;
       background: var(--bg-tertiary);
     }
+
     .tab {
       flex: 1;
       padding: 16px 20px;
@@ -329,32 +365,40 @@
       transition: all 0.2s ease;
       position: relative;
     }
+
     .tab.active {
       background: var(--bg-secondary);
       color: var(--text-primary);
     }
+
     .tab:hover:not(.active) {
       background: rgba(0, 0, 0, 0.05);
       color: var(--text-primary);
     }
+
     .tab-content {
       display: none;
       background: var(--bg-secondary);
       padding: 30px;
     }
+
     .tab-content.active {
       display: block;
     }
+
     .tab-save-button {
       margin-top: 25px;
     }
+
     .save-container {
       width: 450px;
       margin-top: 20px;
     }
+
     .save-button {
       border-radius: 8px;
     }
+
     .sub-option-icon {
       color: var(--text-tertiary);
       margin-right: 8px;
@@ -363,6 +407,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="tabs">
@@ -372,260 +417,274 @@
 
     <!-- General Tab Content -->
     <div class="tab-content active" id="general-content">
-        <div class="form-group">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <label for="accessToken" style="margin: 0;" data-i18n="access_token_label">Access Token:</label>
-            <a href="#" id="oauthLink" style="font-size: 14px; color: var(--button-primary); text-decoration: none;" data-i18n="authenticate_via_oauth">Authenticate via OAuth</a>
-          </div>
-          <input type="text" id="accessToken" data-i18n-placeholder="access_token_placeholder" placeholder="Enter your Pushbullet access token">
-          <div class="tip">
-            <span data-i18n="visit_link_tip">Visit</span> <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account</a> <span data-i18n="get_access_token_tip">to get your access token.</span>
-          </div>
-          <button id="retrieveDevices" class="retrieve-button" disabled data-i18n="retrieve_devices_button">Retrieve devices and people</button>
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label for="accessToken" style="margin: 0;" data-i18n="access_token_label">Access Token:</label>
+          <a href="#" id="oauthLink" style="font-size: 14px; color: var(--button-primary); text-decoration: none;"
+            data-i18n="authenticate_via_oauth">Authenticate via OAuth</a>
         </div>
-        <div class="form-group">
-          <label for="remoteDeviceId"><span data-i18n="target_devices_label">Target Devices:</span> <span id="deviceSelectionStatus" class="selection-status" data-i18n="none_selected_all_devices">None selected (to all devices)</span></label>
-          <select id="remoteDeviceId" multiple>
-          </select>
-          <div class="tip" data-i18n="choose_devices_tip">
-            Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
-          </div>
+        <input type="text" id="accessToken" data-i18n-placeholder="access_token_placeholder"
+          placeholder="Enter your Pushbullet access token">
+        <div class="tip">
+          <span data-i18n="visit_link_tip">Visit</span> <a href="https://www.pushbullet.com/#settings/account"
+            target="_blank">https://www.pushbullet.com/#settings/account</a> <span data-i18n="get_access_token_tip">to
+            get your access token.</span>
         </div>
-        <div class="form-group">
-          <label data-i18n="only_notify_show_pushes_title">Only notify and show pushes for the following</label>
-        </div>
-        <div class="toggle-container" style="margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="current_chrome_devices_label">Current device - Chrome(s)</span>
-          </label>
-          <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
-          <div class="toggle-switch" id="onlyBrowserPushesToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container" style="margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="other_devices_label">Other devices</span>
-          </label>
-          <input type="checkbox" id="showOtherDevicePushes" class="toggle-input">
-          <div class="toggle-switch" id="showOtherDevicePushesToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="form-group" id="otherDeviceListGroup" style="display: none; margin-left: 24px; margin-bottom: 20px;">
-          <select id="otherDeviceIds" multiple>
-          </select>
-          <div class="tip" data-i18n="choose_other_devices_tip">
-            Select which other devices to show notifications for. Hold Ctrl/Cmd to select multiple.
-          </div>
-        </div>
-        <div class="toggle-container" style="margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="pushes_without_target_label">Pushes without target device</span>
-          </label>
-          <input type="checkbox" id="showNoTargetPushes" class="toggle-input">
-          <div class="toggle-switch" id="showNoTargetPushesToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="hide_browser_pushes_label">Hide notification of pushes sent from browsers</label>
-          <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
-          <div class="toggle-switch" id="hideBrowserPushesToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="auto_open_links_label">Auto-open in new tab (inactive) when receiving a link</label>
-          <input type="checkbox" id="autoOpenLinks" class="toggle-input">
-          <div class="toggle-switch" id="autoOpenLinksToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container" id="autoOpenOnResumeContainer" style="display: none; margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="auto_open_on_resume_label">Auto-open even when connection resumes</span>
-          </label>
-          <input type="checkbox" id="autoOpenOnResume" class="toggle-input">
-          <div class="toggle-switch" id="autoOpenOnResumeToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container" id="hideNotificationOnAutoOpenContainer" style="display: none; margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="hide_notification_on_auto_open_label">Hide notification when it has auto-opened</span>
-          </label>
-          <input type="checkbox" id="hideNotificationOnAutoOpen" class="toggle-input">
-          <div class="toggle-switch" id="hideNotificationOnAutoOpenToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="play_sound_on_notification_label">Play sound on notification</label>
-          <input type="checkbox" id="playSoundOnNotification" class="toggle-input">
-          <div class="toggle-switch" id="playSoundOnNotificationToggle">
-            <div class="toggle-slider"></div>
-          </div>
+        <button id="retrieveDevices" class="retrieve-button" disabled data-i18n="retrieve_devices_button">Retrieve
+          devices and people</button>
+      </div>
+      <div class="form-group">
+        <label for="remoteDeviceId"><span data-i18n="target_devices_label">Target Devices:</span> <span
+            id="deviceSelectionStatus" class="selection-status" data-i18n="none_selected_all_devices">None selected (to
+            all devices)</span></label>
+        <select id="remoteDeviceId" multiple>
+        </select>
+        <div class="tip" data-i18n="choose_devices_tip">
+          Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
         </div>
       </div>
+      <div class="form-group">
+        <label data-i18n="only_notify_show_pushes_title">Only notify and show pushes for the following</label>
+      </div>
+      <div class="toggle-container" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="current_chrome_devices_label">Current device - Chrome(s)</span>
+        </label>
+        <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
+        <div class="toggle-switch" id="onlyBrowserPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="other_devices_label">Other devices</span>
+        </label>
+        <input type="checkbox" id="showOtherDevicePushes" class="toggle-input">
+        <div class="toggle-switch" id="showOtherDevicePushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="form-group" id="otherDeviceListGroup" style="display: none; margin-left: 24px; margin-bottom: 20px;">
+        <select id="otherDeviceIds" multiple>
+        </select>
+        <div class="tip" data-i18n="choose_other_devices_tip">
+          Select which other devices to show notifications for. Hold Ctrl/Cmd to select multiple.
+        </div>
+      </div>
+      <div class="toggle-container" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="pushes_without_target_label">Pushes without target device</span>
+        </label>
+        <input type="checkbox" id="showNoTargetPushes" class="toggle-input">
+        <div class="toggle-switch" id="showNoTargetPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="hide_browser_pushes_label">Hide notification of pushes sent from
+          browsers</label>
+        <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
+        <div class="toggle-switch" id="hideBrowserPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="auto_open_links_label">Auto-open in new tab (inactive) when receiving a
+          link</label>
+        <input type="checkbox" id="autoOpenLinks" class="toggle-input">
+        <div class="toggle-switch" id="autoOpenLinksToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="autoOpenOnResumeContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="auto_open_on_resume_label">Auto-open even when connection resumes</span>
+        </label>
+        <input type="checkbox" id="autoOpenOnResume" class="toggle-input">
+        <div class="toggle-switch" id="autoOpenOnResumeToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="hideNotificationOnAutoOpenContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="hide_notification_on_auto_open_label">Hide notification when it has auto-opened</span>
+        </label>
+        <input type="checkbox" id="hideNotificationOnAutoOpen" class="toggle-input">
+        <div class="toggle-switch" id="hideNotificationOnAutoOpenToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="play_sound_on_notification_label">Play sound on notification</label>
+        <input type="checkbox" id="playSoundOnNotification" class="toggle-input">
+        <div class="toggle-switch" id="playSoundOnNotificationToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+    </div>
 
-      <!-- Appearance Tab Content -->
-      <div class="tab-content" id="appearance-content">
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="show_sms_shortcut_label">Show Pushbullet SMS shortcut in popup</label>
-          <input type="checkbox" id="showSmsShortcut" class="toggle-input">
-          <div class="toggle-switch" id="showSmsShortcutToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="enable_notification_mirroring_label">Enable Notification Mirroring</label>
-          <input type="checkbox" id="notificationMirroring" class="toggle-input">
-          <div class="toggle-switch" id="notificationMirroringToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="form-group" id="encryptionPasswordGroup" style="display: none;">
-          <label for="encryptionPassword">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="encryption_password_label">End-to-End Encryption Password:</span>
-          </label>
-          <input type="password" id="encryptionPassword" placeholder="Optional - for encrypted features" data-i18n-placeholder="encryption_password_placeholder">
-          <div class="tip" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your password is never stored. Must be the same on all devices.</div>
-        </div>
-        <div class="form-group" id="defaultTabGroup" style="display: none;">
-          <label for="defaultTab">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="default_tab_label">Default tab in popup:</span>
-          </label>
-          <select id="defaultTab">
-            <option value="push" data-i18n="push_button">Push</option>
-            <option value="notification" data-i18n="notification_button">Notification</option>
-          </select>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="require_interaction_label">Require interaction to dismiss notifications in Chrome</label>
-          <input type="checkbox" id="requireInteraction" class="toggle-input">
-          <div class="toggle-switch" id="requireInteractionToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container" id="requireInteractionPushesContainer" style="display: none; margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="pushes_label">Pushes</span>
-          </label>
-          <input type="checkbox" id="requireInteractionPushes" class="toggle-input">
-          <div class="toggle-switch" id="requireInteractionPushesToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container" id="requireInteractionMirroredContainer" style="display: none; margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
-          </label>
-          <input type="checkbox" id="requireInteractionMirrored" class="toggle-input">
-          <div class="toggle-switch" id="requireInteractionMirroredToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="close_as_dismiss_label">Treat native close of Chrome notification as dismiss action</label>
-          <input type="checkbox" id="closeAsDismiss" class="toggle-input">
-          <div class="toggle-switch" id="closeAsDismissToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="display_unread_counts_label">Display unread counts</label>
-          <input type="checkbox" id="displayUnreadCounts" class="toggle-input">
-          <div class="toggle-switch" id="displayUnreadCountsToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container" id="displayUnreadPushesContainer" style="display: none; margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="pushes_label">Pushes</span>
-          </label>
-          <input type="checkbox" id="displayUnreadPushes" class="toggle-input">
-          <div class="toggle-switch" id="displayUnreadPushesToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container" id="displayUnreadMirroredContainer" style="display: none; margin-left: 0px;">
-          <label class="toggle-label">
-            <span class="sub-option-icon">↳</span>
-            <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
-          </label>
-          <input type="checkbox" id="displayUnreadMirrored" class="toggle-input">
-          <div class="toggle-switch" id="displayUnreadMirroredToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="toggle-container">
-          <label class="toggle-label" data-i18n="show_quick_share_label">Show quick share for current page</label>
-          <input type="checkbox" id="showQuickShare" class="toggle-input">
-          <div class="toggle-switch" id="showQuickShareToggle">
-            <div class="toggle-slider"></div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="languageMode" data-i18n="language_label">Language:</label>
-          <select id="languageMode" size="4">
-            <option value="auto" data-i18n="auto_browser_language">Auto (Browser's language)</option>
-            <option value="id">Bahasa Indonesia</option>
-            <option value="de">Deutsch</option>
-            <option value="en">English</option>
-            <option value="fr">français</option>
-            <option value="nl">nederlands</option>
-            <option value="no">norsk</option>
-            <option value="tr">türkçe</option>
-            <option value="ca">català</option>
-            <option value="da">dansk</option>
-            <option value="es">español</option>
-            <option value="it">italiano</option>
-            <option value="hu">magyar</option>
-            <option value="pl">polski</option>
-            <option value="pt_BR">português (Brasil)</option>
-            <option value="pt_PT">português (Portugal)</option>
-            <option value="ro">română</option>
-            <option value="sk">slovenčina</option>
-            <option value="sl">slovenščina</option>
-            <option value="fi">suomi</option>
-            <option value="sv">svenska</option>
-            <option value="bg">български</option>
-            <option value="ru">русский</option>
-            <option value="he">עברית</option>
-            <option value="th">ไทย</option>
-            <option value="ar">العربية</option>
-            <option value="zh_CN">中文（简体）</option>
-            <option value="zh_TW">中文（繁體）</option>
-            <option value="ja">日本語</option>
-            <option value="ko">한국어</option>
-            <option value="cs">čeština</option>
-            <option value="el">ελληνικά</option>
-            <option value="uk">українська</option>
-            <option value="vi">tiếng Việt</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="colorMode" data-i18n="color_mode_label">Color Mode:</label>
-          <select id="colorMode">
-            <option value="system" data-i18n="follow_system">Follow system</option>
-            <option value="light" data-i18n="light">Light</option>
-            <option value="dark" data-i18n="dark">Dark</option>
-          </select>
+    <!-- Appearance Tab Content -->
+    <div class="tab-content" id="appearance-content">
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="show_sms_shortcut_label">Show Pushbullet SMS shortcut in popup</label>
+        <input type="checkbox" id="showSmsShortcut" class="toggle-input">
+        <div class="toggle-switch" id="showSmsShortcutToggle">
+          <div class="toggle-slider"></div>
         </div>
       </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="enable_notification_mirroring_label">Enable Notification
+          Mirroring</label>
+        <input type="checkbox" id="notificationMirroring" class="toggle-input">
+        <div class="toggle-switch" id="notificationMirroringToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="form-group" id="encryptionPasswordGroup" style="display: none;">
+        <label for="encryptionPassword">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="encryption_password_label">End-to-End Encryption Password:</span>
+        </label>
+        <input type="password" id="encryptionPassword" placeholder="Optional - for encrypted features"
+          data-i18n-placeholder="encryption_password_placeholder">
+        <div class="tip" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your
+          password is never stored. Must be the same on all devices.</div>
+      </div>
+      <div class="form-group" id="defaultTabGroup" style="display: none;">
+        <label for="defaultTab">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="default_tab_label">Default tab in popup:</span>
+        </label>
+        <select id="defaultTab">
+          <option value="push" data-i18n="push_button">Push</option>
+          <option value="notification" data-i18n="notification_button">Notification</option>
+        </select>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="require_interaction_label">Require interaction to dismiss notifications
+          in Chrome</label>
+        <input type="checkbox" id="requireInteraction" class="toggle-input">
+        <div class="toggle-switch" id="requireInteractionToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="requireInteractionPushesContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="pushes_label">Pushes</span>
+        </label>
+        <input type="checkbox" id="requireInteractionPushes" class="toggle-input">
+        <div class="toggle-switch" id="requireInteractionPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="requireInteractionMirroredContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
+        </label>
+        <input type="checkbox" id="requireInteractionMirrored" class="toggle-input">
+        <div class="toggle-switch" id="requireInteractionMirroredToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="close_as_dismiss_label">Treat native close of Chrome notification as
+          dismiss action</label>
+        <input type="checkbox" id="closeAsDismiss" class="toggle-input">
+        <div class="toggle-switch" id="closeAsDismissToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="display_unread_counts_label">Display unread counts</label>
+        <input type="checkbox" id="displayUnreadCounts" class="toggle-input">
+        <div class="toggle-switch" id="displayUnreadCountsToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="displayUnreadPushesContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="pushes_label">Pushes</span>
+        </label>
+        <input type="checkbox" id="displayUnreadPushes" class="toggle-input">
+        <div class="toggle-switch" id="displayUnreadPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="displayUnreadMirroredContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
+        </label>
+        <input type="checkbox" id="displayUnreadMirrored" class="toggle-input">
+        <div class="toggle-switch" id="displayUnreadMirroredToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="show_quick_share_label">Show quick share for current page</label>
+        <input type="checkbox" id="showQuickShare" class="toggle-input">
+        <div class="toggle-switch" id="showQuickShareToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="languageMode" data-i18n="language_label">Language:</label>
+        <select id="languageMode" size="4">
+          <option value="auto" data-i18n="auto_browser_language">Auto (Browser's language)</option>
+          <option value="id">Bahasa Indonesia</option>
+          <option value="de">Deutsch</option>
+          <option value="en">English</option>
+          <option value="fr">français</option>
+          <option value="nl">nederlands</option>
+          <option value="no">norsk</option>
+          <option value="tr">türkçe</option>
+          <option value="ca">català</option>
+          <option value="da">dansk</option>
+          <option value="es">español</option>
+          <option value="it">italiano</option>
+          <option value="hu">magyar</option>
+          <option value="pl">polski</option>
+          <option value="pt_BR">português (Brasil)</option>
+          <option value="pt_PT">português (Portugal)</option>
+          <option value="ro">română</option>
+          <option value="sk">slovenčina</option>
+          <option value="sl">slovenščina</option>
+          <option value="fi">suomi</option>
+          <option value="sv">svenska</option>
+          <option value="bg">български</option>
+          <option value="ru">русский</option>
+          <option value="he">עברית</option>
+          <option value="th">ไทย</option>
+          <option value="ar">العربية</option>
+          <option value="zh_CN">中文（简体）</option>
+          <option value="zh_TW">中文（繁體）</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+          <option value="cs">čeština</option>
+          <option value="el">ελληνικά</option>
+          <option value="uk">українська</option>
+          <option value="vi">tiếng Việt</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="colorMode" data-i18n="color_mode_label">Color Mode:</label>
+        <select id="colorMode">
+          <option value="system" data-i18n="follow_system">Follow system</option>
+          <option value="light" data-i18n="light">Light</option>
+          <option value="dark" data-i18n="dark">Dark</option>
+        </select>
+      </div>
+    </div>
   </div>
-  
+
   <!-- Save button below container -->
   <div class="save-container">
     <button id="saveSettings" class="save-button" data-i18n="save_settings_button">Save Settings</button>
@@ -635,4 +694,5 @@
   <script src="i18n.js"></script>
   <script src="options.js"></script>
 </body>
+
 </html>
