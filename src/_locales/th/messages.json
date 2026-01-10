@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "เลือกอุปกรณ์อื่นที่จะแสดงการแจ้งเตือน กด Ctrl/Cmd ค้างเพื่อเลือกหลายอุปกรณ์"
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "ซ่อนการแจ้งเตือนเมื่อเปิดอัตโนมัติ"
   }
 }

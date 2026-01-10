@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "Vyberte iné zariadenia, na ktorých sa majú zobrazovať upozornenia. Podržte Ctrl/Cmd na výber viacerých."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "Skryť oznámenie pri automatickom otvorení"
   }
 }

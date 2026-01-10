@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "알림을 표시할 다른 기기를 선택하세요. 여러 개를 선택하려면 Ctrl/Cmd를 누르고 있으세요."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "자동으로 열릴 때 알림 숨기기"
   }
 }

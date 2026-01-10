@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "Wybierz, na których innych urządzeniach mają być wyświetlane powiadomienia. Przytrzymaj Ctrl/Cmd, aby wybrać wiele."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "Ukryj powiadomienie przy automatycznym otwarciu"
   }
 }

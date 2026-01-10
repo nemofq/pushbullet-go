@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "选择要显示通知的其他设备。按住 Ctrl/Cmd 可选择多个设备。"
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "自动打开时隐藏通知"
   }
 }

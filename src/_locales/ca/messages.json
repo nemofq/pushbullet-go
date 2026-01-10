@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "Seleccioneu quins altres dispositius han de mostrar notificacions. Mantingueu premut Ctrl/Cmd per seleccionar-ne diversos."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "Amaga la notificació quan s'ha obert automàticament"
   }
 }

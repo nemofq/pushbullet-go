@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "Chọn thiết bị nào khác sẽ hiển thị thông báo. Giữ Ctrl/Cmd để chọn nhiều thiết bị."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "Ẩn thông báo khi tự động mở"
   }
 }

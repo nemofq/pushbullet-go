@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "اختر الأجهزة الأخرى لعرض الإشعارات لها. اضغط Ctrl/Cmd لتحديد عدة أجهزة."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "إخفاء الإشعار عند الفتح التلقائي"
   }
 }

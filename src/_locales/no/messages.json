@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "Velg hvilke andre enheter som skal vise varsler. Hold Ctrl/Cmd nede for å velge flere."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "Skjul varsel ved automatisk åpning"
   }
 }

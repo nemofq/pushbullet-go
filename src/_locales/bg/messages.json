@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "Изберете кои други устройства да показват известия. Задръжте Ctrl/Cmd, за да изберете няколко."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "Скрий известието при автоматично отваряне"
   }
 }

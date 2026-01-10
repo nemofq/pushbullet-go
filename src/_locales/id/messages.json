@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "Pilih perangkat lain mana yang akan menampilkan notifikasi. Tahan Ctrl/Cmd untuk memilih beberapa."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "Sembunyikan notifikasi saat dibuka otomatis"
   }
 }

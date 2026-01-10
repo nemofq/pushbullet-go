@@ -316,5 +316,8 @@
   },
   "choose_other_devices_tip": {
     "message": "בחר באילו מכשירים אחרים להציג התראות. החזק Ctrl/Cmd לבחירת מספר מכשירים."
+  },
+  "hide_notification_on_auto_open_label": {
+    "message": "הסתר התראה כאשר היא נפתחת אוטומטית"
   }
 }
