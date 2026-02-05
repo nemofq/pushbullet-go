@@ -256,9 +256,9 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.storage.sync.get('accessToken'),
       chrome.storage.local.get('showSmsShortcut')
     ]);
-    
+
     // Only show SMS shortcut if we have an access token and the setting is enabled
-    if (tokenData.accessToken && smsData.showSmsShortcut && tabSwitcher.style.display !== 'none') {
+    if (tokenData.accessToken && smsData.showSmsShortcut) {
       smsShortcut.style.display = 'flex';
     } else {
       smsShortcut.style.display = 'none';
