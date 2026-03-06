@@ -91,6 +91,18 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.runtime.sendMessage({ type: 'clear_mirror_history' });
   });
 
+  // Middle-click on links: open in background tab without closing the popup
+  document.addEventListener('auxclick', (e) => {
+    if (e.button === 1) {
+      const link = e.target.closest('a.message-link');
+      if (link) {
+        e.preventDefault();
+        e.stopPropagation();
+        chrome.tabs.create({ url: link.href, active: false });
+      }
+    }
+  });
+
   bodyInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
