@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.runtime.sendMessage({ type: 'clear_mirror_history' });
   });
 
-  // Middle-click on links: open in background tab without closing the popup
+  // Middle-click on links/images: open in background tab without closing the popup
   document.addEventListener('auxclick', (e) => {
     if (e.button === 1) {
       const link = e.target.closest('a.message-link');
@@ -99,6 +99,13 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         e.stopPropagation();
         chrome.tabs.create({ url: link.href, active: false });
+        return;
+      }
+      const img = e.target.closest('img.message-image');
+      if (img) {
+        e.preventDefault();
+        e.stopPropagation();
+        chrome.tabs.create({ url: img.src, active: false });
       }
     }
   });
