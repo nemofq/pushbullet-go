@@ -1418,7 +1418,7 @@ async function setupContextMenus() {
     });
     
     // Add device options under "Choose device" for page
-    devices.filter(d => d.active).forEach(device => {
+    devices.filter(d => d.active && d.pushable !== false).forEach(device => {
       chrome.contextMenus.create({
         id: `pushbullet-page-device-${device.iden}`,
         parentId: 'pushbullet-page-device',
@@ -1467,7 +1467,7 @@ async function setupContextMenus() {
     });
     
     // Add device options under "Choose device" for selection
-    devices.filter(d => d.active).forEach(device => {
+    devices.filter(d => d.active && d.pushable !== false).forEach(device => {
       chrome.contextMenus.create({
         id: `pushbullet-selection-device-${device.iden}`,
         parentId: 'pushbullet-selection-device',
@@ -1516,7 +1516,7 @@ async function setupContextMenus() {
     });
     
     // Add device options under "Choose device" for image
-    devices.filter(d => d.active).forEach(device => {
+    devices.filter(d => d.active && d.pushable !== false).forEach(device => {
       chrome.contextMenus.create({
         id: `pushbullet-image-device-${device.iden}`,
         parentId: 'pushbullet-image-device',
@@ -1565,7 +1565,7 @@ async function setupContextMenus() {
     });
     
     // Add device options under "Choose device" for link
-    devices.filter(d => d.active).forEach(device => {
+    devices.filter(d => d.active && d.pushable !== false).forEach(device => {
       chrome.contextMenus.create({
         id: `pushbullet-link-device-${device.iden}`,
         parentId: 'pushbullet-link-device',

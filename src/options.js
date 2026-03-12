@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
       
       // Save Chrome device ID to local storage for reference
-      const chromeDevice = devices.find(device => device.active && device.type === 'chrome');
+      const chromeDevice = devices.find(device => device.active && device.pushable !== false && device.type === 'chrome');
       const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
       
       // Save all data including userIden for encryption and the access token
@@ -864,7 +864,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     remoteDeviceSelect.innerHTML = '';
 
     devices.forEach(device => {
-      if (device.active) {
+      if (device.active && device.pushable !== false) {
         const remoteOption = document.createElement('option');
         remoteOption.value = device.iden;
         remoteOption.textContent = device.nickname || `${device.manufacturer} ${device.model}`;
@@ -883,7 +883,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Filter out Chrome devices and get only active devices
     const otherDevices = devices.filter(device =>
-      device.active && device.type !== 'chrome'
+      device.active && device.pushable !== false && device.type !== 'chrome'
     );
 
     otherDevices.forEach(device => {
