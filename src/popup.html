@@ -192,6 +192,7 @@
     .messages {
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
       padding: 10px;
       display: flex;
       flex-direction: column;
@@ -271,6 +272,7 @@
       font-weight: bold;
       margin-bottom: 5px;
       font-size: 14px;
+      overflow-wrap: anywhere;
     }
 
     .message.sent .message-title {
@@ -278,8 +280,7 @@
     }
 
     .message-body {
-      word-wrap: break-word;
-      word-break: break-word;
+      overflow-wrap: anywhere;
       white-space: pre-wrap;
       font-size: 14px;
       max-width: 100%;
@@ -527,12 +528,13 @@
       margin-bottom: 4px;
       font-size: 14px;
       color: var(--text-primary);
+      overflow-wrap: anywhere;
     }
 
     .notification-body {
       font-size: 13px;
       color: var(--text-secondary);
-      word-wrap: normal;
+      overflow-wrap: anywhere;
       line-height: 1.4;
     }
 
