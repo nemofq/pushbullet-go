@@ -25,4 +25,8 @@ async function handleAudioPlayback() {
   // Don't close window for audio - let it persist for multiple notifications
 }
 
-console.log('Offscreen document ready');
+// Signal the service worker that the message listener above is live. Awaiting
+// createDocument() is not enough on the SW side: it resolves when the document
+// is created, not when this script has run, so an immediate playback request
+// can arrive before the listener exists and be silently dropped.
+chrome.runtime.sendMessage({ type: 'OFFSCREEN_READY' });

@@ -118,13 +118,31 @@ async function playAlertSound() {
       contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
     });
 
-    // Create offscreen document if it doesn't exist
+    // Create offscreen document if it doesn't exist. createDocument() resolves
+    // before the document's script registers its message listener, so wait for
+    // its OFFSCREEN_READY signal before sending — otherwise the first sound
+    // after a cold service worker is dropped. The listener is attached before
+    // createDocument() so an early signal can't be missed.
     if (existingContexts.length === 0) {
+      const ready = new Promise((resolve) => {
+        const onReady = (message) => {
+          if (message?.type !== 'OFFSCREEN_READY') return;
+          chrome.runtime.onMessage.removeListener(onReady);
+          clearTimeout(timer);
+          resolve();
+        };
+        const timer = setTimeout(() => {
+          chrome.runtime.onMessage.removeListener(onReady);
+          resolve(); // best-effort fallback; attempt playback regardless
+        }, 2000);
+        chrome.runtime.onMessage.addListener(onReady);
+      });
       await chrome.offscreen.createDocument({
         url: 'offscreen.html',
         reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
         justification: 'Play notification alert sound.'
       });
+      await ready;
     }
 
     // Send message to offscreen document to play sound
