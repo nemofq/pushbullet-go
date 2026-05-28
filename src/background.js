@@ -850,9 +850,17 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
   }
 }
 
+function normalizeOpenUrl(url) {
+  if (typeof url !== 'string' || !url) return null;
+  // Bare www. without scheme is treated as a relative URL by chrome.tabs.create
+  // and would open under chrome-extension://; prepend https:// to keep it absolute.
+  return url.toLowerCase().startsWith('www.') ? 'https://' + url : url;
+}
+
 async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false) {
   // Determine if this push will actually be auto-opened
-  const willAutoOpen = push.type === 'link' && push.url && autoOpenLinks;
+  const autoOpenUrl = (push.type === 'link' && autoOpenLinks) ? normalizeOpenUrl(push.url) : null;
+  const willAutoOpen = autoOpenUrl !== null;
 
   // Skip notification creation if both conditions are met:
   // 1. hideNotificationOnAutoOpen is enabled
@@ -908,11 +916,8 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
   await playAlertSound();
 
   // Auto-open link pushes in background tabs (happens regardless of notification)
-  if (willAutoOpen) {
-    // Bare www. without scheme is treated as a relative URL by chrome.tabs.create
-    // and would open under chrome-extension://; prepend https:// to keep it absolute.
-    const url = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
-    chrome.tabs.create({ url, active: false });
+  if (autoOpenUrl) {
+    chrome.tabs.create({ url: autoOpenUrl, active: false });
   }
 }
 
@@ -1072,10 +1077,8 @@ chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIn
           // Open button clicked
           let urlToOpen = null;
           
-          if (push.type === 'link' && push.url) {
-            // Bare www. without scheme would open under chrome-extension://;
-            // prepend https:// to keep the tab navigation absolute.
-            urlToOpen = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
+          if (push.type === 'link') {
+            urlToOpen = normalizeOpenUrl(push.url);
           } else if (push.type === 'file' && push.file_url) {
             urlToOpen = push.file_url;
           }
