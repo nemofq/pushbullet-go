@@ -110,6 +110,15 @@ chrome.idle.queryState(60, (state) => {
 // script registers its message listener, so we also wait for the OFFSCREEN_READY
 // handshake — otherwise the first sound after a cold service worker is dropped.
 async function ensureOffscreenDocument() {
+  // Check the in-flight creation promise BEFORE getContexts: createDocument()
+  // resolves once the document exists but before its script registers a
+  // message listener, so a second caller arriving in that window would see an
+  // existing context and skip the OFFSCREEN_READY wait, dropping their message.
+  if (creatingOffscreenDocument) {
+    await creatingOffscreenDocument;
+    return;
+  }
+
   const existingContexts = await chrome.runtime.getContexts({
     contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
   });
@@ -373,70 +382,45 @@ chrome.idle.onStateChanged.addListener((state) => {
   }
 });
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+// Keep this listener synchronous: an async listener returns a Promise for every
+// message, which Chrome treats as sendResponse(value). Cases that don't need to
+// reply should return nothing; only the explicit async-response case returns
+// `true` to keep the channel open for sendResponse.
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.type) {
     case 'token_updated':
-      initializeBackgroundI18n().then(async () => {
-        // Check if token was removed (sign-out)
-        const data = await chrome.storage.sync.get('accessToken');
-        if (!data.accessToken) {
-          // Clear all encryption keys on sign-out
-          const localData = await chrome.storage.local.get(null);
-          const keysToRemove = Object.keys(localData).filter(key => key.startsWith('encryptionKey_'));
-          if (keysToRemove.length > 0) {
-            await chrome.storage.local.remove(keysToRemove);
-            console.log('Cleared encryption keys on sign-out');
-          }
-        }
-        initializeExtension();
-        await setupContextMenus();
-      }).catch(async (error) => {
-        console.error('Failed to reinitialize i18n:', error);
-        initializeExtension();
-        await setupContextMenus();
-      });
-      break;
+      handleTokenUpdated();
+      return;
     case 'get_status':
-      sendResponse({ 
+      sendResponse({
         status: connectionStatus,
         canRetry: reconnectAttempts >= maxReconnectAttempts
       });
-      return true; // Only return true for async responses
+      return;
     case 'retry_connection':
-      // Manual reconnection from popup - use existing logic directly
-      if (accessToken) {
-        console.log('Manual reconnection requested from popup');
-        // Reset attempts counter for fresh start
-        reconnectAttempts = 0;
-        // Use existing reconnection logic directly
-        connectWebSocket();
-      } else {
-        console.log('No access token available for manual reconnection');
-        connectionStatus = 'disconnected';
-        await updateBadge();
-      }
-      break;
+      handleRetryConnection();
+      return;
     case 'send_push':
       sendPush(message.data);
-      break;
+      return;
     case 'clear_unread_pushes':
-      await clearUnreadPushCount();
-      break;
+      clearUnreadPushCount();
+      return;
     case 'clear_unread_mirrors':
-      await clearUnreadMirrorCount();
-      break;
+      clearUnreadMirrorCount();
+      return;
     case 'clear_push_history':
-      await clearPushHistory();
-      break;
+      clearPushHistory();
+      return;
     case 'clear_mirror_history':
-      await clearMirrorHistory();
-      break;
+      clearMirrorHistory();
+      return;
     case 'delete_notification':
-      await deleteNotification(message.id);
-      break;
+      deleteNotification(message.id);
+      return;
     case 'delete_push':
-      await deletePush(message.iden);
-      break;
+      deletePush(message.iden);
+      return;
     case 'encryption_updated':
       initializeEncryption().then(() => {
         sendResponse({ success: true });
@@ -444,6 +428,46 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       return true; // Will respond asynchronously
   }
 });
+
+async function handleTokenUpdated() {
+  try {
+    await initializeBackgroundI18n();
+  } catch (error) {
+    console.error('Failed to reinitialize i18n:', error);
+  }
+  try {
+    // Check if token was removed (sign-out)
+    const data = await chrome.storage.sync.get('accessToken');
+    if (!data.accessToken) {
+      // Clear all encryption keys on sign-out
+      const localData = await chrome.storage.local.get(null);
+      const keysToRemove = Object.keys(localData).filter(key => key.startsWith('encryptionKey_'));
+      if (keysToRemove.length > 0) {
+        await chrome.storage.local.remove(keysToRemove);
+        console.log('Cleared encryption keys on sign-out');
+      }
+    }
+  } catch (error) {
+    console.error('Sign-out cleanup failed:', error);
+  }
+  initializeExtension();
+  await setupContextMenus();
+}
+
+async function handleRetryConnection() {
+  // Manual reconnection from popup - use existing logic directly
+  if (accessToken) {
+    console.log('Manual reconnection requested from popup');
+    // Reset attempts counter for fresh start
+    reconnectAttempts = 0;
+    // Use existing reconnection logic directly
+    connectWebSocket();
+  } else {
+    console.log('No access token available for manual reconnection');
+    connectionStatus = 'disconnected';
+    await updateBadge();
+  }
+}
 
 chrome.commands.onCommand.addListener(async (command, tab) => {
   if (command === 'push-current-page') {
@@ -1220,8 +1244,15 @@ async function handleMirrorDismissal(dismissalData) {
 }
 
 async function sendPush(pushData) {
-  if (!accessToken) return;
-  
+  // A popup/file send can wake a cold service worker before initializeExtension
+  // has populated the module-level accessToken. Load it on demand so the first
+  // send after SW wake-up isn't silently dropped.
+  if (!accessToken) {
+    const data = await chrome.storage.sync.get('accessToken');
+    accessToken = data.accessToken;
+    if (!accessToken) return;
+  }
+
   try {
     // Get Chrome device ID to add as source_device_iden
     const configData = await chrome.storage.local.get('chromeDeviceId');
