@@ -373,7 +373,7 @@ chrome.idle.onStateChanged.addListener((state) => {
   console.log('Idle state changed to:', state);
   currentIdleState = state;
 
-  if (state === 'active' && connectionStatus === 'disconnected' && accessToken) {
+  if (state === 'active' && connectionStatus === 'disconnected') {
     console.log('System resumed from idle - triggering reconnection');
     // Reset attempts counter to allow fresh reconnection
     reconnectAttempts = 0;
@@ -543,12 +543,13 @@ async function resetConnection() {
 }
 
 async function connectWebSocket() {
-  if (!accessToken) {
+  const token = await getAccessToken();
+  if (!token) {
     connectionStatus = 'disconnected';
     await updateBadge();
     return;
   }
-  
+
   // Clean up existing connection
   if (ws) {
     ws.close();
@@ -578,7 +579,7 @@ async function connectWebSocket() {
   }
   
   // Create WebSocket with consolidated error handling
-  ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${accessToken}`);
+  ws = new WebSocket(`wss://stream.pushbullet.com/websocket/${token}`);
   
   // Set up error handler immediately - treat errors as disconnection
   ws.onerror = async (event) => {
