@@ -455,8 +455,10 @@ async function handleTokenUpdated() {
 }
 
 async function handleRetryConnection() {
-  // Manual reconnection from popup - use existing logic directly
-  if (accessToken) {
+  // Manual reconnection from popup - use existing logic directly.
+  // Go through getAccessToken() so a cold service-worker wake before
+  // initializeExtension() finishes doesn't silently no-op the retry.
+  if (await getAccessToken()) {
     console.log('Manual reconnection requested from popup');
     // Reset attempts counter for fresh start
     reconnectAttempts = 0;
@@ -1257,7 +1259,8 @@ async function getAccessToken() {
 }
 
 async function sendPush(pushData) {
-  if (!(await getAccessToken())) return;
+  const token = await getAccessToken();
+  if (!token) return;
 
   try {
     // Get Chrome device ID to add as source_device_iden
@@ -1265,21 +1268,21 @@ async function sendPush(pushData) {
     if (configData.chromeDeviceId) {
       pushData.source_device_iden = configData.chromeDeviceId;
     }
-    
+
     // Handle multiple device IDs
     const deviceIds = pushData.device_iden ? pushData.device_iden.split(',').map(id => id.trim()).filter(id => id) : [];
-    
+
     if (deviceIds.length <= 1) {
       // Single or no device - use original logic
       const response = await fetch('https://api.pushbullet.com/v2/pushes', {
         method: 'POST',
         headers: {
-          'Access-Token': accessToken,
+          'Access-Token': token,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(pushData)
       });
-      
+
       if (response.ok) {
         const push = await response.json();
         await storeSentMessage(push);
@@ -1291,7 +1294,7 @@ async function sendPush(pushData) {
         return fetch('https://api.pushbullet.com/v2/pushes', {
           method: 'POST',
           headers: {
-            'Access-Token': accessToken,
+            'Access-Token': token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(devicePushData)
