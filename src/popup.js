@@ -560,7 +560,9 @@ document.addEventListener('DOMContentLoaded', function() {
           bodyDiv.appendChild(document.createElement('br'));
         }
         const link = document.createElement('a');
-        link.href = push.url;
+        // Bare www. would resolve as a relative URL under chrome-extension://;
+        // match parseTextWithLinks() and prepend https:// for the href only.
+        link.href = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
         link.textContent = push.url;
         link.className = 'message-link';
         link.target = '_blank';
@@ -827,9 +829,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     if (isUrl) {
-      // Mirror parseTextWithLinks(): bare www.X gets https:// so the receiver's
-      // <a href> isn't treated as a relative URL.
-      pushData.url = body.toLowerCase().startsWith('www.') ? 'https://' + body : body;
+      pushData.url = body;
     }
     
     if (configData.remoteDeviceId) {

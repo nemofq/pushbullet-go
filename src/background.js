@@ -909,7 +909,10 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
 
   // Auto-open link pushes in background tabs (happens regardless of notification)
   if (willAutoOpen) {
-    chrome.tabs.create({ url: push.url, active: false });
+    // Bare www. without scheme is treated as a relative URL by chrome.tabs.create
+    // and would open under chrome-extension://; prepend https:// to keep it absolute.
+    const url = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
+    chrome.tabs.create({ url, active: false });
   }
 }
 
@@ -1037,7 +1040,9 @@ chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIn
           let urlToOpen = null;
           
           if (push.type === 'link' && push.url) {
-            urlToOpen = push.url;
+            // Bare www. without scheme would open under chrome-extension://;
+            // prepend https:// to keep the tab navigation absolute.
+            urlToOpen = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
           } else if (push.type === 'file' && push.file_url) {
             urlToOpen = push.file_url;
           }
