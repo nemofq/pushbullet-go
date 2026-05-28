@@ -827,7 +827,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     if (isUrl) {
-      pushData.url = body;
+      // Mirror parseTextWithLinks(): bare www.X gets https:// so the receiver's
+      // <a href> isn't treated as a relative URL.
+      pushData.url = body.toLowerCase().startsWith('www.') ? 'https://' + body : body;
     }
     
     if (configData.remoteDeviceId) {
@@ -845,12 +847,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   function isValidUrl(string) {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
+    // Match the same prefixes parseTextWithLinks() linkifies on display, so the
+    // send side can't promote non-URL text (e.g. "P2: ...", "foo: bar") to a
+    // link push just because new URL() accepts any scheme-prefixed string.
+    return /^(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)$/i.test(string);
   }
 
   function parseTextWithLinks(text, container, linkClass) {
