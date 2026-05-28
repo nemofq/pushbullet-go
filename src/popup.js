@@ -551,17 +551,19 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const bodyDiv = document.createElement('div');
       bodyDiv.className = 'message-body';
-      
+
+      const hasLinkUrl = typeof push.url === 'string' && push.url;
+
       if (push.type === 'note') {
         parseTextWithLinks(push.body || '', bodyDiv, 'message-link');
       } else if (push.type === 'link') {
         if (push.body) {
           bodyDiv.textContent = push.body;
-          if (typeof push.url === 'string' && push.url) {
+          if (hasLinkUrl) {
             bodyDiv.appendChild(document.createElement('br'));
           }
         }
-        if (typeof push.url === 'string' && push.url) {
+        if (hasLinkUrl) {
           const link = document.createElement('a');
           // Bare www. would resolve as a relative URL under chrome-extension://;
           // match parseTextWithLinks() and prepend https:// for the href only.
@@ -601,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function() {
       messageContentDiv.appendChild(messageDiv);
       
       // Add copy button for received text messages and links
-      if (push.messageType === 'received' && ((push.type === 'note' && push.body) || (push.type === 'link' && push.url))) {
+      if (push.messageType === 'received' && ((push.type === 'note' && push.body) || (push.type === 'link' && hasLinkUrl))) {
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-button';
         copyButton.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>';
