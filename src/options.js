@@ -680,6 +680,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
               // Enable the retrieve devices button
               retrieveDevicesButton.disabled = false;
+              // Automatically retrieve devices and people after OAuth succeeds
+              retrieveDevicesButton.click();
             } else if (error) {
               // Handle OAuth error
               const errorPrefix = window.CustomI18n.getMessage('oauth_error') || 'OAuth error:';
