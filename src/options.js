@@ -660,8 +660,6 @@ document.addEventListener('DOMContentLoaded', async function() {
           }
 
           if (responseUrl) {
-            console.log('Final redirect URL:', responseUrl); // Debug log
-
             // Extract access token from URL fragment (Pushbullet returns it in the hash)
             const url = new URL(responseUrl);
             const hashParams = new URLSearchParams(url.hash.substring(1));

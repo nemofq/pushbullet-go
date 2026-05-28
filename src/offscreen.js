@@ -1,18 +1,21 @@
-chrome.runtime.onMessage.addListener(handleMessages);
-
-async function handleMessages(message) {
+// Sync listener wrapper: an async listener returns a Promise for every message,
+// which Chrome treats as sendResponse(undefined). When the offscreen document
+// is open, popup messages like get_status would otherwise race the background
+// listener and resolve to undefined here. Only kick off async work for messages
+// we actually handle; never return a value.
+chrome.runtime.onMessage.addListener((message) => {
   if (message.target !== 'offscreen-doc') {
     return;
   }
 
   switch (message.type) {
     case 'PLAY_ALERT_SOUND':
-      await handleAudioPlayback();
+      handleAudioPlayback();
       break;
     default:
       console.warn(`Unexpected message type received: '${message.type}'.`);
   }
-}
+});
 
 async function handleAudioPlayback() {
   try {

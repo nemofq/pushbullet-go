@@ -12,6 +12,12 @@ let currentIdleState = 'active';
 // Context menu setup lock to prevent race conditions
 let isSettingUpContextMenus = false;
 
+// Shared promise lock for offscreen document creation. Chrome only allows one
+// offscreen document per extension; concurrent playAlertSound() callers after
+// a cold service worker would otherwise all see no existing context and race
+// into createDocument(), causing the second call to throw.
+let creatingOffscreenDocument = null;
+
 
 // Initialize custom i18n for background script
 let cachedMessages = {};
@@ -99,31 +105,18 @@ chrome.idle.queryState(60, (state) => {
   console.log('Initial idle state:', state);
 });
 
-async function playAlertSound() {
-  try {
-    // Check if sound is enabled
-    const soundSettings = await chrome.storage.local.get('playSoundOnNotification');
-    if (soundSettings.playSoundOnNotification === false) {
-      return; // Sound is disabled
-    }
+// Ensure the offscreen document is open, serializing concurrent callers
+// through a shared promise. createDocument() resolves before the document's
+// script registers its message listener, so we also wait for the OFFSCREEN_READY
+// handshake — otherwise the first sound after a cold service worker is dropped.
+async function ensureOffscreenDocument() {
+  const existingContexts = await chrome.runtime.getContexts({
+    contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
+  });
+  if (existingContexts.length > 0) return;
 
-    // Check if screen is locked
-    if (currentIdleState === 'locked') {
-      console.log('Screen is locked - suppressing notification sound');
-      return;
-    }
-
-    // Check if offscreen document exists
-    const existingContexts = await chrome.runtime.getContexts({
-      contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT]
-    });
-
-    // Create offscreen document if it doesn't exist. createDocument() resolves
-    // before the document's script registers its message listener, so wait for
-    // its OFFSCREEN_READY signal before sending — otherwise the first sound
-    // after a cold service worker is dropped. The listener is attached before
-    // createDocument() so an early signal can't be missed.
-    if (existingContexts.length === 0) {
+  if (!creatingOffscreenDocument) {
+    creatingOffscreenDocument = (async () => {
       const ready = new Promise((resolve) => {
         const onReady = (message) => {
           if (message?.type !== 'OFFSCREEN_READY') return;
@@ -143,7 +136,28 @@ async function playAlertSound() {
         justification: 'Play notification alert sound.'
       });
       await ready;
+    })().finally(() => {
+      creatingOffscreenDocument = null;
+    });
+  }
+  await creatingOffscreenDocument;
+}
+
+async function playAlertSound() {
+  try {
+    // Check if sound is enabled
+    const soundSettings = await chrome.storage.local.get('playSoundOnNotification');
+    if (soundSettings.playSoundOnNotification === false) {
+      return; // Sound is disabled
     }
+
+    // Check if screen is locked
+    if (currentIdleState === 'locked') {
+      console.log('Screen is locked - suppressing notification sound');
+      return;
+    }
+
+    await ensureOffscreenDocument();
 
     // Send message to offscreen document to play sound
     chrome.runtime.sendMessage({
