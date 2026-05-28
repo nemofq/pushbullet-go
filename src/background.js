@@ -1125,13 +1125,14 @@ async function handleDismissedPushes(updatedPushes) {
 }
 
 async function dismissPush(pushIden) {
-  if (!accessToken) return;
-  
+  const token = await getAccessToken();
+  if (!token) return;
+
   try {
     const response = await fetch(`https://api.pushbullet.com/v2/pushes/${pushIden}`, {
       method: 'POST',
       headers: {
-        'Access-Token': accessToken,
+        'Access-Token': token,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -1152,7 +1153,8 @@ async function dismissPush(pushIden) {
 }
 
 async function dismissMirrorNotification(notificationId) {
-  if (!accessToken) return;
+  const token = await getAccessToken();
+  if (!token) return;
 
   try {
     // Extract UUID from notification ID
@@ -1195,7 +1197,7 @@ async function dismissMirrorNotification(notificationId) {
     const response = await fetch('https://api.pushbullet.com/v2/ephemerals', {
       method: 'POST',
       headers: {
-        'Access-Token': accessToken,
+        'Access-Token': token,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(dismissalData)
@@ -1241,15 +1243,21 @@ async function handleMirrorDismissal(dismissalData) {
   }
 }
 
+// Return the current access token, lazy-loading from storage if the
+// module-level cache is empty. Any entry point that may run before
+// initializeExtension() finishes (popup/file sends, keyboard shortcut,
+// context menu, image upload, notification dismiss) should go through this
+// rather than touching the global, so a cold service-worker wake-up can't
+// drop the call.
+async function getAccessToken() {
+  if (accessToken) return accessToken;
+  const data = await chrome.storage.sync.get('accessToken');
+  accessToken = data.accessToken;
+  return accessToken;
+}
+
 async function sendPush(pushData) {
-  // A popup/file send can wake a cold service worker before initializeExtension
-  // has populated the module-level accessToken. Load it on demand so the first
-  // send after SW wake-up isn't silently dropped.
-  if (!accessToken) {
-    const data = await chrome.storage.sync.get('accessToken');
-    accessToken = data.accessToken;
-    if (!accessToken) return;
-  }
+  if (!(await getAccessToken())) return;
 
   try {
     // Get Chrome device ID to add as source_device_iden
@@ -1790,11 +1798,14 @@ async function handleImageContextMenu(info, remoteDeviceId) {
 }
 
 async function uploadImageFromUrl(blob, fileName, remoteDeviceId, email = null) {
+  const token = await getAccessToken();
+  if (!token) return;
+
   // Step 1: Request upload URL
   const uploadRequest = await fetch('https://api.pushbullet.com/v2/upload-request', {
     method: 'POST',
     headers: {
-      'Access-Token': accessToken,
+      'Access-Token': token,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
