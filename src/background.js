@@ -471,10 +471,8 @@ async function handleRetryConnection() {
 
 chrome.commands.onCommand.addListener(async (command, tab) => {
   if (command === 'push-current-page') {
-    if (!accessToken) {
-      console.log('No access token available for keyboard shortcut');
-      return;
-    }
+    // No accessToken pre-check: sendPush() lazy-loads the token so a cold
+    // service-worker wake-up doesn't silently drop the keyboard action.
 
     // Get the configured remote device IDs (same logic as context menu)
     const configData = await chrome.storage.local.get('remoteDeviceId');
@@ -1654,11 +1652,9 @@ async function setupContextMenus() {
 }
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (!accessToken) {
-    console.log('No access token available for context menu action');
-    return;
-  }
-  
+  // No accessToken pre-check: sendPush() lazy-loads the token so a cold
+  // service-worker wake-up doesn't silently drop the context-menu action.
+
   const configData = await chrome.storage.local.get('remoteDeviceId');
   const menuItemId = info.menuItemId;
   
