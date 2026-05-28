@@ -557,16 +557,20 @@ document.addEventListener('DOMContentLoaded', function() {
       } else if (push.type === 'link') {
         if (push.body) {
           bodyDiv.textContent = push.body;
-          bodyDiv.appendChild(document.createElement('br'));
+          if (typeof push.url === 'string' && push.url) {
+            bodyDiv.appendChild(document.createElement('br'));
+          }
         }
-        const link = document.createElement('a');
-        // Bare www. would resolve as a relative URL under chrome-extension://;
-        // match parseTextWithLinks() and prepend https:// for the href only.
-        link.href = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
-        link.textContent = push.url;
-        link.className = 'message-link';
-        link.target = '_blank';
-        bodyDiv.appendChild(link);
+        if (typeof push.url === 'string' && push.url) {
+          const link = document.createElement('a');
+          // Bare www. would resolve as a relative URL under chrome-extension://;
+          // match parseTextWithLinks() and prepend https:// for the href only.
+          link.href = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
+          link.textContent = push.url;
+          link.className = 'message-link';
+          link.target = '_blank';
+          bodyDiv.appendChild(link);
+        }
       } else if (push.type === 'file') {
         if (push.body) {
           bodyDiv.textContent = push.body;
