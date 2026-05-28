@@ -916,6 +916,43 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
   }
 }
 
+const MIRROR_ICON_MAX_SIZE = 256;
+
+async function getMirrorIconDataUrl(iconBase64) {
+  if (!iconBase64 || typeof iconBase64 !== 'string') return null;
+  try {
+    const resp = await fetch(`data:image/jpeg;base64,${iconBase64}`);
+    const blob = await resp.blob();
+    const bitmap = await createImageBitmap(blob);
+
+    const srcSquare = Math.min(bitmap.width, bitmap.height);
+    const size = Math.min(srcSquare, MIRROR_ICON_MAX_SIZE);
+    const sx = (bitmap.width - srcSquare) / 2;
+    const sy = (bitmap.height - srcSquare) / 2;
+
+    const canvas = new OffscreenCanvas(size, size);
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(bitmap, sx, sy, srcSquare, srcSquare, 0, 0, size, size);
+    bitmap.close();
+
+    const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(pngBlob);
+    });
+  } catch (e) {
+    console.error('getMirrorIconDataUrl failed:', e);
+    return `data:image/jpeg;base64,${iconBase64}`;
+  }
+}
+
 async function handleMirrorNotification(mirrorData) {
   // Check if notification mirroring is enabled
   const configData = await chrome.storage.local.get('notificationMirroring');
@@ -984,12 +1021,8 @@ async function showMirrorNotification(notificationData) {
     message: message.trim() || getMessage('new_notification')
   };
 
-  // Handle base64 icon if available
-  if (notificationData.icon) {
-    notificationOptions.iconUrl = `data:image/jpeg;base64,${notificationData.icon}`;
-  } else {
-    notificationOptions.iconUrl = 'assets/icon128.png';
-  }
+  const processedIconUrl = await getMirrorIconDataUrl(notificationData.icon);
+  notificationOptions.iconUrl = processedIconUrl || 'assets/icon128.png';
 
   // Add dismiss button if notification is dismissible
   if (notificationData.dismissible) {
