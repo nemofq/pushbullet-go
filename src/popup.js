@@ -51,6 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(() => {
     messagesList.scrollTop = messagesList.scrollHeight;
   }, 200);
+
+  // Keep relative timestamps fresh while the popup stays open (cheap: only
+  // rewrites the timestamp nodes, which carry their raw epoch ms in data-ts).
+  function refreshTimestamps() {
+    if (!window.CustomI18n) return;
+    document.querySelectorAll('[data-ts]').forEach(node => {
+      const ts = window.CustomI18n.formatTimestamp(Number(node.dataset.ts));
+      node.textContent = ts.text;
+      node.title = ts.title;
+    });
+  }
+  setInterval(refreshTimestamps, 60000);
   
   let lastConnectionStatus = null;
   let loadMessagesTimeout = null;
@@ -525,16 +537,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const timestampDiv = document.createElement('div');
       timestampDiv.className = 'message-timestamp';
       const timestamp = push.created ? push.created * 1000 : push.sentAt;
-      const date = new Date(timestamp);
-      const timeString = date.toLocaleString(undefined, { 
-        hour12: false, 
-        year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit', 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
-      timestampDiv.textContent = timeString;
+      const ts = window.CustomI18n.formatTimestamp(timestamp);
+      timestampDiv.dataset.ts = timestamp;
+      timestampDiv.textContent = ts.text;
+      timestampDiv.title = ts.title;
       
       const messageContentDiv = document.createElement('div');
       messageContentDiv.className = 'message-content';
@@ -706,19 +712,13 @@ document.addEventListener('DOMContentLoaded', function() {
       // Timestamp
       const timestampDiv = document.createElement('div');
       timestampDiv.className = 'notification-timestamp';
-      
+
       // Use stored timestamp (guaranteed to be valid from background script)
       const timestamp = notification.created * 1000;
-      const date = new Date(timestamp);
-      const timeString = date.toLocaleString(undefined, { 
-        hour12: false, 
-        year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit', 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
-      timestampDiv.textContent = timeString;
+      const ts = window.CustomI18n.formatTimestamp(timestamp);
+      timestampDiv.dataset.ts = timestamp;
+      timestampDiv.textContent = ts.text;
+      timestampDiv.title = ts.title;
       headerDiv.appendChild(timestampDiv);
       
       cardDiv.appendChild(headerDiv);
