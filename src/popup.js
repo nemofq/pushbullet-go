@@ -682,7 +682,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const headerDiv = document.createElement('div');
       headerDiv.className = 'notification-header';
       
-      // Icon
+      // Icon (wrapper clips to a circle; the img is zoomed to crop the JPEG
+      // chroma-bleed band at the edges — see MIRROR_ICON_INSET in background.js)
+      const iconWrap = document.createElement('div');
+      iconWrap.className = 'notification-icon-wrap';
       const iconImg = document.createElement('img');
       iconImg.className = 'notification-icon';
       if (notification.icon) {
@@ -691,7 +694,8 @@ document.addEventListener('DOMContentLoaded', function() {
         iconImg.src = 'assets/icon128.png'; // Fallback icon
       }
       iconImg.alt = window.CustomI18n.getMessage('app_icon_alt');
-      headerDiv.appendChild(iconImg);
+      iconWrap.appendChild(iconImg);
+      headerDiv.appendChild(iconWrap);
       
       // App name
       const appDiv = document.createElement('div');

@@ -923,6 +923,11 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
 }
 
 const MIRROR_ICON_MAX_SIZE = 256;
+// Crop the outer band before clipping: Pushbullet icons are 4:2:0-subsampled
+// JPEGs whose chroma bleeds ~1-2px past saturated edges. The inscribed clip
+// circle would otherwise sample that band and render a colored ring, so we
+// zoom into the clean interior instead.
+const MIRROR_ICON_INSET = 0.06;
 
 async function getMirrorIconDataUrl(iconBase64) {
   if (!iconBase64 || typeof iconBase64 !== 'string') return null;
@@ -932,9 +937,10 @@ async function getMirrorIconDataUrl(iconBase64) {
     const bitmap = await createImageBitmap(blob);
 
     const srcSquare = Math.min(bitmap.width, bitmap.height);
-    const size = Math.min(srcSquare, MIRROR_ICON_MAX_SIZE);
-    const sx = (bitmap.width - srcSquare) / 2;
-    const sy = (bitmap.height - srcSquare) / 2;
+    const cropSquare = srcSquare * (1 - MIRROR_ICON_INSET);
+    const size = Math.min(Math.round(cropSquare), MIRROR_ICON_MAX_SIZE);
+    const sx = (bitmap.width - cropSquare) / 2;
+    const sy = (bitmap.height - cropSquare) / 2;
 
     const canvas = new OffscreenCanvas(size, size);
     const ctx = canvas.getContext('2d');
@@ -943,7 +949,7 @@ async function getMirrorIconDataUrl(iconBase64) {
     ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
-    ctx.drawImage(bitmap, sx, sy, srcSquare, srcSquare, 0, 0, size, size);
+    ctx.drawImage(bitmap, sx, sy, cropSquare, cropSquare, 0, 0, size, size);
     bitmap.close();
 
     const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
