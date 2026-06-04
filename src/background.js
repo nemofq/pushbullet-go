@@ -543,6 +543,19 @@ async function resetConnection() {
 }
 
 async function connectWebSocket() {
+  // Reentrancy guard. connectionStatus is claimed as 'connecting' synchronously
+  // here, before the first await, and 'connecting' is set nowhere else, so a
+  // second concurrent call returns immediately instead of racing. Without it two
+  // callers (e.g. onStartup and the top-level init both firing on a cold start,
+  // or two overlapping reconnection timers) could each clear the `if (ws)` block
+  // below while ws is still null and open a separate socket; the orphaned one
+  // keeps delivering, surfacing as duplicated mirror notifications.
+  if (connectionStatus === 'connecting') {
+    console.log('WebSocket connection attempt already in progress - ignoring reentrant call');
+    return;
+  }
+  connectionStatus = 'connecting';
+
   const token = await getAccessToken();
   if (!token) {
     connectionStatus = 'disconnected';
@@ -566,7 +579,6 @@ async function connectWebSocket() {
     keepAliveIntervalId = null;
   }
   
-  connectionStatus = 'connecting';
   console.log(`Connecting to WebSocket... (attempt ${reconnectAttempts + 1})`);
   await updateBadge();
 
