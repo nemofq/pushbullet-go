@@ -87,7 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   sendButton.addEventListener('click', sendMessage);
-  
+  bodyInput.addEventListener('input', updateSendButtonState);
+  updateSendButtonState();
+
   quickShareSend.addEventListener('click', () => {
     if (quickShareUrl.textContent) {
       sendLink(quickShareUrl.textContent);
@@ -823,9 +825,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Reflect the input's content on the Send button: disabled when the trimmed
+  // body is empty, matching sendMessage()'s own empty-guard so the button is
+  // only actionable when there's actually something to send.
+  function updateSendButtonState() {
+    sendButton.disabled = bodyInput.value.trim() === '';
+  }
+
   async function sendMessage() {
     const body = bodyInput.value.trim();
-    
+
     if (!body) {
       return;
     }
@@ -850,8 +859,9 @@ document.addEventListener('DOMContentLoaded', function() {
       type: 'send_push', 
       data: pushData 
     });
-    
+
     bodyInput.value = '';
+    updateSendButtonState();
   }
 
 
@@ -916,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(() => {
         bodyInput.placeholder = window.CustomI18n.getMessage('type_or_paste_placeholder');
         bodyInput.disabled = false;
-        sendButton.disabled = false;
+        updateSendButtonState();
       }, 2000);
 
     } catch (error) {
@@ -925,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(() => {
         bodyInput.placeholder = window.CustomI18n.getMessage('type_or_paste_placeholder');
         bodyInput.disabled = false;
-        sendButton.disabled = false;
+        updateSendButtonState();
       }, 3000);
     }
   }

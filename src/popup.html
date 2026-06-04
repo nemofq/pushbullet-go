@@ -24,6 +24,7 @@
       --border-secondary: #dddddd;
       --button-primary: #4caf50;
       --button-primary-hover: #45a049;
+      --button-disabled: #a5d6a7;
       --copy-button: #cccccc;
       --copy-button-hover: #4caf50;
       --status-connected: #4caf50;
@@ -77,6 +78,7 @@
       --border-secondary: #dddddd;
       --button-primary: #4caf50;
       --button-primary-hover: #45a049;
+      --button-disabled: #a5d6a7;
       --copy-button: #cccccc;
       --copy-button-hover: #4caf50;
       --status-connected: #4caf50;
@@ -103,6 +105,7 @@
       --border-secondary: #555555;
       --button-primary: #4caf50;
       --button-primary-hover: #45a049;
+      --button-disabled: #2f4f33;
       --copy-button: #666666;
       --copy-button-hover: #4caf50;
       --status-connected: #4caf50;
@@ -417,6 +420,15 @@
 
     .icon-button:hover {
       background: var(--button-primary-hover);
+    }
+
+    .icon-button:disabled {
+      background: var(--button-disabled);
+      cursor: not-allowed;
+    }
+
+    .icon-button:disabled:hover {
+      background: var(--button-disabled);
     }
 
     .icon-button svg {
