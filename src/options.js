@@ -46,9 +46,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   const displayUnreadMirroredContainer = document.getElementById('displayUnreadMirroredContainer');
   const encryptionPasswordInput = document.getElementById('encryptionPassword');
   const encryptionPasswordGroup = document.getElementById('encryptionPasswordGroup');
-  const colorModeSelect = document.getElementById('colorMode');
-  const languageModeSelect = document.getElementById('languageMode');
-  const defaultTabSelect = document.getElementById('defaultTab');
   const defaultTabGroup = document.getElementById('defaultTabGroup');
   const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
   const playSoundOnNotificationToggle = document.getElementById('playSoundOnNotificationToggle');
@@ -80,14 +77,24 @@ document.addEventListener('DOMContentLoaded', async function() {
       option.type = 'button';
       option.dataset.iden = iden;
       option.title = label;
+      if (iden) {
+        // device rows are independent toggles → leading checkbox
+        const checkbox = document.createElement('span');
+        checkbox.className = 'opt-checkbox';
+        checkbox.innerHTML = DEVICE_CHECK_SVG;
+        option.appendChild(checkbox);
+      }
       const text = document.createElement('span');
       text.className = 'opt-text';
       text.textContent = label;
       option.appendChild(text);
-      const check = document.createElement('span');
-      check.className = 'opt-check';
-      check.innerHTML = DEVICE_CHECK_SVG;
-      option.appendChild(check);
+      if (!iden) {
+        // the "All …" row is a single current-state choice → trailing ✓
+        const check = document.createElement('span');
+        check.className = 'opt-check';
+        check.innerHTML = DEVICE_CHECK_SVG;
+        option.appendChild(check);
+      }
       return option;
     }
 
@@ -157,6 +164,211 @@ document.addEventListener('DOMContentLoaded', async function() {
     otherDevicePickerEl,
     () => window.CustomI18n.getMessage('all_other_devices')
   );
+
+  // Shared row builder for the value-based lists below (same .list-option
+  // row + checkmark the device checklists use). label may be a string or a
+  // function (for i18n-dependent labels, re-resolved on rerender).
+  function itemLabel(item) {
+    return typeof item.label === 'function' ? item.label() : item.label;
+  }
+
+  function createValueOption(value, labelText) {
+    const option = document.createElement('button');
+    option.className = 'list-option';
+    option.type = 'button';
+    option.dataset.value = value;
+    option.title = labelText;
+    const text = document.createElement('span');
+    text.className = 'opt-text';
+    text.textContent = labelText;
+    option.appendChild(text);
+    const check = document.createElement('span');
+    check.className = 'opt-check';
+    check.innerHTML = DEVICE_CHECK_SVG;
+    option.appendChild(check);
+    return option;
+  }
+
+  // Always-visible single-select list (used by the language picker)
+  function createSingleSelectList(container, items) {
+    let value = items.length ? items[0].value : '';
+
+    function markSelection() {
+      container.querySelectorAll('.list-option').forEach(option => {
+        option.classList.toggle('selected', option.dataset.value === value);
+      });
+    }
+
+    function render() {
+      const fragment = document.createDocumentFragment();
+      items.forEach(item => {
+        fragment.appendChild(createValueOption(item.value, itemLabel(item)));
+      });
+      container.replaceChildren(fragment);
+      markSelection();
+    }
+
+    container.addEventListener('click', function(e) {
+      const option = e.target.closest('.list-option');
+      if (!option) return;
+      value = option.dataset.value;
+      markSelection();
+    });
+
+    render();
+
+    return {
+      getValue: function() { return value; },
+      setValue: function(v) {
+        if (items.some(item => item.value === v)) {
+          value = v;
+        }
+        markSelection();
+      },
+      rerender: render,
+      revealSelected: function() {
+        const selectedOption = container.querySelector('.list-option.selected');
+        if (selectedOption) {
+          selectedOption.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    };
+  }
+
+  // Single-select dropdown: a rounded trigger styled like the inputs, opening
+  // a device-list-styled menu. opensUp avoids the container's overflow:hidden
+  // clipping for controls near the bottom of a tab.
+  const DROPDOWN_CARET_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>';
+
+  function createSelectDropdown(container, items, config) {
+    let value = items.length ? items[0].value : '';
+
+    container.classList.add('dropdown');
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'dropdown-trigger';
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'dropdown-label';
+    trigger.appendChild(labelSpan);
+    const caret = document.createElement('span');
+    caret.className = 'dropdown-caret';
+    caret.innerHTML = DROPDOWN_CARET_SVG;
+    trigger.appendChild(caret);
+    const menu = document.createElement('div');
+    menu.className = `device-list dropdown-menu ${config && config.opensUp ? 'opens-up' : 'opens-down'}`;
+    menu.hidden = true;
+    container.appendChild(trigger);
+    container.appendChild(menu);
+
+    function renderLabel() {
+      const current = items.find(item => item.value === value) || items[0];
+      labelSpan.textContent = current ? itemLabel(current) : '';
+    }
+
+    function renderMenu() {
+      const fragment = document.createDocumentFragment();
+      items.forEach(item => {
+        const option = createValueOption(item.value, itemLabel(item));
+        option.classList.toggle('selected', item.value === value);
+        fragment.appendChild(option);
+      });
+      menu.replaceChildren(fragment);
+    }
+
+    function closeMenu() {
+      menu.hidden = true;
+      container.classList.remove('open');
+    }
+
+    trigger.addEventListener('click', function() {
+      if (menu.hidden) {
+        renderMenu();
+        menu.hidden = false;
+        container.classList.add('open');
+      } else {
+        closeMenu();
+      }
+    });
+
+    menu.addEventListener('click', function(e) {
+      const option = e.target.closest('.list-option');
+      if (!option) return;
+      value = option.dataset.value;
+      renderLabel();
+      closeMenu();
+      if (config && config.onChange) {
+        config.onChange(value);
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!menu.hidden && !container.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    renderLabel();
+
+    return {
+      getValue: function() { return value; },
+      setValue: function(v) {
+        if (items.some(item => item.value === v)) {
+          value = v;
+        }
+        renderLabel();
+      },
+      rerender: renderLabel
+    };
+  }
+
+  // Native option labels carried over verbatim; 'auto' tracks the UI language
+  const LANGUAGE_OPTIONS = [
+    { value: 'auto', label: () => window.CustomI18n.getMessage('auto_browser_language') },
+    { value: 'id', label: 'Bahasa Indonesia' },
+    { value: 'de', label: 'Deutsch' },
+    { value: 'en', label: 'English' },
+    { value: 'fr', label: 'français' },
+    { value: 'nl', label: 'nederlands' },
+    { value: 'no', label: 'norsk' },
+    { value: 'tr', label: 'türkçe' },
+    { value: 'ca', label: 'català' },
+    { value: 'da', label: 'dansk' },
+    { value: 'es', label: 'español' },
+    { value: 'it', label: 'italiano' },
+    { value: 'hu', label: 'magyar' },
+    { value: 'pl', label: 'polski' },
+    { value: 'pt_BR', label: 'português (Brasil)' },
+    { value: 'pt_PT', label: 'português (Portugal)' },
+    { value: 'ro', label: 'română' },
+    { value: 'sk', label: 'slovenčina' },
+    { value: 'sl', label: 'slovenščina' },
+    { value: 'fi', label: 'suomi' },
+    { value: 'sv', label: 'svenska' },
+    { value: 'bg', label: 'български' },
+    { value: 'ru', label: 'русский' },
+    { value: 'he', label: 'עברית' },
+    { value: 'th', label: 'ไทย' },
+    { value: 'ar', label: 'العربية' },
+    { value: 'zh_CN', label: '中文（简体）' },
+    { value: 'zh_TW', label: '中文（繁體）' },
+    { value: 'ja', label: '日本語' },
+    { value: 'ko', label: '한국어' },
+    { value: 'cs', label: 'čeština' },
+    { value: 'el', label: 'ελληνικά' },
+    { value: 'uk', label: 'українська' },
+    { value: 'vi', label: 'tiếng Việt' }
+  ];
+
+  const languageList = createSingleSelectList(document.getElementById('languageList'), LANGUAGE_OPTIONS);
+  const defaultTabDropdown = createSelectDropdown(document.getElementById('defaultTabDropdown'), [
+    { value: 'push', label: () => window.CustomI18n.getMessage('push_button') },
+    { value: 'notification', label: () => window.CustomI18n.getMessage('notification_button') }
+  ]);
+  const colorModeDropdown = createSelectDropdown(document.getElementById('colorModeDropdown'), [
+    { value: 'system', label: () => window.CustomI18n.getMessage('follow_system') },
+    { value: 'light', label: () => window.CustomI18n.getMessage('light') },
+    { value: 'dark', label: () => window.CustomI18n.getMessage('dark') }
+  ], { onChange: applyColorMode, opensUp: true });
   
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -324,14 +536,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDisplayUnreadCountsVisibility();
     
     // Load language mode setting (default is 'auto')
-    languageModeSelect.value = data.languageMode || 'auto';
-    
+    languageList.setValue(data.languageMode || 'auto');
+
     // Load color mode setting (default is 'system')
-    colorModeSelect.value = data.colorMode || 'system';
-    applyColorMode(colorModeSelect.value);
-    
+    colorModeDropdown.setValue(data.colorMode || 'system');
+    applyColorMode(colorModeDropdown.getValue());
+
     // Load default tab setting (default is 'push')
-    defaultTabSelect.value = data.defaultTab || 'push';
+    defaultTabDropdown.setValue(data.defaultTab || 'push');
     
     // Load play sound on notification setting (default is true/enabled)
     playSoundOnNotificationCheckbox.checked = data.playSoundOnNotification !== false; // Default to true
@@ -529,11 +741,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   playSoundOnNotificationToggle.addEventListener('click', function() {
     playSoundOnNotificationCheckbox.checked = !playSoundOnNotificationCheckbox.checked;
     updatePlaySoundOnNotificationToggleVisual();
-  });
-
-  // Handle color mode changes for immediate preview
-  colorModeSelect.addEventListener('change', function() {
-    applyColorMode(colorModeSelect.value);
   });
 
   retrieveDevicesButton.addEventListener('click', async function() {
@@ -796,6 +1003,11 @@ document.addEventListener('DOMContentLoaded', async function() {
       // Add active class to clicked tab and corresponding content
       this.classList.add('active');
       document.getElementById(`${targetTab}-content`).classList.add('active');
+
+      // Scroll the language list to the active language once it's visible
+      if (targetTab === 'appearance') {
+        languageList.revealSelected();
+      }
     });
   });
 
@@ -844,9 +1056,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadCounts: displayUnreadCountsCheckbox.checked,
       displayUnreadPushes: displayUnreadPushesCheckbox.checked,
       displayUnreadMirrored: displayUnreadMirroredCheckbox.checked,
-      languageMode: languageModeSelect.value,
-      colorMode: colorModeSelect.value,
-      defaultTab: defaultTabSelect.value,
+      languageMode: languageList.getValue(),
+      colorMode: colorModeDropdown.getValue(),
+      defaultTab: defaultTabDropdown.getValue(),
       playSoundOnNotification: playSoundOnNotificationCheckbox.checked
     };
     
@@ -923,7 +1135,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.local.set(localSaveData, function() {
       // Check if language has changed
       const oldLanguage = window.CustomI18n.getCurrentLanguage();
-      const newLanguage = languageModeSelect.value;
+      const newLanguage = languageList.getValue();
       
       if (oldLanguage !== newLanguage) {
         // Language changed, reload the locale and update UI
@@ -1256,9 +1468,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       element.placeholder = window.CustomI18n.getMessage(messageKey);
     });
     
-    // Re-render the checklists (their "All …" rows are message-based)
+    // Re-render the custom controls whose labels are message-based
     remoteDevicePicker.rerender();
     otherDevicePicker.rerender();
+    languageList.rerender();
+    defaultTabDropdown.rerender();
+    colorModeDropdown.rerender();
   }
 
   function applyColorMode(mode) {

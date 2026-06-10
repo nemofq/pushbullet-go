@@ -643,6 +643,28 @@
       display: none;
     }
 
+    /* Scrollbar drawn inside the rounded menu: transparent track keeps the
+       border's rounded corners intact; the thumb is an inset pill. */
+    .target-menu::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    .target-menu::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .target-menu::-webkit-scrollbar-thumb {
+      background: var(--border-secondary);
+      border-radius: 6px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+    }
+
+    .target-menu::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+      background-clip: content-box;
+    }
+
     .menu-divider {
       height: 1px;
       background: var(--border-primary);
@@ -712,6 +734,37 @@
     .menu-option .opt-check svg {
       width: 16px;
       height: 16px;
+    }
+
+    /* Leading checkbox — device rows only (multi-select toggles). The
+       default/all row keeps the trailing ✓ instead. */
+    .menu-option .opt-checkbox {
+      width: 16px;
+      height: 16px;
+      box-sizing: border-box;
+      border: 1.5px solid var(--border-secondary);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .menu-option .opt-checkbox svg {
+      width: 11px;
+      height: 11px;
+      opacity: 0;
+    }
+
+    .menu-option.selected .opt-checkbox {
+      background: var(--button-primary);
+      border-color: var(--button-primary);
+    }
+
+    .menu-option.selected .opt-checkbox svg {
+      opacity: 1;
     }
 
     .menu-option.selected {

@@ -956,21 +956,33 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function createTargetMenuOption(iden, label) {
+    const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
     const option = document.createElement('button');
     option.className = 'menu-option';
     option.type = 'button';
     option.dataset.iden = iden;
     option.title = label;
 
+    if (iden) {
+      // device rows are independent toggles → leading checkbox
+      const checkbox = document.createElement('span');
+      checkbox.className = 'opt-checkbox';
+      checkbox.innerHTML = CHECK_SVG;
+      option.appendChild(checkbox);
+    }
+
     const text = document.createElement('span');
     text.className = 'opt-text';
     text.textContent = label;
     option.appendChild(text);
 
-    const check = document.createElement('span');
-    check.className = 'opt-check';
-    check.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
-    option.appendChild(check);
+    if (!iden) {
+      // the default/all row is a single current-state choice → trailing ✓
+      const check = document.createElement('span');
+      check.className = 'opt-check';
+      check.innerHTML = CHECK_SVG;
+      option.appendChild(check);
+    }
 
     return option;
   }

@@ -127,14 +127,6 @@
       :root .tab:hover:not(.active) {
         background: rgba(255, 255, 255, 0.1);
       }
-
-      :root select:not([multiple]):not([size]) {
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-      }
-    }
-
-    .theme-light select:not([multiple]):not([size]) {
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
     }
 
     body {
@@ -175,6 +167,7 @@
       width: 100%;
       padding: 12px;
       border: 1px solid var(--border-secondary);
+      border-radius: 10px;
       font-size: 14px;
       box-sizing: border-box;
       background: var(--bg-primary);
@@ -192,6 +185,7 @@
       background: var(--button-primary);
       color: white;
       border: none;
+      border-radius: 10px;
       padding: 12px 24px;
       cursor: pointer;
       font-size: 14px;
@@ -225,6 +219,7 @@
     .status {
       margin-top: 15px;
       padding: 12px;
+      border-radius: 10px;
       display: none;
       text-align: center;
       font-size: 14px;
@@ -258,46 +253,39 @@
       text-decoration: underline;
     }
 
-    select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border-secondary);
-      font-size: 14px;
-      box-sizing: border-box;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      transition: border-color 0.3s ease, background-color 0.3s ease;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: var(--border-focus);
-    }
-
-    select:not([multiple]):not([size]) {
-      padding: 12px 40px 12px 12px;
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 16px;
-    }
-
-    .theme-dark select:not([multiple]):not([size]),
-    .theme-system.system-dark select:not([multiple]):not([size]) {
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-    }
-
     /* Inline device checklist — same row/checkmark language as the popup's
-       target menu, pinned open inside a square form box. */
+       target menu, pinned open inside a rounded form box. */
     .device-list {
       border: 1px solid var(--border-secondary);
+      border-radius: 10px;
       background: var(--bg-primary);
       box-sizing: border-box;
       padding: 6px;
       max-height: 208px;
       overflow-y: auto;
       transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Scrollbar drawn inside the rounded box: transparent track keeps the
+       border's rounded corners intact; the thumb is an inset pill. */
+    .device-list::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    .device-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .device-list::-webkit-scrollbar-thumb {
+      background: var(--border-secondary);
+      border-radius: 6px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+    }
+
+    .device-list::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+      background-clip: content-box;
     }
 
     .device-list .list-option {
@@ -341,6 +329,37 @@
       height: 16px;
     }
 
+    /* Leading checkbox — multi-select rows only (device toggles). Single
+       current-value rows keep the trailing ✓ instead. */
+    .device-list .opt-checkbox {
+      width: 16px;
+      height: 16px;
+      box-sizing: border-box;
+      border: 1.5px solid var(--border-secondary);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .device-list .opt-checkbox svg {
+      width: 11px;
+      height: 11px;
+      opacity: 0;
+    }
+
+    .device-list .list-option.selected .opt-checkbox {
+      background: var(--toggle-active);
+      border-color: var(--toggle-active);
+    }
+
+    .device-list .list-option.selected .opt-checkbox svg {
+      opacity: 1;
+    }
+
     .device-list .list-option.selected {
       background: var(--accent-soft);
     }
@@ -355,11 +374,75 @@
       margin: 6px 4px;
     }
 
-    /* Fixed size select (like language selector) should not have dropdown arrow */
-    select[size]:not([size="1"]) {
-      appearance: auto;
-      background-image: none;
+    /* Custom dropdown (single-select) — closed face styled like the inputs;
+       the open menu reuses the device-list row/checkmark language. */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       padding: 12px;
+      border: 1px solid var(--border-secondary);
+      border-radius: 10px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .dropdown-trigger:hover,
+    .dropdown.open .dropdown-trigger {
+      background: var(--bg-primary);
+      border-color: var(--border-focus);
+    }
+
+    .dropdown-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dropdown-caret {
+      display: flex;
+      flex-shrink: 0;
+      color: var(--text-secondary);
+    }
+
+    .dropdown-caret svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* The menu composes with .device-list for the box + row styles; the
+       colour-mode dropdown opens upward so the container's overflow:hidden
+       (needed for the rounded tab corners) can't clip it. */
+    .dropdown-menu {
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .dropdown-menu[hidden] {
+      display: none;
+    }
+
+    .dropdown-menu.opens-down {
+      top: calc(100% + 4px);
+    }
+
+    .dropdown-menu.opens-up {
+      bottom: calc(100% + 4px);
     }
 
     .toggle-container {
@@ -454,10 +537,6 @@
     .save-container {
       width: 450px;
       margin-top: 20px;
-    }
-
-    .save-button {
-      border-radius: 8px;
     }
 
     .sub-option-icon {
@@ -623,14 +702,11 @@
           password is never stored. Must be the same on all devices.</div>
       </div>
       <div class="form-group" id="defaultTabGroup" style="display: none;">
-        <label for="defaultTab">
+        <label>
           <span class="sub-option-icon">↳</span>
           <span data-i18n="default_tab_label">Default tab in popup:</span>
         </label>
-        <select id="defaultTab">
-          <option value="push" data-i18n="push_button">Push</option>
-          <option value="notification" data-i18n="notification_button">Notification</option>
-        </select>
+        <div id="defaultTabDropdown"></div>
       </div>
       <div class="toggle-container">
         <label class="toggle-label" data-i18n="require_interaction_label">Require interaction to dismiss notifications
@@ -703,51 +779,12 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="languageMode" data-i18n="language_label">Language:</label>
-        <select id="languageMode" size="4">
-          <option value="auto" data-i18n="auto_browser_language">Auto (Browser's language)</option>
-          <option value="id">Bahasa Indonesia</option>
-          <option value="de">Deutsch</option>
-          <option value="en">English</option>
-          <option value="fr">français</option>
-          <option value="nl">nederlands</option>
-          <option value="no">norsk</option>
-          <option value="tr">türkçe</option>
-          <option value="ca">català</option>
-          <option value="da">dansk</option>
-          <option value="es">español</option>
-          <option value="it">italiano</option>
-          <option value="hu">magyar</option>
-          <option value="pl">polski</option>
-          <option value="pt_BR">português (Brasil)</option>
-          <option value="pt_PT">português (Portugal)</option>
-          <option value="ro">română</option>
-          <option value="sk">slovenčina</option>
-          <option value="sl">slovenščina</option>
-          <option value="fi">suomi</option>
-          <option value="sv">svenska</option>
-          <option value="bg">български</option>
-          <option value="ru">русский</option>
-          <option value="he">עברית</option>
-          <option value="th">ไทย</option>
-          <option value="ar">العربية</option>
-          <option value="zh_CN">中文（简体）</option>
-          <option value="zh_TW">中文（繁體）</option>
-          <option value="ja">日本語</option>
-          <option value="ko">한국어</option>
-          <option value="cs">čeština</option>
-          <option value="el">ελληνικά</option>
-          <option value="uk">українська</option>
-          <option value="vi">tiếng Việt</option>
-        </select>
+        <label data-i18n="language_label">Language:</label>
+        <div id="languageList" class="device-list"></div>
       </div>
       <div class="form-group">
-        <label for="colorMode" data-i18n="color_mode_label">Color Mode:</label>
-        <select id="colorMode">
-          <option value="system" data-i18n="follow_system">Follow system</option>
-          <option value="light" data-i18n="light">Light</option>
-          <option value="dark" data-i18n="dark">Dark</option>
-        </select>
+        <label data-i18n="color_mode_label">Color Mode:</label>
+        <div id="colorModeDropdown"></div>
       </div>
     </div>
   </div>
