@@ -106,6 +106,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function render() {
+      // No devices retrieved yet — show an empty well instead of a
+      // misleadingly selected "All …" row over nothing.
+      container.classList.toggle('empty', devices.length === 0);
+      if (devices.length === 0) {
+        container.replaceChildren();
+        return;
+      }
       const fragment = document.createDocumentFragment();
       fragment.appendChild(createOption('', getAllLabel()));
       const divider = document.createElement('div');

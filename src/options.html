@@ -266,6 +266,12 @@
       transition: border-color 0.3s ease, background-color 0.3s ease;
     }
 
+    /* No devices yet — the checklist renders empty; keep a visible well
+       roughly the height of a single row so the layout doesn't collapse. */
+    .device-list.empty {
+      min-height: 56px;
+    }
+
     /* Scrollbar drawn inside the rounded box: transparent track keeps the
        border's rounded corners intact; the thumb is an inset pill. */
     .device-list::-webkit-scrollbar {
