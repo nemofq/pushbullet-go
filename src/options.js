@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function() {
   const accessTokenInput = document.getElementById('accessToken');
-  const remoteDeviceSelect = document.getElementById('remoteDeviceId');
+  const remoteDevicePickerEl = document.getElementById('remoteDevicePicker');
   const saveSettingsButton = document.getElementById('saveSettings');
   const retrieveDevicesButton = document.getElementById('retrieveDevices');
   const saveStatus = document.getElementById('saveStatus');
@@ -48,17 +48,115 @@ document.addEventListener('DOMContentLoaded', async function() {
   const encryptionPasswordGroup = document.getElementById('encryptionPasswordGroup');
   const colorModeSelect = document.getElementById('colorMode');
   const languageModeSelect = document.getElementById('languageMode');
-  const deviceSelectionStatus = document.getElementById('deviceSelectionStatus');
   const defaultTabSelect = document.getElementById('defaultTab');
   const defaultTabGroup = document.getElementById('defaultTabGroup');
   const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
   const playSoundOnNotificationToggle = document.getElementById('playSoundOnNotificationToggle');
-  const otherDeviceSelect = document.getElementById('otherDeviceIds');
+  const otherDevicePickerEl = document.getElementById('otherDevicePicker');
   const otherDeviceListGroup = document.getElementById('otherDeviceListGroup');
+  const showPerSendTargetCheckbox = document.getElementById('showPerSendTarget');
+  const showPerSendTargetToggle = document.getElementById('showPerSendTargetToggle');
 
   // Tab elements
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
+
+  // Inline device checklists — same row/checkmark language as the popup's
+  // target menu. The top "All …" row is the empty selection ([] = all);
+  // toggling never closes anything, and state only persists on Save.
+  const DEVICE_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
+
+  function createDeviceChecklist(container, getAllLabel) {
+    let devices = [];
+    let selected = [];
+
+    function deviceLabel(device) {
+      return device.nickname || `${device.manufacturer} ${device.model}`;
+    }
+
+    function createOption(iden, label) {
+      const option = document.createElement('button');
+      option.className = 'list-option';
+      option.type = 'button';
+      option.dataset.iden = iden;
+      option.title = label;
+      const text = document.createElement('span');
+      text.className = 'opt-text';
+      text.textContent = label;
+      option.appendChild(text);
+      const check = document.createElement('span');
+      check.className = 'opt-check';
+      check.innerHTML = DEVICE_CHECK_SVG;
+      option.appendChild(check);
+      return option;
+    }
+
+    function markSelection() {
+      container.querySelectorAll('.list-option').forEach(option => {
+        const iden = option.dataset.iden;
+        option.classList.toggle('selected', iden ? selected.includes(iden) : selected.length === 0);
+      });
+    }
+
+    function render() {
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(createOption('', getAllLabel()));
+      const divider = document.createElement('div');
+      divider.className = 'list-divider';
+      fragment.appendChild(divider);
+      devices.forEach(device => {
+        fragment.appendChild(createOption(device.iden, deviceLabel(device)));
+      });
+      container.replaceChildren(fragment);
+      markSelection();
+    }
+
+    container.addEventListener('click', function(e) {
+      const option = e.target.closest('.list-option');
+      if (!option) return;
+      const iden = option.dataset.iden;
+      if (!iden) {
+        selected = [];
+      } else {
+        const index = selected.indexOf(iden);
+        if (index === -1) {
+          selected.push(iden);
+        } else {
+          selected.splice(index, 1);
+        }
+      }
+      markSelection();
+    });
+
+    return {
+      setDevices: function(list) {
+        devices = list;
+        // keep only selections that still point at an existing device
+        selected = selected.filter(iden => devices.some(device => device.iden === iden));
+        render();
+      },
+      setSelected: function(ids) {
+        selected = ids.filter(iden => devices.some(device => device.iden === iden));
+        markSelection();
+      },
+      getSelected: function() {
+        return selected.slice();
+      },
+      getDeviceCount: function() {
+        return devices.length;
+      },
+      rerender: render
+    };
+  }
+
+  const remoteDevicePicker = createDeviceChecklist(
+    remoteDevicePickerEl,
+    () => window.CustomI18n.getMessage('all_devices')
+  );
+  const otherDevicePicker = createDeviceChecklist(
+    otherDevicePickerEl,
+    () => window.CustomI18n.getMessage('all_other_devices')
+  );
   
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -86,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -107,14 +205,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     populateDeviceSelects();
     
     if (data.remoteDeviceId) {
-      const remoteIds = data.remoteDeviceId.split(',').map(id => id.trim()).filter(id => id);
-      Array.from(remoteDeviceSelect.options).forEach(option => {
-        option.selected = remoteIds.includes(option.value);
-      });
+      remoteDevicePicker.setSelected(data.remoteDeviceId.split(',').map(id => id.trim()).filter(id => id));
     }
-    
-    updateDeviceSelectionStatus();
-    
+
+    // Load per-send target selector setting (default is true/on)
+    showPerSendTargetCheckbox.checked = data.showPerSendTarget !== false; // Default to true
+    updateShowPerSendTargetToggleVisual();
+
     // Load auto-open links setting (default is false/off)
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
     updateToggleVisual();
@@ -180,19 +277,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateShowOtherDevicePushesToggleVisual();
     updateShowNoTargetPushesToggleVisual();
 
-    // Populate other device list and load selections
+    // Load other device selections ('' or unset means all other devices,
+    // which the checklist shows as its selected "All other devices" row)
     if (data.selectedOtherDeviceIds !== undefined && data.selectedOtherDeviceIds !== '') {
-      // Mark that we have a stored selection so populateOtherDeviceSelect doesn't select all
-      otherDeviceSelect.dataset.hasStoredSelection = 'true';
-      populateOtherDeviceSelect();
-      const selectedIds = data.selectedOtherDeviceIds.split(',').map(id => id.trim()).filter(id => id);
-      Array.from(otherDeviceSelect.options).forEach(option => {
-        option.selected = selectedIds.includes(option.value);
-      });
-    } else {
-      // No stored selection or empty (means all devices) - let populateOtherDeviceSelect select all by default
-      otherDeviceSelect.dataset.hasStoredSelection = 'false';
-      populateOtherDeviceSelect();
+      otherDevicePicker.setSelected(data.selectedOtherDeviceIds.split(',').map(id => id.trim()).filter(id => id));
     }
     // Show/hide other device list based on toggle state
     updateOtherDeviceListVisibility();
@@ -312,6 +400,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateDisplayUnreadCountsVisibility();
       }
     }
+  });
+
+  showPerSendTargetToggle.addEventListener('click', function() {
+    showPerSendTargetCheckbox.checked = !showPerSendTargetCheckbox.checked;
+    updateShowPerSendTargetToggleVisual();
   });
 
   onlyBrowserPushesToggle.addEventListener('click', function() {
@@ -441,11 +534,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Handle color mode changes for immediate preview
   colorModeSelect.addEventListener('change', function() {
     applyColorMode(colorModeSelect.value);
-  });
-
-  // Handle remote device selection changes
-  remoteDeviceSelect.addEventListener('change', function() {
-    updateDeviceSelectionStatus();
   });
 
   retrieveDevicesButton.addEventListener('click', async function() {
@@ -728,10 +816,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       accessTokenToSave = '';
     }
 
-    const selectedRemoteDevices = Array.from(remoteDeviceSelect.selectedOptions)
-      .map(option => option.value)
-      .filter(value => value)
-      .join(',');
+    const selectedRemoteDevices = remoteDevicePicker.getSelected().join(',');
 
     const saveData = {
       // General settings
@@ -739,6 +824,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
       people: people,
+      showPerSendTarget: showPerSendTargetCheckbox.checked,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
       selectedOtherDeviceIds: getSelectedOtherDeviceIds(),
@@ -807,6 +893,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     const localSaveData = {
       remoteDeviceId: saveData.remoteDeviceId,
+      showPerSendTarget: saveData.showPerSendTarget,
       onlyBrowserPushes: saveData.onlyBrowserPushes,
       showOtherDevicePushes: saveData.showOtherDevicePushes,
       selectedOtherDeviceIds: saveData.selectedOtherDeviceIds,
@@ -861,45 +948,17 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 
   function populateDeviceSelects() {
-    remoteDeviceSelect.innerHTML = '';
+    remoteDevicePicker.setDevices(devices.filter(device => device.active && device.pushable !== false));
 
-    devices.forEach(device => {
-      if (device.active && device.pushable !== false) {
-        const remoteOption = document.createElement('option');
-        remoteOption.value = device.iden;
-        remoteOption.textContent = device.nickname || `${device.manufacturer} ${device.model}`;
-        remoteDeviceSelect.appendChild(remoteOption);
-      }
-    });
-
-    updateDeviceSelectionStatus();
-
-    // Also populate the other device select
+    // Also populate the other device list
     populateOtherDeviceSelect();
   }
 
   function populateOtherDeviceSelect() {
-    otherDeviceSelect.innerHTML = '';
-
     // Filter out Chrome devices and get only active devices
-    const otherDevices = devices.filter(device =>
+    otherDevicePicker.setDevices(devices.filter(device =>
       device.active && device.pushable !== false && device.type !== 'chrome'
-    );
-
-    otherDevices.forEach(device => {
-      const option = document.createElement('option');
-      option.value = device.iden;
-      option.textContent = device.nickname || `${device.manufacturer} ${device.model}`;
-      otherDeviceSelect.appendChild(option);
-    });
-
-    // By default, select all devices (backward compatible)
-    const hasStoredSelection = otherDeviceSelect.dataset.hasStoredSelection === 'true';
-    if (!hasStoredSelection) {
-      Array.from(otherDeviceSelect.options).forEach(option => {
-        option.selected = true;
-      });
-    }
+    ));
   }
 
   function updateOtherDeviceListVisibility() {
@@ -911,16 +970,15 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function getSelectedOtherDeviceIds() {
-    const selectedOptions = Array.from(otherDeviceSelect.selectedOptions);
-    const totalDevices = otherDeviceSelect.options.length;
+    const selected = otherDevicePicker.getSelected();
 
     // If all selected or none selected, return empty (means all, backward compatible)
-    if (selectedOptions.length === 0 || selectedOptions.length === totalDevices) {
+    if (selected.length === 0 || selected.length === otherDevicePicker.getDeviceCount()) {
       return '';
     }
 
     // Return comma-separated IDs
-    return selectedOptions.map(opt => opt.value).filter(v => v).join(',');
+    return selected.join(',');
   }
   
   function updateRetrieveButton() {
@@ -974,6 +1032,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
+  function updateShowPerSendTargetToggleVisual() {
+    if (showPerSendTargetCheckbox.checked) {
+      showPerSendTargetToggle.classList.add('active');
+    } else {
+      showPerSendTargetToggle.classList.remove('active');
+    }
+  }
+
   function updateOnlyBrowserPushesToggleVisual() {
     if (onlyBrowserPushesCheckbox.checked) {
       onlyBrowserPushesToggle.classList.add('active');
@@ -1130,27 +1196,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
-  function updateDeviceSelectionStatus() {
-    const selectedOptions = Array.from(remoteDeviceSelect.selectedOptions);
-    const selectedDevices = selectedOptions.filter(option => option.value);
-    
-    if (selectedDevices.length === 0) {
-      deviceSelectionStatus.textContent = window.CustomI18n && window.CustomI18n.getMessage 
-        ? window.CustomI18n.getMessage('none_selected_all_devices') 
-        : 'None selected (to all devices)';
-      deviceSelectionStatus.style.display = 'inline';
-    } else if (selectedDevices.length === 1) {
-      deviceSelectionStatus.textContent = `${selectedDevices[0].textContent}`;
-      deviceSelectionStatus.style.display = 'inline';
-    } else {
-      const devicesSelectedText = window.CustomI18n && window.CustomI18n.getMessage 
-        ? window.CustomI18n.getMessage('devices_selected') 
-        : 'devices selected';
-      deviceSelectionStatus.textContent = `${selectedDevices.length} ${devicesSelectedText}`;
-      deviceSelectionStatus.style.display = 'inline';
-    }
-  }
-  
   function showStatus(message, type) {
     saveStatus.textContent = message;
     saveStatus.className = `status ${type}`;
@@ -1211,8 +1256,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       element.placeholder = window.CustomI18n.getMessage(messageKey);
     });
     
-    // Update device selection status with proper i18n
-    updateDeviceSelectionStatus();
+    // Re-render the checklists (their "All …" rows are message-based)
+    remoteDevicePicker.rerender();
+    otherDevicePicker.rerender();
   }
 
   function applyColorMode(mode) {

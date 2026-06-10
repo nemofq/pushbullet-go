@@ -7,6 +7,15 @@
     :root {
       /* Light theme */
       color-scheme: light dark;
+      /* second-line (toolbar) control height — a touch shorter than the 40px
+         input, so the action row reads as secondary. */
+      --row2-h: 36px;
+      /* compose vertical rhythm, kept compact so the footer steals as little
+         height as possible from the message list: symmetric padding above
+         line 1 / below line 2, and a smaller gap between the two lines so
+         they still read as one unit. */
+      --compose-pad-y: 8px;
+      --compose-gap: 6px;
       --bg-primary: #ffffff;
       --bg-secondary: #f5f5f5;
       --bg-tertiary: #f9f9f9;
@@ -30,6 +39,8 @@
       --status-connected: #4caf50;
       --status-connecting: #ff9800;
       --status-disconnected: #f44336;
+      --accent-soft: rgba(76, 175, 80, 0.12);
+      --accent-soft-hover: rgba(76, 175, 80, 0.2);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -56,6 +67,8 @@
         --status-connected: #4caf50;
         --status-connecting: #ff9800;
         --status-disconnected: #f44336;
+        --accent-soft: rgba(76, 175, 80, 0.18);
+        --accent-soft-hover: rgba(76, 175, 80, 0.28);
       }
     }
 
@@ -84,6 +97,8 @@
       --status-connected: #4caf50;
       --status-connecting: #ff9800;
       --status-disconnected: #f44336;
+      --accent-soft: rgba(76, 175, 80, 0.12);
+      --accent-soft-hover: rgba(76, 175, 80, 0.2);
     }
 
     .theme-dark {
@@ -111,6 +126,8 @@
       --status-connected: #4caf50;
       --status-connecting: #ff9800;
       --status-disconnected: #f44336;
+      --accent-soft: rgba(76, 175, 80, 0.18);
+      --accent-soft-hover: rgba(76, 175, 80, 0.28);
     }
 
     body {
@@ -370,21 +387,25 @@
       background: var(--bg-tertiary);
       transition: background-color 0.3s ease, border-color 0.3s ease;
       flex-shrink: 0;
+      position: relative;
     }
 
-    .input-container {
+    /* the two-line compose stack: input on line 1, toolbar on line 2 */
+    .compose {
       display: flex;
-      align-items: flex-end;
-      gap: 8px;
+      flex-direction: column;
+      gap: var(--compose-gap);
+      padding: var(--compose-pad-y) 15px;
     }
 
     textarea {
-      flex: 1;
+      width: 100%;
+      box-sizing: border-box;
       padding: 10px 12px;
       border: 1px solid var(--border-secondary);
       border-radius: 10px;
       resize: none;
-      height: 20px;
+      height: 40px;
       font-family: inherit;
       font-size: 14px;
       background: var(--bg-primary);
@@ -398,23 +419,39 @@
       border-color: var(--button-primary);
     }
 
-    .button-group {
+    /* line 2: target control pinned left, file + send pinned right */
+    .compose-toolbar {
       display: flex;
-      gap: 4px;
+      align-items: center;
+      gap: 8px;
+      min-height: var(--row2-h);
     }
 
+    /* margin-left:auto keeps file+send hard right whether or not the target
+       control is present, so the Send button never shifts when the option is
+       toggled off. */
+    .toolbar-actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    /* Base icon button (used by File + Send). Sized to --row2-h so the action
+       row sits a touch shorter than the 40px input above it. */
     .icon-button {
       background: var(--button-primary);
       color: var(--text-white);
       border: none;
-      padding: 10px;
+      padding: 0;
       border-radius: 10px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      width: var(--row2-h);
+      height: var(--row2-h);
+      flex-shrink: 0;
       transition: background-color 0.3s ease;
     }
 
@@ -432,8 +469,257 @@
     }
 
     .icon-button svg {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
+    }
+
+    /* File = secondary action: outlined so it recedes behind Send. */
+    .icon-button.is-secondary {
+      background: transparent;
+      border: 1px solid var(--border-secondary);
+      color: var(--text-secondary);
+    }
+
+    .icon-button.is-secondary:hover {
+      background: var(--accent-soft);
+      border-color: var(--button-primary);
+      color: var(--button-primary);
+    }
+
+    /* Send = primary action: labelled + wider, using the second line's extra
+       room so it's unmistakably the main button, not a twin of File. */
+    .icon-button.send-button {
+      width: auto;
+      padding: 0 16px;
+      gap: 7px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .send-button .send-label {
+      white-space: nowrap;
+    }
+
+    /* ---------------------------------------------------------------
+       THE TARGET CONTROL — one element, two faces.
+       Default face: a quiet outlined chip naming the default destination.
+       Custom face : a green "<name> ✕" pill for this send's override.
+       --------------------------------------------------------------- */
+    .target-control {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      height: var(--row2-h);
+      box-sizing: border-box;
+      font-family: inherit;
+      cursor: pointer;
+      transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .target-control[hidden] {
+      display: none;
+    }
+
+    /* Both faces keep the icon + NAME visible (the target is always legible).
+       default = quiet outlined chip naming the default destination, with a
+       dropdown caret; it stays subtle so it never competes with Send. */
+    .target-control.is-default {
+      width: auto;
+      max-width: 200px;
+      gap: 5px;
+      padding: 0 8px 0 10px;
+      border: 1px solid var(--border-secondary);
+      border-radius: 18px;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .target-control.is-default:hover {
+      border-color: var(--button-primary);
+      color: var(--button-primary);
+      background: var(--accent-soft);
+    }
+
+    /* custom = unmistakable green pill for the device(s) chosen for THIS send. */
+    .target-control.is-custom {
+      width: auto;
+      max-width: 240px;
+      gap: 5px;
+      padding: 0 6px 0 10px;
+      border: 1px solid var(--button-primary);
+      border-radius: 18px;
+      background: var(--accent-soft);
+      color: var(--button-primary);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .target-control.is-custom:hover {
+      background: var(--accent-soft-hover);
+    }
+
+    /* icon + label show in BOTH faces; caret only on default, ✕ only on custom */
+    .target-control .tc-icon {
+      display: flex;
+    }
+
+    .target-control .tc-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* the always-visible name; ellipsizes when the device name is long */
+    .target-control .tc-label {
+      display: inline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 150px;
+    }
+
+    .target-control .tc-caret,
+    .target-control .tc-clear {
+      display: none;
+    }
+
+    .target-control.is-default .tc-caret {
+      display: inline-flex;
+      align-items: center;
+      opacity: 0.7;
+    }
+
+    .target-control .tc-caret svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .target-control.is-custom .tc-clear {
+      display: inline-flex;
+    }
+
+    .target-control .tc-clear {
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .target-control .tc-clear svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .target-control .tc-clear:hover {
+      background: var(--accent-soft-hover);
+    }
+
+    /* ---------------------------------------------------------------
+       target dropdown menu — text-only, opens upward, anchored above
+       the second (bottom) line of the composer.
+       --------------------------------------------------------------- */
+    .target-menu {
+      position: absolute;
+      left: 15px;
+      bottom: 51px;
+      width: 232px;
+      /* ~6.5 compact rows (default row + tip + divider + ~5.5 devices),
+         matching the options-page checklist density */
+      max-height: 222px;
+      overflow-y: auto;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-secondary);
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+      padding: 6px;
+      z-index: 20;
+      box-sizing: border-box;
+    }
+
+    .target-menu[hidden] {
+      display: none;
+    }
+
+    .menu-divider {
+      height: 1px;
+      background: var(--border-primary);
+      margin: 6px 4px;
+    }
+
+    /* small muted hint under the Default option; the top padding keeps it
+       clear of the option's selected background. The "Options" word is an
+       always-visible green link (same treatment as the options page's
+       "Authenticate via OAuth" link). */
+    .menu-tip {
+      padding: 4px 10px 4px;
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+    }
+
+    .menu-tip-link {
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+      color: var(--button-primary);
+      cursor: pointer;
+    }
+
+    .menu-tip-link:hover {
+      text-decoration: underline;
+    }
+
+    .menu-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      background: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-family: inherit;
+      color: var(--text-primary);
+      text-align: left;
+    }
+
+    .menu-option:hover {
+      background: var(--bg-secondary);
+    }
+
+    .menu-option .opt-text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .menu-option .opt-check {
+      display: flex;
+      flex-shrink: 0;
+      color: var(--button-primary);
+      opacity: 0;
+    }
+
+    .menu-option .opt-check svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .menu-option.selected {
+      background: var(--accent-soft);
+    }
+
+    .menu-option.selected .opt-check {
+      opacity: 1;
     }
 
     .no-messages {
@@ -691,10 +977,6 @@
       border-color: var(--button-primary);
     }
 
-    .input-container {
-      padding: 10px 15px 15px 15px;
-    }
-
     .clear-history-button {
       background: none;
       border: none;
@@ -878,21 +1160,47 @@
         <button id="quickShareSend" class="quick-share-button" data-i18n="send">Send</button>
       </div>
     </div>
-    <div class="input-container">
+    <div class="compose">
       <textarea id="bodyInput" data-i18n-placeholder="type_or_paste_placeholder" placeholder="Type or paste"></textarea>
-      <div class="button-group">
-        <button id="sendButton" class="icon-button" data-i18n-title="send_message_title" title="Send message">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
-          </svg>
+      <div class="compose-toolbar">
+        <button class="target-control is-default" id="targetControl" type="button" hidden>
+          <span class="tc-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M4,6H22V4H4C2.89,4 2,4.89 2,6V17H0V20H14V17H4V6M23,8H17C16.5,8 16,8.5 16,9V19C16,19.5 16.5,20 17,20H23C23.5,20 24,19.5 24,19V9C24,8.5 23.5,8 23,8M22,17H18V10H22V17Z" />
+            </svg>
+          </span>
+          <span class="tc-label" id="targetControlLabel"></span>
+          <span class="tc-caret">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+          </span>
+          <span class="tc-clear" id="targetControlClear" data-i18n-title="target_clear_tooltip" title="Back to default">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+            </svg>
+          </span>
         </button>
-        <button id="sendFileButton" class="icon-button" data-i18n-title="send_file_title" title="Send file/image">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-          </svg>
-        </button>
+        <div class="toolbar-actions">
+          <button id="sendFileButton" class="icon-button is-secondary" data-i18n-title="send_file_title"
+            title="Send file/image">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+            </svg>
+          </button>
+          <button id="sendButton" class="icon-button send-button" data-i18n-title="send_message_title"
+            title="Send message">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+            </svg>
+            <span class="send-label" data-i18n="send">Send</span>
+          </button>
+        </div>
       </div>
     </div>
+    <div class="target-menu" id="targetMenu" hidden></div>
   </div>
 
   <script src="i18n.js"></script>

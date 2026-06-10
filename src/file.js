@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressFill = document.getElementById('progressFill');
   const status = document.getElementById('status');
 
+  // One-shot target override threaded in by the popup's per-send selector
+  // (comma-joined device idens). Scoped to this window only — it dies with
+  // the window, so it can't leak into the next file send.
+  const targetOverride = new URLSearchParams(window.location.search).get('to');
+
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
     window.CustomI18n.initializeI18n().then(() => {
@@ -57,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
       progressFill.style.width = '50%';
 
       // Upload file using Pushbullet API directly
-      await uploadFile(file, tokenData.accessToken, configData.remoteDeviceId);
+      await uploadFile(file, tokenData.accessToken, targetOverride || configData.remoteDeviceId);
 
       status.textContent = window.CustomI18n.getMessage('file_image_pushed');
       progressFill.style.width = '100%';

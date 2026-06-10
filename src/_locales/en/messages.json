@@ -81,13 +81,40 @@
     "message": "Retrieved"
   },
   "target_devices_label": {
-    "message": "Target Devices:"
-  },
-  "none_selected_all_devices": {
-    "message": "None selected (to all devices)"
+    "message": "Default Target Devices:"
   },
   "choose_devices_tip": {
-    "message": "Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple."
+    "message": "The default target for pushes you send - from the popup, the right-click menu, and the keyboard shortcut."
+  },
+  "show_per_send_target_label": {
+    "message": "Show per-send target picker in popup"
+  },
+  "all_devices": {
+    "message": "All devices"
+  },
+  "all_other_devices": {
+    "message": "All other devices"
+  },
+  "n_devices": {
+    "message": "$1 devices"
+  },
+  "default_target_option": {
+    "message": "Default ($1)"
+  },
+  "change_target_tip": {
+    "message": "You can change this in"
+  },
+  "options_link_text": {
+    "message": "Options"
+  },
+  "target_default_tooltip": {
+    "message": "Click to choose target devices"
+  },
+  "target_custom_tooltip": {
+    "message": "Sending to $1 · click to change"
+  },
+  "target_clear_tooltip": {
+    "message": "Back to default"
   },
   "only_browser_pushes_label": {
     "message": "Only notify and show pushes to Chrome(s)"
@@ -130,9 +157,6 @@
   },
   "saved": {
     "message": "Saved"
-  },
-  "devices_selected": {
-    "message": "devices selected"
   },
   "push_file_image_title": {
     "message": "Push File/Image"
@@ -315,7 +339,7 @@
     "message": "Copied"
   },
   "choose_other_devices_tip": {
-    "message": "Select which other devices to show notifications for. Hold Ctrl/Cmd to select multiple."
+    "message": "Select which other devices to show notifications for."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Hide notification when it has auto-opened"

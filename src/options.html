@@ -29,6 +29,7 @@
       --toggle-bg: #cccccc;
       --toggle-active: #4caf50;
       --toggle-slider: #ffffff;
+      --accent-soft: rgba(76, 175, 80, 0.12);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -54,6 +55,7 @@
         --toggle-bg: #555555;
         --toggle-active: #4caf50;
         --toggle-slider: #ffffff;
+        --accent-soft: rgba(76, 175, 80, 0.18);
       }
     }
 
@@ -80,6 +82,7 @@
       --toggle-bg: #cccccc;
       --toggle-active: #4caf50;
       --toggle-slider: #ffffff;
+      --accent-soft: rgba(76, 175, 80, 0.12);
     }
 
     .theme-dark {
@@ -105,6 +108,7 @@
       --toggle-bg: #555555;
       --toggle-active: #4caf50;
       --toggle-slider: #ffffff;
+      --accent-soft: rgba(76, 175, 80, 0.18);
     }
 
     .theme-dark .container {
@@ -284,8 +288,71 @@
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
     }
 
-    select[multiple] {
-      height: 120px;
+    /* Inline device checklist — same row/checkmark language as the popup's
+       target menu, pinned open inside a square form box. */
+    .device-list {
+      border: 1px solid var(--border-secondary);
+      background: var(--bg-primary);
+      box-sizing: border-box;
+      padding: 6px;
+      max-height: 208px;
+      overflow-y: auto;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .device-list .list-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      background: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-primary);
+      text-align: left;
+    }
+
+    .device-list .list-option:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .device-list .opt-text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .device-list .opt-check {
+      display: flex;
+      flex-shrink: 0;
+      color: var(--toggle-active);
+      opacity: 0;
+    }
+
+    .device-list .opt-check svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .device-list .list-option.selected {
+      background: var(--accent-soft);
+    }
+
+    .device-list .list-option.selected .opt-check {
+      opacity: 1;
+    }
+
+    .device-list .list-divider {
+      height: 1px;
+      background: var(--border-primary);
+      margin: 6px 4px;
     }
 
     /* Fixed size select (like language selector) should not have dropdown arrow */
@@ -338,12 +405,6 @@
 
     .toggle-input {
       display: none;
-    }
-
-    .selection-status {
-      font-weight: normal;
-      color: var(--text-secondary);
-      font-size: 12px;
     }
 
     /* Tab styles */
@@ -434,13 +495,20 @@
           devices and people</button>
       </div>
       <div class="form-group">
-        <label for="remoteDeviceId"><span data-i18n="target_devices_label">Target Devices:</span> <span
-            id="deviceSelectionStatus" class="selection-status" data-i18n="none_selected_all_devices">None selected (to
-            all devices)</span></label>
-        <select id="remoteDeviceId" multiple>
-        </select>
+        <label data-i18n="target_devices_label">Default Target Devices:</label>
+        <div id="remoteDevicePicker" class="device-list"></div>
         <div class="tip" data-i18n="choose_devices_tip">
-          Choose which devices to send pushes to. Hold Ctrl/Cmd to select multiple.
+          The default target for pushes you send - from the popup, the right-click menu, and the keyboard shortcut.
+        </div>
+      </div>
+      <div class="toggle-container" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="show_per_send_target_label">Show per-send target picker in popup</span>
+        </label>
+        <input type="checkbox" id="showPerSendTarget" class="toggle-input">
+        <div class="toggle-switch" id="showPerSendTargetToggle">
+          <div class="toggle-slider"></div>
         </div>
       </div>
       <div class="form-group">
@@ -467,10 +535,9 @@
         </div>
       </div>
       <div class="form-group" id="otherDeviceListGroup" style="display: none; margin-left: 24px; margin-bottom: 20px;">
-        <select id="otherDeviceIds" multiple>
-        </select>
+        <div id="otherDevicePicker" class="device-list"></div>
         <div class="tip" data-i18n="choose_other_devices_tip">
-          Select which other devices to show notifications for. Hold Ctrl/Cmd to select multiple.
+          Select which other devices to show notifications for.
         </div>
       </div>
       <div class="toggle-container" style="margin-left: 0px;">

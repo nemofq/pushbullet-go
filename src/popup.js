@@ -17,6 +17,18 @@ document.addEventListener('DOMContentLoaded', function() {
   const quickShareSend = document.getElementById('quickShareSend');
   const logoLink = document.getElementById('logoLink');
   const clearNotificationsButton = document.getElementById('clearNotificationsButton');
+  const targetControl = document.getElementById('targetControl');
+  const targetControlLabel = document.getElementById('targetControlLabel');
+  const targetMenu = document.getElementById('targetMenu');
+
+  // Per-popup target override: an array of device idens applying to sends
+  // from this popup until it closes (or the ✕ clears it). [] = use the
+  // configured default (remoteDeviceId). In-memory only, never persisted —
+  // closing the popup is the natural reset.
+  let perSendTargetIdens = [];
+  let targetDevices = [];
+  let defaultTargetLabel = '';
+  let hasConfiguredDefault = false;
 
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -44,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
     debouncedLoadMessages();
     checkNotificationMirroring();
     checkQuickShare();
+    initTargetSelector();
     updateConnectionStatus();
   });
   
@@ -204,15 +217,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
   sendFileButton.addEventListener('click', () => {
     console.log('Popup: Send File button clicked');
-    
+
+    // Thread the current target into the file window via a query param (it
+    // dies with the window, so nothing can leak into a later file send)
+    const fileUrl = perSendTargetIdens.length
+      ? `file.html?to=${encodeURIComponent(perSendTargetIdens.join(','))}`
+      : 'file.html';
+
     // Open file upload window
     chrome.windows.create({
-      url: 'file.html',
+      url: fileUrl,
       type: 'popup',
       width: 440,
       height: 340,
       focused: true
     });
+  });
+
+  // ---- per-send target selector (chip ↔ pill + dropdown menu) ----
+  targetControl.addEventListener('click', (e) => {
+    if (e.target.closest('.tc-clear')) {
+      // ✕ resets to the default target without opening the menu
+      e.stopPropagation();
+      resetPerSendTarget();
+      closeTargetMenu();
+      bodyInput.focus();
+      return;
+    }
+    if (targetMenu.hidden) {
+      openTargetMenu();
+    } else {
+      closeTargetMenu();
+    }
+  });
+
+  // multi-select: toggle devices and KEEP the menu open so several can be
+  // picked in one go (mirrors the options page's multi-device target). The
+  // menu closes when clicking away — e.g. into the input to type/send.
+  targetMenu.addEventListener('click', (e) => {
+    const option = e.target.closest('.menu-option');
+    if (!option) return;
+    const iden = option.dataset.iden;
+    if (!iden) {
+      perSendTargetIdens = [];
+    } else {
+      const index = perSendTargetIdens.indexOf(iden);
+      if (index === -1) {
+        perSendTargetIdens.push(iden);
+      } else {
+        perSendTargetIdens.splice(index, 1);
+      }
+    }
+    renderTargetControl();
+    markTargetMenuSelection();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!targetMenu.hidden && !targetMenu.contains(e.target) && !targetControl.contains(e.target)) {
+      closeTargetMenu();
+    }
   });
 
   openOptionsButton.addEventListener('click', () => {
@@ -340,7 +403,9 @@ document.addEventListener('DOMContentLoaded', function() {
       pushData.title = title;
     }
 
-    if (configData.remoteDeviceId) {
+    if (perSendTargetIdens.length) {
+      pushData.device_iden = perSendTargetIdens.join(',');
+    } else if (configData.remoteDeviceId) {
       pushData.device_iden = configData.remoteDeviceId;
     }
 
@@ -825,6 +890,160 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // ---- per-send target selector ----
+  // Mirrors the options page "Target Devices" list: same devices key, same
+  // active && pushable filter, same labelling (populateDeviceSelects).
+  function deviceLabel(device) {
+    return device.nickname || `${device.manufacturer} ${device.model}`;
+  }
+
+  function selectedTargetDevices() {
+    return targetDevices.filter(device => perSendTargetIdens.includes(device.iden));
+  }
+
+  async function initTargetSelector() {
+    const [configData, syncData] = await Promise.all([
+      chrome.storage.local.get(['showPerSendTarget', 'remoteDeviceId']),
+      chrome.storage.sync.get('devices')
+    ]);
+
+    const devices = syncData.devices || [];
+    targetDevices = devices.filter(device => device.active && device.pushable !== false);
+
+    // Drop selections that no longer point at an existing pushable device
+    perSendTargetIdens = perSendTargetIdens.filter(iden =>
+      targetDevices.some(device => device.iden === iden));
+
+    // The default chip reflects the configured default target (remoteDeviceId),
+    // which may be specific device(s) — "All devices" only when none is set.
+    const remoteIds = (configData.remoteDeviceId || '').split(',').map(id => id.trim()).filter(id => id);
+    const remoteDevices = targetDevices.filter(device => remoteIds.includes(device.iden));
+    hasConfiguredDefault = remoteDevices.length > 0;
+    if (remoteDevices.length === 1) {
+      defaultTargetLabel = deviceLabel(remoteDevices[0]);
+    } else if (remoteDevices.length > 1) {
+      defaultTargetLabel = window.CustomI18n.getMessage('n_devices', [String(remoteDevices.length)]);
+    } else {
+      defaultTargetLabel = window.CustomI18n.getMessage('all_devices');
+    }
+
+    // Hidden when the option is off (default on), or when there's nothing to
+    // choose between (≤1 pushable device).
+    const enabled = configData.showPerSendTarget !== false && targetDevices.length > 1;
+    targetControl.hidden = !enabled;
+    if (!enabled) {
+      perSendTargetIdens = [];
+      closeTargetMenu();
+    }
+    renderTargetControl();
+  }
+
+  function renderTargetControl() {
+    const selected = selectedTargetDevices();
+    if (selected.length === 0) {
+      targetControl.classList.add('is-default');
+      targetControl.classList.remove('is-custom');
+      targetControlLabel.textContent = defaultTargetLabel;
+      targetControl.title = window.CustomI18n.getMessage('target_default_tooltip');
+    } else {
+      targetControl.classList.remove('is-default');
+      targetControl.classList.add('is-custom');
+      targetControlLabel.textContent = selected.length === 1
+        ? deviceLabel(selected[0])
+        : window.CustomI18n.getMessage('n_devices', [String(selected.length)]);
+      targetControl.title = window.CustomI18n.getMessage('target_custom_tooltip', [selected.map(deviceLabel).join(', ')]);
+    }
+  }
+
+  function createTargetMenuOption(iden, label) {
+    const option = document.createElement('button');
+    option.className = 'menu-option';
+    option.type = 'button';
+    option.dataset.iden = iden;
+    option.title = label;
+
+    const text = document.createElement('span');
+    text.className = 'opt-text';
+    text.textContent = label;
+    option.appendChild(text);
+
+    const check = document.createElement('span');
+    check.className = 'opt-check';
+    check.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
+    option.appendChild(check);
+
+    return option;
+  }
+
+  function buildTargetMenu() {
+    const fragment = document.createDocumentFragment();
+
+    // Top option = back to the configured default; qualified so it can't be
+    // confused with the same device's own row below ("" iden = default).
+    const defaultOptionLabel = hasConfiguredDefault
+      ? window.CustomI18n.getMessage('default_target_option', [defaultTargetLabel])
+      : defaultTargetLabel;
+    fragment.appendChild(createTargetMenuOption('', defaultOptionLabel));
+
+    // Visible hint (tooltips are kept short on purpose): the default lives on
+    // the options page — the green "Options" link takes you there. Split into
+    // text + link keys like the options page's visit_link_tip pattern.
+    const settingsTip = document.createElement('div');
+    settingsTip.className = 'menu-tip';
+    const tipText = document.createElement('span');
+    tipText.textContent = window.CustomI18n.getMessage('change_target_tip');
+    const tipLink = document.createElement('button');
+    tipLink.className = 'menu-tip-link';
+    tipLink.type = 'button';
+    tipLink.textContent = window.CustomI18n.getMessage('options_link_text');
+    tipLink.onclick = () => {
+      chrome.runtime.openOptionsPage();
+    };
+    settingsTip.appendChild(tipText);
+    settingsTip.appendChild(document.createTextNode(' '));
+    settingsTip.appendChild(tipLink);
+    fragment.appendChild(settingsTip);
+
+    const divider = document.createElement('div');
+    divider.className = 'menu-divider';
+    fragment.appendChild(divider);
+
+    targetDevices.forEach(device => {
+      fragment.appendChild(createTargetMenuOption(device.iden, deviceLabel(device)));
+    });
+
+    targetMenu.replaceChildren(fragment);
+    markTargetMenuSelection();
+  }
+
+  function markTargetMenuSelection() {
+    targetMenu.querySelectorAll('.menu-option').forEach(option => {
+      const iden = option.dataset.iden;
+      const isSelected = iden
+        ? perSendTargetIdens.includes(iden)
+        : perSendTargetIdens.length === 0;
+      option.classList.toggle('selected', isSelected);
+    });
+  }
+
+  function openTargetMenu() {
+    buildTargetMenu();
+    targetMenu.hidden = false;
+  }
+
+  function closeTargetMenu() {
+    targetMenu.hidden = true;
+  }
+
+  // Snaps the control back to its quiet default face — the ✕ and option-off
+  // paths. Sends do NOT reset it; closing the popup does (in-memory only).
+  function resetPerSendTarget() {
+    if (perSendTargetIdens.length) {
+      perSendTargetIdens = [];
+      renderTargetControl();
+    }
+  }
+
   // Reflect the input's content on the Send button: disabled when the trimmed
   // body is empty, matching sendMessage()'s own empty-guard so the button is
   // only actionable when there's actually something to send.
@@ -850,14 +1069,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isUrl) {
       pushData.url = body;
     }
-    
-    if (configData.remoteDeviceId) {
+
+    if (perSendTargetIdens.length) {
+      pushData.device_iden = perSendTargetIdens.join(',');
+    } else if (configData.remoteDeviceId) {
       pushData.device_iden = configData.remoteDeviceId;
     }
-    
-    chrome.runtime.sendMessage({ 
-      type: 'send_push', 
-      data: pushData 
+
+    chrome.runtime.sendMessage({
+      type: 'send_push',
+      data: pushData
     });
 
     bodyInput.value = '';
@@ -920,8 +1141,11 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error(window.CustomI18n.getMessage('no_access_token'));
       }
 
-      await uploadPastedFile(file, tokenData.accessToken, configData.remoteDeviceId);
-      
+      const targetDeviceIds = perSendTargetIdens.length
+        ? perSendTargetIdens.join(',')
+        : configData.remoteDeviceId;
+      await uploadPastedFile(file, tokenData.accessToken, targetDeviceIds);
+
       bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + window.CustomI18n.getMessage('uploaded_successfully');
       setTimeout(() => {
         bodyInput.placeholder = window.CustomI18n.getMessage('type_or_paste_placeholder');
@@ -1041,6 +1265,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const messageKey = element.getAttribute('data-i18n-title');
       element.title = window.CustomI18n.getMessage(messageKey);
     });
+
+    // The target control's labels are built from messages — refresh them
+    initTargetSelector();
   }
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -1079,6 +1306,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (areaName === 'local' && changes.showQuickShare) {
       checkQuickShare();
+    }
+    if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId)) {
+      initTargetSelector();
+    }
+    if (areaName === 'sync' && changes.devices) {
+      initTargetSelector();
     }
     if (areaName === 'local' && changes.colorMode) {
       loadAndApplyColorMode();
