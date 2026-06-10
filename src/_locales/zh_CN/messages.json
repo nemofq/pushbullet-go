@@ -81,13 +81,10 @@
     "message": "获取完成"
   },
   "target_devices_label": {
-    "message": "目标设备："
-  },
-  "none_selected_all_devices": {
-    "message": "未选择（发送到所有设备）"
+    "message": "默认目标设备："
   },
   "choose_devices_tip": {
-    "message": "选择要发送推送的设备。按住 Ctrl/Cmd 可多选。"
+    "message": "发送推送时的默认目标——适用于弹窗、右键菜单及键盘快捷键。"
   },
   "only_browser_pushes_label": {
     "message": "仅通知并显示发送到 Chrome(s) 的推送"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "已保存"
-  },
-  "devices_selected": {
-    "message": "个设备已选"
   },
   "push_file_image_title": {
     "message": "推送文件/图片"
@@ -315,9 +309,39 @@
     "message": "已复制"
   },
   "choose_other_devices_tip": {
-    "message": "选择要显示通知的其他设备。按住 Ctrl/Cmd 可选择多个设备。"
+    "message": "选择要显示通知的其他设备。"
   },
   "hide_notification_on_auto_open_label": {
     "message": "自动打开时隐藏通知"
+  },
+  "show_per_send_target_label": {
+    "message": "在弹窗中显示每次发送的目标选择器"
+  },
+  "all_devices": {
+    "message": "所有设备"
+  },
+  "all_other_devices": {
+    "message": "所有其他设备"
+  },
+  "n_devices": {
+    "message": "$1 台设备"
+  },
+  "default_target_option": {
+    "message": "默认（$1）"
+  },
+  "change_target_tip": {
+    "message": "可在以下页面更改："
+  },
+  "options_link_text": {
+    "message": "设置"
+  },
+  "target_default_tooltip": {
+    "message": "点击选择目标设备"
+  },
+  "target_custom_tooltip": {
+    "message": "正在发送至 $1 · 点击更改"
+  },
+  "target_clear_tooltip": {
+    "message": "恢复默认"
   }
 }

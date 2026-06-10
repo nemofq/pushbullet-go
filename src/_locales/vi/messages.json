@@ -81,13 +81,10 @@
     "message": "Đã lấy"
   },
   "target_devices_label": {
-    "message": "Thiết bị nhận:"
-  },
-  "none_selected_all_devices": {
-    "message": "Không chọn (gửi tới tất cả thiết bị)"
+    "message": "Thiết bị nhận mặc định:"
   },
   "choose_devices_tip": {
-    "message": "Chọn thiết bị để gửi. Giữ Ctrl/Cmd để chọn nhiều."
+    "message": "Đích mặc định cho các push bạn gửi - từ popup, menu chuột phải và phím tắt bàn phím."
   },
   "only_browser_pushes_label": {
     "message": "Chỉ thông báo và hiển thị trên Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Đã lưu"
-  },
-  "devices_selected": {
-    "message": "thiết bị đã chọn"
   },
   "push_file_image_title": {
     "message": "Gửi tệp/hình ảnh"
@@ -315,9 +309,39 @@
     "message": "Đã sao chép"
   },
   "choose_other_devices_tip": {
-    "message": "Chọn thiết bị nào khác sẽ hiển thị thông báo. Giữ Ctrl/Cmd để chọn nhiều thiết bị."
+    "message": "Chọn thiết bị nào khác sẽ hiển thị thông báo."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Ẩn thông báo khi tự động mở"
+  },
+  "show_per_send_target_label": {
+    "message": "Hiển thị bộ chọn đích mỗi lần gửi trong popup"
+  },
+  "all_devices": {
+    "message": "Tất cả thiết bị"
+  },
+  "all_other_devices": {
+    "message": "Tất cả thiết bị khác"
+  },
+  "n_devices": {
+    "message": "$1 thiết bị"
+  },
+  "default_target_option": {
+    "message": "Mặc định ($1)"
+  },
+  "change_target_tip": {
+    "message": "Bạn có thể thay đổi trong"
+  },
+  "options_link_text": {
+    "message": "Cài đặt"
+  },
+  "target_default_tooltip": {
+    "message": "Nhấp để chọn thiết bị nhận"
+  },
+  "target_custom_tooltip": {
+    "message": "Đang gửi đến $1 · nhấp để thay đổi"
+  },
+  "target_clear_tooltip": {
+    "message": "Về mặc định"
   }
 }

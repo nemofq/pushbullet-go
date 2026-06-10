@@ -81,13 +81,10 @@
     "message": "Recuperat"
   },
   "target_devices_label": {
-    "message": "Dispositius destinataris:"
-  },
-  "none_selected_all_devices": {
-    "message": "Cap seleccionat (a tots els dispositius)"
+    "message": "Dispositius destinataris per defecte:"
   },
   "choose_devices_tip": {
-    "message": "Tria a quins dispositius vols enviar els enviaments. Mantén premut Ctrl/Cmd per seleccionar-ne més d'un."
+    "message": "El destinatari per defecte dels enviaments que fas, des de la finestra emergent, el menú contextual i la drecera de teclat."
   },
   "only_browser_pushes_label": {
     "message": "Només notificar i mostrar enviaments al Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Desat"
-  },
-  "devices_selected": {
-    "message": "dispositius seleccionats"
   },
   "push_file_image_title": {
     "message": "Enviar fitxer/imatge"
@@ -315,9 +309,39 @@
     "message": "Copiat"
   },
   "choose_other_devices_tip": {
-    "message": "Seleccioneu quins altres dispositius han de mostrar notificacions. Mantingueu premut Ctrl/Cmd per seleccionar-ne diversos."
+    "message": "Seleccioneu quins altres dispositius han de mostrar notificacions."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Amaga la notificació quan s'ha obert automàticament"
+  },
+  "show_per_send_target_label": {
+    "message": "Mostra el selector de destinatari per enviament al popup"
+  },
+  "all_devices": {
+    "message": "Tots els dispositius"
+  },
+  "all_other_devices": {
+    "message": "Tots els altres dispositius"
+  },
+  "n_devices": {
+    "message": "$1 dispositius"
+  },
+  "default_target_option": {
+    "message": "Per defecte ($1)"
+  },
+  "change_target_tip": {
+    "message": "Podeu canviar-ho a"
+  },
+  "options_link_text": {
+    "message": "Opcions"
+  },
+  "target_default_tooltip": {
+    "message": "Fes clic per triar els dispositius destinataris"
+  },
+  "target_custom_tooltip": {
+    "message": "S'envia a $1 · fes clic per canviar"
+  },
+  "target_clear_tooltip": {
+    "message": "Torna al valor per defecte"
   }
 }

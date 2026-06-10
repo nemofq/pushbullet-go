@@ -81,13 +81,10 @@
     "message": "تم الاسترجاع"
   },
   "target_devices_label": {
-    "message": "الأجهزة المستهدفة:"
-  },
-  "none_selected_all_devices": {
-    "message": "لم يتم اختيار أي جهاز (إلى جميع الأجهزة)"
+    "message": "الأجهزة المستهدفة الافتراضية:"
   },
   "choose_devices_tip": {
-    "message": "اختر الأجهزة لإرسال الإشعارات إليها. اضغط Ctrl/Cmd لتحديد عدة أجهزة."
+    "message": "الهدف الافتراضي للإرسالات التي ترسلها - من النافذة المنبثقة، وقائمة النقر بزر الأيمن، واختصار لوحة المفاتيح."
   },
   "only_browser_pushes_label": {
     "message": "إشعار المتصفح فقط وعرض الإشعارات على Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "تم الحفظ"
-  },
-  "devices_selected": {
-    "message": "أجهزة محددة"
   },
   "push_file_image_title": {
     "message": "إرسال ملف/صورة"
@@ -315,9 +309,39 @@
     "message": "تم النسخ"
   },
   "choose_other_devices_tip": {
-    "message": "اختر الأجهزة الأخرى لعرض الإشعارات لها. اضغط Ctrl/Cmd لتحديد عدة أجهزة."
+    "message": "اختر الأجهزة الأخرى لعرض الإشعارات لها."
   },
   "hide_notification_on_auto_open_label": {
     "message": "إخفاء الإشعار عند الفتح التلقائي"
+  },
+  "show_per_send_target_label": {
+    "message": "إظهار محدد الهدف لكل إرسال في النافذة المنبثقة"
+  },
+  "all_devices": {
+    "message": "جميع الأجهزة"
+  },
+  "all_other_devices": {
+    "message": "جميع الأجهزة الأخرى"
+  },
+  "n_devices": {
+    "message": "$1 أجهزة"
+  },
+  "default_target_option": {
+    "message": "افتراضي ($1)"
+  },
+  "change_target_tip": {
+    "message": "يمكنك تغيير ذلك في"
+  },
+  "options_link_text": {
+    "message": "الخيارات"
+  },
+  "target_default_tooltip": {
+    "message": "انقر لاختيار الأجهزة المستهدفة"
+  },
+  "target_custom_tooltip": {
+    "message": "إرسال إلى $1 · انقر للتغيير"
+  },
+  "target_clear_tooltip": {
+    "message": "رجوع إلى الافتراضي"
   }
 }

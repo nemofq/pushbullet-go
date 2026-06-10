@@ -81,13 +81,10 @@
     "message": "Pobrano"
   },
   "target_devices_label": {
-    "message": "Urządzenia docelowe:"
-  },
-  "none_selected_all_devices": {
-    "message": "Brak wyboru (do wszystkich urządzeń)"
+    "message": "Domyślne urządzenia docelowe:"
   },
   "choose_devices_tip": {
-    "message": "Wybierz urządzenia do wysyłki. Przytrzymaj Ctrl/Cmd, aby zaznaczyć wiele."
+    "message": "Domyślny cel dla wysyłanych push – z okna popup, menu kontekstowego i skrótu klawiszowego."
   },
   "only_browser_pushes_label": {
     "message": "Powiadamiaj tylko w Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Zapisano"
-  },
-  "devices_selected": {
-    "message": "urządzenia wybrane"
   },
   "push_file_image_title": {
     "message": "Wyślij plik/obraz"
@@ -315,9 +309,39 @@
     "message": "Skopiowano"
   },
   "choose_other_devices_tip": {
-    "message": "Wybierz, na których innych urządzeniach mają być wyświetlane powiadomienia. Przytrzymaj Ctrl/Cmd, aby wybrać wiele."
+    "message": "Wybierz, na których innych urządzeniach mają być wyświetlane powiadomienia."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Ukryj powiadomienie przy automatycznym otwarciu"
+  },
+  "show_per_send_target_label": {
+    "message": "Pokaż wybór celu wysyłki w oknie popup"
+  },
+  "all_devices": {
+    "message": "Wszystkie urządzenia"
+  },
+  "all_other_devices": {
+    "message": "Wszystkie pozostałe"
+  },
+  "n_devices": {
+    "message": "$1 urządzeń"
+  },
+  "default_target_option": {
+    "message": "Domyślny ($1)"
+  },
+  "change_target_tip": {
+    "message": "Możesz to zmienić w"
+  },
+  "options_link_text": {
+    "message": "Ustawieniach"
+  },
+  "target_default_tooltip": {
+    "message": "Kliknij, aby wybrać urządzenia docelowe"
+  },
+  "target_custom_tooltip": {
+    "message": "Wysyłanie do $1 · kliknij, aby zmienić"
+  },
+  "target_clear_tooltip": {
+    "message": "Przywróć domyślne"
   }
 }

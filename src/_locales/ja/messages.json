@@ -81,13 +81,10 @@
     "message": "取得完了"
   },
   "target_devices_label": {
-    "message": "対象デバイス:"
-  },
-  "none_selected_all_devices": {
-    "message": "未選択（すべてのデバイス）"
+    "message": "既定の対象デバイス:"
   },
   "choose_devices_tip": {
-    "message": "プッシュを送信するデバイスを選択（複数選択は Ctrl/Cmd）"
+    "message": "ポップアップ、右クリックメニュー、キーボード ショートカットから送信するプッシュのデフォルト ターゲットです。"
   },
   "only_browser_pushes_label": {
     "message": "Chrome(s)へのプッシュのみ通知・表示"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "保存しました"
-  },
-  "devices_selected": {
-    "message": "台のデバイスを選択"
   },
   "push_file_image_title": {
     "message": "ファイル/画像をプッシュ"
@@ -315,9 +309,39 @@
     "message": "コピー済"
   },
   "choose_other_devices_tip": {
-    "message": "通知を表示する他のデバイスを選択してください。複数選択するには Ctrl/Cmd を押したままにしてください。"
+    "message": "通知を表示する他のデバイスを選択してください。"
   },
   "hide_notification_on_auto_open_label": {
     "message": "自動で開いた時は通知を非表示"
+  },
+  "show_per_send_target_label": {
+    "message": "ポップアップに送信ごとのターゲット選択を表示"
+  },
+  "all_devices": {
+    "message": "すべてのデバイス"
+  },
+  "all_other_devices": {
+    "message": "他のすべてのデバイス"
+  },
+  "n_devices": {
+    "message": "$1台のデバイス"
+  },
+  "default_target_option": {
+    "message": "既定（$1）"
+  },
+  "change_target_tip": {
+    "message": "変更するには"
+  },
+  "options_link_text": {
+    "message": "設定"
+  },
+  "target_default_tooltip": {
+    "message": "対象デバイスを選択"
+  },
+  "target_custom_tooltip": {
+    "message": "$1 に送信中 · 変更するにはクリック"
+  },
+  "target_clear_tooltip": {
+    "message": "既定に戻す"
   }
 }

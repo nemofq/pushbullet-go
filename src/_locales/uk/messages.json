@@ -81,13 +81,10 @@
     "message": "Отримано"
   },
   "target_devices_label": {
-    "message": "Цільові пристрої:"
-  },
-  "none_selected_all_devices": {
-    "message": "Нічого не вибрано (для всіх пристроїв)"
+    "message": "Цільові пристрої за замовчуванням:"
   },
   "choose_devices_tip": {
-    "message": "Виберіть пристрої для надсилання push. Утримуйте Ctrl/Cmd, щоб вибрати кілька."
+    "message": "Типовий отримувач ваших push — зі спливаючого вікна, контекстного меню та комбінації клавіш."
   },
   "only_browser_pushes_label": {
     "message": "Показувати та сповіщати лише у Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Збережено"
-  },
-  "devices_selected": {
-    "message": "пристроїв вибрано"
   },
   "push_file_image_title": {
     "message": "Надіслати файл/зображення"
@@ -315,9 +309,39 @@
     "message": "Скопійовано"
   },
   "choose_other_devices_tip": {
-    "message": "Виберіть інші пристрої для відображення сповіщень. Утримуйте Ctrl/Cmd для вибору кількох."
+    "message": "Виберіть інші пристрої для відображення сповіщень."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Приховати сповіщення при автоматичному відкритті"
+  },
+  "show_per_send_target_label": {
+    "message": "Показати вибір отримувача для кожного надсилання у спливаючому вікні"
+  },
+  "all_devices": {
+    "message": "Усі пристрої"
+  },
+  "all_other_devices": {
+    "message": "Усі інші пристрої"
+  },
+  "n_devices": {
+    "message": "$1 пристроїв"
+  },
+  "default_target_option": {
+    "message": "За замовчуванням ($1)"
+  },
+  "change_target_tip": {
+    "message": "Змінити можна у"
+  },
+  "options_link_text": {
+    "message": "Налаштуваннях"
+  },
+  "target_default_tooltip": {
+    "message": "Натисніть, щоб вибрати цільові пристрої"
+  },
+  "target_custom_tooltip": {
+    "message": "Надсилається на $1 · натисніть, щоб змінити"
+  },
+  "target_clear_tooltip": {
+    "message": "Повернути до типового"
   }
 }

@@ -81,13 +81,10 @@
     "message": "Pridobljeno"
   },
   "target_devices_label": {
-    "message": "Ciljne naprave:"
-  },
-  "none_selected_all_devices": {
-    "message": "Nič izbranega (za vse naprave)"
+    "message": "Privzete ciljne naprave:"
   },
   "choose_devices_tip": {
-    "message": "Izberite naprave za pošiljanje. Držite Ctrl/Cmd za več izbir."
+    "message": "Privzeta ciljna naprava za potiske, ki jih pošljete – iz pojavnega okna, kontekstnega menija in bližnjice na tipkovnici."
   },
   "only_browser_pushes_label": {
     "message": "Obvesti in prikaži potiske samo v Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Shranjeno"
-  },
-  "devices_selected": {
-    "message": "naprav izbranih"
   },
   "push_file_image_title": {
     "message": "Pošlji datoteko/sliko"
@@ -315,9 +309,39 @@
     "message": "Kopirano"
   },
   "choose_other_devices_tip": {
-    "message": "Izberite druge naprave, na katerih naj se prikažejo obvestila. Držite Ctrl/Cmd za izbiro več naprav."
+    "message": "Izberite druge naprave, na katerih naj se prikažejo obvestila."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Skrij obvestilo pri samodejnem odpiranju"
+  },
+  "show_per_send_target_label": {
+    "message": "Prikaži izbirnik cilja za vsako pošiljanje v popup"
+  },
+  "all_devices": {
+    "message": "Vse naprave"
+  },
+  "all_other_devices": {
+    "message": "Vse ostale naprave"
+  },
+  "n_devices": {
+    "message": "$1 naprav"
+  },
+  "default_target_option": {
+    "message": "Privzeto ($1)"
+  },
+  "change_target_tip": {
+    "message": "To lahko spremenite v"
+  },
+  "options_link_text": {
+    "message": "Nastavitvah"
+  },
+  "target_default_tooltip": {
+    "message": "Kliknite za izbiro ciljnih naprav"
+  },
+  "target_custom_tooltip": {
+    "message": "Pošiljanje na $1 · kliknite za spremembo"
+  },
+  "target_clear_tooltip": {
+    "message": "Nazaj na privzeto"
   }
 }

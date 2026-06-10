@@ -81,13 +81,10 @@
     "message": "Obtido"
   },
   "target_devices_label": {
-    "message": "Dispositivos de destino:"
-  },
-  "none_selected_all_devices": {
-    "message": "Nenhum selecionado (para todos os dispositivos)"
+    "message": "Dispositivos de destino padrão:"
   },
   "choose_devices_tip": {
-    "message": "Escolha para quais dispositivos enviar. Segure Ctrl/Cmd para selecionar vários."
+    "message": "O destino padrão para os pushs que você envia — pelo popup, pelo menu de contexto e pelo atalho de teclado."
   },
   "only_browser_pushes_label": {
     "message": "Notificar e mostrar apenas no Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Salvo"
-  },
-  "devices_selected": {
-    "message": "dispositivos selecionados"
   },
   "push_file_image_title": {
     "message": "Enviar arquivo/imagem"
@@ -315,9 +309,39 @@
     "message": "Copiado"
   },
   "choose_other_devices_tip": {
-    "message": "Selecione quais outros dispositivos devem mostrar notificações. Segure Ctrl/Cmd para selecionar vários."
+    "message": "Selecione quais outros dispositivos devem mostrar notificações."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Ocultar notificação quando abrir automaticamente"
+  },
+  "show_per_send_target_label": {
+    "message": "Mostrar seletor de destino por envio no popup"
+  },
+  "all_devices": {
+    "message": "Todos os dispositivos"
+  },
+  "all_other_devices": {
+    "message": "Todos os outros dispositivos"
+  },
+  "n_devices": {
+    "message": "$1 dispositivos"
+  },
+  "default_target_option": {
+    "message": "Padrão ($1)"
+  },
+  "change_target_tip": {
+    "message": "Você pode alterar isso nas"
+  },
+  "options_link_text": {
+    "message": "Configurações"
+  },
+  "target_default_tooltip": {
+    "message": "Clique para escolher os dispositivos de destino"
+  },
+  "target_custom_tooltip": {
+    "message": "Enviando para $1 · clique para alterar"
+  },
+  "target_clear_tooltip": {
+    "message": "Voltar ao padrão"
   }
 }

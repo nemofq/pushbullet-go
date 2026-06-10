@@ -81,13 +81,10 @@
     "message": "Recuperat"
   },
   "target_devices_label": {
-    "message": "Dispozitive țintă:"
-  },
-  "none_selected_all_devices": {
-    "message": "Nimic selectat (către toate dispozitivele)"
+    "message": "Dispozitive țintă implicite:"
   },
   "choose_devices_tip": {
-    "message": "Alegeți dispozitivele pentru trimitere. Țineți Ctrl/Cmd pentru selecție multiplă."
+    "message": "Destinația implicită pentru push-urile trimise — din popup, meniul cu clic dreapta și scurtătura de tastatură."
   },
   "only_browser_pushes_label": {
     "message": "Notifică și afișează doar push-urile către Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Salvat"
-  },
-  "devices_selected": {
-    "message": "dispozitive selectate"
   },
   "push_file_image_title": {
     "message": "Trimite fișier/imagine"
@@ -315,9 +309,39 @@
     "message": "Copiat"
   },
   "choose_other_devices_tip": {
-    "message": "Selectează ce alte dispozitive să afișeze notificări. Ține apăsat Ctrl/Cmd pentru a selecta mai multe."
+    "message": "Selectează ce alte dispozitive să afișeze notificări."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Ascunde notificarea la deschidere automată"
+  },
+  "show_per_send_target_label": {
+    "message": "Afișează selector de destinație per-trimitere în popup"
+  },
+  "all_devices": {
+    "message": "Toate dispozitivele"
+  },
+  "all_other_devices": {
+    "message": "Toate celelalte dispozitive"
+  },
+  "n_devices": {
+    "message": "$1 dispozitive"
+  },
+  "default_target_option": {
+    "message": "Implicit ($1)"
+  },
+  "change_target_tip": {
+    "message": "Puteți modifica în"
+  },
+  "options_link_text": {
+    "message": "Opțiuni"
+  },
+  "target_default_tooltip": {
+    "message": "Faceți clic pentru a alege dispozitivele țintă"
+  },
+  "target_custom_tooltip": {
+    "message": "Se trimite către $1 · faceți clic pentru a schimba"
+  },
+  "target_clear_tooltip": {
+    "message": "Înapoi la implicit"
   }
 }

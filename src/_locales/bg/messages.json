@@ -81,13 +81,10 @@
     "message": "Извлечено"
   },
   "target_devices_label": {
-    "message": "Целеви устройства:"
-  },
-  "none_selected_all_devices": {
-    "message": "Няма избрани (до всички устройства)"
+    "message": "Подразбиращи се целеви устройства:"
   },
   "choose_devices_tip": {
-    "message": "Изберете устройства за изпращане. Задръжте Ctrl/Cmd за избор на няколко."
+    "message": "Подразбиращата се цел за изпращанията ви — от изскачащия прозорец, контекстното меню и клавишната комбинация."
   },
   "only_browser_pushes_label": {
     "message": "Известия само към Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Запазено"
-  },
-  "devices_selected": {
-    "message": "избрани устройства"
   },
   "push_file_image_title": {
     "message": "Изпрати файл/изображение"
@@ -315,9 +309,39 @@
     "message": "Копирано"
   },
   "choose_other_devices_tip": {
-    "message": "Изберете кои други устройства да показват известия. Задръжте Ctrl/Cmd, за да изберете няколко."
+    "message": "Изберете кои други устройства да показват известия."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Скрий известието при автоматично отваряне"
+  },
+  "show_per_send_target_label": {
+    "message": "Показвай избор на цел за всяко изпращане в popup"
+  },
+  "all_devices": {
+    "message": "Всички устройства"
+  },
+  "all_other_devices": {
+    "message": "Всички други устройства"
+  },
+  "n_devices": {
+    "message": "$1 устройства"
+  },
+  "default_target_option": {
+    "message": "По подразбиране ($1)"
+  },
+  "change_target_tip": {
+    "message": "Можете да промените това в"
+  },
+  "options_link_text": {
+    "message": "Настройки"
+  },
+  "target_default_tooltip": {
+    "message": "Щракнете, за да изберете целеви устройства"
+  },
+  "target_custom_tooltip": {
+    "message": "Изпращане до $1 · щракнете за промяна"
+  },
+  "target_clear_tooltip": {
+    "message": "Обратно към подразбиращото се"
   }
 }

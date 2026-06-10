@@ -81,13 +81,10 @@
     "message": "Abgerufen"
   },
   "target_devices_label": {
-    "message": "Zielgeräte:"
-  },
-  "none_selected_all_devices": {
-    "message": "Keine ausgewählt (an alle Geräte)"
+    "message": "Standard-Zielgeräte:"
   },
   "choose_devices_tip": {
-    "message": "Wählen Sie Geräte zum Senden aus. Strg/Cmd halten, um mehrere zu wählen."
+    "message": "Das Standardziel für Pushs, die Sie senden – aus dem Popup, dem Rechtsklick-Menü und dem Tastaturkürzel."
   },
   "only_browser_pushes_label": {
     "message": "Nur Chrome(s)-Pushs anzeigen/benachrichtigen"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Gespeichert"
-  },
-  "devices_selected": {
-    "message": "Geräte ausgewählt"
   },
   "push_file_image_title": {
     "message": "Datei/Bild pushen"
@@ -315,9 +309,39 @@
     "message": "Kopiert"
   },
   "choose_other_devices_tip": {
-    "message": "Wählen Sie aus, für welche anderen Geräte Benachrichtigungen angezeigt werden sollen. Halten Sie Strg/Cmd gedrückt, um mehrere auszuwählen."
+    "message": "Wählen Sie aus, für welche anderen Geräte Benachrichtigungen angezeigt werden sollen."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Benachrichtigung beim automatischen Öffnen ausblenden"
+  },
+  "show_per_send_target_label": {
+    "message": "Zielauswahl pro Senden im Popup anzeigen"
+  },
+  "all_devices": {
+    "message": "Alle Geräte"
+  },
+  "all_other_devices": {
+    "message": "Alle anderen Geräte"
+  },
+  "n_devices": {
+    "message": "$1 Geräte"
+  },
+  "default_target_option": {
+    "message": "Standard ($1)"
+  },
+  "change_target_tip": {
+    "message": "Sie können dies in den"
+  },
+  "options_link_text": {
+    "message": "Einstellungen"
+  },
+  "target_default_tooltip": {
+    "message": "Klicken, um Zielgeräte auszuwählen"
+  },
+  "target_custom_tooltip": {
+    "message": "Wird gesendet an $1 · zum Ändern klicken"
+  },
+  "target_clear_tooltip": {
+    "message": "Zurück zum Standard"
   }
 }

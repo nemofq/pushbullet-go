@@ -81,13 +81,10 @@
     "message": "Hentet"
   },
   "target_devices_label": {
-    "message": "Målenheder:"
-  },
-  "none_selected_all_devices": {
-    "message": "Ingen valgt (til alle enheder)"
+    "message": "Standard målenheder:"
   },
   "choose_devices_tip": {
-    "message": "Vælg hvilke enheder der skal modtage push. Hold Ctrl/Cmd for at vælge flere."
+    "message": "Standardmålet for push du sender – fra popup, højrekliksmenuen og tastaturgenvejen."
   },
   "only_browser_pushes_label": {
     "message": "Kun underret og vis push til Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Gemt"
-  },
-  "devices_selected": {
-    "message": "enheder valgt"
   },
   "push_file_image_title": {
     "message": "Send fil/billede"
@@ -315,9 +309,39 @@
     "message": "Kopieret"
   },
   "choose_other_devices_tip": {
-    "message": "Vælg hvilke andre enheder der skal vise notifikationer. Hold Ctrl/Cmd nede for at vælge flere."
+    "message": "Vælg hvilke andre enheder der skal vise notifikationer."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Skjul notifikation når den er auto-åbnet"
+  },
+  "show_per_send_target_label": {
+    "message": "Vis målvælger per send i popup"
+  },
+  "all_devices": {
+    "message": "Alle enheder"
+  },
+  "all_other_devices": {
+    "message": "Alle andre enheder"
+  },
+  "n_devices": {
+    "message": "$1 enheder"
+  },
+  "default_target_option": {
+    "message": "Standard ($1)"
+  },
+  "change_target_tip": {
+    "message": "Du kan ændre dette i"
+  },
+  "options_link_text": {
+    "message": "Indstillinger"
+  },
+  "target_default_tooltip": {
+    "message": "Klik for at vælge målenheder"
+  },
+  "target_custom_tooltip": {
+    "message": "Sender til $1 · klik for at ændre"
+  },
+  "target_clear_tooltip": {
+    "message": "Tilbage til standard"
   }
 }

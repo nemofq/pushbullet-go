@@ -81,13 +81,10 @@
     "message": "Haettu"
   },
   "target_devices_label": {
-    "message": "Kohdelaitteet:"
-  },
-  "none_selected_all_devices": {
-    "message": "Ei valintaa (kaikkiin laitteisiin)"
+    "message": "Oletuskohdelaitteet:"
   },
   "choose_devices_tip": {
-    "message": "Valitse laitteet, joihin lähetetään. Pidä Ctrl/Cmd valitaksesi useita."
+    "message": "Oletuskohde lähettämillesi pusheille – ponnahdusikkunasta, hiiren kakkospainikkeen valikosta ja pikanäppäimestä."
   },
   "only_browser_pushes_label": {
     "message": "Ilmoita ja näytä vain Chrome(s):lle"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Tallennettu"
-  },
-  "devices_selected": {
-    "message": "laitetta valittu"
   },
   "push_file_image_title": {
     "message": "Lähetä tiedosto/kuva"
@@ -315,9 +309,39 @@
     "message": "Kopioitu"
   },
   "choose_other_devices_tip": {
-    "message": "Valitse, millä muilla laitteilla ilmoitukset näytetään. Pidä Ctrl/Cmd painettuna valitaksesi useita."
+    "message": "Valitse, millä muilla laitteilla ilmoitukset näytetään."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Piilota ilmoitus automaattisen avauksen yhteydessä"
+  },
+  "show_per_send_target_label": {
+    "message": "Näytä kohdevalitsin ponnahdusikkunassa"
+  },
+  "all_devices": {
+    "message": "Kaikki laitteet"
+  },
+  "all_other_devices": {
+    "message": "Kaikki muut laitteet"
+  },
+  "n_devices": {
+    "message": "$1 laitetta"
+  },
+  "default_target_option": {
+    "message": "Oletus ($1)"
+  },
+  "change_target_tip": {
+    "message": "Voit muuttaa tämän"
+  },
+  "options_link_text": {
+    "message": "asetuksissa"
+  },
+  "target_default_tooltip": {
+    "message": "Napsauta valitaksesi kohdelaitteet"
+  },
+  "target_custom_tooltip": {
+    "message": "Lähetetään kohteeseen $1 · napsauta muuttaaksesi"
+  },
+  "target_clear_tooltip": {
+    "message": "Palauta oletusasetus"
   }
 }

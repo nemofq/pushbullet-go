@@ -81,13 +81,10 @@
     "message": "Opgehaald"
   },
   "target_devices_label": {
-    "message": "Doelapparaten:"
-  },
-  "none_selected_all_devices": {
-    "message": "Geen geselecteerd (naar alle apparaten)"
+    "message": "Standaard doelapparaten:"
   },
   "choose_devices_tip": {
-    "message": "Kies naar welke apparaten je wilt pushen. Houd Ctrl/Cmd ingedrukt om meerdere te selecteren."
+    "message": "De standaard bestemming voor pushes die je verstuurt – vanuit de popup, het rechtsklikmenu en de sneltoets."
   },
   "only_browser_pushes_label": {
     "message": "Alleen pushmeldingen naar Chrome(s) tonen"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Opgeslagen"
-  },
-  "devices_selected": {
-    "message": "apparaten geselecteerd"
   },
   "push_file_image_title": {
     "message": "Bestand/Afbeelding pushen"
@@ -315,9 +309,39 @@
     "message": "Gekopieerd"
   },
   "choose_other_devices_tip": {
-    "message": "Selecteer voor welke andere apparaten meldingen moeten worden weergegeven. Houd Ctrl/Cmd ingedrukt om meerdere te selecteren."
+    "message": "Selecteer voor welke andere apparaten meldingen moeten worden weergegeven."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Verberg melding bij automatisch openen"
+  },
+  "show_per_send_target_label": {
+    "message": "Doelkiezer per verzending in popup tonen"
+  },
+  "all_devices": {
+    "message": "Alle apparaten"
+  },
+  "all_other_devices": {
+    "message": "Alle andere apparaten"
+  },
+  "n_devices": {
+    "message": "$1 apparaten"
+  },
+  "default_target_option": {
+    "message": "Standaard ($1)"
+  },
+  "change_target_tip": {
+    "message": "Je kunt dit wijzigen bij"
+  },
+  "options_link_text": {
+    "message": "Instellingen"
+  },
+  "target_default_tooltip": {
+    "message": "Klik om doelapparaten te kiezen"
+  },
+  "target_custom_tooltip": {
+    "message": "Verzenden naar $1 · klik om te wijzigen"
+  },
+  "target_clear_tooltip": {
+    "message": "Terug naar standaard"
   }
 }

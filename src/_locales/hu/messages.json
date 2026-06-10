@@ -81,13 +81,10 @@
     "message": "Lekérve"
   },
   "target_devices_label": {
-    "message": "Cél eszközök:"
-  },
-  "none_selected_all_devices": {
-    "message": "Nincs kiválasztva (összes eszköz)"
+    "message": "Alapértelmezett céleszközök:"
   },
   "choose_devices_tip": {
-    "message": "Válassza ki, mely eszközökre küld push üzenetet. Több kiválasztásához tartsa lenyomva a Ctrl/Cmd-t."
+    "message": "Az alapértelmezett cél a küldött push üzenetekhez – a felugró ablakból, a jobb klikk menüből és a billentyűparancsból."
   },
   "only_browser_pushes_label": {
     "message": "Csak Chrome(s) push értesítések megjelenítése"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Mentve"
-  },
-  "devices_selected": {
-    "message": "eszköz kiválasztva"
   },
   "push_file_image_title": {
     "message": "Fájl/kép küldése"
@@ -315,9 +309,39 @@
     "message": "Másolva"
   },
   "choose_other_devices_tip": {
-    "message": "Válaszd ki, mely eszközökön jelenjenek meg az értesítések. Tartsd nyomva a Ctrl/Cmd gombot több eszköz kiválasztásához."
+    "message": "Válaszd ki, mely eszközökön jelenjenek meg az értesítések."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Értesítés elrejtése automatikus megnyitáskor"
+  },
+  "show_per_send_target_label": {
+    "message": "Céleszköz-választó megjelenítése a popup-ban"
+  },
+  "all_devices": {
+    "message": "Minden eszköz"
+  },
+  "all_other_devices": {
+    "message": "Minden más eszköz"
+  },
+  "n_devices": {
+    "message": "$1 eszköz"
+  },
+  "default_target_option": {
+    "message": "Alapértelmezett ($1)"
+  },
+  "change_target_tip": {
+    "message": "Ezt módosíthatja a"
+  },
+  "options_link_text": {
+    "message": "Beállításokban"
+  },
+  "target_default_tooltip": {
+    "message": "Kattintson a céleszközök kiválasztásához"
+  },
+  "target_custom_tooltip": {
+    "message": "Küldés ide: $1 · kattintson a módosításhoz"
+  },
+  "target_clear_tooltip": {
+    "message": "Vissza az alapértelmezettre"
   }
 }

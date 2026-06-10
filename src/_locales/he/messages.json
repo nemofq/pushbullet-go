@@ -81,13 +81,10 @@
     "message": "נטען"
   },
   "target_devices_label": {
-    "message": "מכשירי יעד:"
-  },
-  "none_selected_all_devices": {
-    "message": "לא נבחרו (לכל המכשירים)"
+    "message": "מכשירי יעד ברירת מחדל:"
   },
   "choose_devices_tip": {
-    "message": "בחר את המכשירים לשליחה. החזק Ctrl/Cmd לבחירה מרובה."
+    "message": "היעד הברירת מחדל לדחיפות שאתה שולח — מהחלונית הקופצת, מתפריט לחיצה ימנית ומקיצור המקלדת."
   },
   "only_browser_pushes_label": {
     "message": "הצג התראות ודחיפות ל-Chrome(s) בלבד"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "נשמר"
-  },
-  "devices_selected": {
-    "message": "מכשירים נבחרו"
   },
   "push_file_image_title": {
     "message": "שלח קובץ/תמונה"
@@ -315,9 +309,39 @@
     "message": "הועתק"
   },
   "choose_other_devices_tip": {
-    "message": "בחר באילו מכשירים אחרים להציג התראות. החזק Ctrl/Cmd לבחירת מספר מכשירים."
+    "message": "בחר באילו מכשירים אחרים להציג התראות."
   },
   "hide_notification_on_auto_open_label": {
     "message": "הסתר התראה כאשר היא נפתחת אוטומטית"
+  },
+  "show_per_send_target_label": {
+    "message": "הצג בורר יעד לכל שליחה בחלונית הקופצת"
+  },
+  "all_devices": {
+    "message": "כל המכשירים"
+  },
+  "all_other_devices": {
+    "message": "כל שאר המכשירים"
+  },
+  "n_devices": {
+    "message": "$1 מכשירים"
+  },
+  "default_target_option": {
+    "message": "ברירת מחדל ($1)"
+  },
+  "change_target_tip": {
+    "message": "תוכל לשנות זאת ב"
+  },
+  "options_link_text": {
+    "message": "הגדרות"
+  },
+  "target_default_tooltip": {
+    "message": "לחץ לבחירת מכשירי יעד"
+  },
+  "target_custom_tooltip": {
+    "message": "שולח אל $1 · לחץ לשינוי"
+  },
+  "target_clear_tooltip": {
+    "message": "חזור לברירת מחדל"
   }
 }

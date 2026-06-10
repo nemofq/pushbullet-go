@@ -81,13 +81,10 @@
     "message": "Получено"
   },
   "target_devices_label": {
-    "message": "Целевые устройства:"
-  },
-  "none_selected_all_devices": {
-    "message": "Не выбрано (для всех устройств)"
+    "message": "Целевые устройства по умолчанию:"
   },
   "choose_devices_tip": {
-    "message": "Выберите устройства для отправки. Удерживайте Ctrl/Cmd для выбора нескольких."
+    "message": "Устройство по умолчанию для push-отправок — из всплывающего окна, контекстного меню и горячей клавиши."
   },
   "only_browser_pushes_label": {
     "message": "Уведомлять только Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Сохранено"
-  },
-  "devices_selected": {
-    "message": "устройства выбраны"
   },
   "push_file_image_title": {
     "message": "Отправить файл/изображение"
@@ -315,9 +309,39 @@
     "message": "Скопировано"
   },
   "choose_other_devices_tip": {
-    "message": "Выберите другие устройства для отображения уведомлений. Удерживайте Ctrl/Cmd для выбора нескольких."
+    "message": "Выберите другие устройства для отображения уведомлений."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Скрывать уведомление при автоматическом открытии"
+  },
+  "show_per_send_target_label": {
+    "message": "Показать выбор получателя для каждой отправки во всплывающем окне"
+  },
+  "all_devices": {
+    "message": "Все устройства"
+  },
+  "all_other_devices": {
+    "message": "Все остальные"
+  },
+  "n_devices": {
+    "message": "$1 устройств"
+  },
+  "default_target_option": {
+    "message": "По умолчанию ($1)"
+  },
+  "change_target_tip": {
+    "message": "Можно изменить в"
+  },
+  "options_link_text": {
+    "message": "Настройках"
+  },
+  "target_default_tooltip": {
+    "message": "Нажмите для выбора устройств"
+  },
+  "target_custom_tooltip": {
+    "message": "Отправка на $1 · нажмите для изменения"
+  },
+  "target_clear_tooltip": {
+    "message": "Вернуть по умолчанию"
   }
 }

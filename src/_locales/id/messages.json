@@ -81,13 +81,10 @@
     "message": "Diambil"
   },
   "target_devices_label": {
-    "message": "Perangkat Tujuan:"
-  },
-  "none_selected_all_devices": {
-    "message": "Tidak ada yang dipilih (ke semua perangkat)"
+    "message": "Perangkat Tujuan Bawaan:"
   },
   "choose_devices_tip": {
-    "message": "Pilih perangkat untuk mengirim push. Tahan Ctrl/Cmd untuk memilih beberapa."
+    "message": "Tujuan bawaan untuk push yang Anda kirim — dari popup, menu klik kanan, dan pintasan keyboard."
   },
   "only_browser_pushes_label": {
     "message": "Hanya beri notifikasi & tampilkan push di Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Tersimpan"
-  },
-  "devices_selected": {
-    "message": "perangkat dipilih"
   },
   "push_file_image_title": {
     "message": "Kirim File/Gambar"
@@ -315,9 +309,39 @@
     "message": "Tersalin"
   },
   "choose_other_devices_tip": {
-    "message": "Pilih perangkat lain mana yang akan menampilkan notifikasi. Tahan Ctrl/Cmd untuk memilih beberapa."
+    "message": "Pilih perangkat lain mana yang akan menampilkan notifikasi."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Sembunyikan notifikasi saat dibuka otomatis"
+  },
+  "show_per_send_target_label": {
+    "message": "Tampilkan pemilih tujuan per-pengiriman di popup"
+  },
+  "all_devices": {
+    "message": "Semua perangkat"
+  },
+  "all_other_devices": {
+    "message": "Semua perangkat lain"
+  },
+  "n_devices": {
+    "message": "$1 perangkat"
+  },
+  "default_target_option": {
+    "message": "Bawaan ($1)"
+  },
+  "change_target_tip": {
+    "message": "Anda dapat mengubahnya di"
+  },
+  "options_link_text": {
+    "message": "Pengaturan"
+  },
+  "target_default_tooltip": {
+    "message": "Klik untuk memilih perangkat tujuan"
+  },
+  "target_custom_tooltip": {
+    "message": "Mengirim ke $1 · klik untuk mengubah"
+  },
+  "target_clear_tooltip": {
+    "message": "Kembali ke bawaan"
   }
 }

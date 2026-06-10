@@ -81,13 +81,10 @@
     "message": "Getirildi"
   },
   "target_devices_label": {
-    "message": "Hedef Cihazlar:"
-  },
-  "none_selected_all_devices": {
-    "message": "Hiçbiri seçilmedi (tüm cihazlara)"
+    "message": "Varsayılan Hedef Cihazlar:"
   },
   "choose_devices_tip": {
-    "message": "Push göndermek istediğiniz cihazları seçin. Birden fazla seçmek için Ctrl/Cmd basılı tutun."
+    "message": "Gönderdiğiniz push'ların varsayılan hedefi — popup'tan, sağ tık menüsünden ve klavye kısayolundan."
   },
   "only_browser_pushes_label": {
     "message": "Yalnızca Chrome(s)'a bildir ve göster"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Kaydedildi"
-  },
-  "devices_selected": {
-    "message": "cihaz seçildi"
   },
   "push_file_image_title": {
     "message": "Dosya/Görsel Gönder"
@@ -315,9 +309,39 @@
     "message": "Kopyalandı"
   },
   "choose_other_devices_tip": {
-    "message": "Bildirim gösterecek diğer cihazları seçin. Birden fazla seçmek için Ctrl/Cmd tuşuna basılı tutun."
+    "message": "Bildirim gösterecek diğer cihazları seçin."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Otomatik açıldığında bildirimi gizle"
+  },
+  "show_per_send_target_label": {
+    "message": "Gönderim başına hedef seçiciyi popup'ta göster"
+  },
+  "all_devices": {
+    "message": "Tüm cihazlar"
+  },
+  "all_other_devices": {
+    "message": "Diğer tüm cihazlar"
+  },
+  "n_devices": {
+    "message": "$1 cihaz"
+  },
+  "default_target_option": {
+    "message": "Varsayılan ($1)"
+  },
+  "change_target_tip": {
+    "message": "Bunu şuradan değiştirebilirsiniz:"
+  },
+  "options_link_text": {
+    "message": "Ayarlar"
+  },
+  "target_default_tooltip": {
+    "message": "Hedef cihazları seçmek için tıklayın"
+  },
+  "target_custom_tooltip": {
+    "message": "$1'a gönderiliyor · değiştirmek için tıklayın"
+  },
+  "target_clear_tooltip": {
+    "message": "Varsayılana dön"
   }
 }

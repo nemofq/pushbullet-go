@@ -81,13 +81,10 @@
     "message": "獲取完成"
   },
   "target_devices_label": {
-    "message": "目標裝置："
-  },
-  "none_selected_all_devices": {
-    "message": "未選擇（傳送到所有裝置）"
+    "message": "預設目標裝置："
   },
   "choose_devices_tip": {
-    "message": "選擇要傳送推送的裝置。按住 Ctrl/Cmd 可多選。"
+    "message": "您透過彈出視窗、右鍵選單或鍵盤快速鍵傳送推送時的預設目標裝置。"
   },
   "only_browser_pushes_label": {
     "message": "僅通知並顯示傳送到 Chrome(s) 的推送"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "已儲存"
-  },
-  "devices_selected": {
-    "message": "個裝置已選"
   },
   "push_file_image_title": {
     "message": "推送檔案/圖片"
@@ -315,9 +309,39 @@
     "message": "已複製"
   },
   "choose_other_devices_tip": {
-    "message": "選擇要顯示通知的其他裝置。按住 Ctrl/Cmd 可選擇多個裝置。"
+    "message": "選擇要顯示通知的其他裝置。"
   },
   "hide_notification_on_auto_open_label": {
     "message": "自動開啟時隱藏通知"
+  },
+  "show_per_send_target_label": {
+    "message": "在彈出視窗中顯示單次傳送目標選擇器"
+  },
+  "all_devices": {
+    "message": "所有裝置"
+  },
+  "all_other_devices": {
+    "message": "所有其他裝置"
+  },
+  "n_devices": {
+    "message": "$1 台裝置"
+  },
+  "default_target_option": {
+    "message": "預設（$1）"
+  },
+  "change_target_tip": {
+    "message": "可在以下頁面變更："
+  },
+  "options_link_text": {
+    "message": "設定"
+  },
+  "target_default_tooltip": {
+    "message": "點擊選擇目標裝置"
+  },
+  "target_custom_tooltip": {
+    "message": "傳送至 $1 · 點擊以變更"
+  },
+  "target_clear_tooltip": {
+    "message": "恢復預設"
   }
 }

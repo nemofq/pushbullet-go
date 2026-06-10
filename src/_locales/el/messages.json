@@ -81,13 +81,10 @@
     "message": "Ανακτήθηκε"
   },
   "target_devices_label": {
-    "message": "Συσκευές-στόχοι:"
-  },
-  "none_selected_all_devices": {
-    "message": "Καμία επιλογή (σε όλες τις συσκευές)"
+    "message": "Προεπιλεγμένες συσκευές-στόχοι:"
   },
   "choose_devices_tip": {
-    "message": "Επιλέξτε σε ποιες συσκευές θα σταλούν προωθήσεις. Κρατήστε Ctrl/Cmd για πολλαπλή επιλογή."
+    "message": "Ο προεπιλεγμένος στόχος για τις προωθήσεις που στέλνετε — από το popup, το μενού δεξί κλικ και τη συντόμευση πληκτρολογίου."
   },
   "only_browser_pushes_label": {
     "message": "Μόνο ειδοποίηση και εμφάνιση προωθήσεων σε Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Αποθηκεύτηκε"
-  },
-  "devices_selected": {
-    "message": "συσκευές επιλέχθηκαν"
   },
   "push_file_image_title": {
     "message": "Προώθηση αρχείου/εικόνας"
@@ -315,9 +309,39 @@
     "message": "Αντιγράφηκε"
   },
   "choose_other_devices_tip": {
-    "message": "Επιλέξτε για ποιες άλλες συσκευές να εμφανίζονται ειδοποιήσεις. Κρατήστε πατημένο το Ctrl/Cmd για να επιλέξετε πολλές."
+    "message": "Επιλέξτε για ποιες άλλες συσκευές να εμφανίζονται ειδοποιήσεις."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Απόκρυψη ειδοποίησης όταν ανοίγει αυτόματα"
+  },
+  "show_per_send_target_label": {
+    "message": "Εμφάνιση επιλογέα στόχου ανά αποστολή στο popup"
+  },
+  "all_devices": {
+    "message": "Όλες οι συσκευές"
+  },
+  "all_other_devices": {
+    "message": "Όλες οι άλλες συσκευές"
+  },
+  "n_devices": {
+    "message": "$1 συσκευές"
+  },
+  "default_target_option": {
+    "message": "Προεπιλογή ($1)"
+  },
+  "change_target_tip": {
+    "message": "Μπορείτε να το αλλάξετε στις"
+  },
+  "options_link_text": {
+    "message": "Επιλογές"
+  },
+  "target_default_tooltip": {
+    "message": "Κλικ για επιλογή συσκευών-στόχων"
+  },
+  "target_custom_tooltip": {
+    "message": "Αποστολή σε $1 · κλικ για αλλαγή"
+  },
+  "target_clear_tooltip": {
+    "message": "Επιστροφή στην προεπιλογή"
   }
 }

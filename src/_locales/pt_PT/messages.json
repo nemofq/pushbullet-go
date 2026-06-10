@@ -81,13 +81,10 @@
     "message": "Obtido"
   },
   "target_devices_label": {
-    "message": "Dispositivos de destino:"
-  },
-  "none_selected_all_devices": {
-    "message": "Nenhum selecionado (para todos os dispositivos)"
+    "message": "Dispositivos de Destino Predefinidos:"
   },
   "choose_devices_tip": {
-    "message": "Escolha os dispositivos para enviar. Use Ctrl/Cmd para selecionar vários."
+    "message": "O destino predefinido para os envios — a partir do popup, do menu de contexto e do atalho de teclado."
   },
   "only_browser_pushes_label": {
     "message": "Notificar e mostrar apenas envios para Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Guardado"
-  },
-  "devices_selected": {
-    "message": "dispositivos selecionados"
   },
   "push_file_image_title": {
     "message": "Enviar ficheiro/imagem"
@@ -315,9 +309,39 @@
     "message": "Copiado"
   },
   "choose_other_devices_tip": {
-    "message": "Selecione quais outros dispositivos devem mostrar notificações. Mantenha Ctrl/Cmd pressionado para selecionar vários."
+    "message": "Selecione quais outros dispositivos devem mostrar notificações."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Ocultar notificação quando abre automaticamente"
+  },
+  "show_per_send_target_label": {
+    "message": "Mostrar seletor de destino por envio no popup"
+  },
+  "all_devices": {
+    "message": "Todos os dispositivos"
+  },
+  "all_other_devices": {
+    "message": "Todos os outros dispositivos"
+  },
+  "n_devices": {
+    "message": "$1 dispositivos"
+  },
+  "default_target_option": {
+    "message": "Predefinição ($1)"
+  },
+  "change_target_tip": {
+    "message": "Pode alterar isto nas"
+  },
+  "options_link_text": {
+    "message": "Definições"
+  },
+  "target_default_tooltip": {
+    "message": "Clique para escolher dispositivos de destino"
+  },
+  "target_custom_tooltip": {
+    "message": "A enviar para $1 · clique para alterar"
+  },
+  "target_clear_tooltip": {
+    "message": "Voltar à predefinição"
   }
 }

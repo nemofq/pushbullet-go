@@ -81,13 +81,10 @@
     "message": "Récupéré"
   },
   "target_devices_label": {
-    "message": "Appareils cibles :"
-  },
-  "none_selected_all_devices": {
-    "message": "Aucun sélectionné (tous les appareils)"
+    "message": "Appareils cibles par défaut :"
   },
   "choose_devices_tip": {
-    "message": "Choisissez les appareils pour l’envoi. Maintenez Ctrl/Cmd pour en sélectionner plusieurs."
+    "message": "La cible par défaut pour les envois — depuis la popup, le menu contextuel et le raccourci clavier."
   },
   "only_browser_pushes_label": {
     "message": "Notifier/afficher uniquement sur Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Enregistré"
-  },
-  "devices_selected": {
-    "message": "appareils sélectionnés"
   },
   "push_file_image_title": {
     "message": "Envoyer fichier/image"
@@ -315,9 +309,39 @@
     "message": "Copié"
   },
   "choose_other_devices_tip": {
-    "message": "Sélectionnez les autres appareils pour lesquels afficher les notifications. Maintenez Ctrl/Cmd enfoncé pour en sélectionner plusieurs."
+    "message": "Sélectionnez les autres appareils pour lesquels afficher les notifications."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Masquer la notification lors de l'ouverture automatique"
+  },
+  "show_per_send_target_label": {
+    "message": "Afficher le sélecteur de destination par envoi dans la popup"
+  },
+  "all_devices": {
+    "message": "Tous les appareils"
+  },
+  "all_other_devices": {
+    "message": "Tous les autres appareils"
+  },
+  "n_devices": {
+    "message": "$1 appareils"
+  },
+  "default_target_option": {
+    "message": "Par défaut ($1)"
+  },
+  "change_target_tip": {
+    "message": "Modifiable dans les"
+  },
+  "options_link_text": {
+    "message": "Options"
+  },
+  "target_default_tooltip": {
+    "message": "Cliquer pour choisir les appareils cibles"
+  },
+  "target_custom_tooltip": {
+    "message": "Envoi vers $1 · cliquer pour changer"
+  },
+  "target_clear_tooltip": {
+    "message": "Revenir au réglage par défaut"
   }
 }

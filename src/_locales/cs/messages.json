@@ -81,13 +81,10 @@
     "message": "Načteno"
   },
   "target_devices_label": {
-    "message": "Cílová zařízení:"
-  },
-  "none_selected_all_devices": {
-    "message": "Nic nevybráno (na všechna zařízení)"
+    "message": "Výchozí cílová zařízení:"
   },
   "choose_devices_tip": {
-    "message": "Vyberte zařízení pro odeslání. Držte Ctrl/Cmd pro více výběrů."
+    "message": "Výchozí cíl pro push, které odesíláte – z popup okna, kontextové nabídky a klávesové zkratky."
   },
   "only_browser_pushes_label": {
     "message": "Oznámit a zobrazit pouze v Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Uloženo"
-  },
-  "devices_selected": {
-    "message": "zařízení vybrána"
   },
   "push_file_image_title": {
     "message": "Odeslat soubor/obrázek"
@@ -315,9 +309,39 @@
     "message": "Zkopírováno"
   },
   "choose_other_devices_tip": {
-    "message": "Vyberte další zařízení, pro která se mají zobrazovat oznámení. Podržte Ctrl/Cmd pro výběr více zařízení."
+    "message": "Vyberte další zařízení, pro která se mají zobrazovat oznámení."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Skrýt oznámení při automatickém otevření"
+  },
+  "show_per_send_target_label": {
+    "message": "Zobrazit výběr cíle pro každé odeslání v popup"
+  },
+  "all_devices": {
+    "message": "Všechna zařízení"
+  },
+  "all_other_devices": {
+    "message": "Všechna ostatní zařízení"
+  },
+  "n_devices": {
+    "message": "$1 zařízení"
+  },
+  "default_target_option": {
+    "message": "Výchozí ($1)"
+  },
+  "change_target_tip": {
+    "message": "Toto lze změnit v"
+  },
+  "options_link_text": {
+    "message": "Možnostech"
+  },
+  "target_default_tooltip": {
+    "message": "Klikněte pro výběr cílových zařízení"
+  },
+  "target_custom_tooltip": {
+    "message": "Odesílá se na $1 · klikněte pro změnu"
+  },
+  "target_clear_tooltip": {
+    "message": "Zpět na výchozí"
   }
 }

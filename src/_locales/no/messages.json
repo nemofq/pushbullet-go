@@ -81,13 +81,10 @@
     "message": "Hentet"
   },
   "target_devices_label": {
-    "message": "Målenheter:"
-  },
-  "none_selected_all_devices": {
-    "message": "Ingen valgt (til alle enheter)"
+    "message": "Standard målenheter:"
   },
   "choose_devices_tip": {
-    "message": "Velg hvilke enheter du vil sende meldinger til. Hold Ctrl/Cmd for å velge flere."
+    "message": "Standard mål for sendinger du sender – fra popup, høyreklikkmenyen og tastatursnarvei."
   },
   "only_browser_pushes_label": {
     "message": "Varsle og vis kun meldinger til Chrome(s)"
@@ -121,9 +118,6 @@
   },
   "saved": {
     "message": "Lagret"
-  },
-  "devices_selected": {
-    "message": "enheter valgt"
   },
   "push_file_image_title": {
     "message": "Send fil/bilde"
@@ -315,9 +309,39 @@
     "message": "Kopiert"
   },
   "choose_other_devices_tip": {
-    "message": "Velg hvilke andre enheter som skal vise varsler. Hold Ctrl/Cmd nede for å velge flere."
+    "message": "Velg hvilke andre enheter som skal vise varsler."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Skjul varsel ved automatisk åpning"
+  },
+  "show_per_send_target_label": {
+    "message": "Vis per-sending målvelger i popup"
+  },
+  "all_devices": {
+    "message": "Alle enheter"
+  },
+  "all_other_devices": {
+    "message": "Alle andre enheter"
+  },
+  "n_devices": {
+    "message": "$1 enheter"
+  },
+  "default_target_option": {
+    "message": "Standard ($1)"
+  },
+  "change_target_tip": {
+    "message": "Du kan endre dette i"
+  },
+  "options_link_text": {
+    "message": "Innstillinger"
+  },
+  "target_default_tooltip": {
+    "message": "Klikk for å velge målenheter"
+  },
+  "target_custom_tooltip": {
+    "message": "Sender til $1 · klikk for å endre"
+  },
+  "target_clear_tooltip": {
+    "message": "Tilbake til standard"
   }
 }

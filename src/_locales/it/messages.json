@@ -81,13 +81,10 @@
     "message": "Recuperato"
   },
   "target_devices_label": {
-    "message": "Dispositivi di destinazione:"
-  },
-  "none_selected_all_devices": {
-    "message": "Nessuno selezionato (a tutti i dispositivi)"
+    "message": "Dispositivi di destinazione predefiniti:"
   },
   "choose_devices_tip": {
-    "message": "Scegli a quali dispositivi inviare. Tieni premuto Ctrl/Cmd per selezionare più elementi."
+    "message": "La destinazione predefinita per i push che invii - dal popup, dal menu contestuale e dalla scorciatoia da tastiera."
   },
   "only_browser_pushes_label": {
     "message": "Notifica solo ai Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "Salvato"
-  },
-  "devices_selected": {
-    "message": "dispositivi selezionati"
   },
   "push_file_image_title": {
     "message": "Invia file/immagine"
@@ -315,9 +309,39 @@
     "message": "Copiato"
   },
   "choose_other_devices_tip": {
-    "message": "Seleziona per quali altri dispositivi mostrare le notifiche. Tieni premuto Ctrl/Cmd per selezionarne più di uno."
+    "message": "Seleziona per quali altri dispositivi mostrare le notifiche."
   },
   "hide_notification_on_auto_open_label": {
     "message": "Nascondi notifica quando si apre automaticamente"
+  },
+  "show_per_send_target_label": {
+    "message": "Mostra selettore destinazione per invio nel popup"
+  },
+  "all_devices": {
+    "message": "Tutti i dispositivi"
+  },
+  "all_other_devices": {
+    "message": "Tutti gli altri dispositivi"
+  },
+  "n_devices": {
+    "message": "$1 dispositivi"
+  },
+  "default_target_option": {
+    "message": "Predefinito ($1)"
+  },
+  "change_target_tip": {
+    "message": "Puoi modificarlo nelle"
+  },
+  "options_link_text": {
+    "message": "Impostazioni"
+  },
+  "target_default_tooltip": {
+    "message": "Fai clic per scegliere i dispositivi di destinazione"
+  },
+  "target_custom_tooltip": {
+    "message": "Invio a $1 · fai clic per modificare"
+  },
+  "target_clear_tooltip": {
+    "message": "Torna al predefinito"
   }
 }

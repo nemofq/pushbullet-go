@@ -81,13 +81,10 @@
     "message": "ดึงข้อมูลแล้ว"
   },
   "target_devices_label": {
-    "message": "อุปกรณ์เป้าหมาย:"
-  },
-  "none_selected_all_devices": {
-    "message": "ไม่ได้เลือก (ส่งไปยังทุกอุปกรณ์)"
+    "message": "อุปกรณ์เป้าหมายค่าเริ่มต้น:"
   },
   "choose_devices_tip": {
-    "message": "เลือกอุปกรณ์ที่จะส่ง กด Ctrl/Cmd เพื่อเลือกหลายรายการ"
+    "message": "เป้าหมายเริ่มต้นสำหรับการส่งของคุณ — จากป๊อปอัพ เมนูคลิกขวา และทางลัดแป้นพิมพ์"
   },
   "only_browser_pushes_label": {
     "message": "แจ้งเตือนเฉพาะการส่งไปยัง Chrome(s)"
@@ -127,9 +124,6 @@
   },
   "saved": {
     "message": "บันทึกแล้ว"
-  },
-  "devices_selected": {
-    "message": "อุปกรณ์ที่เลือก"
   },
   "push_file_image_title": {
     "message": "ส่งไฟล์/รูปภาพ"
@@ -315,9 +309,39 @@
     "message": "คัดลอกแล้ว"
   },
   "choose_other_devices_tip": {
-    "message": "เลือกอุปกรณ์อื่นที่จะแสดงการแจ้งเตือน กด Ctrl/Cmd ค้างเพื่อเลือกหลายอุปกรณ์"
+    "message": "เลือกอุปกรณ์อื่นที่ต้องการแสดงการแจ้งเตือน"
   },
   "hide_notification_on_auto_open_label": {
     "message": "ซ่อนการแจ้งเตือนเมื่อเปิดอัตโนมัติ"
+  },
+  "show_per_send_target_label": {
+    "message": "แสดงตัวเลือกเป้าหมายต่อการส่งในป๊อปอัพ"
+  },
+  "all_devices": {
+    "message": "ทุกเครื่อง"
+  },
+  "all_other_devices": {
+    "message": "เครื่องอื่นทั้งหมด"
+  },
+  "n_devices": {
+    "message": "$1 เครื่อง"
+  },
+  "default_target_option": {
+    "message": "ค่าเริ่มต้น ($1)"
+  },
+  "change_target_tip": {
+    "message": "เปลี่ยนได้ที่"
+  },
+  "options_link_text": {
+    "message": "การตั้งค่า"
+  },
+  "target_default_tooltip": {
+    "message": "คลิกเพื่อเลือกอุปกรณ์เป้าหมาย"
+  },
+  "target_custom_tooltip": {
+    "message": "กำลังส่งไปยัง $1 · คลิกเพื่อเปลี่ยน"
+  },
+  "target_clear_tooltip": {
+    "message": "กลับสู่ค่าเริ่มต้น"
   }
 }
