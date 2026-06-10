@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "กลับสู่ค่าเริ่มต้น"
+  },
+  "retrieve_devices_first": {
+    "message": "ดึงข้อมูลอุปกรณ์ก่อน"
+  },
+  "no_devices_yet": {
+    "message": "ยังไม่มีอุปกรณ์"
   }
 }

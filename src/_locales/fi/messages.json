@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Palauta oletusasetus"
+  },
+  "retrieve_devices_first": {
+    "message": "Hae laitteet ensin"
+  },
+  "no_devices_yet": {
+    "message": "Ei laitteita vielä"
   }
 }

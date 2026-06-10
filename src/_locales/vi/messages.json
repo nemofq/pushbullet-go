@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Về mặc định"
+  },
+  "retrieve_devices_first": {
+    "message": "Lấy thiết bị trước"
+  },
+  "no_devices_yet": {
+    "message": "Chưa có thiết bị"
   }
 }

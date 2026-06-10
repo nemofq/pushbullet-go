@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "恢復預設"
+  },
+  "retrieve_devices_first": {
+    "message": "請先獲取裝置"
+  },
+  "no_devices_yet": {
+    "message": "暫無裝置"
   }
 }

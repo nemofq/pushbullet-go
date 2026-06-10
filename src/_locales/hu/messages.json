@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Vissza az alapértelmezettre"
+  },
+  "retrieve_devices_first": {
+    "message": "Először kérje le az eszközöket"
+  },
+  "no_devices_yet": {
+    "message": "Még nincs eszköz"
   }
 }

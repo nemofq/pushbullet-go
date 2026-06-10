@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Обратно към подразбиращото се"
+  },
+  "retrieve_devices_first": {
+    "message": "Първо извлечи устройства"
+  },
+  "no_devices_yet": {
+    "message": "Все още няма устройства"
   }
 }

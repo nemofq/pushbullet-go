@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "既定に戻す"
+  },
+  "retrieve_devices_first": {
+    "message": "先にデバイスを取得してください"
+  },
+  "no_devices_yet": {
+    "message": "まだデバイスがありません"
   }
 }

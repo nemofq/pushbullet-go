@@ -18,7 +18,7 @@
     "message": "Nakonfigurujte svůj přístupový token Pushbullet pro použití rozšíření."
   },
   "open_settings_button": {
-    "message": "Otevřít nastavení"
+    "message": "Otevřít možnosti"
   },
   "type_or_paste_placeholder": {
     "message": "Napište nebo vložte"
@@ -195,7 +195,7 @@
     "message": "Zkusit znovu připojit"
   },
   "open_settings_to_configure": {
-    "message": "Otevřete nastavení pro konfiguraci tokenu"
+    "message": "Otevřete možnosti pro konfiguraci přístupového tokenu"
   },
   "no_access_token": {
     "message": "Přístupový token nenalezen. Nakonfigurujte v možnostech."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Zpět na výchozí"
+  },
+  "retrieve_devices_first": {
+    "message": "Nejprve načíst zařízení"
+  },
+  "no_devices_yet": {
+    "message": "Zatím žádná zařízení"
   }
 }

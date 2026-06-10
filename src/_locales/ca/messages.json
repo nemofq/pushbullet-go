@@ -18,7 +18,7 @@
     "message": "Configura el teu token d'accés Pushbullet per començar a utilitzar l'extensió."
   },
   "open_settings_button": {
-    "message": "Obrir configuració"
+    "message": "Obrir opcions"
   },
   "type_or_paste_placeholder": {
     "message": "Escriu o enganxa"
@@ -195,7 +195,7 @@
     "message": "Reintentar connexió"
   },
   "open_settings_to_configure": {
-    "message": "Obre la configuració per configurar el token d'accés"
+    "message": "Obre les opcions per configurar el token d'accés"
   },
   "no_access_token": {
     "message": "No s'ha trobat cap token d'accés. Si us plau, configura'l a les opcions."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Torna al valor per defecte"
+  },
+  "retrieve_devices_first": {
+    "message": "Recupera primer els dispositius"
+  },
+  "no_devices_yet": {
+    "message": "Encara no hi ha dispositius"
   }
 }

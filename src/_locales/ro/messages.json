@@ -18,7 +18,7 @@
     "message": "Configurați tokenul de acces Pushbullet pentru a începe să utilizați extensia."
   },
   "open_settings_button": {
-    "message": "Deschide setările"
+    "message": "Deschide Opțiunile"
   },
   "type_or_paste_placeholder": {
     "message": "Scrieți sau lipiți"
@@ -195,7 +195,7 @@
     "message": "Reîncearcă conexiunea"
   },
   "open_settings_to_configure": {
-    "message": "Deschide setările pentru a configura tokenul de acces"
+    "message": "Deschide Opțiunile pentru a configura tokenul de acces"
   },
   "no_access_token": {
     "message": "Niciun token de acces găsit. Configurați în opțiuni."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Înapoi la implicit"
+  },
+  "retrieve_devices_first": {
+    "message": "Recuperați mai întâi dispozitivele"
+  },
+  "no_devices_yet": {
+    "message": "Niciun dispozitiv încă"
   }
 }

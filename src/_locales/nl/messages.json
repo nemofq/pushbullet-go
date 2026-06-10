@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Terug naar standaard"
+  },
+  "retrieve_devices_first": {
+    "message": "Haal eerst apparaten op"
+  },
+  "no_devices_yet": {
+    "message": "Nog geen apparaten"
   }
 }

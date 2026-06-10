@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Вернуть по умолчанию"
+  },
+  "retrieve_devices_first": {
+    "message": "Сначала получите устройства"
+  },
+  "no_devices_yet": {
+    "message": "Устройств пока нет"
   }
 }

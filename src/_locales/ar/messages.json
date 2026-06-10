@@ -18,7 +18,7 @@
     "message": "قم بإعداد رمز وصول Pushbullet لبدء استخدام الامتداد."
   },
   "open_settings_button": {
-    "message": "فتح الإعدادات"
+    "message": "فتح الخيارات"
   },
   "type_or_paste_placeholder": {
     "message": "اكتب أو الصق"
@@ -201,7 +201,7 @@
     "message": "إعادة محاولة الاتصال"
   },
   "open_settings_to_configure": {
-    "message": "افتح الإعدادات لتكوين رمز الوصول"
+    "message": "افتح الخيارات لتكوين رمز الوصول"
   },
   "no_access_token": {
     "message": "لم يتم العثور على رمز وصول. يرجى التكوين في الخيارات."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "رجوع إلى الافتراضي"
+  },
+  "retrieve_devices_first": {
+    "message": "استرجع الأجهزة أولاً"
+  },
+  "no_devices_yet": {
+    "message": "لا توجد أجهزة بعد"
   }
 }

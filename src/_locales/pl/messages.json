@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Przywróć domyślne"
+  },
+  "retrieve_devices_first": {
+    "message": "Najpierw pobierz urządzenia"
+  },
+  "no_devices_yet": {
+    "message": "Brak urządzeń"
   }
 }

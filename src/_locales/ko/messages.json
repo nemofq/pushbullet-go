@@ -18,7 +18,7 @@
     "message": "확장 프로그램을 사용하려면 Pushbullet 액세스 토큰을 설정하세요."
   },
   "open_settings_button": {
-    "message": "설정 열기"
+    "message": "옵션 열기"
   },
   "type_or_paste_placeholder": {
     "message": "입력 또는 붙여넣기"
@@ -201,7 +201,7 @@
     "message": "연결 재시도"
   },
   "open_settings_to_configure": {
-    "message": "액세스 토큰 설정을 위해 설정 열기"
+    "message": "액세스 토큰 설정을 위해 옵션 열기"
   },
   "no_access_token": {
     "message": "액세스 토큰이 없습니다. 옵션에서 설정하세요."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "기본값으로 돌아가기"
+  },
+  "retrieve_devices_first": {
+    "message": "먼저 디바이스 가져오기"
+  },
+  "no_devices_yet": {
+    "message": "아직 디바이스가 없습니다"
   }
 }

@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Späť na predvolené"
+  },
+  "retrieve_devices_first": {
+    "message": "Najprv získajte zariadenia"
+  },
+  "no_devices_yet": {
+    "message": "Zatiaľ žiadne zariadenia"
   }
 }

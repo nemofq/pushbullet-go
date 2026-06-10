@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Voltar ao padrão"
+  },
+  "retrieve_devices_first": {
+    "message": "Obtenha dispositivos primeiro"
+  },
+  "no_devices_yet": {
+    "message": "Nenhum dispositivo ainda"
   }
 }

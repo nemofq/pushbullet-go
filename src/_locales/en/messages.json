@@ -18,7 +18,7 @@
     "message": "Configure your Pushbullet access token to start using the extension."
   },
   "open_settings_button": {
-    "message": "Open Settings"
+    "message": "Open Options"
   },
   "type_or_paste_placeholder": {
     "message": "Type or paste"
@@ -240,7 +240,7 @@
     "message": "Retry connection"
   },
   "open_settings_to_configure": {
-    "message": "Open settings to configure access token"
+    "message": "Open Options to configure access token"
   },
   "no_access_token": {
     "message": "No access token found. Please configure in options."

@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Kembali ke bawaan"
+  },
+  "retrieve_devices_first": {
+    "message": "Ambil perangkat terlebih dahulu"
+  },
+  "no_devices_yet": {
+    "message": "Belum ada perangkat"
   }
 }

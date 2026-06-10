@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "恢复默认"
+  },
+  "retrieve_devices_first": {
+    "message": "请先获取设备"
+  },
+  "no_devices_yet": {
+    "message": "暂无设备"
   }
 }

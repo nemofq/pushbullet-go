@@ -18,7 +18,7 @@
     "message": "Configurez votre jeton d’accès Pushbullet pour commencer à utiliser l’extension."
   },
   "open_settings_button": {
-    "message": "Ouvrir les paramètres"
+    "message": "Ouvrir les Options"
   },
   "type_or_paste_placeholder": {
     "message": "Saisir ou coller"
@@ -201,7 +201,7 @@
     "message": "Réessayer la connexion"
   },
   "open_settings_to_configure": {
-    "message": "Ouvrez paramètres pour configurer le jeton"
+    "message": "Ouvrez Options pour configurer le jeton d'accès"
   },
   "no_access_token": {
     "message": "Aucun jeton trouvé. Configurez-le dans les options."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Revenir au réglage par défaut"
+  },
+  "retrieve_devices_first": {
+    "message": "Récupérer d'abord les appareils"
+  },
+  "no_devices_yet": {
+    "message": "Aucun appareil"
   }
 }

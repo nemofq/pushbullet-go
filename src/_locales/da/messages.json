@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Tilbage til standard"
+  },
+  "retrieve_devices_first": {
+    "message": "Hent enheder først"
+  },
+  "no_devices_yet": {
+    "message": "Ingen enheder endnu"
   }
 }

@@ -195,7 +195,7 @@
     "message": "Ponovno poveži"
   },
   "open_settings_to_configure": {
-    "message": "Odprite nastavitve za nastavitev dostopnega žetona"
+    "message": "Odprite nastavitve za konfiguracijo dostopnega žetona"
   },
   "no_access_token": {
     "message": "Dostopni žeton ni najden. Nastavite ga v možnostih."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Nazaj na privzeto"
+  },
+  "retrieve_devices_first": {
+    "message": "Najprej pridobi naprave"
+  },
+  "no_devices_yet": {
+    "message": "Ni naprav"
   }
 }

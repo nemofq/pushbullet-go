@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Zurück zum Standard"
+  },
+  "retrieve_devices_first": {
+    "message": "Zuerst Geräte abrufen"
+  },
+  "no_devices_yet": {
+    "message": "Noch keine Geräte"
   }
 }

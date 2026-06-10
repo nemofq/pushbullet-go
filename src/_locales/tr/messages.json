@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Varsayılana dön"
+  },
+  "retrieve_devices_first": {
+    "message": "Önce cihazları getir"
+  },
+  "no_devices_yet": {
+    "message": "Henüz cihaz yok"
   }
 }

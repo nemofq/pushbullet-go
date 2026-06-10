@@ -18,7 +18,7 @@
     "message": "Configura tu token de acceso de Pushbullet para empezar a usar la extensión."
   },
   "open_settings_button": {
-    "message": "Abrir ajustes"
+    "message": "Abrir opciones"
   },
   "type_or_paste_placeholder": {
     "message": "Escribe o pega"
@@ -201,7 +201,7 @@
     "message": "Reintentar conexión"
   },
   "open_settings_to_configure": {
-    "message": "Abre ajustes para configurar el token de acceso"
+    "message": "Abre opciones para configurar el token de acceso"
   },
   "no_access_token": {
     "message": "No se encontró token de acceso. Configúralo en opciones."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Volver al predeterminado"
+  },
+  "retrieve_devices_first": {
+    "message": "Obtener dispositivos primero"
+  },
+  "no_devices_yet": {
+    "message": "Aún no hay dispositivos"
   }
 }

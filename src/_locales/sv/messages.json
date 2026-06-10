@@ -18,7 +18,7 @@
     "message": "Konfigurera din Pushbullet-åtkomsttoken för att börja använda tillägget."
   },
   "open_settings_button": {
-    "message": "Öppna inställningar"
+    "message": "Öppna alternativ"
   },
   "type_or_paste_placeholder": {
     "message": "Skriv eller klistra in"
@@ -201,7 +201,7 @@
     "message": "Försök att ansluta igen"
   },
   "open_settings_to_configure": {
-    "message": "Öppna inställningar för att konfigurera åtkomsttoken"
+    "message": "Öppna alternativ för att konfigurera åtkomsttoken"
   },
   "no_access_token": {
     "message": "Ingen åtkomsttoken hittades. Konfigurera i alternativen."
@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "Tillbaka till standard"
+  },
+  "retrieve_devices_first": {
+    "message": "Hämta enheter först"
+  },
+  "no_devices_yet": {
+    "message": "Inga enheter ännu"
   }
 }

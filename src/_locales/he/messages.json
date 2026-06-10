@@ -343,5 +343,11 @@
   },
   "target_clear_tooltip": {
     "message": "חזור לברירת מחדל"
+  },
+  "retrieve_devices_first": {
+    "message": "שלוף מכשירים תחילה"
+  },
+  "no_devices_yet": {
+    "message": "אין מכשירים עדיין"
   }
 }
