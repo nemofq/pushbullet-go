@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   // toggling never closes anything, and state only persists on Save.
   const DEVICE_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
 
-  function createDeviceChecklist(container, getAllLabel) {
+  function createDeviceChecklist(container, getAllLabel, getEmptyLabel) {
     let devices = [];
     let selected = [];
 
@@ -106,11 +106,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function render() {
-      // No devices retrieved yet — show an empty well instead of a
-      // misleadingly selected "All …" row over nothing.
+      // No devices retrieved yet — show a hint in an empty well instead of
+      // a misleadingly selected "All …" row over nothing.
       container.classList.toggle('empty', devices.length === 0);
       if (devices.length === 0) {
-        container.replaceChildren();
+        const empty = document.createElement('div');
+        empty.className = 'list-empty';
+        empty.textContent = getEmptyLabel();
+        container.replaceChildren(empty);
         return;
       }
       const fragment = document.createDocumentFragment();
@@ -165,11 +168,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   const remoteDevicePicker = createDeviceChecklist(
     remoteDevicePickerEl,
-    () => window.CustomI18n.getMessage('all_devices')
+    () => window.CustomI18n.getMessage('all_devices'),
+    () => window.CustomI18n.getMessage('retrieve_devices_first')
   );
   const otherDevicePicker = createDeviceChecklist(
     otherDevicePickerEl,
-    () => window.CustomI18n.getMessage('all_other_devices')
+    () => window.CustomI18n.getMessage('all_other_devices'),
+    () => window.CustomI18n.getMessage('no_devices_yet')
   );
 
   // Shared row builder for the value-based lists below (same .list-option

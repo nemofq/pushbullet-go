@@ -95,6 +95,12 @@
   "all_other_devices": {
     "message": "All other devices"
   },
+  "retrieve_devices_first": {
+    "message": "Retrieve devices first"
+  },
+  "no_devices_yet": {
+    "message": "No devices yet"
+  },
   "n_devices": {
     "message": "$1 devices"
   },

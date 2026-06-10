@@ -266,10 +266,20 @@
       transition: border-color 0.3s ease, background-color 0.3s ease;
     }
 
-    /* No devices yet — the checklist renders empty; keep a visible well
-       roughly the height of a single row so the layout doesn't collapse. */
+    /* No devices yet — the checklist renders a centered hint in an empty
+       well so the layout doesn't collapse. */
     .device-list.empty {
-      min-height: 56px;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .device-list .list-empty {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-align: center;
+      padding: 8px;
     }
 
     /* Scrollbar drawn inside the rounded box: transparent track keeps the
