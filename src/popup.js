@@ -101,7 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   sendButton.addEventListener('click', sendMessage);
   bodyInput.addEventListener('input', updateSendButtonState);
+  bodyInput.addEventListener('input', fitComposeHeight);
   updateSendButtonState();
+  fitComposeHeight();
 
   quickShareSend.addEventListener('click', () => {
     if (quickShareUrl.textContent) {
@@ -1063,6 +1065,20 @@ document.addEventListener('DOMContentLoaded', function() {
     sendButton.disabled = bodyInput.value.trim() === '';
   }
 
+  // Grow the input with its content (Shift+Enter / pasted multi-line text)
+  // from the idle 40px up to the ~5-line cap, then hand overflow to the inner
+  // scrollbar. Content is measured at height:auto, which is why the element
+  // carries rows="1" — the default of 2 makes even an empty box measure two
+  // lines tall. overflow-y flips to auto only at the cap: leaving it auto
+  // while growing risks a phantom scrollbar from scrollHeight rounding.
+  function fitComposeHeight() {
+    const maxHeight = 118; // 5 lines × 19.6px + 18px padding + 2px border
+    bodyInput.style.height = 'auto';
+    const needed = bodyInput.scrollHeight + 2; // scrollHeight excludes the border
+    bodyInput.style.height = Math.max(40, Math.min(needed, maxHeight)) + 'px';
+    bodyInput.style.overflowY = needed > maxHeight ? 'auto' : 'hidden';
+  }
+
   async function sendMessage() {
     const body = bodyInput.value.trim();
 
@@ -1095,6 +1111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     bodyInput.value = '';
     updateSendButtonState();
+    fitComposeHeight();
   }
 
 

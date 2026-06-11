@@ -146,7 +146,7 @@
 
     body.dragging textarea {
       border: 2px solid var(--button-primary);
-      padding: 9px 11px;
+      padding: 8px 11px;
       /* Compensate for border increase (from 1px to 2px) */
       background: var(--bg-secondary);
     }
@@ -398,25 +398,53 @@
       padding: var(--compose-pad-y) 15px;
     }
 
+    /* Auto-grows with content (popup.js sets the height on input) from the
+       idle 40px up to a ~5-line cap, then scrolls. line-height 1.4 keeps
+       multi-line text readable; the 9px padding keeps a single line at the
+       familiar 40px. No height transition: growth must track typing
+       instantly. */
     textarea {
       width: 100%;
       box-sizing: border-box;
-      padding: 10px 12px;
+      padding: 9px 12px;
       border: 1px solid var(--border-secondary);
       border-radius: 10px;
       resize: none;
-      height: 40px;
+      min-height: 40px;
+      overflow-y: hidden;
       font-family: inherit;
       font-size: 14px;
       background: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.2;
+      line-height: 1.4;
       transition: border-color 0.3s ease, background-color 0.3s ease;
     }
 
     textarea:focus {
       outline: none;
       border-color: var(--button-primary);
+    }
+
+    /* Scrollbar for the capped multi-line state: same inset-pill treatment
+       as .target-menu, drawn inside the rounded border. */
+    textarea::-webkit-scrollbar {
+      width: 11px;
+    }
+
+    textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+      background: var(--border-secondary);
+      border-radius: 6px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+    }
+
+    textarea::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+      background-clip: content-box;
     }
 
     /* line 2: target control pinned left, file + send pinned right */
@@ -1214,7 +1242,7 @@
       </div>
     </div>
     <div class="compose">
-      <textarea id="bodyInput" data-i18n-placeholder="type_or_paste_placeholder" placeholder="Type or paste"></textarea>
+      <textarea id="bodyInput" rows="1" data-i18n-placeholder="type_or_paste_placeholder" placeholder="Type or paste"></textarea>
       <div class="compose-toolbar">
         <button class="target-control is-default" id="targetControl" type="button" hidden>
           <span class="tc-icon">
