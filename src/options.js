@@ -779,7 +779,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       });
       
       if (!devicesResponse.ok) {
-        throw new Error(`Failed to fetch devices: ${devicesResponse.status} ${devicesResponse.statusText}`);
+        throw new Error(window.CustomI18n.getMessage('retrieve_failed'));
       }
       
       const devicesData = await devicesResponse.json();
@@ -828,7 +828,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       });
       
       if (!chatsResponse.ok) {
-        throw new Error(`Failed to fetch chats: ${chatsResponse.status} ${chatsResponse.statusText}`);
+        throw new Error(window.CustomI18n.getMessage('retrieve_failed'));
       }
       
       const chatsData = await chatsResponse.json();
@@ -920,7 +920,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       
     } catch (error) {
       console.error('Error retrieving devices:', error);
-      showStatus(`Error: ${error.message}`, 'error');
+      showStatus(error.message, 'error');
     } finally {
       // Note: Don't re-enable here as showRetrieveSuccess will handle it
       if (retrieveDevicesButton.textContent === window.CustomI18n.getMessage('retrieving')) {

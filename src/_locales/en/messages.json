@@ -80,6 +80,9 @@
   "retrieved": {
     "message": "Retrieved"
   },
+  "retrieve_failed": {
+    "message": "Couldn't retrieve devices and people. Check access token and try again."
+  },
   "target_devices_label": {
     "message": "Default Target Devices:"
   },
@@ -183,7 +186,7 @@
     "message": "File/image pushed!"
   },
   "upload_failed": {
-    "message": "Upload failed: "
+    "message": "Upload failed. Check the file size or connection, then try again."
   },
   "uploading_to_server": {
     "message": "Uploading to server..."

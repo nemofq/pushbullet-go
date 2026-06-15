@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     } catch (error) {
       console.error('File upload failed:', error);
-      status.textContent = window.CustomI18n.getMessage('upload_failed') + error.message;
+      status.textContent = window.CustomI18n.getMessage('upload_failed');
       progressFill.style.width = '0%';
     }
   }
