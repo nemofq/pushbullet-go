@@ -138,7 +138,7 @@
     "message": "Đã gửi tệp/hình ảnh!"
   },
   "upload_failed": {
-    "message": "Tải lên thất bại: "
+    "message": "Tải lên thất bại. Kiểm tra kích thước tệp hoặc kết nối mạng, rồi thử lại."
   },
   "uploading_to_server": {
     "message": "Đang tải lên máy chủ..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Chưa có thiết bị"
+  },
+  "retrieve_failed": {
+    "message": "Không thể lấy thiết bị và người. Kiểm tra mã truy cập rồi thử lại."
   }
 }

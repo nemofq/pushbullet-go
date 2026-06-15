@@ -138,7 +138,7 @@
     "message": "Fișier/imagine trimis!"
   },
   "upload_failed": {
-    "message": "Încărcarea a eșuat: "
+    "message": "Încărcarea a eșuat. Verificați dimensiunea fișierului sau conexiunea, apoi încercați din nou."
   },
   "uploading_to_server": {
     "message": "Se încarcă pe server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Niciun dispozitiv încă"
+  },
+  "retrieve_failed": {
+    "message": "Nu s-au putut recupera dispozitivele și persoanele. Verificați tokenul de acces și încercați din nou."
   }
 }

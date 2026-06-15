@@ -138,7 +138,7 @@
     "message": "Datoteka/slika poslana!"
   },
   "upload_failed": {
-    "message": "Nalaganje ni uspelo: "
+    "message": "Nalaganje ni uspelo. Preverite velikost datoteke ali povezavo in poskusite znova."
   },
   "uploading_to_server": {
     "message": "Nalaganje na strežnik..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Ni naprav"
+  },
+  "retrieve_failed": {
+    "message": "Naprav in oseb ni bilo mogoče pridobiti. Preverite dostopni žeton in poskusite znova."
   }
 }

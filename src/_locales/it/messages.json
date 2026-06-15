@@ -144,7 +144,7 @@
     "message": "File/immagine inviato!"
   },
   "upload_failed": {
-    "message": "Caricamento fallito: "
+    "message": "Caricamento non riuscito. Controlla la dimensione del file o la connessione, poi riprova."
   },
   "uploading_to_server": {
     "message": "Caricamento sul server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Nessun dispositivo"
+  },
+  "retrieve_failed": {
+    "message": "Impossibile recuperare dispositivi e persone. Controlla il token di accesso e riprova."
   }
 }

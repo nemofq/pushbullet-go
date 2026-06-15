@@ -138,7 +138,7 @@
     "message": "Fitxer/imatge enviat!"
   },
   "upload_failed": {
-    "message": "Càrrega fallida: "
+    "message": "La càrrega ha fallat. Comprova la mida del fitxer o la connexió i torna-ho a provar."
   },
   "uploading_to_server": {
     "message": "Carregant al servidor..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Encara no hi ha dispositius"
+  },
+  "retrieve_failed": {
+    "message": "No s'han pogut recuperar els dispositius i persones. Comprova el token d'accés i torna-ho a provar."
   }
 }

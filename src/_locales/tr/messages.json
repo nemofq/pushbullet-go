@@ -144,7 +144,7 @@
     "message": "Dosya/görsel gönderildi!"
   },
   "upload_failed": {
-    "message": "Yükleme başarısız: "
+    "message": "Yükleme başarısız. Dosya boyutunu veya bağlantıyı kontrol edin, ardından tekrar deneyin."
   },
   "uploading_to_server": {
     "message": "Sunucuya yükleniyor..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Henüz cihaz yok"
+  },
+  "retrieve_failed": {
+    "message": "Cihazlar ve kişiler getirilemedi. Erişim belirtecini kontrol edin ve tekrar deneyin."
   }
 }

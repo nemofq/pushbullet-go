@@ -144,7 +144,7 @@
     "message": "Plik/obraz wysłany!"
   },
   "upload_failed": {
-    "message": "Błąd przesyłania: "
+    "message": "Przesyłanie nieudane. Sprawdź rozmiar pliku lub połączenie i spróbuj ponownie."
   },
   "uploading_to_server": {
     "message": "Przesyłanie na serwer..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Brak urządzeń"
+  },
+  "retrieve_failed": {
+    "message": "Nie można pobrać urządzeń i osób. Sprawdź token dostępu i spróbuj ponownie."
   }
 }

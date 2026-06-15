@@ -138,7 +138,7 @@
     "message": "Súbor/obrázok odoslaný!"
   },
   "upload_failed": {
-    "message": "Nahrávanie zlyhalo: "
+    "message": "Nahrávanie zlyhalo. Skontrolujte veľkosť súboru alebo pripojenie a skúste znova."
   },
   "uploading_to_server": {
     "message": "Nahráva sa na server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Zatiaľ žiadne zariadenia"
+  },
+  "retrieve_failed": {
+    "message": "Nepodarilo sa získať zariadenia a ľudí. Skontrolujte prístupový token a skúste znova."
   }
 }

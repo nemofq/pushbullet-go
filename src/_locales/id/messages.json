@@ -138,7 +138,7 @@
     "message": "File/gambar terkirim!"
   },
   "upload_failed": {
-    "message": "Unggahan gagal: "
+    "message": "Unggahan gagal. Periksa ukuran file atau koneksi, lalu coba lagi."
   },
   "uploading_to_server": {
     "message": "Mengunggah ke server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Belum ada perangkat"
+  },
+  "retrieve_failed": {
+    "message": "Tidak dapat mengambil perangkat dan orang. Periksa token akses dan coba lagi."
   }
 }

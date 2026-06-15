@@ -138,7 +138,7 @@
     "message": "Fil/bilde sendt!"
   },
   "upload_failed": {
-    "message": "Opplasting mislyktes: "
+    "message": "Opplasting mislyktes. Sjekk filstørrelsen eller tilkoblingen, og prøv igjen."
   },
   "uploading_to_server": {
     "message": "Laster opp til server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Ingen enheter ennå"
+  },
+  "retrieve_failed": {
+    "message": "Kunne ikke hente enheter og personer. Sjekk tilgangsnøkkelen og prøv igjen."
   }
 }

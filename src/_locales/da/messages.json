@@ -138,7 +138,7 @@
     "message": "Fil/billede sendt!"
   },
   "upload_failed": {
-    "message": "Upload mislykkedes: "
+    "message": "Upload mislykkedes. Kontrollér filstørrelse eller forbindelse, og prøv igen."
   },
   "uploading_to_server": {
     "message": "Uploader til server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Ingen enheder endnu"
+  },
+  "retrieve_failed": {
+    "message": "Kunne ikke hente enheder og personer. Kontrollér adgangstoken og prøv igen."
   }
 }

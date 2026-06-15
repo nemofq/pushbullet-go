@@ -144,7 +144,7 @@
     "message": "Arquivo/imagem enviado!"
   },
   "upload_failed": {
-    "message": "Falha no upload: "
+    "message": "Falha no upload. Verifique o tamanho do arquivo ou a conexão e tente novamente."
   },
   "uploading_to_server": {
     "message": "Enviando para o servidor..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Nenhum dispositivo ainda"
+  },
+  "retrieve_failed": {
+    "message": "Não foi possível obter dispositivos e pessoas. Verifique o token de acesso e tente novamente."
   }
 }

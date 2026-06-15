@@ -138,7 +138,7 @@
     "message": "Fájl/kép elküldve!"
   },
   "upload_failed": {
-    "message": "Feltöltés sikertelen: "
+    "message": "Feltöltés sikertelen. Ellenőrizze a fájlméretet vagy a kapcsolatot, majd próbálja újra."
   },
   "uploading_to_server": {
     "message": "Feltöltés a szerverre..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Még nincs eszköz"
+  },
+  "retrieve_failed": {
+    "message": "Nem sikerült lekérni az eszközöket és a személyeket. Ellenőrizze a hozzáférési tokent, majd próbálja újra."
   }
 }

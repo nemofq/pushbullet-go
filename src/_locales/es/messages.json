@@ -144,7 +144,7 @@
     "message": "¡Archivo/imagen enviado!"
   },
   "upload_failed": {
-    "message": "Error de carga: "
+    "message": "Error de carga. Verifica el tamaño del archivo o la conexión, y vuelve a intentarlo."
   },
   "uploading_to_server": {
     "message": "Cargando al servidor..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Aún no hay dispositivos"
+  },
+  "retrieve_failed": {
+    "message": "No se pudieron obtener los dispositivos y personas. Verifica el token de acceso y vuelve a intentarlo."
   }
 }

@@ -144,7 +144,7 @@
     "message": "檔案/圖片已推送！"
   },
   "upload_failed": {
-    "message": "上傳失敗："
+    "message": "上傳失敗。請檢查檔案大小或連線狀態，然後重試。"
   },
   "uploading_to_server": {
     "message": "正在上傳到伺服器..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "暫無裝置"
+  },
+  "retrieve_failed": {
+    "message": "無法獲取裝置和聯絡人。請檢查訪問令牌並重試。"
   }
 }

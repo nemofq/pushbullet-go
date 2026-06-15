@@ -138,7 +138,7 @@
     "message": "Tiedosto/kuva lähetetty!"
   },
   "upload_failed": {
-    "message": "Lataus epäonnistui: "
+    "message": "Lataus epäonnistui. Tarkista tiedoston koko tai yhteys, ja yritä uudelleen."
   },
   "uploading_to_server": {
     "message": "Ladataan palvelimelle..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Ei laitteita vielä"
+  },
+  "retrieve_failed": {
+    "message": "Laitteiden ja henkilöiden haku epäonnistui. Tarkista käyttöoikeustunnus ja yritä uudelleen."
   }
 }

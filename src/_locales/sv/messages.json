@@ -144,7 +144,7 @@
     "message": "Fil/bild skickad!"
   },
   "upload_failed": {
-    "message": "Uppladdning misslyckades: "
+    "message": "Uppladdning misslyckades. Kontrollera filstorleken eller anslutningen och försök igen."
   },
   "uploading_to_server": {
     "message": "Laddar upp till server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Inga enheter ännu"
+  },
+  "retrieve_failed": {
+    "message": "Kunde inte hämta enheter och personer. Kontrollera åtkomsttoken och försök igen."
   }
 }

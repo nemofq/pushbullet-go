@@ -144,7 +144,7 @@
     "message": "파일/이미지 푸시 완료!"
   },
   "upload_failed": {
-    "message": "업로드 실패: "
+    "message": "업로드에 실패했습니다. 파일 크기 또는 연결을 확인한 후 다시 시도하세요."
   },
   "uploading_to_server": {
     "message": "서버로 업로드 중..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "아직 디바이스가 없습니다"
+  },
+  "retrieve_failed": {
+    "message": "디바이스 및 사용자를 가져올 수 없습니다. 액세스 토큰을 확인하고 다시 시도하세요."
   }
 }

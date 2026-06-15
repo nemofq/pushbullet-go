@@ -144,7 +144,7 @@
     "message": "Datei/Bild gesendet!"
   },
   "upload_failed": {
-    "message": "Upload fehlgeschlagen: "
+    "message": "Upload fehlgeschlagen. Dateigröße oder Verbindung prüfen und erneut versuchen."
   },
   "uploading_to_server": {
     "message": "Wird auf Server hochgeladen..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Noch keine Geräte"
+  },
+  "retrieve_failed": {
+    "message": "Geräte und Personen konnten nicht abgerufen werden. Zugangstoken prüfen und erneut versuchen."
   }
 }

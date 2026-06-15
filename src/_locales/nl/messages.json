@@ -144,7 +144,7 @@
     "message": "Bestand/afbeelding gepusht!"
   },
   "upload_failed": {
-    "message": "Upload mislukt: "
+    "message": "Upload mislukt. Controleer de bestandsgrootte of verbinding en probeer opnieuw."
   },
   "uploading_to_server": {
     "message": "Uploaden naar server..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Nog geen apparaten"
+  },
+  "retrieve_failed": {
+    "message": "Apparaten en personen ophalen mislukt. Controleer het toegangstoken en probeer opnieuw."
   }
 }

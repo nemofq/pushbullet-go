@@ -144,7 +144,7 @@
     "message": "Fichier/image envoyé !"
   },
   "upload_failed": {
-    "message": "Échec du téléversement : "
+    "message": "Échec du téléversement. Vérifiez la taille du fichier ou la connexion, puis réessayez."
   },
   "uploading_to_server": {
     "message": "Téléversement vers le serveur..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "Aucun appareil"
+  },
+  "retrieve_failed": {
+    "message": "Impossible de récupérer les appareils et personnes. Vérifiez le jeton d'accès et réessayez."
   }
 }

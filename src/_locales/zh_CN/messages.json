@@ -144,7 +144,7 @@
     "message": "文件/图片已推送！"
   },
   "upload_failed": {
-    "message": "上传失败："
+    "message": "上传失败。请检查文件大小或网络连接，然后重试。"
   },
   "uploading_to_server": {
     "message": "正在上传到服务器..."
@@ -349,5 +349,8 @@
   },
   "no_devices_yet": {
     "message": "暂无设备"
+  },
+  "retrieve_failed": {
+    "message": "无法获取设备和联系人。请检查访问令牌后重试。"
   }
 }
