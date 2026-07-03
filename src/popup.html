@@ -924,6 +924,11 @@
       color: var(--text-secondary);
       overflow-wrap: anywhere;
       line-height: 1.4;
+      display: -webkit-box;
+      overflow: hidden;
+      line-clamp: 3;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
 
     .notification-actions {
@@ -1070,6 +1075,8 @@
       text-decoration: underline;
       display: block;
       width: fit-content;
+      position: sticky;
+      top: 0;
     }
 
     .clear-history-button:hover {
