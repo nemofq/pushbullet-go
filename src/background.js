@@ -914,12 +914,16 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
     }
 
     // Check if require interaction is enabled for pushes
-    const requireInteractionData = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes']);
-    if (requireInteractionData.requireInteraction && requireInteractionData.requireInteractionPushes) {
+    const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'hideOsNotifications']);
+    if (notifPrefs.requireInteraction && notifPrefs.requireInteractionPushes) {
       notificationOptions.requireInteraction = true;
     }
 
-    chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
+    // Suppress the desktop/OS notification when the user has opted out; the
+    // push is still recorded in the popup and counted as unread.
+    if (!notifPrefs.hideOsNotifications) {
+      chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
+    }
 
     // Increment unread push count
     await incrementUnreadPushCount();
@@ -1056,15 +1060,19 @@ async function showMirrorNotification(notificationData) {
   }
 
   // Check if require interaction is enabled for mirrored notifications
-  const requireInteractionData = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored']);
-  if (requireInteractionData.requireInteraction && requireInteractionData.requireInteractionMirrored) {
+  const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored', 'hideOsNotifications']);
+  if (notifPrefs.requireInteraction && notifPrefs.requireInteractionMirrored) {
     notificationOptions.requireInteraction = true;
   }
 
   // Use the UUID as notification ID for easy lookup
   const notificationId = `pushbullet-mirror-${notificationData.id}`;
 
-  chrome.notifications.create(notificationId, notificationOptions);
+  // Suppress the desktop/OS notification when the user has opted out; the
+  // mirrored notification is still recorded and counted as unread.
+  if (!notifPrefs.hideOsNotifications) {
+    chrome.notifications.create(notificationId, notificationOptions);
+  }
 
   // Play alert sound
   await playAlertSound();

@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Piilota ilmoitus automaattisen avauksen yhteydessä"
   },
+  "hide_os_notifications_label": {
+    "message": "Piilota käyttöjärjestelmän ilmoitukset"
+  },
   "show_per_send_target_label": {
     "message": "Näytä kohdevalitsin ponnahdusikkunassa"
   },

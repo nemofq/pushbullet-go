@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "إخفاء الإشعار عند الفتح التلقائي"
   },
+  "hide_os_notifications_label": {
+    "message": "إخفاء إشعارات النظام"
+  },
   "show_per_send_target_label": {
     "message": "إظهار محدد الهدف لكل إرسال في النافذة المنبثقة"
   },

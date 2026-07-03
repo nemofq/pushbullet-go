@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Ẩn thông báo khi tự động mở"
   },
+  "hide_os_notifications_label": {
+    "message": "Ẩn thông báo hệ điều hành"
+  },
   "show_per_send_target_label": {
     "message": "Hiển thị bộ chọn đích mỗi lần gửi trong popup"
   },

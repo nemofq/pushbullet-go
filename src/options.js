@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const defaultTabGroup = document.getElementById('defaultTabGroup');
   const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
   const playSoundOnNotificationToggle = document.getElementById('playSoundOnNotificationToggle');
+  const hideOsNotificationsCheckbox = document.getElementById('hideOsNotifications');
+  const hideOsNotificationsToggle = document.getElementById('hideOsNotificationsToggle');
   const otherDevicePickerEl = document.getElementById('otherDevicePicker');
   const otherDeviceListGroup = document.getElementById('otherDeviceListGroup');
   const showPerSendTargetCheckbox = document.getElementById('showPerSendTarget');
@@ -408,7 +410,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'hideOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -560,6 +562,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load play sound on notification setting (default is true/enabled)
     playSoundOnNotificationCheckbox.checked = data.playSoundOnNotification !== false; // Default to true
     updatePlaySoundOnNotificationToggleVisual();
+
+    // Load hide OS notifications setting (default is false/off)
+    hideOsNotificationsCheckbox.checked = data.hideOsNotifications || false; // Default to false
+    updateHideOsNotificationsToggleVisual();
     
     // Update conditional visibility for default tab option
     updateDefaultTabVisibility();
@@ -753,6 +759,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   playSoundOnNotificationToggle.addEventListener('click', function() {
     playSoundOnNotificationCheckbox.checked = !playSoundOnNotificationCheckbox.checked;
     updatePlaySoundOnNotificationToggleVisual();
+  });
+
+  hideOsNotificationsToggle.addEventListener('click', function() {
+    hideOsNotificationsCheckbox.checked = !hideOsNotificationsCheckbox.checked;
+    updateHideOsNotificationsToggleVisual();
   });
 
   retrieveDevicesButton.addEventListener('click', async function() {
@@ -1071,7 +1082,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       languageMode: languageList.getValue(),
       colorMode: colorModeDropdown.getValue(),
       defaultTab: defaultTabDropdown.getValue(),
-      playSoundOnNotification: playSoundOnNotificationCheckbox.checked
+      playSoundOnNotification: playSoundOnNotificationCheckbox.checked,
+      hideOsNotifications: hideOsNotificationsCheckbox.checked
     };
     
     // Handle encryption password - derive key and store locally
@@ -1139,7 +1151,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab,
-      playSoundOnNotification: saveData.playSoundOnNotification
+      playSoundOnNotification: saveData.playSoundOnNotification,
+      hideOsNotifications: saveData.hideOsNotifications
     };
     
     // Save to both storages
@@ -1417,6 +1430,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       playSoundOnNotificationToggle.classList.add('active');
     } else {
       playSoundOnNotificationToggle.classList.remove('active');
+    }
+  }
+
+  function updateHideOsNotificationsToggleVisual() {
+    if (hideOsNotificationsCheckbox.checked) {
+      hideOsNotificationsToggle.classList.add('active');
+    } else {
+      hideOsNotificationsToggle.classList.remove('active');
     }
   }
   

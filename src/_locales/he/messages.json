@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "הסתר התראה כאשר היא נפתחת אוטומטית"
   },
+  "hide_os_notifications_label": {
+    "message": "הסתר התראות מערכת"
+  },
   "show_per_send_target_label": {
     "message": "הצג בורר יעד לכל שליחה בחלונית הקופצת"
   },

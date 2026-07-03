@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Ocultar notificação quando abre automaticamente"
   },
+  "hide_os_notifications_label": {
+    "message": "Ocultar notificações do sistema"
+  },
   "show_per_send_target_label": {
     "message": "Mostrar seletor de destino por envio no popup"
   },

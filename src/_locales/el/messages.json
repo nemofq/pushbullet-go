@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Απόκρυψη ειδοποίησης όταν ανοίγει αυτόματα"
   },
+  "hide_os_notifications_label": {
+    "message": "Απόκρυψη ειδοποιήσεων συστήματος"
+  },
   "show_per_send_target_label": {
     "message": "Εμφάνιση επιλογέα στόχου ανά αποστολή στο popup"
   },
