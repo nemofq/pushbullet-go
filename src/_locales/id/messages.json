@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Sembunyikan notifikasi saat dibuka otomatis"
   },
+  "hide_os_notifications_label": {
+    "message": "Sembunyikan notifikasi sistem"
+  },
   "show_per_send_target_label": {
     "message": "Tampilkan pemilih tujuan per-pengiriman di popup"
   },

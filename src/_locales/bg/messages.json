@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Скрий известието при автоматично отваряне"
   },
+  "hide_os_notifications_label": {
+    "message": "Скриване на системните известия"
+  },
   "show_per_send_target_label": {
     "message": "Показвай избор на цел за всяко изпращане в popup"
   },

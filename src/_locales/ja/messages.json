@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "自動で開いた時は通知を非表示"
   },
+  "hide_os_notifications_label": {
+    "message": "OS通知を非表示"
+  },
   "show_per_send_target_label": {
     "message": "ポップアップに送信ごとのターゲット選択を表示"
   },

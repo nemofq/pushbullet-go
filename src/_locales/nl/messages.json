@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Verberg melding bij automatisch openen"
   },
+  "hide_os_notifications_label": {
+    "message": "Systeemmeldingen verbergen"
+  },
   "show_per_send_target_label": {
     "message": "Doelkiezer per verzending in popup tonen"
   },

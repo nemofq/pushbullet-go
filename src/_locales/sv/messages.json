@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Dölj avisering vid automatisk öppning"
   },
+  "hide_os_notifications_label": {
+    "message": "Dölj systemaviseringar"
+  },
   "show_per_send_target_label": {
     "message": "Visa målväljare per sändning i popup"
   },

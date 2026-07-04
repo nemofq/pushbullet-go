@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Ascunde notificarea la deschidere automată"
   },
+  "hide_os_notifications_label": {
+    "message": "Ascunde notificările sistemului"
+  },
   "show_per_send_target_label": {
     "message": "Afișează selector de destinație per-trimitere în popup"
   },

@@ -314,6 +314,9 @@
   "hide_notification_on_auto_open_label": {
     "message": "Skrýt oznámení při automatickém otevření"
   },
+  "hide_os_notifications_label": {
+    "message": "Skrýt systémová oznámení"
+  },
   "show_per_send_target_label": {
     "message": "Zobrazit výběr cíle pro každé odeslání v popup"
   },
