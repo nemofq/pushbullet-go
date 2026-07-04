@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "ซ่อนการแจ้งเตือนเมื่อเปิดอัตโนมัติ"
   },
-  "hide_os_notifications_label": {
-    "message": "ซ่อนการแจ้งเตือนของระบบ"
-  },
   "show_per_send_target_label": {
     "message": "แสดงตัวเลือกเป้าหมายต่อการส่งในป๊อปอัพ"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "ไม่สามารถดึงข้อมูลอุปกรณ์และบุคคลได้ ตรวจสอบโทเค็นการเข้าถึงแล้วลองอีกครั้ง"
+  },
+  "show_os_notifications_label": {
+    "message": "แสดงการแจ้งเตือน"
   }
 }

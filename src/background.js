@@ -154,9 +154,10 @@ async function ensureOffscreenDocument() {
 
 async function playAlertSound() {
   try {
-    // Check if sound is enabled
-    const soundSettings = await chrome.storage.local.get('playSoundOnNotification');
-    if (soundSettings.playSoundOnNotification === false) {
+    // Check if sound is enabled; sound is a sub-option of the OS notifications
+    // master toggle, so it is muted when the master is off (absent means on)
+    const soundSettings = await chrome.storage.local.get(['playSoundOnNotification', 'showOsNotifications']);
+    if (soundSettings.playSoundOnNotification === false || soundSettings.showOsNotifications === false) {
       return; // Sound is disabled
     }
 
@@ -822,7 +823,7 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
                 let shouldHideNotification = push.dismissed === true;
                 
                 // Check if we should hide notifications from browser pushes
-                if (!shouldHideNotification && configData.hideBrowserPushes !== false && localData.chromeDeviceId) { // Default is true
+                if (!shouldHideNotification && configData.hideBrowserPushes === true && localData.chromeDeviceId) { // Default is false, matching the options page
                   // Hide notification if push is from the Chrome device
                   shouldHideNotification = push.source_device_iden === localData.chromeDeviceId;
                 }
@@ -914,14 +915,14 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
     }
 
     // Check if require interaction is enabled for pushes
-    const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'hideOsNotifications']);
+    const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'showOsNotifications']);
     if (notifPrefs.requireInteraction && notifPrefs.requireInteractionPushes) {
       notificationOptions.requireInteraction = true;
     }
 
-    // Suppress the desktop/OS notification when the user has opted out; the
-    // push is still recorded in the popup and counted as unread.
-    if (!notifPrefs.hideOsNotifications) {
+    // Skip the desktop/OS notification when the master toggle is off (absent
+    // means on); the push is still recorded in the popup and counted as unread.
+    if (notifPrefs.showOsNotifications !== false) {
       chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
     }
 
@@ -1060,7 +1061,7 @@ async function showMirrorNotification(notificationData) {
   }
 
   // Check if require interaction is enabled for mirrored notifications
-  const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored', 'hideOsNotifications']);
+  const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored', 'showOsNotifications']);
   if (notifPrefs.requireInteraction && notifPrefs.requireInteractionMirrored) {
     notificationOptions.requireInteraction = true;
   }
@@ -1068,9 +1069,9 @@ async function showMirrorNotification(notificationData) {
   // Use the UUID as notification ID for easy lookup
   const notificationId = `pushbullet-mirror-${notificationData.id}`;
 
-  // Suppress the desktop/OS notification when the user has opted out; the
-  // mirrored notification is still recorded and counted as unread.
-  if (!notifPrefs.hideOsNotifications) {
+  // Skip the desktop/OS notification when the master toggle is off (absent
+  // means on); the mirrored notification is still recorded and counted as unread.
+  if (notifPrefs.showOsNotifications !== false) {
     chrome.notifications.create(notificationId, notificationOptions);
   }
 

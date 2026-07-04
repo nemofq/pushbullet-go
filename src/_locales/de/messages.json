@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "Benachrichtigung beim automatischen Öffnen ausblenden"
   },
-  "hide_os_notifications_label": {
-    "message": "Systembenachrichtigungen ausblenden"
-  },
   "show_per_send_target_label": {
     "message": "Zielauswahl pro Senden im Popup anzeigen"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "Geräte und Personen konnten nicht abgerufen werden. Zugangstoken prüfen und erneut versuchen."
+  },
+  "show_os_notifications_label": {
+    "message": "Benachrichtigungen anzeigen"
   }
 }

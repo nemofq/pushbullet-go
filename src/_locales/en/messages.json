@@ -353,7 +353,7 @@
   "hide_notification_on_auto_open_label": {
     "message": "Hide notification when it has auto-opened"
   },
-  "hide_os_notifications_label": {
-    "message": "Hide OS notifications"
+  "show_os_notifications_label": {
+    "message": "Show notifications"
   }
 }

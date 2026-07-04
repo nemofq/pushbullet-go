@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "自动打开时隐藏通知"
   },
-  "hide_os_notifications_label": {
-    "message": "隐藏系统通知"
-  },
   "show_per_send_target_label": {
     "message": "在弹窗中显示每次发送的目标选择器"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "无法获取设备和联系人。请检查访问令牌后重试。"
+  },
+  "show_os_notifications_label": {
+    "message": "显示通知"
   }
 }

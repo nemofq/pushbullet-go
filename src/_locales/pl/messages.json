@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "Ukryj powiadomienie przy automatycznym otwarciu"
   },
-  "hide_os_notifications_label": {
-    "message": "Ukryj powiadomienia systemowe"
-  },
   "show_per_send_target_label": {
     "message": "Pokaż wybór celu wysyłki w oknie popup"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "Nie można pobrać urządzeń i osób. Sprawdź token dostępu i spróbuj ponownie."
+  },
+  "show_os_notifications_label": {
+    "message": "Pokaż powiadomienia"
   }
 }

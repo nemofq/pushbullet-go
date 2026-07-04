@@ -646,14 +646,6 @@
         </div>
       </div>
       <div class="toggle-container">
-        <label class="toggle-label" data-i18n="hide_browser_pushes_label">Hide notification of pushes sent from
-          browsers</label>
-        <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
-        <div class="toggle-switch" id="hideBrowserPushesToggle">
-          <div class="toggle-slider"></div>
-        </div>
-      </div>
-      <div class="toggle-container">
         <label class="toggle-label" data-i18n="auto_open_links_label">Auto-open in new tab (inactive) when receiving a
           link</label>
         <input type="checkbox" id="autoOpenLinks" class="toggle-input">
@@ -682,16 +674,31 @@
         </div>
       </div>
       <div class="toggle-container">
-        <label class="toggle-label" data-i18n="play_sound_on_notification_label">Play sound on notification</label>
-        <input type="checkbox" id="playSoundOnNotification" class="toggle-input">
-        <div class="toggle-switch" id="playSoundOnNotificationToggle">
+        <label class="toggle-label" data-i18n="show_os_notifications_label">Show notifications</label>
+        <input type="checkbox" id="showOsNotifications" class="toggle-input">
+        <div class="toggle-switch" id="showOsNotificationsToggle">
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="toggle-container">
-        <label class="toggle-label" data-i18n="hide_os_notifications_label">Hide OS notifications</label>
-        <input type="checkbox" id="hideOsNotifications" class="toggle-input">
-        <div class="toggle-switch" id="hideOsNotificationsToggle">
+      <!-- Sub-options start visible: the master above defaults to on (unlike
+           the requireInteraction group, whose master defaults to off) -->
+      <div class="toggle-container" id="hideBrowserPushesContainer" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="hide_browser_pushes_label">Hide notification of pushes sent from browsers</span>
+        </label>
+        <input type="checkbox" id="hideBrowserPushes" class="toggle-input">
+        <div class="toggle-switch" id="hideBrowserPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="playSoundOnNotificationContainer" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="play_sound_on_notification_label">Play sound on notification</span>
+        </label>
+        <input type="checkbox" id="playSoundOnNotification" class="toggle-input">
+        <div class="toggle-switch" id="playSoundOnNotificationToggle">
           <div class="toggle-slider"></div>
         </div>
       </div>

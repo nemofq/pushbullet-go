@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "Приховати сповіщення при автоматичному відкритті"
   },
-  "hide_os_notifications_label": {
-    "message": "Приховувати системні сповіщення"
-  },
   "show_per_send_target_label": {
     "message": "Показати вибір отримувача для кожного надсилання у спливаючому вікні"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "Не вдалося отримати пристрої та контакти. Перевірте токен доступу та спробуйте ще раз."
+  },
+  "show_os_notifications_label": {
+    "message": "Показувати сповіщення"
   }
 }

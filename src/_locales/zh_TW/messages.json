@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "自動開啟時隱藏通知"
   },
-  "hide_os_notifications_label": {
-    "message": "隱藏系統通知"
-  },
   "show_per_send_target_label": {
     "message": "在彈出視窗中顯示單次傳送目標選擇器"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "無法獲取裝置和聯絡人。請檢查訪問令牌並重試。"
+  },
+  "show_os_notifications_label": {
+    "message": "顯示通知"
   }
 }

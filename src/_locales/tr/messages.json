@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "Otomatik açıldığında bildirimi gizle"
   },
-  "hide_os_notifications_label": {
-    "message": "İşletim sistemi bildirimlerini gizle"
-  },
   "show_per_send_target_label": {
     "message": "Gönderim başına hedef seçiciyi popup'ta göster"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "Cihazlar ve kişiler getirilemedi. Erişim belirtecini kontrol edin ve tekrar deneyin."
+  },
+  "show_os_notifications_label": {
+    "message": "Bildirimleri göster"
   }
 }

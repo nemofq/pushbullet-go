@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "자동으로 열릴 때 알림 숨기기"
   },
-  "hide_os_notifications_label": {
-    "message": "OS 알림 숨기기"
-  },
   "show_per_send_target_label": {
     "message": "팝업에서 전송별 대상 선택기 표시"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "디바이스 및 사용자를 가져올 수 없습니다. 액세스 토큰을 확인하고 다시 시도하세요."
+  },
+  "show_os_notifications_label": {
+    "message": "알림 표시"
   }
 }

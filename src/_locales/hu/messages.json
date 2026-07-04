@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "Értesítés elrejtése automatikus megnyitáskor"
   },
-  "hide_os_notifications_label": {
-    "message": "Rendszerértesítések elrejtése"
-  },
   "show_per_send_target_label": {
     "message": "Céleszköz-választó megjelenítése a popup-ban"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "Nem sikerült lekérni az eszközöket és a személyeket. Ellenőrizze a hozzáférési tokent, majd próbálja újra."
+  },
+  "show_os_notifications_label": {
+    "message": "Értesítések megjelenítése"
   }
 }

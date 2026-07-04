@@ -314,9 +314,6 @@
   "hide_notification_on_auto_open_label": {
     "message": "Masquer la notification lors de l'ouverture automatique"
   },
-  "hide_os_notifications_label": {
-    "message": "Masquer les notifications du système"
-  },
   "show_per_send_target_label": {
     "message": "Afficher le sélecteur de destination par envoi dans la popup"
   },
@@ -355,5 +352,8 @@
   },
   "retrieve_failed": {
     "message": "Impossible de récupérer les appareils et personnes. Vérifiez le jeton d'accès et réessayez."
+  },
+  "show_os_notifications_label": {
+    "message": "Afficher les notifications"
   }
 }

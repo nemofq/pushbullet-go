@@ -49,8 +49,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   const defaultTabGroup = document.getElementById('defaultTabGroup');
   const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
   const playSoundOnNotificationToggle = document.getElementById('playSoundOnNotificationToggle');
-  const hideOsNotificationsCheckbox = document.getElementById('hideOsNotifications');
-  const hideOsNotificationsToggle = document.getElementById('hideOsNotificationsToggle');
+  const showOsNotificationsCheckbox = document.getElementById('showOsNotifications');
+  const showOsNotificationsToggle = document.getElementById('showOsNotificationsToggle');
+  const hideBrowserPushesContainer = document.getElementById('hideBrowserPushesContainer');
+  const playSoundOnNotificationContainer = document.getElementById('playSoundOnNotificationContainer');
   const otherDevicePickerEl = document.getElementById('otherDevicePicker');
   const otherDeviceListGroup = document.getElementById('otherDeviceListGroup');
   const showPerSendTargetCheckbox = document.getElementById('showPerSendTarget');
@@ -410,7 +412,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'hideOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -563,9 +565,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     playSoundOnNotificationCheckbox.checked = data.playSoundOnNotification !== false; // Default to true
     updatePlaySoundOnNotificationToggleVisual();
 
-    // Load hide OS notifications setting (default is false/off)
-    hideOsNotificationsCheckbox.checked = data.hideOsNotifications || false; // Default to false
-    updateHideOsNotificationsToggleVisual();
+    // Load show OS notifications master setting (default is true/on)
+    showOsNotificationsCheckbox.checked = data.showOsNotifications !== false; // Default to true
+    updateShowOsNotificationsToggleVisual();
+    updateShowOsNotificationsVisibility();
     
     // Update conditional visibility for default tab option
     updateDefaultTabVisibility();
@@ -761,9 +764,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     updatePlaySoundOnNotificationToggleVisual();
   });
 
-  hideOsNotificationsToggle.addEventListener('click', function() {
-    hideOsNotificationsCheckbox.checked = !hideOsNotificationsCheckbox.checked;
-    updateHideOsNotificationsToggleVisual();
+  showOsNotificationsToggle.addEventListener('click', function() {
+    showOsNotificationsCheckbox.checked = !showOsNotificationsCheckbox.checked;
+    updateShowOsNotificationsToggleVisual();
+    updateShowOsNotificationsVisibility();
   });
 
   retrieveDevicesButton.addEventListener('click', async function() {
@@ -1083,7 +1087,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       colorMode: colorModeDropdown.getValue(),
       defaultTab: defaultTabDropdown.getValue(),
       playSoundOnNotification: playSoundOnNotificationCheckbox.checked,
-      hideOsNotifications: hideOsNotificationsCheckbox.checked
+      showOsNotifications: showOsNotificationsCheckbox.checked
     };
     
     // Handle encryption password - derive key and store locally
@@ -1152,7 +1156,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab,
       playSoundOnNotification: saveData.playSoundOnNotification,
-      hideOsNotifications: saveData.hideOsNotifications
+      showOsNotifications: saveData.showOsNotifications
     };
     
     // Save to both storages
@@ -1433,11 +1437,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
 
-  function updateHideOsNotificationsToggleVisual() {
-    if (hideOsNotificationsCheckbox.checked) {
-      hideOsNotificationsToggle.classList.add('active');
+  function updateShowOsNotificationsToggleVisual() {
+    if (showOsNotificationsCheckbox.checked) {
+      showOsNotificationsToggle.classList.add('active');
     } else {
-      hideOsNotificationsToggle.classList.remove('active');
+      showOsNotificationsToggle.classList.remove('active');
+    }
+  }
+
+  function updateShowOsNotificationsVisibility() {
+    if (showOsNotificationsCheckbox.checked) {
+      hideBrowserPushesContainer.style.display = 'flex';
+      playSoundOnNotificationContainer.style.display = 'flex';
+    } else {
+      hideBrowserPushesContainer.style.display = 'none';
+      playSoundOnNotificationContainer.style.display = 'none';
     }
   }
   
