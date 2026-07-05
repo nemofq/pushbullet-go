@@ -742,7 +742,19 @@ async function handleReconnection() {
   }
 }
 
-async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) {
+// Refreshes run strictly one at a time. Overlapping runs (ws.onopen plus an
+// immediately-following tickle) would read the same lastModified/pushes
+// baseline and notify and count the same pushes twice; a queued run sees the
+// updated baseline instead and fetches nothing new.
+let refreshQueue = Promise.resolve();
+
+function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) {
+  const run = refreshQueue.then(() => doRefreshPushList(isFromTickle, allowAutoOpenLinks));
+  refreshQueue = run.catch(() => {});
+  return run;
+}
+
+async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
   if (!accessToken) return;
   
   try {
@@ -779,61 +791,6 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
         // Handle new pushes
         if (newPushes.length > 0) {
           pushes.unshift(...newPushes);
-          
-          // Show notifications for new pushes (only if from tickle, meaning real-time)
-          if (isFromTickle) {
-            // Apply device filtering for notifications (same as popup display)
-            const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
-            const localData = await chrome.storage.local.get('chromeDeviceId');
-
-            newPushes.forEach(push => {
-              // Apply new flexible push filtering
-              let shouldShowPush = false;
-
-              // Check if push should be shown based on target device
-              const targetDeviceIden = push.target_device_iden;
-
-              if (targetDeviceIden === localData.chromeDeviceId) {
-                // Push is targeted to current Chrome device
-                shouldShowPush = configData.onlyBrowserPushes !== false; // Default is true
-              } else if (targetDeviceIden && targetDeviceIden !== localData.chromeDeviceId) {
-                // Push is targeted to other device
-                if (configData.showOtherDevicePushes === true) {
-                  // Check if specific devices are selected
-                  const selectedIds = configData.selectedOtherDeviceIds || '';
-
-                  if (!selectedIds) {
-                    // Empty means all other devices (backward compatible)
-                    shouldShowPush = true;
-                  } else {
-                    // Check if this device is in the selected list
-                    const deviceIds = selectedIds.split(',').map(id => id.trim());
-                    shouldShowPush = deviceIds.includes(targetDeviceIden);
-                  }
-                } else {
-                  shouldShowPush = false;
-                }
-              } else if (!targetDeviceIden) {
-                // Push has no target device (sent to all)
-                shouldShowPush = configData.showNoTargetPushes === true; // Default is false
-              }
-              
-              if (shouldShowPush) {
-                // Skip notifications for dismissed pushes
-                let shouldHideNotification = push.dismissed === true;
-                
-                // Check if we should hide notifications from browser pushes
-                if (!shouldHideNotification && configData.hideBrowserPushes === true && localData.chromeDeviceId) { // Default is false, matching the options page
-                  // Hide notification if push is from the Chrome device
-                  shouldHideNotification = push.source_device_iden === localData.chromeDeviceId;
-                }
-                
-                if (!shouldHideNotification) {
-                  showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false);
-                }
-              }
-            });
-          }
         }
         
         // Handle updated pushes
@@ -856,6 +813,74 @@ async function refreshPushList(isFromTickle = false, allowAutoOpenLinks = true) 
         if (newPushes.length > 0 || updatedPushes.length > 0) {
           await chrome.storage.local.set({ pushes: pushes.slice(0, 100) });
         }
+
+        // Show notifications for new pushes (only if from tickle, meaning
+        // real-time). Runs after the list write so the popup reflects the
+        // whole batch immediately. The unread count is applied once for the
+        // batch: per-push increments are racy read-modify-writes that drop
+        // updates when a resume delivers many pushes at once.
+        if (isFromTickle && newPushes.length > 0) {
+          // Apply device filtering for notifications (same as popup display)
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const localData = await chrome.storage.local.get('chromeDeviceId');
+
+          const pushesToNotify = newPushes.filter(push => {
+            // Apply new flexible push filtering
+            let shouldShowPush = false;
+
+            // Check if push should be shown based on target device
+            const targetDeviceIden = push.target_device_iden;
+
+            if (targetDeviceIden === localData.chromeDeviceId) {
+              // Push is targeted to current Chrome device
+              shouldShowPush = configData.onlyBrowserPushes !== false; // Default is true
+            } else if (targetDeviceIden && targetDeviceIden !== localData.chromeDeviceId) {
+              // Push is targeted to other device
+              if (configData.showOtherDevicePushes === true) {
+                // Check if specific devices are selected
+                const selectedIds = configData.selectedOtherDeviceIds || '';
+
+                if (!selectedIds) {
+                  // Empty means all other devices (backward compatible)
+                  shouldShowPush = true;
+                } else {
+                  // Check if this device is in the selected list
+                  const deviceIds = selectedIds.split(',').map(id => id.trim());
+                  shouldShowPush = deviceIds.includes(targetDeviceIden);
+                }
+              } else {
+                shouldShowPush = false;
+              }
+            } else if (!targetDeviceIden) {
+              // Push has no target device (sent to all)
+              shouldShowPush = configData.showNoTargetPushes === true; // Default is false
+            }
+
+            if (!shouldShowPush) {
+              return false;
+            }
+
+            // Skip notifications for dismissed pushes
+            let shouldHideNotification = push.dismissed === true;
+
+            // Check if we should hide notifications from browser pushes
+            if (!shouldHideNotification && configData.hideBrowserPushes === true && localData.chromeDeviceId) { // Default is false, matching the options page
+              // Hide notification if push is from the Chrome device
+              shouldHideNotification = push.source_device_iden === localData.chromeDeviceId;
+            }
+
+            return !shouldHideNotification;
+          });
+
+          const counted = await Promise.all(pushesToNotify.map(push =>
+            showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false)
+          ));
+
+          const unreadDelta = counted.filter(Boolean).length;
+          if (unreadDelta > 0) {
+            await incrementUnreadPushCount(unreadDelta);
+          }
+        }
       }
       
     }
@@ -871,6 +896,10 @@ function normalizeOpenUrl(url) {
   return url.toLowerCase().startsWith('www.') ? 'https://' + url : url;
 }
 
+// Resolves with whether the push counts toward the unread badge — false only
+// when the push is auto-opened with hideNotificationOnAutoOpen. The caller
+// tallies a whole batch into one counter write, so the decision is made before
+// the side effects below, and their failures neither reject nor change it.
 async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false) {
   // Determine if this push will actually be auto-opened
   const autoOpenUrl = (push.type === 'link' && autoOpenLinks) ? normalizeOpenUrl(push.url) : null;
@@ -881,62 +910,65 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
   // 2. This is a link push that will be auto-opened
   const shouldSkipNotification = willAutoOpen && hideNotificationOnAutoOpen;
 
-  if (!shouldSkipNotification) {
-    let notificationBody = '';
+  try {
+    if (!shouldSkipNotification) {
+      let notificationBody = '';
 
-    if (push.type === 'note') {
-      notificationBody = push.body || getMessage('new_note');
-    } else if (push.type === 'link') {
-      notificationBody = push.body || push.url || getMessage('new_link');
-    } else if (push.type === 'file') {
-      notificationBody = push.body || `${getMessage('file_prefix')}${push.file_name}` || getMessage('new_file');
-    } else {
-      notificationBody = push.body || getMessage('new_push');
+      if (push.type === 'note') {
+        notificationBody = push.body || getMessage('new_note');
+      } else if (push.type === 'link') {
+        notificationBody = push.body || push.url || getMessage('new_link');
+      } else if (push.type === 'file') {
+        notificationBody = push.body || `${getMessage('file_prefix')}${push.file_name}` || getMessage('new_file');
+      } else {
+        notificationBody = push.body || getMessage('new_push');
+      }
+
+      const notificationOptions = {
+        type: 'basic',
+        iconUrl: 'assets/icon128.png',
+        title: push.title || '',
+        message: notificationBody
+      };
+
+      // Add buttons based on push type
+      if (push.type === 'link' || push.type === 'file') {
+        notificationOptions.buttons = [
+          { title: getMessage('open_button') },
+          { title: getMessage('dismiss_button') }
+        ];
+      } else {
+        // For note and other types, only add dismiss button
+        notificationOptions.buttons = [
+          { title: getMessage('dismiss_button') }
+        ];
+      }
+
+      // Check if require interaction is enabled for pushes
+      const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'showOsNotifications']);
+      if (notifPrefs.requireInteraction && notifPrefs.requireInteractionPushes) {
+        notificationOptions.requireInteraction = true;
+      }
+
+      // Skip the desktop/OS notification when the master toggle is off (absent
+      // means on); the push is still recorded in the popup and counted as unread.
+      if (notifPrefs.showOsNotifications !== false) {
+        chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
+      }
     }
 
-    const notificationOptions = {
-      type: 'basic',
-      iconUrl: 'assets/icon128.png',
-      title: push.title || '',
-      message: notificationBody
-    };
+    // Play alert sound (happens whenever push is processed, respects global sound setting)
+    await playAlertSound();
 
-    // Add buttons based on push type
-    if (push.type === 'link' || push.type === 'file') {
-      notificationOptions.buttons = [
-        { title: getMessage('open_button') },
-        { title: getMessage('dismiss_button') }
-      ];
-    } else {
-      // For note and other types, only add dismiss button
-      notificationOptions.buttons = [
-        { title: getMessage('dismiss_button') }
-      ];
+    // Auto-open link pushes in background tabs (happens regardless of notification)
+    if (autoOpenUrl) {
+      chrome.tabs.create({ url: autoOpenUrl, active: false });
     }
-
-    // Check if require interaction is enabled for pushes
-    const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'showOsNotifications']);
-    if (notifPrefs.requireInteraction && notifPrefs.requireInteractionPushes) {
-      notificationOptions.requireInteraction = true;
-    }
-
-    // Skip the desktop/OS notification when the master toggle is off (absent
-    // means on); the push is still recorded in the popup and counted as unread.
-    if (notifPrefs.showOsNotifications !== false) {
-      chrome.notifications.create(`pushbullet-${push.iden}-${Date.now()}`, notificationOptions);
-    }
-
-    // Increment unread push count
-    await incrementUnreadPushCount();
+  } catch (error) {
+    console.error('Failed to show notification for push:', error);
   }
 
-  // Play alert sound (happens whenever push is processed, respects global sound setting)
-  await playAlertSound();
-
-  // Auto-open link pushes in background tabs (happens regardless of notification)
-  if (autoOpenUrl) {
-    chrome.tabs.create({ url: autoOpenUrl, active: false });
-  }
+  return !shouldSkipNotification;
 }
 
 const MIRROR_ICON_MAX_SIZE = 256;
@@ -1399,67 +1431,50 @@ async function storeSentMessage(push) {
   await chrome.storage.local.set({ sentMessages: sentMessages.slice(0, 100) });
 }
 
-// Unread count management functions
-async function incrementUnreadPushCount() {
-  try {
-    const data = await chrome.storage.local.get('unreadPushCount');
-    const currentCount = data.unreadPushCount || 0;
-    await chrome.storage.local.set({ unreadPushCount: currentCount + 1 });
-    await updateBadge();
-  } catch (error) {
-    console.error('Failed to increment unread push count:', error);
-  }
+// Unread count management functions. Both counters are read-modify-write on
+// storage with this service worker as the only writer, so every mutation runs
+// through one queue: overlapping updates (a batch increment against a
+// dismissal decrement or a popup clear) would otherwise read the same starting
+// value and silently drop each other's writes.
+let unreadCountOps = Promise.resolve();
+
+function updateUnreadCount(storageKey, mutate) {
+  const run = unreadCountOps.then(async () => {
+    try {
+      const data = await chrome.storage.local.get(storageKey);
+      const next = Math.max(0, mutate(data[storageKey] || 0));
+      await chrome.storage.local.set({ [storageKey]: next });
+      await updateBadge();
+    } catch (error) {
+      console.error(`Failed to update ${storageKey}:`, error);
+    }
+  });
+  unreadCountOps = run.catch(() => {});
+  return run;
+}
+
+async function incrementUnreadPushCount(count = 1) {
+  return updateUnreadCount('unreadPushCount', current => current + count);
 }
 
 async function incrementUnreadMirrorCount() {
-  try {
-    const data = await chrome.storage.local.get('unreadMirrorCount');
-    const currentCount = data.unreadMirrorCount || 0;
-    await chrome.storage.local.set({ unreadMirrorCount: currentCount + 1 });
-    await updateBadge();
-  } catch (error) {
-    console.error('Failed to increment unread mirror count:', error);
-  }
+  return updateUnreadCount('unreadMirrorCount', current => current + 1);
 }
 
 async function decrementUnreadPushCount() {
-  try {
-    const data = await chrome.storage.local.get('unreadPushCount');
-    const currentCount = Math.max(0, (data.unreadPushCount || 0) - 1);
-    await chrome.storage.local.set({ unreadPushCount: currentCount });
-    await updateBadge();
-  } catch (error) {
-    console.error('Failed to decrement unread push count:', error);
-  }
+  return updateUnreadCount('unreadPushCount', current => current - 1);
 }
 
 async function clearUnreadPushCount() {
-  try {
-    await chrome.storage.local.set({ unreadPushCount: 0 });
-    await updateBadge();
-  } catch (error) {
-    console.error('Failed to clear unread push count:', error);
-  }
+  return updateUnreadCount('unreadPushCount', () => 0);
 }
 
 async function decrementUnreadMirrorCount() {
-  try {
-    const data = await chrome.storage.local.get('unreadMirrorCount');
-    const currentCount = Math.max(0, (data.unreadMirrorCount || 0) - 1);
-    await chrome.storage.local.set({ unreadMirrorCount: currentCount });
-    await updateBadge();
-  } catch (error) {
-    console.error('Failed to decrement unread mirror count:', error);
-  }
+  return updateUnreadCount('unreadMirrorCount', current => current - 1);
 }
 
 async function clearUnreadMirrorCount() {
-  try {
-    await chrome.storage.local.set({ unreadMirrorCount: 0 });
-    await updateBadge();
-  } catch (error) {
-    console.error('Failed to clear unread mirror count:', error);
-  }
+  return updateUnreadCount('unreadMirrorCount', () => 0);
 }
 
 async function updateBadge() {
