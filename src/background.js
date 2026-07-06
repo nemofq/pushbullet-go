@@ -1056,6 +1056,40 @@ async function handleMirrorNotification(mirrorData) {
   const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
   const notifications = existingNotifications.mirrorNotifications || [];
 
+  const existingIndex = notifications.findIndex(n =>
+    n.package_name === notificationData.package_name &&
+    n.notification_id === notificationData.notification_id
+  );
+
+  if (existingIndex !== -1) {
+    notificationData.id = notifications[existingIndex].id;
+    notifications[existingIndex] = notificationData;
+    await chrome.storage.local.set({ mirrorNotifications: notifications });
+
+    const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored', 'showOsNotifications']);
+    if (notifPrefs.showOsNotifications !== false) {
+      const appName = notificationData.application_name || notificationData.package_name || getMessage('unknown_app');
+      let message = '';
+      if (notificationData.title) message += `${notificationData.title}\n`;
+      if (notificationData.body) message += `${notificationData.body}`;
+      const notificationOptions = {
+        type: 'basic',
+        title: appName,
+        message: message.trim() || getMessage('new_notification')
+      };
+      const processedIconUrl = await getMirrorIconDataUrl(notificationData.icon);
+      notificationOptions.iconUrl = processedIconUrl || 'assets/icon128.png';
+      if (notificationData.dismissible) {
+        notificationOptions.buttons = [{ title: getMessage('dismiss_button') }];
+      }
+      if (notifPrefs.requireInteraction && notifPrefs.requireInteractionMirrored) {
+        notificationOptions.requireInteraction = true;
+      }
+      chrome.notifications.update(`pushbullet-mirror-${notificationData.id}`, notificationOptions);
+    }
+    return;
+  }
+
   notifications.unshift(notificationData);
   await chrome.storage.local.set({
     mirrorNotifications: notifications.slice(0, 100)
@@ -1341,6 +1375,10 @@ async function handleMirrorDismissal(dismissalData) {
       console.log(`Clearing mirror notification for dismissal: ${dismissalData.package_name}`);
       await chrome.notifications.clear(notificationId);
     }
+
+    const updated = notifications.filter(n => n !== notification);
+    await chrome.storage.local.set({ mirrorNotifications: updated });
+    await decrementUnreadMirrorCount();
   } catch (error) {
     console.error('Error handling mirror dismissal:', error);
   }
