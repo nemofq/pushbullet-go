@@ -1288,11 +1288,10 @@ async function showMirrorNotification(notificationData, isUpdate = false) {
   // Play alert sound
   await playAlertSound();
 
-  // Increment unread mirrored notification count; a replacement was already
-  // counted when the notification first arrived
-  if (!isUpdate) {
-    await incrementUnreadMirrorCount();
-  }
+  // Increment unread mirrored notification count. In-place updates count
+  // too: the badge tracks mirror activity since the popup was last opened,
+  // with no per-entry read state.
+  await incrementUnreadMirrorCount();
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
