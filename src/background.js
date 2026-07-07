@@ -1014,6 +1014,39 @@ async function getMirrorIconDataUrl(iconBase64) {
   }
 }
 
+// Android identifies an active notification by the (package_name,
+// notification_tag, notification_id) triple; a repeated mirror of the same
+// triple is a content update of that notification, not a new one.
+function isSameMirrorNotification(a, b) {
+  return a.package_name === b.package_name &&
+    (a.notification_tag ?? null) === (b.notification_tag ?? null) &&
+    a.notification_id === b.notification_id;
+}
+
+// mirrorNotifications is read-modify-write from several concurrent entry
+// points (new mirrors, phone-side dismissals, extension-side dismissals,
+// popup deletes); like unreadCountOps, one queue keeps overlapping mutations
+// from reading the same starting array and dropping each other's writes.
+// mutate() gets the stored array and returns the next one, or falsy to skip
+// the write.
+let mirrorStoreOps = Promise.resolve();
+
+function updateMirrorNotifications(mutate) {
+  const run = mirrorStoreOps.then(async () => {
+    try {
+      const data = await chrome.storage.local.get('mirrorNotifications');
+      const next = mutate(data.mirrorNotifications || []);
+      if (next) {
+        await chrome.storage.local.set({ mirrorNotifications: next });
+      }
+    } catch (error) {
+      console.error('Failed to update mirrorNotifications:', error);
+    }
+  });
+  mirrorStoreOps = run.catch(() => {});
+  return run;
+}
+
 async function handleMirrorNotification(mirrorData) {
   // Check if notification mirroring is enabled
   const configData = await chrome.storage.local.get('notificationMirroring');
@@ -1052,54 +1085,26 @@ async function handleMirrorNotification(mirrorData) {
     }
   }
 
-  // Store in local storage (keep latest 100)
-  const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
-  const notifications = existingNotifications.mirrorNotifications || [];
-
-  const existingIndex = notifications.findIndex(n =>
-    n.package_name === notificationData.package_name &&
-    n.notification_id === notificationData.notification_id
-  );
-
-  if (existingIndex !== -1) {
-    notificationData.id = notifications[existingIndex].id;
-    notifications[existingIndex] = notificationData;
-    await chrome.storage.local.set({ mirrorNotifications: notifications });
-
-    const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionMirrored', 'showOsNotifications']);
-    if (notifPrefs.showOsNotifications !== false) {
-      const appName = notificationData.application_name || notificationData.package_name || getMessage('unknown_app');
-      let message = '';
-      if (notificationData.title) message += `${notificationData.title}\n`;
-      if (notificationData.body) message += `${notificationData.body}`;
-      const notificationOptions = {
-        type: 'basic',
-        title: appName,
-        message: message.trim() || getMessage('new_notification')
-      };
-      const processedIconUrl = await getMirrorIconDataUrl(notificationData.icon);
-      notificationOptions.iconUrl = processedIconUrl || 'assets/icon128.png';
-      if (notificationData.dismissible) {
-        notificationOptions.buttons = [{ title: getMessage('dismiss_button') }];
-      }
-      if (notifPrefs.requireInteraction && notifPrefs.requireInteractionMirrored) {
-        notificationOptions.requireInteraction = true;
-      }
-      chrome.notifications.update(`pushbullet-mirror-${notificationData.id}`, notificationOptions);
+  // Store in local storage (keep latest 100). A repeated mirror of an
+  // existing notification replaces its entry but keeps the stored UUID, so
+  // the Chrome notification and the dismissal flows stay addressable.
+  let isUpdate = false;
+  await updateMirrorNotifications((notifications) => {
+    const existingIndex = notifications.findIndex(n => isSameMirrorNotification(n, notificationData));
+    if (existingIndex !== -1) {
+      notificationData.id = notifications[existingIndex].id;
+      notifications.splice(existingIndex, 1);
+      isUpdate = true;
     }
-    return;
-  }
-
-  notifications.unshift(notificationData);
-  await chrome.storage.local.set({
-    mirrorNotifications: notifications.slice(0, 100)
+    notifications.unshift(notificationData);
+    return notifications.slice(0, 100);
   });
 
-  // Create Chrome notification
-  await showMirrorNotification(notificationData);
+  // Create or replace Chrome notification
+  await showMirrorNotification(notificationData, isUpdate);
 }
 
-async function showMirrorNotification(notificationData) {
+async function showMirrorNotification(notificationData, isUpdate = false) {
   const appName = notificationData.application_name || notificationData.package_name || getMessage('unknown_app');
 
   let message = '';
@@ -1138,14 +1143,23 @@ async function showMirrorNotification(notificationData) {
   // Skip the desktop/OS notification when the master toggle is off (absent
   // means on); the mirrored notification is still recorded and counted as unread.
   if (notifPrefs.showOsNotifications !== false) {
+    if (isUpdate) {
+      // clear() first so the replacement re-alerts; create() alone can
+      // coalesce into a still-visible toast without alerting. update() would
+      // show nothing at all once the old toast is gone.
+      await chrome.notifications.clear(notificationId);
+    }
     chrome.notifications.create(notificationId, notificationOptions);
   }
 
   // Play alert sound
   await playAlertSound();
 
-  // Increment unread mirrored notification count
-  await incrementUnreadMirrorCount();
+  // Increment unread mirrored notification count; a replacement was already
+  // counted when the notification first arrived
+  if (!isUpdate) {
+    await incrementUnreadMirrorCount();
+  }
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
@@ -1342,6 +1356,9 @@ async function dismissMirrorNotification(notificationId) {
     
     if (response.ok) {
       console.log('Mirror notification dismissed successfully');
+      // Remove locally right away; the server echoes our own dismissal back
+      // over the websocket and handleMirrorDismissal must find nothing then.
+      await updateMirrorNotifications(notifications => notifications.filter(n => n.id !== uuid));
       // Decrement unread mirror count when successfully dismissed
       await decrementUnreadMirrorCount();
     } else {
@@ -1354,13 +1371,13 @@ async function dismissMirrorNotification(notificationId) {
 
 async function handleMirrorDismissal(dismissalData) {
   try {
-    // Find matching notification in storage by package_name and notification_id
-    const existingNotifications = await chrome.storage.local.get('mirrorNotifications');
-    const notifications = existingNotifications.mirrorNotifications || [];
-    const notification = notifications.find(n =>
-      n.package_name === dismissalData.package_name &&
-      n.notification_id === dismissalData.notification_id
-    );
+    // Find and remove the matching stored notification. Nothing found means
+    // the dismissal was already handled (e.g. the echo of our own dismissal).
+    let notification;
+    await updateMirrorNotifications((notifications) => {
+      notification = notifications.find(n => isSameMirrorNotification(n, dismissalData));
+      return notification ? notifications.filter(n => n.id !== notification.id) : null;
+    });
 
     if (!notification) {
       console.log('No matching notification found for dismissal');
@@ -1376,8 +1393,6 @@ async function handleMirrorDismissal(dismissalData) {
       await chrome.notifications.clear(notificationId);
     }
 
-    const updated = notifications.filter(n => n !== notification);
-    await chrome.storage.local.set({ mirrorNotifications: updated });
     await decrementUnreadMirrorCount();
   } catch (error) {
     console.error('Error handling mirror dismissal:', error);
@@ -2035,31 +2050,16 @@ async function clearPushHistory() {
 }
 
 async function clearMirrorHistory() {
-  try {
-    await chrome.storage.local.set({
-      mirrorNotifications: [],
-      unreadMirrorCount: 0
-    });
-    await updateBadge();
-    console.log('Mirror notification history cleared');
-  } catch (error) {
-    console.error('Failed to clear mirror history:', error);
-  }
+  await updateMirrorNotifications(() => []);
+  await clearUnreadMirrorCount();
+  console.log('Mirror notification history cleared');
 }
 
 async function deleteNotification(id) {
-  try {
-    const data = await chrome.storage.local.get('mirrorNotifications');
-    let notifications = data.mirrorNotifications || [];
-
-    // Filter out the notification with the matching unique ID
-    notifications = notifications.filter(notification => notification.id !== id);
-
-    await chrome.storage.local.set({ mirrorNotifications: notifications });
-    console.log('Notification deleted:', id);
-  } catch (error) {
-    console.error('Failed to delete notification:', error);
-  }
+  // Filter out the notification with the matching unique ID
+  await updateMirrorNotifications(notifications =>
+    notifications.filter(notification => notification.id !== id));
+  console.log('Notification deleted:', id);
 }
 
 async function deletePush(iden) {
