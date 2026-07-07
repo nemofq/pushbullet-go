@@ -252,8 +252,47 @@ async function migrateSpecificFieldsFromSyncToLocal() {
   }
 }
 
+// One-time migration of the devices and people lists from sync to local
+// storage. sync caps each item at 8KB (QUOTA_BYTES_PER_ITEM), which the raw
+// devices array can exceed for accounts with many devices.
+async function migrateDevicesPeopleFromSyncToLocal() {
+  try {
+    const migrationCheck = await chrome.storage.local.get('migrationFromSyncCompleted_v3');
+    if (migrationCheck.migrationFromSyncCompleted_v3) {
+      return; // Already migrated
+    }
+
+    const syncData = await chrome.storage.sync.get(['devices', 'people']);
+    const localData = await chrome.storage.local.get(['devices', 'people']);
+
+    // Copy only keys local doesn't already have, so a fresher copy written by
+    // ensureDeviceDataFromServer() is never clobbered by the stale sync copy
+    const toCopy = {};
+    if (syncData.devices !== undefined && localData.devices === undefined) {
+      toCopy.devices = syncData.devices;
+    }
+    if (syncData.people !== undefined && localData.people === undefined) {
+      toCopy.people = syncData.people;
+    }
+
+    if (Object.keys(toCopy).length > 0) {
+      console.log('Migrating devices/people lists from sync to local storage:', Object.keys(toCopy));
+      await chrome.storage.local.set(toCopy);
+    }
+
+    // Always clear the sync copies to free sync quota (no-op if absent)
+    await chrome.storage.sync.remove(['devices', 'people']);
+
+    await chrome.storage.local.set({ migrationFromSyncCompleted_v3: true });
+  } catch (error) {
+    console.error('Devices/people migration failed:', error);
+    // Don't set migration as completed if it failed, so it can retry next time
+  }
+}
+
 // Run migration immediately when background script loads
 migrateSpecificFieldsFromSyncToLocal();
+const devicesPeopleMigration = migrateDevicesPeopleFromSyncToLocal();
 
 // Initialize encryption if key is stored
 async function initializeEncryption() {
@@ -351,7 +390,7 @@ initializeBackgroundI18n().then(async () => {
 });
 
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
-  if (namespace === 'sync' && (changes.devices || changes.people)) {
+  if (namespace === 'local' && (changes.devices || changes.people)) {
     await setupContextMenus();
   }
   if (namespace === 'local' && changes.languageMode) {
@@ -440,13 +479,12 @@ async function handleTokenUpdated() {
     // Check if token was removed (sign-out)
     const data = await chrome.storage.sync.get('accessToken');
     if (!data.accessToken) {
-      // Clear all encryption keys on sign-out
+      // Clear all encryption keys and account data on sign-out
       const localData = await chrome.storage.local.get(null);
       const keysToRemove = Object.keys(localData).filter(key => key.startsWith('encryptionKey_'));
-      if (keysToRemove.length > 0) {
-        await chrome.storage.local.remove(keysToRemove);
-        console.log('Cleared encryption keys on sign-out');
-      }
+      keysToRemove.push('devices', 'people', 'chromeDeviceId');
+      await chrome.storage.local.remove(keysToRemove);
+      console.log('Cleared encryption keys and account data on sign-out');
     }
   } catch (error) {
     console.error('Sign-out cleanup failed:', error);
@@ -495,6 +533,93 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
   }
 });
 
+// Fetch the devices and people lists from the server when a token exists but
+// the local lists are missing or empty (new machine that received the token
+// via Chrome sync, token saved without running Retrieve, post sign-out).
+// Mirrors the options-page Retrieve flow, including creating this browser's
+// chrome-type device if the account has never had one. Read-only otherwise;
+// safe to re-run on every service-worker start.
+let isEnsuringDeviceData = false;
+
+async function ensureDeviceDataFromServer() {
+  if (isEnsuringDeviceData) {
+    return;
+  }
+  isEnsuringDeviceData = true;
+
+  try {
+    // Let the one-time migration finish first so its sync copy (if any) wins
+    // over a needless network fetch
+    await devicesPeopleMigration;
+
+    const token = await getAccessToken();
+    if (!token) return;
+
+    const localData = await chrome.storage.local.get('devices');
+    if (localData.devices && localData.devices.length > 0) return;
+
+    const devicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
+      headers: { 'Access-Token': token }
+    });
+    if (!devicesResponse.ok) return; // Retry on a later service-worker start
+
+    const devicesData = await devicesResponse.json();
+    let devices = devicesData.devices || [];
+
+    // Deleted devices come back as inactive tombstones and still count here,
+    // so a device the user removed on pushbullet.com is not resurrected
+    const hasChromeDevice = devices.some(device => device.type === 'chrome');
+    if (!hasChromeDevice) {
+      console.log('No Chrome device found, creating one...');
+      const createDeviceResponse = await fetch('https://api.pushbullet.com/v2/devices', {
+        method: 'POST',
+        headers: {
+          'Access-Token': token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nickname: 'Chrome',
+          type: 'chrome',
+          model: 'Chrome'
+        })
+      });
+
+      if (createDeviceResponse.ok) {
+        const updatedDevicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
+          headers: { 'Access-Token': token }
+        });
+        if (updatedDevicesResponse.ok) {
+          const updatedDevicesData = await updatedDevicesResponse.json();
+          devices = updatedDevicesData.devices || [];
+        }
+      } else {
+        console.warn('Failed to create Chrome device:', createDeviceResponse.status, createDeviceResponse.statusText);
+      }
+    }
+
+    const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats', {
+      headers: { 'Access-Token': token }
+    });
+    if (!chatsResponse.ok) return; // Save nothing partial; retry later
+
+    const chatsData = await chatsResponse.json();
+    const people = (chatsData.chats || [])
+      .filter(chat => chat.active === true)
+      .map(chat => ({
+        email_normalized: chat.with.email_normalized,
+        name: chat.with.name
+      }));
+
+    const chromeDevice = devices.find(device => device.active && device.pushable !== false && device.type === 'chrome');
+    const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
+
+    await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId });
+    console.log(`Device data fetched from server: ${devices.length} devices, ${people.length} people`);
+  } finally {
+    isEnsuringDeviceData = false;
+  }
+}
+
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
   const localData = await chrome.storage.local.get('lastModified');
@@ -517,6 +642,12 @@ async function initializeExtension() {
 
   // Update badge on initialization
   await updateBadge();
+
+  // Repopulate local device data if it's missing (never awaited — must not
+  // delay connection setup)
+  ensureDeviceDataFromServer().catch(error => {
+    console.error('Failed to ensure device data:', error);
+  });
 }
 
 
@@ -1592,8 +1723,12 @@ async function setupContextMenus() {
   
   return new Promise((resolve) => {
     chrome.contextMenus.removeAll(async () => {
+      // Wait for the one-time sync→local migration so the first build after
+      // an update doesn't read local before the lists land (the concurrency
+      // guard above drops the rebuild the migration would otherwise trigger)
+      await devicesPeopleMigration;
       // Get stored devices and people data
-      const data = await chrome.storage.sync.get(['devices', 'people']);
+      const data = await chrome.storage.local.get(['devices', 'people']);
       const devices = data.devices || [];
       const people = data.people || [];
     

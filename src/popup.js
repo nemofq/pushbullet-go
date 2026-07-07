@@ -904,12 +904,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function initTargetSelector() {
-    const [configData, syncData] = await Promise.all([
-      chrome.storage.local.get(['showPerSendTarget', 'remoteDeviceId']),
-      chrome.storage.sync.get('devices')
-    ]);
+    const configData = await chrome.storage.local.get(['showPerSendTarget', 'remoteDeviceId', 'devices']);
 
-    const devices = syncData.devices || [];
+    const devices = configData.devices || [];
     targetDevices = devices.filter(device => device.active && device.pushable !== false);
 
     // Drop selections that no longer point at an existing pushable device
@@ -1336,10 +1333,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (areaName === 'local' && changes.showQuickShare) {
       checkQuickShare();
     }
-    if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId)) {
-      initTargetSelector();
-    }
-    if (areaName === 'sync' && changes.devices) {
+    if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId || changes.devices)) {
       initTargetSelector();
     }
     if (areaName === 'local' && changes.colorMode) {

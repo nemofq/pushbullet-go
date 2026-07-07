@@ -409,10 +409,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Get data from both sync and local storage
   const syncData = await new Promise(resolve => {
-    chrome.storage.sync.get(['accessToken', 'devices', 'people', 'userIden'], resolve);
+    chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -881,13 +881,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       const chromeDevice = devices.find(device => device.active && device.pushable !== false && device.type === 'chrome');
       const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
       
-      // Save all data including userIden for encryption and the access token
-      const syncData = { devices: devices, people: people, accessToken: accessToken };
+      // Save the access token (and userIden for encryption) to sync first, on
+      // its own, so it persists even if a later write fails. The device and
+      // people lists go to local storage: sync caps each item at 8KB
+      // (QUOTA_BYTES_PER_ITEM), which the devices array can exceed.
+      const syncData = { accessToken: accessToken };
       if (userIden) {
         syncData.userIden = userIden;
       }
       await chrome.storage.sync.set(syncData);
-      await chrome.storage.local.set({ chromeDeviceId: chromeDeviceId });
+      await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId });
 
       // Update access token field display after saving (same as "Save" button behavior)
       accessTokenInput.type = 'password';
@@ -1125,13 +1128,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Split data between sync and local storage
     const syncSaveData = {
-      accessToken: saveData.accessToken,
-      devices: saveData.devices,
-      people: saveData.people
+      accessToken: saveData.accessToken
     };
-    
-    
+
+
     const localSaveData = {
+      devices: saveData.devices,
+      people: saveData.people,
       remoteDeviceId: saveData.remoteDeviceId,
       showPerSendTarget: saveData.showPerSendTarget,
       onlyBrowserPushes: saveData.onlyBrowserPushes,
