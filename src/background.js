@@ -1216,13 +1216,15 @@ async function handleMirrorNotification(mirrorData) {
     }
   }
 
-  // Store in local storage (keep latest 100). A repeated mirror of an
-  // existing notification replaces its entry but keeps the stored UUID, so
-  // the Chrome notification and the dismissal flows stay addressable.
+  // Store in local storage (keep latest 100). A repeated mirror of a live
+  // notification replaces its entry in place, keeping the stored UUID so the
+  // Chrome notification and the dismissal flows stay addressable. Dismissed
+  // entries stay in the list as history; their Android slot starts over as a
+  // new entry.
   let isUpdate = false;
   await updateMirrorNotifications((notifications) => {
     const existingIndex = notifications.findIndex(n => isSameMirrorNotification(n, notificationData));
-    if (existingIndex !== -1) {
+    if (existingIndex !== -1 && !notifications[existingIndex].dismissed) {
       notificationData.id = notifications[existingIndex].id;
       notifications.splice(existingIndex, 1);
       isUpdate = true;
@@ -1487,11 +1489,21 @@ async function dismissMirrorNotification(notificationId) {
     
     if (response.ok) {
       console.log('Mirror notification dismissed successfully');
-      // Remove locally right away; the server echoes our own dismissal back
-      // over the websocket and handleMirrorDismissal must find nothing then.
-      await updateMirrorNotifications(notifications => notifications.filter(n => n.id !== uuid));
-      // Decrement unread mirror count when successfully dismissed
-      await decrementUnreadMirrorCount();
+      // Flag instead of removing: the entry stays in the popup list as
+      // history. Flipping dismissed exactly once (inside the queue) gates
+      // the unread decrement, so the server echo of this dismissal or a
+      // concurrent phone-side dismissal cannot decrement twice.
+      let flipped = false;
+      await updateMirrorNotifications((notifications) => {
+        const stored = notifications.find(n => n.id === uuid);
+        if (!stored || stored.dismissed) return null;
+        stored.dismissed = true;
+        flipped = true;
+        return notifications;
+      });
+      if (flipped) {
+        await decrementUnreadMirrorCount();
+      }
     } else {
       console.error('Failed to dismiss mirror notification:', response.statusText);
     }
@@ -1502,16 +1514,19 @@ async function dismissMirrorNotification(notificationId) {
 
 async function handleMirrorDismissal(dismissalData) {
   try {
-    // Find and remove the matching stored notification. Nothing found means
-    // the dismissal was already handled (e.g. the echo of our own dismissal).
+    // Flag the matching live notification as dismissed; it stays in the
+    // popup list as history. No live match means the dismissal was already
+    // handled (e.g. the echo of our own dismissal).
     let notification;
     await updateMirrorNotifications((notifications) => {
-      notification = notifications.find(n => isSameMirrorNotification(n, dismissalData));
-      return notification ? notifications.filter(n => n.id !== notification.id) : null;
+      notification = notifications.find(n => isSameMirrorNotification(n, dismissalData) && !n.dismissed);
+      if (!notification) return null;
+      notification.dismissed = true;
+      return notifications;
     });
 
     if (!notification) {
-      console.log('No matching notification found for dismissal');
+      console.log('No matching live notification found for dismissal');
       return;
     }
 
