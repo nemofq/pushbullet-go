@@ -447,7 +447,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       clearUnreadPushCount();
       return;
     case 'clear_unread_mirrors':
-      clearUnreadMirrorCount();
+      markMirrorNotificationsRead();
       return;
     case 'clear_push_history':
       clearPushHistory();
@@ -622,14 +622,22 @@ async function ensureDeviceDataFromServer() {
 
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
-  const localData = await chrome.storage.local.get('lastModified');
+  const localData = await chrome.storage.local.get(['lastModified', 'lastMirrorReadTime']);
   accessToken = data.accessToken;
-  
+
   // Restore lastModified from storage to survive extension restarts
   if (localData.lastModified) {
     lastModified = localData.lastModified;
   }
-  
+
+  // First run after the update that introduced the derived unread count:
+  // treat entries stored before it as read so the badge does not light up
+  // retroactively.
+  if (localData.lastMirrorReadTime === undefined) {
+    await chrome.storage.local.set({ lastMirrorReadTime: Date.now() / 1000 });
+    await updateMirrorNotifications(() => null);
+  }
+
   if (accessToken) {
     // Initialize encryption if key is stored (userIden should be available from options page)
     await initializeEncryption();
@@ -1159,23 +1167,43 @@ function isSameMirrorNotification(a, b) {
 // popup deletes); like unreadCountOps, one queue keeps overlapping mutations
 // from reading the same starting array and dropping each other's writes.
 // mutate() gets the stored array and returns the next one, or falsy to skip
-// the write.
+// the write; the unread count is recomputed either way.
 let mirrorStoreOps = Promise.resolve();
 
 function updateMirrorNotifications(mutate) {
   const run = mirrorStoreOps.then(async () => {
     try {
       const data = await chrome.storage.local.get('mirrorNotifications');
-      const next = mutate(data.mirrorNotifications || []);
+      const notifications = data.mirrorNotifications || [];
+      const next = mutate(notifications);
       if (next) {
         await chrome.storage.local.set({ mirrorNotifications: next });
       }
+      await recomputeUnreadMirrorCount(next || notifications);
     } catch (error) {
       console.error('Failed to update mirrorNotifications:', error);
     }
   });
   mirrorStoreOps = run.catch(() => {});
   return run;
+}
+
+// The unread mirror count is derived, not bookkept: the number of entries
+// with activity newer than the last time the popup's notifications tab was
+// opened, excluding dismissed ones. Recomputed inside the queue after every
+// list change, so it cannot drift from the list.
+async function recomputeUnreadMirrorCount(notifications) {
+  const data = await chrome.storage.local.get('lastMirrorReadTime');
+  const lastRead = data.lastMirrorReadTime || 0;
+  const count = notifications.filter(n => !n.dismissed && n.created > lastRead).length;
+  await chrome.storage.local.set({ unreadMirrorCount: count });
+  await updateBadge();
+}
+
+async function markMirrorNotificationsRead() {
+  await chrome.storage.local.set({ lastMirrorReadTime: Date.now() / 1000 });
+  // Queue a no-op mutation so the count recomputes from a consistent snapshot
+  await updateMirrorNotifications(() => null);
 }
 
 async function handleMirrorNotification(mirrorData) {
@@ -1287,11 +1315,6 @@ async function showMirrorNotification(notificationData, isUpdate = false) {
 
   // Play alert sound
   await playAlertSound();
-
-  // Increment unread mirrored notification count. In-place updates count
-  // too: the badge tracks mirror activity since the popup was last opened,
-  // with no per-entry read state.
-  await incrementUnreadMirrorCount();
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
@@ -1489,20 +1512,13 @@ async function dismissMirrorNotification(notificationId) {
     if (response.ok) {
       console.log('Mirror notification dismissed successfully');
       // Flag instead of removing: the entry stays in the popup list as
-      // history. Flipping dismissed exactly once (inside the queue) gates
-      // the unread decrement, so the server echo of this dismissal or a
-      // concurrent phone-side dismissal cannot decrement twice.
-      let flipped = false;
+      // history and stops counting toward the unread badge.
       await updateMirrorNotifications((notifications) => {
         const stored = notifications.find(n => n.id === uuid);
         if (!stored || stored.dismissed) return null;
         stored.dismissed = true;
-        flipped = true;
         return notifications;
       });
-      if (flipped) {
-        await decrementUnreadMirrorCount();
-      }
     } else {
       console.error('Failed to dismiss mirror notification:', response.statusText);
     }
@@ -1537,8 +1553,6 @@ async function handleMirrorDismissal(dismissalData) {
       console.log(`Clearing mirror notification for dismissal: ${dismissalData.package_name}`);
       await chrome.notifications.clear(notificationId);
     }
-
-    await decrementUnreadMirrorCount();
   } catch (error) {
     console.error('Error handling mirror dismissal:', error);
   }
@@ -1629,11 +1643,12 @@ async function storeSentMessage(push) {
   await chrome.storage.local.set({ sentMessages: sentMessages.slice(0, 100) });
 }
 
-// Unread count management functions. Both counters are read-modify-write on
-// storage with this service worker as the only writer, so every mutation runs
-// through one queue: overlapping updates (a batch increment against a
-// dismissal decrement or a popup clear) would otherwise read the same starting
-// value and silently drop each other's writes.
+// Unread push count management. The counter is read-modify-write on storage
+// with this service worker as the only writer, so every mutation runs through
+// one queue: overlapping updates (a batch increment against a dismissal
+// decrement or a popup clear) would otherwise read the same starting value
+// and silently drop each other's writes. The mirror count is not managed
+// here; it is derived in recomputeUnreadMirrorCount.
 let unreadCountOps = Promise.resolve();
 
 function updateUnreadCount(storageKey, mutate) {
@@ -1655,24 +1670,12 @@ async function incrementUnreadPushCount(count = 1) {
   return updateUnreadCount('unreadPushCount', current => current + count);
 }
 
-async function incrementUnreadMirrorCount() {
-  return updateUnreadCount('unreadMirrorCount', current => current + 1);
-}
-
 async function decrementUnreadPushCount() {
   return updateUnreadCount('unreadPushCount', current => current - 1);
 }
 
 async function clearUnreadPushCount() {
   return updateUnreadCount('unreadPushCount', () => 0);
-}
-
-async function decrementUnreadMirrorCount() {
-  return updateUnreadCount('unreadMirrorCount', current => current - 1);
-}
-
-async function clearUnreadMirrorCount() {
-  return updateUnreadCount('unreadMirrorCount', () => 0);
 }
 
 async function updateBadge() {
@@ -2200,7 +2203,6 @@ async function clearPushHistory() {
 
 async function clearMirrorHistory() {
   await updateMirrorNotifications(() => []);
-  await clearUnreadMirrorCount();
   console.log('Mirror notification history cleared');
 }
 
