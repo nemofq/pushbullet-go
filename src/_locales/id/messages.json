@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Tampilkan notifikasi"
+  },
+  "invalid_token": {
+    "message": "Token akses tidak valid. Periksa dan coba lagi."
   }
 }

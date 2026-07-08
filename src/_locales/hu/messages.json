@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Értesítések megjelenítése"
+  },
+  "invalid_token": {
+    "message": "A hozzáférési token érvénytelen. Ellenőrizze, majd próbálja újra."
   }
 }

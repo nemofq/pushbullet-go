@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Hiển thị thông báo"
+  },
+  "invalid_token": {
+    "message": "Mã truy cập không hợp lệ. Kiểm tra rồi thử lại."
   }
 }

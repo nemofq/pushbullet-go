@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Visa aviseringar"
+  },
+  "invalid_token": {
+    "message": "Åtkomsttoken är inte giltig. Kontrollera den och försök igen."
   }
 }

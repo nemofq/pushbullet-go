@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Pokaži obvestila"
+  },
+  "invalid_token": {
+    "message": "Dostopni žeton ni veljaven. Preverite ga in poskusite znova."
   }
 }

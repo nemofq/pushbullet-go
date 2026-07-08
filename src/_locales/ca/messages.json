@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Mostra les notificacions"
+  },
+  "invalid_token": {
+    "message": "El token d'accés no és vàlid. Comprova'l i torna-ho a provar."
   }
 }

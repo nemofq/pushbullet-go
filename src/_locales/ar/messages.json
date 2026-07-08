@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "إظهار الإشعارات"
+  },
+  "invalid_token": {
+    "message": "رمز الوصول غير صالح. تحقق منه وحاول مرة أخرى."
   }
 }

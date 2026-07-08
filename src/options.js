@@ -770,6 +770,39 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateShowOsNotificationsVisibility();
   });
 
+  // Resolve the account iden behind an access token via /v2/users/me. The
+  // encryption key is stored and derived per account iden, so userIden must
+  // only be saved alongside a token confirmed to belong to that account.
+  // Returns { status: 'ok', iden }, { status: 'invalid' } when the API
+  // rejects the token, or { status: 'error' } when validity is unknown.
+  async function fetchUserIden(accessToken) {
+    try {
+      const response = await fetch('https://api.pushbullet.com/v2/users/me', {
+        headers: {
+          'Access-Token': accessToken
+        },
+        // A 401 here carries a WWW-Authenticate challenge; without this the
+        // browser pops its native sign-in dialog on top of the options page.
+        credentials: 'omit'
+      });
+      if (response.ok) {
+        const user = await response.json();
+        if (user.iden) {
+          return { status: 'ok', iden: user.iden };
+        }
+        return { status: 'error' };
+      }
+      if (response.status === 401) {
+        return { status: 'invalid' };
+      }
+      console.warn('Failed to fetch user info:', response.status, response.statusText);
+      return { status: 'error' };
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      return { status: 'error' };
+    }
+  }
+
   retrieveDevicesButton.addEventListener('click', async function() {
     // Get access token - either from new input or existing stored
     let accessToken = accessTokenInput.value.trim();
@@ -790,7 +823,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       const devicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
         headers: {
           'Access-Token': accessToken
-        }
+        },
+        credentials: 'omit'
       });
       
       if (!devicesResponse.ok) {
@@ -814,7 +848,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             nickname: 'Chrome',
             type: 'chrome',
             model: 'Chrome'
-          })
+          }),
+          credentials: 'omit'
         });
         
         if (createDeviceResponse.ok) {
@@ -823,7 +858,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           const updatedDevicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
             headers: {
               'Access-Token': accessToken
-            }
+            },
+            credentials: 'omit'
           });
           
           if (updatedDevicesResponse.ok) {
@@ -839,7 +875,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats', {
         headers: {
           'Access-Token': accessToken
-        }
+        },
+        credentials: 'omit'
       });
       
       if (!chatsResponse.ok) {
@@ -858,24 +895,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }));
       
       // Fetch user info for encryption
-      let userIden = null;
-      try {
-        const userResponse = await fetch('https://api.pushbullet.com/v2/users/me', {
-          headers: {
-            'Access-Token': accessToken
-          }
-        });
-        
-        if (userResponse.ok) {
-          const user = await userResponse.json();
-          userIden = user.iden;
-          console.log('User info retrieved successfully for encryption');
-        } else {
-          console.warn('Failed to fetch user info:', userResponse.status, userResponse.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
+      const userInfo = await fetchUserIden(accessToken);
       
       // Save Chrome device ID to local storage for reference
       const chromeDevice = devices.find(device => device.active && device.pushable !== false && device.type === 'chrome');
@@ -886,10 +906,15 @@ document.addEventListener('DOMContentLoaded', async function() {
       // people lists go to local storage: sync caps each item at 8KB
       // (QUOTA_BYTES_PER_ITEM), which the devices array can exceed.
       const syncData = { accessToken: accessToken };
-      if (userIden) {
-        syncData.userIden = userIden;
+      if (userInfo.status === 'ok') {
+        syncData.userIden = userInfo.iden;
       }
       await chrome.storage.sync.set(syncData);
+      if (userInfo.status !== 'ok') {
+        // A stale iden would pair this token with another account's encryption
+        // key, so drop it when the account can't be confirmed.
+        await chrome.storage.sync.remove('userIden');
+      }
       await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId });
 
       // Update access token field display after saving (same as "Save" button behavior)
@@ -908,7 +933,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         const pushesResponse = await fetch('https://api.pushbullet.com/v2/pushes?active=true&limit=20', {
           headers: {
             'Access-Token': accessToken
-          }
+          },
+          credentials: 'omit'
         });
         
         if (pushesResponse.ok) {
@@ -1045,9 +1071,23 @@ document.addEventListener('DOMContentLoaded', async function() {
   saveSettingsButton.addEventListener('click', async function() {
     // Handle access token - only update if user entered a new one
     let accessTokenToSave;
+    let userIdenToSave = null;
+    let dropUserIden = false;
     if (accessTokenInput.value.trim()) {
       // User entered a new token
       accessTokenToSave = accessTokenInput.value.trim();
+      // Keep userIden paired with the account this token belongs to (see
+      // fetchUserIden); a stale iden would load another account's encryption key
+      const userInfo = await fetchUserIden(accessTokenToSave);
+      if (userInfo.status === 'invalid') {
+        showStatus(window.CustomI18n.getMessage('invalid_token'), 'error');
+        return;
+      }
+      if (userInfo.status === 'ok') {
+        userIdenToSave = userInfo.iden;
+      } else {
+        dropUserIden = true;
+      }
     } else if (accessTokenInput.dataset.hasToken === 'true') {
       // Keep existing token (don't save empty string)
       const existingData = await new Promise(resolve => {
@@ -1130,6 +1170,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     const syncSaveData = {
       accessToken: saveData.accessToken
     };
+    if (userIdenToSave) {
+      syncSaveData.userIden = userIdenToSave;
+    }
 
 
     const localSaveData = {
@@ -1163,6 +1206,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     };
     
     // Save to both storages
+    if (dropUserIden) {
+      chrome.storage.sync.remove('userIden');
+    }
     chrome.storage.sync.set(syncSaveData);
     chrome.storage.local.set(localSaveData, function() {
       // Check if language has changed

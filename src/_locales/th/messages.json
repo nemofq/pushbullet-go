@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "แสดงการแจ้งเตือน"
+  },
+  "invalid_token": {
+    "message": "โทเค็นการเข้าถึงไม่ถูกต้อง ตรวจสอบแล้วลองอีกครั้ง"
   }
 }

@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "הצג התראות"
+  },
+  "invalid_token": {
+    "message": "אסימון הגישה אינו תקין. בדוק אותו ונסה שוב."
   }
 }

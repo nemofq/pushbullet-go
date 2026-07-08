@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "通知を表示"
+  },
+  "invalid_token": {
+    "message": "アクセス トークンが無効です。確認して、もう一度お試しください。"
   }
 }

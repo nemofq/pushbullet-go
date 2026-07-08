@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Vis varsler"
+  },
+  "invalid_token": {
+    "message": "Tilgangsnøkkelen er ikke gyldig. Sjekk den og prøv igjen."
   }
 }

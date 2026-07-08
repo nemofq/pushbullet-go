@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Zobraziť oznámenia"
+  },
+  "invalid_token": {
+    "message": "Prístupový token nie je platný. Skontrolujte ho a skúste znova."
   }
 }

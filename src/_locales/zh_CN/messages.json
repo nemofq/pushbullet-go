@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "显示通知"
+  },
+  "invalid_token": {
+    "message": "访问令牌无效。请检查后重试。"
   }
 }

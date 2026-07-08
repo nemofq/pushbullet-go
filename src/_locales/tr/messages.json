@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Bildirimleri göster"
+  },
+  "invalid_token": {
+    "message": "Erişim belirteci geçerli değil. Kontrol edin ve tekrar deneyin."
   }
 }

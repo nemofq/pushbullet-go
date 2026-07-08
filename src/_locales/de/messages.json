@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Benachrichtigungen anzeigen"
+  },
+  "invalid_token": {
+    "message": "Das Zugangstoken ist ungültig. Bitte prüfen und erneut versuchen."
   }
 }

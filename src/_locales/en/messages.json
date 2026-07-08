@@ -317,6 +317,9 @@
   "access_token_set_placeholder": {
     "message": "Access token is set (enter new to change)"
   },
+  "invalid_token": {
+    "message": "Access token is not valid. Check it and try again."
+  },
   "authenticate_via_oauth": {
     "message": "Authenticate via OAuth"
   },

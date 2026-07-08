@@ -475,20 +475,6 @@ async function handleTokenUpdated() {
   } catch (error) {
     console.error('Failed to reinitialize i18n:', error);
   }
-  try {
-    // Check if token was removed (sign-out)
-    const data = await chrome.storage.sync.get('accessToken');
-    if (!data.accessToken) {
-      // Clear all encryption keys and account data on sign-out
-      const localData = await chrome.storage.local.get(null);
-      const keysToRemove = Object.keys(localData).filter(key => key.startsWith('encryptionKey_'));
-      keysToRemove.push('devices', 'people', 'chromeDeviceId');
-      await chrome.storage.local.remove(keysToRemove);
-      console.log('Cleared encryption keys and account data on sign-out');
-    }
-  } catch (error) {
-    console.error('Sign-out cleanup failed:', error);
-  }
   initializeExtension();
   await setupContextMenus();
 }
@@ -535,7 +521,7 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
 
 // Fetch the devices and people lists from the server when a token exists but
 // the local lists are missing or empty (new machine that received the token
-// via Chrome sync, token saved without running Retrieve, post sign-out).
+// via Chrome sync, token saved without running Retrieve).
 // Mirrors the options-page Retrieve flow, including creating this browser's
 // chrome-type device if the account has never had one. Read-only otherwise;
 // safe to re-run on every service-worker start.

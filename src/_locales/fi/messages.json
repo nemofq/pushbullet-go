@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Näytä ilmoitukset"
+  },
+  "invalid_token": {
+    "message": "Käyttöoikeustunnus ei ole kelvollinen. Tarkista se ja yritä uudelleen."
   }
 }

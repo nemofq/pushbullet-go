@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Vis notifikationer"
+  },
+  "invalid_token": {
+    "message": "Adgangstokenet er ikke gyldigt. Kontrollér det og prøv igen."
   }
 }

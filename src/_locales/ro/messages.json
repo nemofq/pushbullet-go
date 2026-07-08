@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "Afișează notificările"
+  },
+  "invalid_token": {
+    "message": "Tokenul de acces nu este valid. Verificați-l și încercați din nou."
   }
 }

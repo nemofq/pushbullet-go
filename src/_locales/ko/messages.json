@@ -355,5 +355,8 @@
   },
   "show_os_notifications_label": {
     "message": "알림 표시"
+  },
+  "invalid_token": {
+    "message": "액세스 토큰이 유효하지 않습니다. 확인하고 다시 시도하세요."
   }
 }
