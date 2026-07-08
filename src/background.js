@@ -635,8 +635,11 @@ async function initializeExtension() {
   // retroactively.
   if (localData.lastMirrorReadTime === undefined) {
     await chrome.storage.local.set({ lastMirrorReadTime: Date.now() / 1000 });
-    await updateMirrorNotifications(() => null);
   }
+
+  // Recompute the derived unread count on startup so the cached value can
+  // never stay stale across service worker restarts.
+  await updateMirrorNotifications(() => null);
 
   if (accessToken) {
     // Initialize encryption if key is stored (userIden should be available from options page)
@@ -1195,7 +1198,7 @@ function updateMirrorNotifications(mutate) {
 async function recomputeUnreadMirrorCount(notifications) {
   const data = await chrome.storage.local.get('lastMirrorReadTime');
   const lastRead = data.lastMirrorReadTime || 0;
-  const count = notifications.filter(n => !n.dismissed && n.created > lastRead).length;
+  const count = notifications.filter(n => !n.dismissed && (n.receivedAt ?? n.created) > lastRead).length;
   await chrome.storage.local.set({ unreadMirrorCount: count });
   await updateBadge();
 }
@@ -1225,6 +1228,11 @@ async function handleMirrorNotification(mirrorData) {
     created: mirrorData.created && typeof mirrorData.created === 'number' && mirrorData.created > 0
       ? mirrorData.created
       : Date.now() / 1000,  // Use current time in seconds if websocket timestamp is invalid
+    // Local-clock arrival stamp. created can be phone/server time, so recency
+    // checks (unread count, popup scroll) use this to stay in one clock
+    // domain with lastMirrorReadTime, and it advances even when an app
+    // re-posts a notification without changing its timestamp.
+    receivedAt: Date.now() / 1000,
     icon: mirrorData.icon,
     title: mirrorData.title,
     body: mirrorData.body,

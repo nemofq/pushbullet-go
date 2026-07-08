@@ -1318,7 +1318,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const oldFirst = changes.mirrorNotifications.oldValue?.[0];
       const newFirst = changes.mirrorNotifications.newValue?.[0];
       const hasNewContent = newLength >= oldLength && !!newFirst &&
-        (!oldFirst || newFirst.id !== oldFirst.id || newFirst.created !== oldFirst.created);
+        (!oldFirst || newFirst.id !== oldFirst.id ||
+          (newFirst.receivedAt ?? newFirst.created) !== (oldFirst.receivedAt ?? oldFirst.created));
 
       const savedScrollTop = hasNewContent ? null : notificationsList.scrollTop;
       debouncedLoadNotifications(savedScrollTop);
