@@ -280,8 +280,10 @@ async function migrateDevicesPeopleFromSyncToLocal() {
       await chrome.storage.local.set(toCopy);
     }
 
-    // Always clear the sync copies to free sync quota (no-op if absent)
-    await chrome.storage.sync.remove(['devices', 'people']);
+    // Leave the sync copies in place: pre-v1.11.5 installs on the same
+    // Chrome profile still read them, and a remove() here would sync the
+    // deletion over to those machines, emptying their device/people lists.
+    // Reclaim the sync quota in a later release once old versions age out.
 
     await chrome.storage.local.set({ migrationFromSyncCompleted_v3: true });
   } catch (error) {
@@ -568,8 +570,11 @@ async function ensureDeviceDataFromServer() {
     const token = await getAccessToken();
     if (!token) return;
 
-    const localData = await chrome.storage.local.get('devices');
-    if (localData.devices && localData.devices.length > 0) return;
+    // The migration copies the device list but chromeDeviceId was never in
+    // sync, so only a completed fetch (which records chromeDeviceId - even as
+    // null for accounts with no usable Chrome device) satisfies this gate
+    const localData = await chrome.storage.local.get(['devices', 'chromeDeviceId']);
+    if (localData.devices && localData.devices.length > 0 && localData.chromeDeviceId !== undefined) return;
 
     const devicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
       headers: { 'Access-Token': token }
