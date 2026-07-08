@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Erişim belirteci geçerli değil. Kontrol edin ve tekrar deneyin."
+  },
+  "mirror_encryption_title": {
+    "message": "Bildirimler Şifreli"
+  },
+  "mirror_encryption_text": {
+    "message": "Bildirimleri görmek için uçtan uca şifreleme parolanızı yapılandırın."
   }
 }

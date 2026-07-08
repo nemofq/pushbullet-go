@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Tilgangsnøkkelen er ikke gyldig. Sjekk den og prøv igjen."
+  },
+  "mirror_encryption_title": {
+    "message": "Varsler er kryptert"
+  },
+  "mirror_encryption_text": {
+    "message": "Konfigurer ditt ende-til-ende-krypteringspassord for å se varslene."
   }
 }

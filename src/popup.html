@@ -829,14 +829,29 @@
       display: flex;
     }
 
-    .setup-guide h3 {
+    /* In-flow variant of the setup guide, centered inside a list pane
+       (the setup guide itself is an absolute overlay) */
+    .list-guide {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      color: var(--text-secondary);
+    }
+
+    .setup-guide h3,
+    .list-guide h3 {
       margin: 0 0 15px 0;
       color: var(--text-primary);
       font-weight: normal;
       font-size: 16px;
     }
 
-    .setup-guide p {
+    .setup-guide p,
+    .list-guide p {
       margin: 0 0 20px 0;
       font-size: 14px;
       line-height: 1.4;

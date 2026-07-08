@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "O token de acesso não é válido. Verifique-o e tente novamente."
+  },
+  "mirror_encryption_title": {
+    "message": "As notificações estão criptografadas"
+  },
+  "mirror_encryption_text": {
+    "message": "Configure sua senha de criptografia ponta a ponta para ver as notificações."
   }
 }

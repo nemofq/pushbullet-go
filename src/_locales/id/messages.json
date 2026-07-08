@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Token akses tidak valid. Periksa dan coba lagi."
+  },
+  "mirror_encryption_title": {
+    "message": "Notifikasi Dienkripsi"
+  },
+  "mirror_encryption_text": {
+    "message": "Konfigurasikan kata sandi enkripsi ujung-ke-ujung Anda untuk melihat notifikasi."
   }
 }

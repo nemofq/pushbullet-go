@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "אסימון הגישה אינו תקין. בדוק אותו ונסה שוב."
+  },
+  "mirror_encryption_title": {
+    "message": "ההתראות מוצפנות"
+  },
+  "mirror_encryption_text": {
+    "message": "הגדר את סיסמת ההצפנה מקצה לקצה כדי לראות את ההתראות."
   }
 }

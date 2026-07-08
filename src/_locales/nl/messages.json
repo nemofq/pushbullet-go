@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Het toegangstoken is ongeldig. Controleer het en probeer opnieuw."
+  },
+  "mirror_encryption_title": {
+    "message": "Meldingen zijn versleuteld"
+  },
+  "mirror_encryption_text": {
+    "message": "Configureer je end-to-end versleuteling wachtwoord om de meldingen te zien."
   }
 }

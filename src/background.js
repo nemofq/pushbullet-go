@@ -294,6 +294,27 @@ async function migrateDevicesPeopleFromSyncToLocal() {
 migrateSpecificFieldsFromSyncToLocal();
 const devicesPeopleMigration = migrateDevicesPeopleFromSyncToLocal();
 
+// Mirrors the stored mirrorDecryptIssue flag so repeated drops don't rewrite
+// storage on every frame; undefined = not yet written this worker lifetime.
+let mirrorDecryptIssueCache;
+
+// Record why encrypted ephemerals are being dropped ('not_configured' |
+// 'failed') or clear the record (null). The popup shows this state in the
+// notifications tab in place of the frozen list.
+async function setMirrorDecryptIssue(reason) {
+  if (mirrorDecryptIssueCache === reason) return;
+  mirrorDecryptIssueCache = reason;
+  try {
+    if (reason) {
+      await chrome.storage.local.set({ mirrorDecryptIssue: reason });
+    } else {
+      await chrome.storage.local.remove('mirrorDecryptIssue');
+    }
+  } catch (error) {
+    console.error('Failed to update mirrorDecryptIssue:', error);
+  }
+}
+
 // Initialize encryption if key is stored
 async function initializeEncryption() {
   try {
@@ -462,6 +483,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       deletePush(message.iden);
       return;
     case 'encryption_updated':
+      // Encryption settings changed: reset the drop notice; the next
+      // encrypted ephemeral re-evaluates against the new key state
+      setMirrorDecryptIssue(null);
       initializeEncryption().then(() => {
         sendResponse({ success: true });
       });
@@ -770,19 +794,25 @@ async function connectWebSocket() {
       
       // Check for encrypted ephemeral without configured crypto - graceful degradation
       if (data.type === 'push' && data.push && data.push.encrypted === true && !pushbulletCrypto) {
-        // Silently ignore encrypted messages when encryption is not configured
         console.warn('Received encrypted ephemeral but encryption is not configured - ignoring');
+        await setMirrorDecryptIssue('not_configured');
         return;
       }
-      
+
       // Process encrypted ephemeral if applicable
       if (pushbulletCrypto && data.type === 'push' && data.push) {
+        const wasEncrypted = data.push.encrypted === true;
         data = await pushbulletCrypto.processEphemeral(data);
-        
+
         // Check if decryption failed (push is still encrypted)
         if (data.push && data.push.encrypted === true) {
           console.warn('Failed to decrypt ephemeral (wrong password?) - ignoring');
+          await setMirrorDecryptIssue('failed');
           return;
+        }
+        if (wasEncrypted) {
+          // The key decrypts real traffic again - retire the popup notice
+          await setMirrorDecryptIssue(null);
         }
       }
       

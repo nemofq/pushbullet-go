@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "A hozzáférési token érvénytelen. Ellenőrizze, majd próbálja újra."
+  },
+  "mirror_encryption_title": {
+    "message": "Az értesítések titkosítva vannak"
+  },
+  "mirror_encryption_text": {
+    "message": "Állítsa be a végpontok közötti titkosítási jelszót az értesítések megtekintéséhez."
   }
 }

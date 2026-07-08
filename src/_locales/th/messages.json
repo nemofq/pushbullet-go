@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "โทเค็นการเข้าถึงไม่ถูกต้อง ตรวจสอบแล้วลองอีกครั้ง"
+  },
+  "mirror_encryption_title": {
+    "message": "การแจ้งเตือนถูกเข้ารหัส"
+  },
+  "mirror_encryption_text": {
+    "message": "กำหนดค่ารหัสผ่านเข้ารหัสแบบ end-to-end เพื่อดูการแจ้งเตือน"
   }
 }

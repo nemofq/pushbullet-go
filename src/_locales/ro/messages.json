@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Tokenul de acces nu este valid. Verificați-l și încercați din nou."
+  },
+  "mirror_encryption_title": {
+    "message": "Notificările sunt criptate"
+  },
+  "mirror_encryption_text": {
+    "message": "Configurați parola de criptare end-to-end pentru a vedea notificările."
   }
 }

@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "アクセス トークンが無効です。確認して、もう一度お試しください。"
+  },
+  "mirror_encryption_title": {
+    "message": "通知は暗号化済み"
+  },
+  "mirror_encryption_text": {
+    "message": "通知を見るには、エンドツーエンド暗号化パスワードを設定してください。"
   }
 }

@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "액세스 토큰이 유효하지 않습니다. 확인하고 다시 시도하세요."
+  },
+  "mirror_encryption_title": {
+    "message": "알림 암호화됨"
+  },
+  "mirror_encryption_text": {
+    "message": "알림을 보려면 종단간 암호화 비밀번호를 설정하세요."
   }
 }

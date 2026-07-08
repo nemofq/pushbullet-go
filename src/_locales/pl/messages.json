@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Token dostępu jest nieprawidłowy. Sprawdź go i spróbuj ponownie."
+  },
+  "mirror_encryption_title": {
+    "message": "Powiadomienia są zaszyfrowane"
+  },
+  "mirror_encryption_text": {
+    "message": "Skonfiguruj swoje hasło szyfrowania end-to-end, aby zobaczyć powiadomienia."
   }
 }

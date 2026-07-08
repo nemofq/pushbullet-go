@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Dostopni žeton ni veljaven. Preverite ga in poskusite znova."
+  },
+  "mirror_encryption_title": {
+    "message": "Obvestila so šifrirana"
+  },
+  "mirror_encryption_text": {
+    "message": "Nastavite svoje geslo za end-to-end šifriranje, da vidite obvestila."
   }
 }

@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "رمز الوصول غير صالح. تحقق منه وحاول مرة أخرى."
+  },
+  "mirror_encryption_title": {
+    "message": "الإشعارات مشفّرة"
+  },
+  "mirror_encryption_text": {
+    "message": "قم بإعداد كلمة مرور التشفير الشامل لرؤية الإشعارات."
   }
 }

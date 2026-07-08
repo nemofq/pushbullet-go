@@ -314,6 +314,12 @@
   "encryption_help_text": {
     "message": "Enable encryption for Notification Mirroring. Your password is never stored. Must be the same on all devices."
   },
+  "mirror_encryption_title": {
+    "message": "Notifications are Encrypted"
+  },
+  "mirror_encryption_text": {
+    "message": "Configure your end-to-end encryption password to see the notifications."
+  },
   "access_token_set_placeholder": {
     "message": "Access token is set (enter new to change)"
   },

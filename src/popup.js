@@ -726,8 +726,37 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadNotifications(preserveScrollTop = null) {
-    const data = await chrome.storage.local.get('mirrorNotifications');
+    const data = await chrome.storage.local.get(['mirrorNotifications', 'mirrorDecryptIssue']);
     const notifications = data.mirrorNotifications || [];
+
+    // Encrypted ephemerals are being dropped (missing or wrong encryption
+    // password), so the list is frozen: show why, in place of stale entries,
+    // until background clears the flag on the next successful decrypt.
+    if (data.mirrorDecryptIssue) {
+      const tokenData = await chrome.storage.sync.get('accessToken');
+      const fragment = document.createDocumentFragment();
+      if (tokenData.accessToken) {
+        const guideDiv = document.createElement('div');
+        guideDiv.className = 'list-guide';
+        const titleEl = document.createElement('h3');
+        titleEl.textContent = window.CustomI18n.getMessage('mirror_encryption_title');
+        const textEl = document.createElement('p');
+        textEl.textContent = window.CustomI18n.getMessage('mirror_encryption_text');
+        const optionsButton = document.createElement('button');
+        optionsButton.className = 'setup-button';
+        optionsButton.type = 'button';
+        optionsButton.textContent = window.CustomI18n.getMessage('open_settings_button');
+        optionsButton.onclick = () => {
+          chrome.runtime.openOptionsPage();
+        };
+        guideDiv.appendChild(titleEl);
+        guideDiv.appendChild(textEl);
+        guideDiv.appendChild(optionsButton);
+        fragment.appendChild(guideDiv);
+      }
+      notificationsList.replaceChildren(fragment);
+      return;
+    }
 
     if (notifications.length === 0) {
       // Only show "No notifications received" if we have access token, otherwise show empty
@@ -1332,6 +1361,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (areaName === 'local' && changes.notificationMirroring) {
       checkNotificationMirroring();
+    }
+    if (areaName === 'local' && changes.mirrorDecryptIssue) {
+      debouncedLoadNotifications();
     }
     if (areaName === 'local' && changes.showSmsShortcut) {
       checkSmsShortcut();

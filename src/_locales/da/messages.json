@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Adgangstokenet er ikke gyldigt. Kontrollér det og prøv igen."
+  },
+  "mirror_encryption_title": {
+    "message": "Notifikationer er krypteret"
+  },
+  "mirror_encryption_text": {
+    "message": "Konfigurer din end-to-end krypteringsadgangskode for at se notifikationerne."
   }
 }

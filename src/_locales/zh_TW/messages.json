@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "訪問令牌無效。請檢查後重試。"
+  },
+  "mirror_encryption_title": {
+    "message": "通知已加密"
+  },
+  "mirror_encryption_text": {
+    "message": "請配置端對端加密密碼以查看通知。"
   }
 }

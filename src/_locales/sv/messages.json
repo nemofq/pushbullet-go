@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Åtkomsttoken är inte giltig. Kontrollera den och försök igen."
+  },
+  "mirror_encryption_title": {
+    "message": "Aviseringar är krypterade"
+  },
+  "mirror_encryption_text": {
+    "message": "Konfigurera ditt end-to-end krypteringslösenord för att se aviseringarna."
   }
 }

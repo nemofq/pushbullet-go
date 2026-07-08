@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Le jeton d'accès n'est pas valide. Vérifiez-le et réessayez."
+  },
+  "mirror_encryption_title": {
+    "message": "Les notifications sont chiffrées"
+  },
+  "mirror_encryption_text": {
+    "message": "Configurez votre mot de passe de chiffrement de bout en bout pour voir les notifications."
   }
 }

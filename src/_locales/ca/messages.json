@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "El token d'accés no és vàlid. Comprova'l i torna-ho a provar."
+  },
+  "mirror_encryption_title": {
+    "message": "Les notificacions estan xifrades"
+  },
+  "mirror_encryption_text": {
+    "message": "Configura la teva contrasenya de xifratge extrem a extrem per veure les notificacions."
   }
 }

@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Mã truy cập không hợp lệ. Kiểm tra rồi thử lại."
+  },
+  "mirror_encryption_title": {
+    "message": "Thông báo đã được mã hóa"
+  },
+  "mirror_encryption_text": {
+    "message": "Cấu hình mật khẩu mã hóa end-to-end để xem thông báo."
   }
 }

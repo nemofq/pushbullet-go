@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Přístupový token není platný. Zkontrolujte ho a zkuste to znovu."
+  },
+  "mirror_encryption_title": {
+    "message": "Oznámení jsou šifrována"
+  },
+  "mirror_encryption_text": {
+    "message": "Nakonfigurujte své heslo end-to-end šifrování pro zobrazení oznámení."
   }
 }

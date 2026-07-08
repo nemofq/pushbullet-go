@@ -358,5 +358,11 @@
   },
   "invalid_token": {
     "message": "Käyttöoikeustunnus ei ole kelvollinen. Tarkista se ja yritä uudelleen."
+  },
+  "mirror_encryption_title": {
+    "message": "Ilmoitukset on salattu"
+  },
+  "mirror_encryption_text": {
+    "message": "Määritä päästä-päähän -salaussalasana nähdäksesi ilmoitukset."
   }
 }
