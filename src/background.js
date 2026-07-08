@@ -2228,12 +2228,13 @@ function getImageFileName(url) {
 
 async function clearPushHistory() {
   try {
-    await chrome.storage.local.set({ 
+    await chrome.storage.local.set({
       pushes: [],
-      sentMessages: [],
-      unreadPushCount: 0 
+      sentMessages: []
     });
-    await updateBadge();
+    // Reset the counter through the serialized queue (which also refreshes
+    // the badge) so an in-flight batch increment can't overwrite it
+    await clearUnreadPushCount();
     console.log('Push history cleared');
   } catch (error) {
     console.error('Failed to clear push history:', error);
