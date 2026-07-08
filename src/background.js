@@ -494,6 +494,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 async function handleTokenUpdated() {
+  // Token/account changed: the drop notice reflects the old account's
+  // traffic; the next encrypted ephemeral re-evaluates against the new state
+  setMirrorDecryptIssue(null);
   try {
     await initializeBackgroundI18n();
   } catch (error) {
@@ -821,8 +824,11 @@ async function connectWebSocket() {
       } else if (data.type === 'tickle' && data.subtype === 'push') {
         refreshPushList(true);
       } else if (data.type === 'push' && data.push && data.push.type === 'mirror') {
+        // Mirror traffic arrived readable - retire the drop notice
+        await setMirrorDecryptIssue(null);
         handleMirrorNotification(data.push);
       } else if (data.type === 'push' && data.push && data.push.type === 'dismissal') {
+        await setMirrorDecryptIssue(null);
         handleMirrorDismissal(data.push);
       }
     } catch (error) {

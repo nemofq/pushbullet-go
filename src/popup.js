@@ -731,7 +731,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Encrypted ephemerals are being dropped (missing or wrong encryption
     // password), so the list is frozen: show why, in place of stale entries,
-    // until background clears the flag on the next successful decrypt.
+    // until background clears the flag (readable mirror traffic arrives,
+    // encryption settings change, or the token changes).
     if (data.mirrorDecryptIssue) {
       const tokenData = await chrome.storage.sync.get('accessToken');
       const fragment = document.createDocumentFragment();
