@@ -1169,8 +1169,8 @@ function isSameMirrorNotification(a, b) {
 // points (new mirrors, phone-side dismissals, extension-side dismissals,
 // popup deletes); like unreadCountOps, one queue keeps overlapping mutations
 // from reading the same starting array and dropping each other's writes.
-// mutate() gets the stored array and returns the next one, or falsy to skip
-// the write; the unread count is recomputed either way.
+// mutate() (sync or async) gets the stored array and returns the next one,
+// or falsy to skip the write; the unread count is recomputed either way.
 let mirrorStoreOps = Promise.resolve();
 
 function updateMirrorNotifications(mutate) {
@@ -1178,7 +1178,7 @@ function updateMirrorNotifications(mutate) {
     try {
       const data = await chrome.storage.local.get('mirrorNotifications');
       const notifications = data.mirrorNotifications || [];
-      const next = mutate(notifications);
+      const next = await mutate(notifications);
       if (next) {
         await chrome.storage.local.set({ mirrorNotifications: next });
       }
@@ -1204,9 +1204,18 @@ async function recomputeUnreadMirrorCount(notifications) {
 }
 
 async function markMirrorNotificationsRead() {
-  await chrome.storage.local.set({ lastMirrorReadTime: Date.now() / 1000 });
-  // Queue a no-op mutation so the count recomputes from a consistent snapshot
-  await updateMirrorNotifications(() => null);
+  // Opening the popup must always clear the badge: stamp the read time past
+  // every stored entry (not just the wall clock) inside the queue, so the
+  // recompute that follows is guaranteed to count zero even if an entry
+  // carries a futuristic timestamp from a skewed or corrected clock.
+  await updateMirrorNotifications(async (notifications) => {
+    const newest = notifications.reduce((max, n) => {
+      const t = n.receivedAt ?? n.created;
+      return t > max ? t : max;
+    }, 0);
+    await chrome.storage.local.set({ lastMirrorReadTime: Math.max(Date.now() / 1000, newest) });
+    return null;
+  });
 }
 
 async function handleMirrorNotification(mirrorData) {
