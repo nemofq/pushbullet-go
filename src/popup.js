@@ -1310,12 +1310,18 @@ document.addEventListener('DOMContentLoaded', function() {
       debouncedLoadMessages(savedScrollTop);
     }
     if (areaName === 'local' && changes.mirrorNotifications) {
-      // Only preserve scroll position when deleting (array shrinks), otherwise scroll to bottom for new notifications
+      // Scroll to bottom only when new content arrived, i.e. a new or updated
+      // entry at the front of the stored array; deletions and dismissed-flag
+      // writes (same entries, same order) keep the scroll position.
       const oldLength = changes.mirrorNotifications.oldValue?.length || 0;
       const newLength = changes.mirrorNotifications.newValue?.length || 0;
-      const isDeleting = newLength < oldLength;
+      const oldFirst = changes.mirrorNotifications.oldValue?.[0];
+      const newFirst = changes.mirrorNotifications.newValue?.[0];
+      const hasNewContent = newLength >= oldLength && !!newFirst &&
+        (!oldFirst || newFirst.id !== oldFirst.id ||
+          (newFirst.receivedAt ?? newFirst.created) !== (oldFirst.receivedAt ?? oldFirst.created));
 
-      const savedScrollTop = isDeleting ? notificationsList.scrollTop : null;
+      const savedScrollTop = hasNewContent ? null : notificationsList.scrollTop;
       debouncedLoadNotifications(savedScrollTop);
     }
     if (areaName === 'sync' && changes.accessToken) {
