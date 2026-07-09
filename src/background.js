@@ -1417,47 +1417,12 @@ async function getMirrorIconDataUrl(iconBase64) {
   }
 }
 
-// Letter-avatar palette + hash, duplicated from popup.js so a generated
-// notification avatar matches the popup's letter fallback exactly.
-// keep in sync with popup.js
-const AVATAR_HUES = [262, 24, 202, 340, 174, 288, 16];
-// keep in sync with popup.js
-const hueFor = s => AVATAR_HUES[[...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_HUES.length];
-
-// Generate a letter avatar (128x128 PNG data URL): a solid deterministic-hue
-// circle with the sender's initial in white, matching the popup's fillAvatar
-// letter branch — hue keyed on email_normalized||email||name, initial from the
-// first char of name||email||'?'. Deterministic and cheap, so it is generated
-// per call and never cached. Returns null on any failure so the caller falls
-// back to icon128.png.
-async function getLetterAvatarDataUrl(person) {
-  try {
-    const size = 128;
-    const key = person.email_normalized || person.email || person.name || '';
-    const initial = (person.name || person.email || '?').charAt(0).toUpperCase();
-
-    const canvas = new OffscreenCanvas(size, size);
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingQuality = 'high';
-    // Full-circle hue fill (same hsl as the popup's inline background).
-    ctx.fillStyle = `hsl(${hueFor(key)}, 45%, 52%)`;
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.fill();
-    // White initial, centered. textBaseline 'middle' sits a hair high for caps,
-    // so the baseline is nudged down a few px for optical centering.
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 64px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(initial, size / 2, size / 2 + 4);
-
-    return await canvasToPngDataUrl(canvas);
-  } catch (e) {
-    return null;
-  }
-}
+// Bundled default person avatar (drawn in-repo, official-client-inspired but
+// our own circular design) — the notification icon whenever a real photo
+// cannot be fetched. A static asset rather than a runtime-generated letter
+// circle: the popup can display photo hosts the worker cannot fetch, so a
+// letter here would contradict the photo the user then sees in the popup.
+const PERSON_FALLBACK_ICON = 'assets/person128.png';
 
 // Insert or refresh a personAvatars entry at the freshest position, then evict
 // the oldest (insertion order) until the store is within
@@ -1482,19 +1447,18 @@ async function putPersonAvatar(cache, emailNormalized, entry) {
 
 // Notification avatar for a person. Resolution order:
 //   1. cached success ({ image_url, dataUrl })      -> the cropped photo
-//   2. cached failure ({ image_url, failed: true }) -> letter avatar
+//   2. cached failure ({ image_url, failed: true }) -> the default avatar
 //   3. image_url is an https dl.pushbulletusercontent.com URL -> fetch it; on
 //      success cache + return the photo, on any failure (non-ok / network /
-//      decode) negative-cache the image_url and return the letter avatar
-//   4. absent / unparseable / non-whitelisted image_url -> letter avatar
-//   5. letter generation itself fails -> null (caller uses icon128.png)
+//      decode) negative-cache the image_url and return the default avatar
+//   4. absent / unparseable / non-whitelisted image_url -> the default avatar
 // Only dl.pushbulletusercontent.com is ever fetched: it is verified to send
 // `access-control-allow-origin: *`. static.pushbullet.com (Google profile
 // photos) sends no CORS headers, so a fetch there can only fail and spam an
 // unsuppressible CORS error onto the extensions page — it, and every other
 // host, is never requested. Cache entries invalidate when image_url changes.
 async function getPersonIconDataUrl(person) {
-  if (!person) return null;
+  if (!person) return PERSON_FALLBACK_ICON;
 
   let cache = {};
   try {
@@ -1502,11 +1466,11 @@ async function getPersonIconDataUrl(person) {
     cache = stored.personAvatars || {};
     const cached = cache[person.email_normalized];
     if (cached && cached.image_url === person.image_url) {
-      if (cached.dataUrl) return cached.dataUrl;                       // cached success
-      if (cached.failed) return await getLetterAvatarDataUrl(person);  // cached failure
+      if (cached.dataUrl) return cached.dataUrl;      // cached success
+      if (cached.failed) return PERSON_FALLBACK_ICON; // cached failure
     }
   } catch (e) {
-    // Storage read failed; fall through to a fresh fetch/letter attempt.
+    // Storage read failed; fall through to a fresh attempt.
   }
 
   // Whitelist gate: only build a request for an https URL whose host is exactly
@@ -1523,7 +1487,7 @@ async function getPersonIconDataUrl(person) {
   }
 
   if (!fetchable) {
-    return await getLetterAvatarDataUrl(person);
+    return PERSON_FALLBACK_ICON;
   }
 
   try {
@@ -1536,9 +1500,9 @@ async function getPersonIconDataUrl(person) {
     return dataUrl;
   } catch (e) {
     // Negative-cache this image_url so it is not retried (or re-logged) until it
-    // changes, then fall back to the letter avatar.
+    // changes, then fall back to the default avatar.
     await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, failed: true });
-    return await getLetterAvatarDataUrl(person);
+    return PERSON_FALLBACK_ICON;
   }
 }
 

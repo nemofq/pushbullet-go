@@ -56,8 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // the Push tab restores it from this cached value without an async re-read.
   let targetChipEnabled = false;
 
-  // Deterministic letter-avatar hue — keep in sync with background.js, which
-  // draws the same letter circles for notification icons.
+  // Deterministic letter-avatar hue for people without a photo.
   const AVATAR_HUES = [262, 24, 202, 340, 174, 288, 16];
   const hueFor = s => AVATAR_HUES[[...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_HUES.length];
   // Bell icons for the conversation mute button + the list muted glyph.
