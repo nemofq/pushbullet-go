@@ -640,6 +640,15 @@
       margin-right: 8px;
       font-size: 14px;
       font-weight: normal;
+      flex-shrink: 0;
+    }
+
+    /* Hanging indent for every sub-option label: the ↳ marker sits in its own
+       fixed gutter and the text wraps inside its own box, so wrapped lines
+       align with the first line's text instead of sliding under the marker. */
+    label:has(> .sub-option-icon) {
+      display: flex;
+      align-items: baseline;
     }
   </style>
 </head>
