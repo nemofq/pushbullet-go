@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configurați parola de criptare end-to-end pentru a vedea notificările."
+  },
+  "show_people_pushes_label": {
+    "message": "Push-uri de la persoane"
+  },
+  "behavior_tab": {
+    "message": "Comportament"
+  },
+  "auto_open_people_label": {
+    "message": "De asemenea, link-urile de la persoane"
+  },
+  "n_targets": {
+    "message": "$1 ținte"
+  },
+  "people_menu_label": {
+    "message": "Persoane"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Activează Chat-ul cu persoane"
+  },
+  "no_people_yet": {
+    "message": "Nicio persoană încă"
+  },
+  "manage_people_tip": {
+    "message": "Adăugați, eliminați sau blocați persoane pe"
+  },
+  "no_pushes_with_person": {
+    "message": "Niciun push cu $1 încă"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Niciun push încă"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Nu este încă pe Pushbullet – push-urile ajung prin e-mail."
+  },
+  "person_muted_title": {
+    "message": "Silențios"
+  },
+  "mute_person_title": {
+    "message": "Fără sunet"
+  },
+  "unmute_person_title": {
+    "message": "Cu sunet"
+  },
+  "to_person": {
+    "message": "Către $1"
+  },
+  "back_button_title": {
+    "message": "Înapoi"
+  },
+  "person_avatar_alt": {
+    "message": "Poză de profil"
   }
 }

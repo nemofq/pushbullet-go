@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "قم بإعداد كلمة مرور التشفير الشامل لرؤية الإشعارات."
+  },
+  "n_targets": {
+    "message": "$1 أهداف"
+  },
+  "people_menu_label": {
+    "message": "أشخاص"
+  },
+  "behavior_tab": {
+    "message": "السلوك"
+  },
+  "show_people_pushes_label": {
+    "message": "الإرسالات من الأشخاص"
+  },
+  "auto_open_people_label": {
+    "message": "أيضًا الروابط من الأشخاص"
+  },
+  "chat_tab": {
+    "message": "الدردشة"
+  },
+  "enable_chat_label": {
+    "message": "تفعيل الدردشة مع الأشخاص"
+  },
+  "no_people_yet": {
+    "message": "لا يوجد أشخاص بعد"
+  },
+  "manage_people_tip": {
+    "message": "أضف الأشخاص أو احذفهم أو احظرهم في"
+  },
+  "no_pushes_with_person": {
+    "message": "لا توجد إرسالات مع $1 بعد"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "لا توجد إرسالات بعد"
+  },
+  "person_not_on_pushbullet": {
+    "message": "ليس على Pushbullet بعد — تصل الإرسالات عبر البريد الإلكتروني."
+  },
+  "person_muted_title": {
+    "message": "مكتوم"
+  },
+  "mute_person_title": {
+    "message": "كتم"
+  },
+  "unmute_person_title": {
+    "message": "إلغاء الكتم"
+  },
+  "to_person": {
+    "message": "إلى $1"
+  },
+  "back_button_title": {
+    "message": "رجوع"
+  },
+  "person_avatar_alt": {
+    "message": "صورة الملف الشخصي"
   }
 }

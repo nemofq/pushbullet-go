@@ -20,15 +20,49 @@ document.addEventListener('DOMContentLoaded', function() {
   const targetControl = document.getElementById('targetControl');
   const targetControlLabel = document.getElementById('targetControlLabel');
   const targetMenu = document.getElementById('targetMenu');
+  const chatTab = document.getElementById('chatTab');
+  const peopleList = document.getElementById('peopleList');
+  const convWrap = document.getElementById('convWrap');
+  const convBack = document.getElementById('convBack');
+  const convAvatar = document.getElementById('convAvatar');
+  const convName = document.getElementById('convName');
+  const convEmail = document.getElementById('convEmail');
+  const convHint = document.getElementById('convHint');
+  const convMute = document.getElementById('convMute');
+  const convMuteIcon = document.getElementById('convMuteIcon');
+  const convMessages = document.getElementById('convMessages');
 
-  // Per-popup target override: an array of device idens applying to sends
-  // from this popup until it closes (or the ✕ clears it). [] = use the
-  // configured default (remoteDeviceId). In-memory only, never persisted —
-  // closing the popup is the natural reset.
+  // Per-popup target override applying to sends from this popup until it closes
+  // (or the ✕ clears it): device idens and people emails are tracked in two
+  // parallel arrays so a send can mix both kinds. Both [] = use the configured
+  // default (remoteDeviceId). In-memory only, never persisted — closing the
+  // popup is the natural reset.
   let perSendTargetIdens = [];
+  let perSendTargetEmails = [];
   let targetDevices = [];
+  let targetPeople = [];
   let defaultTargetLabel = '';
   let hasConfiguredDefault = false;
+
+  // ---- Chat tab state (drill-down list ↔ conversation, in-memory) ----
+  // currentTab tracks the active popup surface so storage.onChanged handlers
+  // know whether the Chat surfaces are visible; chatView is the sub-view and
+  // currentPerson the person whose conversation is open.
+  let currentTab = 'push';   // 'push' | 'chat' | 'notification'
+  let chatView = 'list';     // 'list' | 'conv'
+  let currentPerson = null;
+  // Cached "should the per-send target chip show" flag (set by
+  // initTargetSelector). The conversation force-hides the chip; returning to
+  // the Push tab restores it from this cached value without an async re-read.
+  let targetChipEnabled = false;
+
+  // Deterministic letter-avatar hue (matches prototype/people/index.html).
+  const AVATAR_HUES = [262, 24, 202, 340, 174, 288, 16];
+  const hueFor = s => AVATAR_HUES[[...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_HUES.length];
+  // Bell icons for the conversation mute button + the list muted glyph.
+  const BELL_PATH = 'M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21';
+  const BELL_OFF_PATH = 'M20,18.69L7.84,6.14L5.27,3.49L4,4.76L6.8,7.56V7.57C6.28,8.56 6,9.74 6,11V16L4,18V19H17.73L19.73,21L21,19.73L20,18.69M12,22A2,2 0 0,0 14,20H10A2,2 0 0,0 12,22M18,14.68V11C18,7.92 16.36,5.36 13.5,4.68V4A1.5,1.5 0 0,0 12,2.5A1.5,1.5 0 0,0 10.5,4V4.68C10.23,4.74 9.97,4.83 9.72,4.92L18,13.21V14.68Z';
+  const BELL_OFF_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="${BELL_OFF_PATH}"/></svg>`;
 
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -71,9 +105,27 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!window.CustomI18n) return;
     document.querySelectorAll('[data-ts]').forEach(node => {
       const ts = window.CustomI18n.formatTimestamp(Number(node.dataset.ts));
-      node.textContent = ts.text;
       node.title = ts.title;
+      // Nodes carrying a sender/recipient caption (people-push timeline rows)
+      // keep it across refreshes; plain timestamp nodes just take the new text.
+      renderTimestampContent(node, ts.text, node.dataset.tsCaption);
     });
+  }
+
+  // Fill a message-timestamp node with either a bare relative time or a
+  // "<name> · time" caption line (people-push attribution). Caption text is set
+  // via textContent so user-supplied names can never inject markup.
+  function renderTimestampContent(node, tsText, caption) {
+    if (caption) {
+      node.replaceChildren();
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'ts-name';
+      nameSpan.textContent = caption;
+      node.appendChild(nameSpan);
+      node.appendChild(document.createTextNode(' · ' + tsText));
+    } else {
+      node.textContent = tsText;
+    }
   }
   setInterval(refreshTimestamps, 60000);
   
@@ -220,11 +272,24 @@ document.addEventListener('DOMContentLoaded', function() {
   sendFileButton.addEventListener('click', () => {
     console.log('Popup: Send File button clicked');
 
-    // Thread the current target into the file window via a query param (it
-    // dies with the window, so nothing can leak into a later file send)
-    const fileUrl = perSendTargetIdens.length
-      ? `file.html?to=${encodeURIComponent(perSendTargetIdens.join(','))}`
-      : 'file.html';
+    // Thread the current target(s) into the file window via query params —
+    // device idens in `to`, people emails in `email`, each only when present
+    // (they die with the window, so nothing can leak into a later file send)
+    const params = new URLSearchParams();
+    if (currentTab === 'chat' && chatView === 'conv' && currentPerson) {
+      // Conversation: the file goes to this person only (single email); the
+      // per-send picker does not apply here.
+      params.set('email', currentPerson.email_normalized);
+    } else {
+      if (perSendTargetIdens.length) {
+        params.set('to', perSendTargetIdens.join(','));
+      }
+      if (perSendTargetEmails.length) {
+        params.set('email', perSendTargetEmails.join(','));
+      }
+    }
+    const query = params.toString();
+    const fileUrl = query ? `file.html?${query}` : 'file.html';
 
     // Open file upload window
     chrome.windows.create({
@@ -259,15 +324,28 @@ document.addEventListener('DOMContentLoaded', function() {
   targetMenu.addEventListener('click', (e) => {
     const option = e.target.closest('.menu-option');
     if (!option) return;
-    const iden = option.dataset.iden;
-    if (!iden) {
-      perSendTargetIdens = [];
-    } else {
-      const index = perSendTargetIdens.indexOf(iden);
+    const email = option.dataset.email;
+    if (email) {
+      // people row toggle (keyed by email_normalized)
+      const index = perSendTargetEmails.indexOf(email);
       if (index === -1) {
-        perSendTargetIdens.push(iden);
+        perSendTargetEmails.push(email);
       } else {
-        perSendTargetIdens.splice(index, 1);
+        perSendTargetEmails.splice(index, 1);
+      }
+    } else {
+      const iden = option.dataset.iden;
+      if (!iden) {
+        // default row → back to the configured default, clearing every pick
+        perSendTargetIdens = [];
+        perSendTargetEmails = [];
+      } else {
+        const index = perSendTargetIdens.indexOf(iden);
+        if (index === -1) {
+          perSendTargetIdens.push(iden);
+        } else {
+          perSendTargetIdens.splice(index, 1);
+        }
       }
     }
     renderTargetControl();
@@ -289,8 +367,44 @@ document.addEventListener('DOMContentLoaded', function() {
     switchTab('push');
   });
 
+  chatTab.addEventListener('click', () => {
+    switchTab('chat');
+  });
+
   notificationTab.addEventListener('click', () => {
     switchTab('notification');
+  });
+
+  // Conversation: back returns to the list; mute is the one chat action.
+  convBack.addEventListener('click', () => {
+    chatView = 'list';
+    currentPerson = null;
+    updateChatView();
+  });
+
+  convMute.addEventListener('click', () => {
+    // Hidden when the person entry has no iden (pre-upgrade trimmed entry), but
+    // guard anyway — no iden means no mute endpoint to call.
+    if (!currentPerson || !currentPerson.iden) return;
+    const wasMuted = currentPerson.muted === true;
+    const newMuted = !wasMuted;
+    // Optimistic swap; revert on a failed server call (plan §9).
+    currentPerson.muted = newMuted;
+    renderMuteButton();
+    chrome.runtime.sendMessage(
+      {
+        type: 'set_person_muted',
+        iden: currentPerson.iden,
+        email_normalized: currentPerson.email_normalized,
+        muted: newMuted
+      },
+      (response) => {
+        if (chrome.runtime.lastError || !response || response.success === false) {
+          currentPerson.muted = wasMuted;
+          renderMuteButton();
+        }
+      }
+    );
   });
 
   async function checkAccessToken() {
@@ -303,6 +417,8 @@ document.addEventListener('DOMContentLoaded', function() {
       setupGuide.classList.add('show');
       messagesList.style.display = 'none';
       notificationsList.style.display = 'none';
+      peopleList.style.display = 'none';
+      convWrap.style.display = 'none';
       sendForm.style.display = 'none';
       tabSwitcher.style.display = 'none';
       // Clear any content that might be affecting layout
@@ -319,33 +435,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  async function checkNotificationMirroring() {
+  // Computes which popup surfaces are enabled and lands on the right tab.
+  // Fixed tab order Push | Chat | Notification: Push is always enabled, Chat iff
+  // enableChat !== false, Notification iff mirroring is on; the switcher shows
+  // only when signed in and at least two surfaces are enabled. Pass
+  // { preserveCurrent: true } for reactive surface-toggle changes so an active,
+  // still-available tab is kept — otherwise (initial load / reconnect) the saved
+  // default tab is applied. The saved defaultTab is never rewritten here; a
+  // disabled surface just falls back to Push for display.
+  async function checkNotificationMirroring(options) {
+    const preserveCurrent = !!(options && options.preserveCurrent);
     const tokenData = await chrome.storage.sync.get('accessToken');
-    
+
     // Only show tabs if we have an access token
     if (!tokenData.accessToken) {
       tabSwitcher.style.display = 'none';
+      chatTab.style.display = 'none';
+      notificationTab.style.display = 'none';
       checkSmsShortcut();
       return;
     }
-    
-    const [mirroringData, defaultTabData] = await Promise.all([
-      chrome.storage.local.get('notificationMirroring'),
-      chrome.storage.local.get('defaultTab')
-    ]);
-    
-    if (mirroringData.notificationMirroring) {
-      tabSwitcher.style.display = 'flex';
+
+    const localData = await chrome.storage.local.get(['notificationMirroring', 'enableChat', 'defaultTab']);
+    const mirroringOn = !!localData.notificationMirroring;
+    const chatOn = localData.enableChat !== false;
+
+    // Per-button visibility (fixed order); the switcher shows with >1 surface.
+    chatTab.style.display = chatOn ? '' : 'none';
+    notificationTab.style.display = mirroringOn ? '' : 'none';
+    const enabledCount = 1 + (chatOn ? 1 : 0) + (mirroringOn ? 1 : 0);
+    tabSwitcher.style.display = enabledCount > 1 ? 'flex' : 'none';
+
+    const isTabAvailable = (tab) =>
+      tab === 'push' || (tab === 'chat' && chatOn) || (tab === 'notification' && mirroringOn);
+    const storedDefaultTab = localData.defaultTab || 'push';
+    const effectiveDefaultTab = isTabAvailable(storedDefaultTab) ? storedDefaultTab : 'push';
+
+    if (mirroringOn) {
       debouncedLoadNotifications();
-      
-      // Switch to default tab
-      const defaultTab = defaultTabData.defaultTab || 'push';
-      switchTab(defaultTab);
-    } else {
-      tabSwitcher.style.display = 'none';
-      // Clear unread push count when viewing pushes without tabs
-      chrome.runtime.sendMessage({ type: 'clear_unread_pushes' });
     }
+
+    // If the active tab's surface just turned off, drop any open conversation
+    // before falling back so a later re-enable reopens on the list.
+    if (!isTabAvailable(currentTab) && currentTab === 'chat') {
+      chatView = 'list';
+      currentPerson = null;
+    }
+
+    // switchTab('push') clears unread pushes; switchTab('notification') clears
+    // unread mirrors; switchTab('chat') touches neither.
+    const targetTab = (preserveCurrent && isTabAvailable(currentTab)) ? currentTab : effectiveDefaultTab;
+    switchTab(targetTab);
     checkSmsShortcut();
   }
 
@@ -405,11 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
       pushData.title = title;
     }
 
-    if (perSendTargetIdens.length) {
-      pushData.device_iden = perSendTargetIdens.join(',');
-    } else if (configData.remoteDeviceId) {
-      pushData.device_iden = configData.remoteDeviceId;
-    }
+    applyPerSendTargets(pushData, configData.remoteDeviceId);
 
     // Use the background script's sendPush function which handles multiple devices
     chrome.runtime.sendMessage({
@@ -432,13 +568,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const sendForm = document.querySelector('.send-form');
     const clearNotificationsBar = document.getElementById('clearNotificationsBar');
 
+    currentTab = tab;
+
+    if (tab === 'chat') {
+      // Chat surface (list or conversation). Deliberately does NOT clear the
+      // unread-push or unread-mirror counts — Chat tracks reads per-person
+      // (peopleLastRead), independent of both badges.
+      pushTab.classList.remove('active');
+      chatTab.classList.add('active');
+      notificationTab.classList.remove('active');
+      updateChatView();
+      // Freshen the people list on tab open (throttled to 15 min in background).
+      chrome.runtime.sendMessage({ type: 'refresh_people' });
+      return;
+    }
+
     if (tab === 'push') {
       pushTab.classList.add('active');
+      chatTab.classList.remove('active');
       notificationTab.classList.remove('active');
       messagesList.style.display = 'flex';
       notificationsList.style.display = 'none';
+      peopleList.style.display = 'none';
+      convWrap.style.display = 'none';
       sendForm.style.display = 'block';
       clearNotificationsBar.style.display = 'none';
+      // Restore the per-send target chip a conversation may have force-hidden.
+      targetControl.hidden = !targetChipEnabled;
+      // Restore the quick-share bar the Chat surface hid (shows only when
+      // enabled + on a shareable page).
+      checkQuickShare();
 
 
       // Clear unread push count when pushes tab is opened
@@ -452,17 +611,47 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     } else {
       pushTab.classList.remove('active');
+      chatTab.classList.remove('active');
       notificationTab.classList.add('active');
       messagesList.style.display = 'none';
       notificationsList.style.display = 'flex';
+      peopleList.style.display = 'none';
+      convWrap.style.display = 'none';
       sendForm.style.display = 'none';
       clearNotificationsBar.style.display = 'flex';
 
-      
+
       debouncedLoadNotifications();
-      
+
       // Clear unread mirrored notifications count when notifications tab is opened
       chrome.runtime.sendMessage({ type: 'clear_unread_mirrors' });
+    }
+  }
+
+  // Toggle the Chat sub-view (list vs conversation) plus the composer. The
+  // conversation reuses the standard composer but with no target chip — the
+  // header already names the recipient (the per-send picker does not apply).
+  function updateChatView() {
+    const sendForm = document.querySelector('.send-form');
+    const clearNotificationsBar = document.getElementById('clearNotificationsBar');
+    const inConv = chatView === 'conv' && !!currentPerson;
+
+    messagesList.style.display = 'none';
+    notificationsList.style.display = 'none';
+    peopleList.style.display = inConv ? 'none' : 'flex';
+    convWrap.style.display = inConv ? 'flex' : 'none';
+    clearNotificationsBar.style.display = 'none';
+    sendForm.style.display = inConv ? 'block' : 'none';
+    // Quick share is a Push-tab affordance; the conversation composer (which
+    // also shows the send-form) must never surface it.
+    quickShareContainer.style.display = 'none';
+
+    if (inConv) {
+      targetControl.hidden = true;
+      closeTargetMenu();
+      renderConversation();
+    } else {
+      renderPeopleList();
     }
   }
 
@@ -531,17 +720,160 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 16); // Optimized for smooth 60fps updates
   }
 
+  // Classify a push by direction (matches background.js): a people push is an
+  // incoming person-to-person push (channel/client pushes excluded); an
+  // outgoing push was sent to a person and belongs only to the conversation view.
+  const isPeoplePush = push => push.direction === 'incoming' && !push.channel_iden && !push.client_iden;
+  const isOutgoingPush = push => push.direction === 'outgoing';
+
+  // Shared bubble builder for both the main Push timeline and the conversation
+  // view: builds one .message-row (timestamp line + note/link/file/image bubble
+  // + copy/delete buttons) from a push. `messageType` is 'received' | 'sent';
+  // `caption` (or null) is the sender/recipient attribution shown on the
+  // timestamp line — used by the main timeline for people pushes, always null in
+  // the conversation (its header already names the person). `scrollContainer` is
+  // scrolled to the bottom once an image bubble finishes loading. With a null
+  // caption the output is identical to the pre-extraction inline markup.
+  function buildMessageRow(push, messageType, caption, scrollContainer) {
+    const messageRowDiv = document.createElement('div');
+    messageRowDiv.className = `message-row ${messageType}`;
+
+    const timestampDiv = document.createElement('div');
+    timestampDiv.className = 'message-timestamp';
+    const timestamp = push.created ? push.created * 1000 : push.sentAt;
+    const ts = window.CustomI18n.formatTimestamp(timestamp);
+    timestampDiv.dataset.ts = timestamp;
+    timestampDiv.title = ts.title;
+    if (caption) {
+      timestampDiv.dataset.tsCaption = caption;
+    }
+    renderTimestampContent(timestampDiv, ts.text, caption);
+
+    const messageContentDiv = document.createElement('div');
+    messageContentDiv.className = 'message-content';
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${messageType}`;
+
+    if (push.title) {
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'message-title';
+      titleDiv.textContent = push.title;
+      messageDiv.appendChild(titleDiv);
+    }
+
+    const bodyDiv = document.createElement('div');
+    bodyDiv.className = 'message-body';
+
+    const hasLinkUrl = typeof push.url === 'string' && push.url;
+
+    if (push.type === 'note') {
+      parseTextWithLinks(push.body || '', bodyDiv, 'message-link');
+    } else if (push.type === 'link') {
+      if (push.body) {
+        bodyDiv.textContent = push.body;
+        if (hasLinkUrl) {
+          bodyDiv.appendChild(document.createElement('br'));
+        }
+      }
+      if (hasLinkUrl) {
+        const link = document.createElement('a');
+        // Bare www. would resolve as a relative URL under chrome-extension://;
+        // match parseTextWithLinks() and prepend https:// for the href only.
+        link.href = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
+        link.textContent = push.url;
+        link.className = 'message-link';
+        link.target = '_blank';
+        bodyDiv.appendChild(link);
+      }
+    } else if (push.type === 'file') {
+      if (push.body) {
+        bodyDiv.textContent = push.body;
+        bodyDiv.appendChild(document.createElement('br'));
+      }
+
+      if (push.file_type && push.file_type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = push.file_url;
+        img.className = 'message-image';
+        img.onclick = () => window.open(push.file_url, '_blank');
+        // Add load event listener to handle scroll positioning after image loads
+        img.onload = () => {
+          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        };
+        bodyDiv.appendChild(img);
+      } else {
+        const link = document.createElement('a');
+        link.href = push.file_url;
+        link.textContent = push.file_name || window.CustomI18n.getMessage('download_file');
+        link.className = 'message-link';
+        link.target = '_blank';
+        bodyDiv.appendChild(link);
+      }
+    }
+
+    messageDiv.appendChild(bodyDiv);
+    messageContentDiv.appendChild(messageDiv);
+
+    // Add copy button for received text messages and links
+    if (messageType === 'received' && ((push.type === 'note' && push.body) || (push.type === 'link' && hasLinkUrl))) {
+      const copyButton = document.createElement('button');
+      copyButton.className = 'copy-button';
+      copyButton.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>';
+      copyButton.title = push.type === 'link' ? window.CustomI18n.getMessage('copy_link') : window.CustomI18n.getMessage('copy_message');
+      copyButton.onclick = (e) => {
+        e.stopPropagation();
+        const textToCopy = push.type === 'link' ? push.url : push.body;
+        navigator.clipboard.writeText(textToCopy);
+      };
+      messageContentDiv.appendChild(copyButton);
+    }
+
+    // Add delete button for all pushes
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'push-delete-button';
+    deleteButton.innerHTML = '<svg viewBox="3 2 18 20" fill="currentColor"><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg>';
+    deleteButton.title = window.CustomI18n.getMessage('delete_push');
+    deleteButton.onclick = (e) => {
+      e.stopPropagation();
+      chrome.runtime.sendMessage({
+        type: 'delete_push',
+        iden: push.iden
+      });
+    };
+    messageContentDiv.appendChild(deleteButton);
+
+    messageRowDiv.appendChild(timestampDiv);
+    messageRowDiv.appendChild(messageContentDiv);
+    return messageRowDiv;
+  }
+
   async function loadMessages(preserveScrollTop = null) {
-    const [receivedData, sentData, configData, localData] = await Promise.all([
+    const [receivedData, sentData, configData, localData, peopleData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes']),
-      chrome.storage.local.get('chromeDeviceId')
+      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes']),
+      chrome.storage.local.get('chromeDeviceId'),
+      chrome.storage.local.get('people')
     ]);
+
+    // People lookup (by email_normalized) for the timestamp-line attribution
+    // captions on people pushes / sent-to-person messages.
+    const peopleByEmail = new Map((peopleData.people || []).map(p => [p.email_normalized, p]));
 
     // Get received messages (filtered by new flexible filtering settings)
     let receivedMessages = receivedData.pushes || [];
     receivedMessages = receivedMessages.filter(push => {
+      // Classify by direction before device bucketing: outgoing pushes belong
+      // only to the conversation view, and people pushes have their own filter
+      // (default on) instead of mis-bucketing as "no target device".
+      if (isOutgoingPush(push)) {
+        return false;
+      }
+      if (isPeoplePush(push)) {
+        return configData.showPeoplePushes !== false; // Default is true
+      }
+
       const targetDeviceIden = push.target_device_iden;
 
       if (targetDeviceIden === localData.chromeDeviceId) {
@@ -600,114 +932,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     allMessages.reverse().forEach(push => {
-      const messageRowDiv = document.createElement('div');
-      messageRowDiv.className = `message-row ${push.messageType}`;
-      
-      const timestampDiv = document.createElement('div');
-      timestampDiv.className = 'message-timestamp';
-      const timestamp = push.created ? push.created * 1000 : push.sentAt;
-      const ts = window.CustomI18n.formatTimestamp(timestamp);
-      timestampDiv.dataset.ts = timestamp;
-      timestampDiv.textContent = ts.text;
-      timestampDiv.title = ts.title;
-      
-      const messageContentDiv = document.createElement('div');
-      messageContentDiv.className = 'message-content';
-      
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${push.messageType}`;
-      
-      if (push.title) {
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'message-title';
-        titleDiv.textContent = push.title;
-        messageDiv.appendChild(titleDiv);
+      // People-push attribution on the timestamp line: incoming people pushes
+      // show the sender name; sent-to-person messages show "To <name>". Name
+      // resolves via the people list, then the push's own fields.
+      let caption = null;
+      if (push.messageType === 'received' && isPeoplePush(push)) {
+        const person = peopleByEmail.get(push.sender_email_normalized);
+        caption = (person && person.name) || push.sender_name || push.sender_email || null;
+      } else if (push.messageType === 'sent' && push.receiver_email) {
+        const person = peopleByEmail.get(push.receiver_email_normalized);
+        const name = (person && person.name) || push.receiver_email;
+        caption = window.CustomI18n.getMessage('to_person', [name]);
       }
-      
-      const bodyDiv = document.createElement('div');
-      bodyDiv.className = 'message-body';
-
-      const hasLinkUrl = typeof push.url === 'string' && push.url;
-
-      if (push.type === 'note') {
-        parseTextWithLinks(push.body || '', bodyDiv, 'message-link');
-      } else if (push.type === 'link') {
-        if (push.body) {
-          bodyDiv.textContent = push.body;
-          if (hasLinkUrl) {
-            bodyDiv.appendChild(document.createElement('br'));
-          }
-        }
-        if (hasLinkUrl) {
-          const link = document.createElement('a');
-          // Bare www. would resolve as a relative URL under chrome-extension://;
-          // match parseTextWithLinks() and prepend https:// for the href only.
-          link.href = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
-          link.textContent = push.url;
-          link.className = 'message-link';
-          link.target = '_blank';
-          bodyDiv.appendChild(link);
-        }
-      } else if (push.type === 'file') {
-        if (push.body) {
-          bodyDiv.textContent = push.body;
-          bodyDiv.appendChild(document.createElement('br'));
-        }
-        
-        if (push.file_type && push.file_type.startsWith('image/')) {
-          const img = document.createElement('img');
-          img.src = push.file_url;
-          img.className = 'message-image';
-          img.onclick = () => window.open(push.file_url, '_blank');
-          // Add load event listener to handle scroll positioning after image loads
-          img.onload = () => {
-            messagesList.scrollTop = messagesList.scrollHeight;
-          };
-          bodyDiv.appendChild(img);
-        } else {
-          const link = document.createElement('a');
-          link.href = push.file_url;
-          link.textContent = push.file_name || window.CustomI18n.getMessage('download_file');
-          link.className = 'message-link';
-          link.target = '_blank';
-          bodyDiv.appendChild(link);
-        }
-      }
-      
-      messageDiv.appendChild(bodyDiv);
-      messageContentDiv.appendChild(messageDiv);
-      
-      // Add copy button for received text messages and links
-      if (push.messageType === 'received' && ((push.type === 'note' && push.body) || (push.type === 'link' && hasLinkUrl))) {
-        const copyButton = document.createElement('button');
-        copyButton.className = 'copy-button';
-        copyButton.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>';
-        copyButton.title = push.type === 'link' ? window.CustomI18n.getMessage('copy_link') : window.CustomI18n.getMessage('copy_message');
-        copyButton.onclick = (e) => {
-          e.stopPropagation();
-          const textToCopy = push.type === 'link' ? push.url : push.body;
-          navigator.clipboard.writeText(textToCopy);
-        };
-        messageContentDiv.appendChild(copyButton);
-      }
-
-      // Add delete button for all pushes
-      const deleteButton = document.createElement('button');
-      deleteButton.className = 'push-delete-button';
-      deleteButton.innerHTML = '<svg viewBox="3 2 18 20" fill="currentColor"><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg>';
-      deleteButton.title = window.CustomI18n.getMessage('delete_push');
-      deleteButton.onclick = (e) => {
-        e.stopPropagation();
-        chrome.runtime.sendMessage({
-          type: 'delete_push',
-          iden: push.iden
-        });
-      };
-      messageContentDiv.appendChild(deleteButton);
-      
-      messageRowDiv.appendChild(timestampDiv);
-      messageRowDiv.appendChild(messageContentDiv);
-      fragment.appendChild(messageRowDiv);
+      fragment.appendChild(buildMessageRow(push, push.messageType, caption, messagesList));
     });
     
     // Replace content atomically to prevent flashing
@@ -922,6 +1159,291 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // ================================================================
+  // Chat tab: list + conversation rendering
+  // ================================================================
+
+  // Epoch seconds for ordering: push `created`, else sent `sentAt` (ms → s).
+  function itemTime(item) {
+    if (item.created) return item.created;
+    if (item.sentAt) return item.sentAt / 1000;
+    return 0;
+  }
+
+  // A person's display name, falling back to the email (type:"email" people
+  // have no name).
+  function personDisplayName(person) {
+    return person.name || person.email || '';
+  }
+
+  // Fill a .person-avatar element: the photo when image_url is present, else a
+  // deterministic-hue letter circle. DOM-built (no innerHTML with user data).
+  function fillAvatar(el, person, sizeClass) {
+    el.className = 'person-avatar' + (sizeClass ? ' ' + sizeClass : '');
+    el.removeAttribute('style');
+    el.replaceChildren();
+    const letterFallback = () => {
+      el.replaceChildren();
+      const key = person.email_normalized || person.email || person.name || '';
+      el.style.background = `hsl(${hueFor(key)}, 45%, 52%)`;
+      el.textContent = (person.name || person.email || '?').charAt(0).toUpperCase();
+    };
+    if (person.image_url) {
+      const img = document.createElement('img');
+      // A dead avatar URL would render the broken-image glyph; use the letter
+      // circle instead.
+      img.onerror = letterFallback;
+      img.src = person.image_url;
+      img.alt = window.CustomI18n.getMessage('person_avatar_alt');
+      el.appendChild(img);
+    } else {
+      letterFallback();
+    }
+  }
+
+  function buildAvatar(person, sizeClass) {
+    const el = document.createElement('div');
+    fillAvatar(el, person, sizeClass);
+    return el;
+  }
+
+  // Green "pushbullet.com" link that opens the People page in a new tab —
+  // identity management (add / remove / block) stays on pushbullet.com.
+  function buildPeopleManageLink() {
+    const link = document.createElement('a');
+    link.href = 'https://www.pushbullet.com/#people';
+    link.textContent = 'pushbullet.com';
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: 'https://www.pushbullet.com/#people' });
+    });
+    return link;
+  }
+
+  // Persist "this conversation was read up to now" (epoch seconds) — the derived
+  // per-person unread key (mirrors lastMirrorReadTime). Absent key = never
+  // opened. Writing it triggers a storage.onChanged re-render that clears dots.
+  async function stampPersonRead(emailNormalized) {
+    if (!emailNormalized) return;
+    const data = await chrome.storage.local.get('peopleLastRead');
+    const peopleLastRead = data.peopleLastRead || {};
+    peopleLastRead[emailNormalized] = Math.floor(Date.now() / 1000);
+    await chrome.storage.local.set({ peopleLastRead });
+  }
+
+  async function renderPeopleList() {
+    const [peopleData, pushesData, sentData, readData] = await Promise.all([
+      chrome.storage.local.get('people'),
+      chrome.storage.local.get('pushes'),
+      chrome.storage.local.get('sentMessages'),
+      chrome.storage.local.get('peopleLastRead')
+    ]);
+    const people = peopleData.people || [];
+    const pushes = pushesData.pushes || [];
+    const sentMessages = sentData.sentMessages || [];
+    const peopleLastRead = readData.peopleLastRead || {};
+
+    const fragment = document.createDocumentFragment();
+
+    // Empty state (setup-guide style): heading + the pushbullet.com manage tip.
+    if (people.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'people-empty';
+      const heading = document.createElement('h3');
+      heading.textContent = window.CustomI18n.getMessage('no_people_yet');
+      empty.appendChild(heading);
+      empty.appendChild(document.createTextNode(window.CustomI18n.getMessage('manage_people_tip') + ' '));
+      empty.appendChild(buildPeopleManageLink());
+      fragment.appendChild(empty);
+      peopleList.replaceChildren(fragment);
+      return;
+    }
+
+    // Per-person activity from the local push caches: latest item (either
+    // direction) drives the snippet + time; the latest INCOMING drives unread.
+    const rows = people.map(person => {
+      const key = person.email_normalized;
+      let latestItem = null;
+      let latestTime = 0;
+      let latestIncomingTime = 0;
+      const consider = item => {
+        if (!key) return;
+        if (item.sender_email_normalized !== key && item.receiver_email_normalized !== key) return;
+        const t = itemTime(item);
+        if (t >= latestTime) { latestTime = t; latestItem = item; }
+      };
+      pushes.forEach(push => {
+        consider(push);
+        if (push.sender_email_normalized === key && push.direction === 'incoming') {
+          const t = itemTime(push);
+          if (t > latestIncomingTime) latestIncomingTime = t;
+        }
+      });
+      sentMessages.forEach(consider);
+
+      let snippet = '';
+      if (latestItem) {
+        snippet = latestItem.title || latestItem.body || latestItem.url || latestItem.file_name || '';
+      }
+      if (!snippet) {
+        snippet = (person.name && person.email && person.name !== person.email)
+          ? person.email
+          : window.CustomI18n.getMessage('no_pushes_yet_snippet');
+      }
+
+      // Absent read key = never opened → unread when any incoming exists.
+      const readAt = peopleLastRead[key];
+      const unread = latestIncomingTime > 0 && (readAt === undefined || latestIncomingTime > readAt);
+
+      return { person, latestTime, snippet, unread, sortName: personDisplayName(person).toLowerCase() };
+    });
+
+    // Sort: most recent activity first; no-activity people fall to the bottom;
+    // alphabetical within ties (necessarily client-side — /v2/chats has no sort).
+    rows.sort((a, b) => {
+      if (b.latestTime !== a.latestTime) return b.latestTime - a.latestTime;
+      return a.sortName.localeCompare(b.sortName);
+    });
+
+    rows.forEach(r => {
+      const person = r.person;
+      const row = document.createElement('div');
+      row.className = 'person-row' + (r.unread ? ' unread' : '');
+      row.appendChild(buildAvatar(person));
+
+      const main = document.createElement('div');
+      main.className = 'person-main';
+
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'person-name';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'nm';
+      nameSpan.textContent = personDisplayName(person);
+      nameDiv.appendChild(nameSpan);
+      if (person.muted === true) {
+        const glyph = document.createElement('span');
+        glyph.className = 'muted-glyph';
+        glyph.title = window.CustomI18n.getMessage('person_muted_title');
+        glyph.innerHTML = BELL_OFF_SVG;
+        nameDiv.appendChild(glyph);
+      }
+      main.appendChild(nameDiv);
+
+      const snip = document.createElement('div');
+      snip.className = 'person-snippet';
+      snip.textContent = r.snippet;
+      main.appendChild(snip);
+      row.appendChild(main);
+
+      const meta = document.createElement('div');
+      meta.className = 'person-meta';
+      if (r.latestTime > 0) {
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'person-time';
+        const ms = r.latestTime * 1000;
+        const ts = window.CustomI18n.formatTimestamp(ms);
+        timeDiv.dataset.ts = ms;
+        timeDiv.textContent = ts.text;
+        timeDiv.title = ts.title;
+        meta.appendChild(timeDiv);
+      }
+      if (r.unread) {
+        const dot = document.createElement('div');
+        dot.className = 'unread-dot';
+        meta.appendChild(dot);
+      }
+      row.appendChild(meta);
+
+      row.onclick = () => openConversation(person);
+      fragment.appendChild(row);
+    });
+
+    // Quiet footer tip: manage identities at pushbullet.com.
+    const tip = document.createElement('div');
+    tip.className = 'people-tip';
+    tip.appendChild(document.createTextNode(window.CustomI18n.getMessage('manage_people_tip') + ' '));
+    tip.appendChild(buildPeopleManageLink());
+    fragment.appendChild(tip);
+
+    peopleList.replaceChildren(fragment);
+  }
+
+  async function openConversation(person) {
+    currentPerson = person;
+    chatView = 'conv';
+    // Opening marks the conversation read (epoch seconds).
+    await stampPersonRead(person.email_normalized);
+    refreshConversationHeader();
+    updateChatView();
+  }
+
+  // Fill the conversation header from currentPerson (name over email, email
+  // hidden when identical; avatar; email-delivery hint; mute bell state).
+  function refreshConversationHeader() {
+    if (!currentPerson) return;
+    fillAvatar(convAvatar, currentPerson, 'md');
+    convName.textContent = personDisplayName(currentPerson);
+    convEmail.textContent = (currentPerson.name === currentPerson.email) ? '' : (currentPerson.email || '');
+    convHint.style.display = currentPerson.type === 'email' ? 'block' : 'none';
+    renderMuteButton();
+  }
+
+  function renderMuteButton() {
+    if (!currentPerson) return;
+    const muted = currentPerson.muted === true;
+    convMuteIcon.innerHTML = `<path d="${muted ? BELL_OFF_PATH : BELL_PATH}"/>`;
+    convMute.title = window.CustomI18n.getMessage(muted ? 'unmute_person_title' : 'mute_person_title');
+    // Mute needs the chat iden (POST /v2/chats/{iden}); hide it for pre-upgrade
+    // trimmed entries that predate the stored iden.
+    convMute.style.display = currentPerson.iden ? 'flex' : 'none';
+  }
+
+  async function renderConversation() {
+    if (!currentPerson) return;
+    const key = currentPerson.email_normalized;
+    const [pushesData, sentData] = await Promise.all([
+      chrome.storage.local.get('pushes'),
+      chrome.storage.local.get('sentMessages')
+    ]);
+    const pushes = pushesData.pushes || [];
+    const sentMessages = sentData.sentMessages || [];
+
+    const matches = item =>
+      item.sender_email_normalized === key || item.receiver_email_normalized === key;
+
+    // Merge pushes ∪ sentMessages, dedupe by iden (prefer the pushes copy — an
+    // own send appears in both once the tickle lands), filter to this person.
+    const byIden = new Map();
+    const noIden = [];
+    sentMessages.filter(matches).forEach(m => { m.iden ? byIden.set(m.iden, m) : noIden.push(m); });
+    pushes.filter(matches).forEach(p => { p.iden ? byIden.set(p.iden, p) : noIden.push(p); });
+    const merged = [...byIden.values(), ...noIden];
+    merged.sort((a, b) => itemTime(a) - itemTime(b));
+
+    if (merged.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'no-messages';
+      empty.textContent = window.CustomI18n.getMessage('no_pushes_with_person', [personDisplayName(currentPerson)]);
+      convMessages.replaceChildren(empty);
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    merged.forEach(push => {
+      // incoming → received bubble; outgoing/self → sent bubble. No caption in
+      // the conversation — the header already names the person.
+      const messageType = push.direction === 'incoming' ? 'received' : 'sent';
+      fragment.appendChild(buildMessageRow(push, messageType, null, convMessages));
+    });
+    convMessages.replaceChildren(fragment);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        convMessages.scrollTop = convMessages.scrollHeight;
+      });
+    });
+  }
+
   // ---- per-send target selector ----
   // Mirrors the options page "Target Devices" list: same devices key, same
   // active && pushable filter, same labelling (populateDeviceSelects).
@@ -929,19 +1451,34 @@ document.addEventListener('DOMContentLoaded', function() {
     return device.nickname || `${device.manufacturer} ${device.model}`;
   }
 
+  // People rows are labelled by name, falling back to the email (type:"email"
+  // people have no name), and keyed by email_normalized everywhere.
+  function personLabel(person) {
+    return person.name || person.email;
+  }
+
   function selectedTargetDevices() {
     return targetDevices.filter(device => perSendTargetIdens.includes(device.iden));
   }
 
+  function selectedTargetPeople() {
+    return targetPeople.filter(person => perSendTargetEmails.includes(person.email_normalized));
+  }
+
   async function initTargetSelector() {
-    const configData = await chrome.storage.local.get(['showPerSendTarget', 'remoteDeviceId', 'devices']);
+    const configData = await chrome.storage.local.get(['showPerSendTarget', 'remoteDeviceId', 'devices', 'people', 'enableChat']);
 
     const devices = configData.devices || [];
     targetDevices = devices.filter(device => device.active && device.pushable !== false);
 
-    // Drop selections that no longer point at an existing pushable device
+    // People join the menu as per-send targets only while Chat is enabled.
+    targetPeople = configData.enableChat !== false ? (configData.people || []) : [];
+
+    // Drop selections that no longer point at an existing pushable device / person
     perSendTargetIdens = perSendTargetIdens.filter(iden =>
       targetDevices.some(device => device.iden === iden));
+    perSendTargetEmails = perSendTargetEmails.filter(email =>
+      targetPeople.some(person => person.email_normalized === email));
 
     // The default chip reflects the configured default target (remoteDeviceId),
     // which may be specific device(s) — "All devices" only when none is set.
@@ -957,19 +1494,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Hidden when the option is off (default on), or when there's nothing to
-    // choose between (≤1 pushable device).
-    const enabled = configData.showPerSendTarget !== false && targetDevices.length > 1;
-    targetControl.hidden = !enabled;
+    // choose between (≤1 pushable target across devices + people). With no
+    // people this is exactly the previous `targetDevices.length > 1` gate.
+    const enabled = configData.showPerSendTarget !== false && (targetDevices.length + targetPeople.length) > 1;
+    targetChipEnabled = enabled;
+    // In a conversation the chip is always hidden (the header names the
+    // recipient); elsewhere it follows the computed enabled state.
+    const inConversation = currentTab === 'chat' && chatView === 'conv';
+    targetControl.hidden = inConversation || !enabled;
     if (!enabled) {
       perSendTargetIdens = [];
+      perSendTargetEmails = [];
       closeTargetMenu();
     }
     renderTargetControl();
   }
 
   function renderTargetControl() {
-    const selected = selectedTargetDevices();
-    if (selected.length === 0) {
+    const selectedDevices = selectedTargetDevices();
+    const selectedPeople = selectedTargetPeople();
+    const total = selectedDevices.length + selectedPeople.length;
+    if (total === 0) {
       targetControl.classList.add('is-default');
       targetControl.classList.remove('is-custom');
       targetControlLabel.textContent = defaultTargetLabel;
@@ -977,23 +1522,42 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       targetControl.classList.remove('is-default');
       targetControl.classList.add('is-custom');
-      targetControlLabel.textContent = selected.length === 1
-        ? deviceLabel(selected[0])
-        : window.CustomI18n.getMessage('n_devices', [String(selected.length)]);
-      targetControl.title = window.CustomI18n.getMessage('target_custom_tooltip', [selected.map(deviceLabel).join(', ')]);
+      // Names listed devices-first, matching the menu order.
+      const names = [
+        ...selectedDevices.map(deviceLabel),
+        ...selectedPeople.map(personLabel)
+      ];
+      let label;
+      if (total === 1) {
+        label = names[0];
+      } else if (selectedPeople.length > 0) {
+        // any person in the mix → "N targets"; all devices → "N devices"
+        label = window.CustomI18n.getMessage('n_targets', [String(total)]);
+      } else {
+        label = window.CustomI18n.getMessage('n_devices', [String(total)]);
+      }
+      targetControlLabel.textContent = label;
+      targetControl.title = window.CustomI18n.getMessage('target_custom_tooltip', [names.join(', ')]);
     }
   }
 
-  function createTargetMenuOption(iden, label) {
+  function createTargetMenuOption(iden, label, email) {
     const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
     const option = document.createElement('button');
     option.className = 'menu-option';
     option.type = 'button';
-    option.dataset.iden = iden;
+    // People rows key by email; device rows by iden; the default/all row keeps
+    // the empty iden. Device and people rows are both independent toggles.
+    const isToggle = !!iden || !!email;
+    if (email) {
+      option.dataset.email = email;
+    } else {
+      option.dataset.iden = iden;
+    }
     option.title = label;
 
-    if (iden) {
-      // device rows are independent toggles → leading checkbox
+    if (isToggle) {
+      // device / people rows are independent toggles → leading checkbox
       const checkbox = document.createElement('span');
       checkbox.className = 'opt-checkbox';
       checkbox.innerHTML = CHECK_SVG;
@@ -1005,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', function() {
     text.textContent = label;
     option.appendChild(text);
 
-    if (!iden) {
+    if (!isToggle) {
       // the default/all row is a single current-state choice → trailing ✓
       const check = document.createElement('span');
       check.className = 'opt-check';
@@ -1053,16 +1617,41 @@ document.addEventListener('DOMContentLoaded', function() {
       fragment.appendChild(createTargetMenuOption(device.iden, deviceLabel(device)));
     });
 
+    // People section: divider + small tertiary label + one toggle row per
+    // person, mixed freely with the device rows above. targetPeople is already
+    // gated on enableChat (empty when Chat is off).
+    if (targetPeople.length) {
+      const peopleDivider = document.createElement('div');
+      peopleDivider.className = 'menu-divider';
+      fragment.appendChild(peopleDivider);
+
+      const peopleLabel = document.createElement('div');
+      peopleLabel.className = 'menu-section-label';
+      peopleLabel.textContent = window.CustomI18n.getMessage('people_menu_label');
+      fragment.appendChild(peopleLabel);
+
+      targetPeople.forEach(person => {
+        fragment.appendChild(createTargetMenuOption(null, personLabel(person), person.email_normalized));
+      });
+    }
+
     targetMenu.replaceChildren(fragment);
     markTargetMenuSelection();
   }
 
   function markTargetMenuSelection() {
     targetMenu.querySelectorAll('.menu-option').forEach(option => {
+      const email = option.dataset.email;
       const iden = option.dataset.iden;
-      const isSelected = iden
-        ? perSendTargetIdens.includes(iden)
-        : perSendTargetIdens.length === 0;
+      let isSelected;
+      if (email) {
+        isSelected = perSendTargetEmails.includes(email);
+      } else if (iden) {
+        isSelected = perSendTargetIdens.includes(iden);
+      } else {
+        // default/all row — selected only when nothing is overridden
+        isSelected = perSendTargetIdens.length === 0 && perSendTargetEmails.length === 0;
+      }
       option.classList.toggle('selected', isSelected);
     });
   }
@@ -1079,9 +1668,27 @@ document.addEventListener('DOMContentLoaded', function() {
   // Snaps the control back to its quiet default face — the ✕ and option-off
   // paths. Sends do NOT reset it; closing the popup does (in-memory only).
   function resetPerSendTarget() {
-    if (perSendTargetIdens.length) {
+    if (perSendTargetIdens.length || perSendTargetEmails.length) {
       perSendTargetIdens = [];
+      perSendTargetEmails = [];
       renderTargetControl();
+    }
+  }
+
+  // Apply the current per-send selection to a push payload: selected devices →
+  // device_iden, selected people → email (either may be absent). With no
+  // per-send override, fall back to the configured default device(s) — this
+  // keeps quick-share and typed sends device-only by default.
+  function applyPerSendTargets(pushData, remoteDeviceId) {
+    if (perSendTargetIdens.length || perSendTargetEmails.length) {
+      if (perSendTargetIdens.length) {
+        pushData.device_iden = perSendTargetIdens.join(',');
+      }
+      if (perSendTargetEmails.length) {
+        pushData.email = perSendTargetEmails.join(',');
+      }
+    } else if (remoteDeviceId) {
+      pushData.device_iden = remoteDeviceId;
     }
   }
 
@@ -1112,23 +1719,24 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!body) {
       return;
     }
-    
-    const configData = await chrome.storage.local.get('remoteDeviceId');
-    
+
     const isUrl = isValidUrl(body);
     const pushData = {
       type: isUrl ? 'link' : 'note',
       body: isUrl ? '' : body
     };
-    
+
     if (isUrl) {
       pushData.url = body;
     }
 
-    if (perSendTargetIdens.length) {
-      pushData.device_iden = perSendTargetIdens.join(',');
-    } else if (configData.remoteDeviceId) {
-      pushData.device_iden = configData.remoteDeviceId;
+    if (currentTab === 'chat' && chatView === 'conv' && currentPerson) {
+      // Conversation send: addressed to this person only. The per-send target
+      // picker does not apply here (the header names the recipient).
+      pushData.email = currentPerson.email_normalized;
+    } else {
+      const configData = await chrome.storage.local.get('remoteDeviceId');
+      applyPerSendTargets(pushData, configData.remoteDeviceId);
     }
 
     chrome.runtime.sendMessage({
@@ -1197,10 +1805,16 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error(window.CustomI18n.getMessage('no_access_token'));
       }
 
-      const targetDeviceIds = perSendTargetIdens.length
-        ? perSendTargetIdens.join(',')
-        : configData.remoteDeviceId;
-      await uploadPastedFile(file, tokenData.accessToken, targetDeviceIds);
+      // Snapshot the target(s) now (before the upload await) — devices and/or
+      // people; fall back to the configured default device when nothing is
+      // overridden.
+      const target = (perSendTargetIdens.length || perSendTargetEmails.length)
+        ? {
+            device_iden: perSendTargetIdens.length ? perSendTargetIdens.join(',') : undefined,
+            email: perSendTargetEmails.length ? perSendTargetEmails.join(',') : undefined
+          }
+        : { device_iden: configData.remoteDeviceId };
+      await uploadPastedFile(file, tokenData.accessToken, target);
 
       bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + window.CustomI18n.getMessage('uploaded_successfully');
       setTimeout(() => {
@@ -1220,7 +1834,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  async function uploadPastedFile(file, accessToken, remoteDeviceId) {
+  async function uploadPastedFile(file, accessToken, target) {
     const uploadRequest = await fetch('https://api.pushbullet.com/v2/upload-request', {
       method: 'POST',
       headers: {
@@ -1263,14 +1877,17 @@ document.addEventListener('DOMContentLoaded', function() {
       file_url: uploadData.file_url
     };
 
-    if (remoteDeviceId) {
-      pushData.device_iden = remoteDeviceId;
+    if (target.device_iden) {
+      pushData.device_iden = target.device_iden;
+    }
+    if (target.email) {
+      pushData.email = target.email;
     }
 
     // Use the background script's sendPush function which handles multiple devices
-    chrome.runtime.sendMessage({ 
-      type: 'send_push', 
-      data: pushData 
+    chrome.runtime.sendMessage({
+      type: 'send_push',
+      data: pushData
     });
   }
 
@@ -1338,6 +1955,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const savedScrollTop = isDeleting ? messagesList.scrollTop : null;
       debouncedLoadMessages(savedScrollTop);
+
+      // Keep the Chat surfaces live: a new push in the open conversation
+      // re-stamps it read (keeps the dot cleared) then re-renders; otherwise the
+      // list re-renders (snippets, times, unread dots).
+      if (currentTab === 'chat') {
+        if (chatView === 'conv' && currentPerson) {
+          stampPersonRead(currentPerson.email_normalized);
+          renderConversation();
+        } else {
+          renderPeopleList();
+        }
+      }
     }
     if (areaName === 'local' && changes.mirrorNotifications) {
       // Scroll to bottom only when new content arrived, i.e. a new or updated
@@ -1361,7 +1990,13 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
     if (areaName === 'local' && changes.notificationMirroring) {
-      checkNotificationMirroring();
+      // Reactive surface toggle: keep the active tab if still available, else
+      // fall back (see checkNotificationMirroring).
+      checkNotificationMirroring({ preserveCurrent: true });
+    }
+    if (areaName === 'local' && changes.enableChat) {
+      // Chat surface toggled: same preserve-or-fall-back behavior.
+      checkNotificationMirroring({ preserveCurrent: true });
     }
     if (areaName === 'local' && changes.mirrorDecryptIssue) {
       debouncedLoadNotifications();
@@ -1372,8 +2007,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (areaName === 'local' && changes.showQuickShare) {
       checkQuickShare();
     }
-    if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId || changes.devices)) {
+    if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId || changes.devices || changes.people || changes.enableChat)) {
       initTargetSelector();
+    }
+    if (areaName === 'local' && changes.people && currentTab === 'chat') {
+      // People list changed (mute/name/avatar upgrade, added/removed people):
+      // refresh the open conversation's person + timeline, or the list.
+      if (chatView === 'conv' && currentPerson) {
+        const updated = (changes.people.newValue || []).find(p => p.email_normalized === currentPerson.email_normalized);
+        if (updated) {
+          currentPerson = updated;
+          refreshConversationHeader();
+        }
+        renderConversation();
+      } else {
+        renderPeopleList();
+      }
+    }
+    if (areaName === 'local' && changes.peopleLastRead && currentTab === 'chat' && chatView === 'list') {
+      // Read stamps changed — refresh the list so unread dots clear.
+      renderPeopleList();
     }
     if (areaName === 'local' && changes.colorMode) {
       loadAndApplyColorMode();
@@ -1385,17 +2038,23 @@ document.addEventListener('DOMContentLoaded', function() {
           initializeI18n();
           debouncedLoadMessages(); // Refresh messages to update any UI text
           debouncedLoadNotifications(); // Refresh notifications too
+          // Re-render the Chat surfaces so their programmatic strings re-localize.
+          if (currentTab === 'chat') {
+            if (chatView === 'conv' && currentPerson) {
+              refreshConversationHeader();
+              renderConversation();
+            } else {
+              renderPeopleList();
+            }
+          }
         });
       }
     }
     if (areaName === 'local' && changes.defaultTab) {
-      // Default tab changed, switch to new default if notification mirroring is enabled
-      chrome.storage.local.get('notificationMirroring').then(data => {
-        if (data.notificationMirroring) {
-          const newDefaultTab = changes.defaultTab.newValue || 'push';
-          switchTab(newDefaultTab);
-        }
-      });
+      // Default tab changed (options Save): re-apply, honoring which surfaces
+      // are enabled (Push always, Chat/Notification per their toggles). The
+      // saved value itself is never rewritten here.
+      checkNotificationMirroring();
     }
   });
 });

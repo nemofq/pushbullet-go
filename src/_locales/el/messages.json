@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Ρυθμίστε τον κωδικό κρυπτογράφησης από άκρο σε άκρο για να δείτε τις ειδοποιήσεις."
+  },
+  "n_targets": {
+    "message": "$1 παραλήπτες"
+  },
+  "people_menu_label": {
+    "message": "Επαφές"
+  },
+  "behavior_tab": {
+    "message": "Συμπεριφορά"
+  },
+  "show_people_pushes_label": {
+    "message": "Αποστολές από επαφές"
+  },
+  "auto_open_people_label": {
+    "message": "Επίσης σύνδεσμοι από επαφές"
+  },
+  "chat_tab": {
+    "message": "Συνομιλία"
+  },
+  "enable_chat_label": {
+    "message": "Ενεργοποίηση συνομιλίας με επαφές"
+  },
+  "no_people_yet": {
+    "message": "Δεν υπάρχουν επαφές"
+  },
+  "manage_people_tip": {
+    "message": "Προσθέστε, αφαιρέστε ή αποκλείστε επαφές στο"
+  },
+  "no_pushes_with_person": {
+    "message": "Δεν υπάρχουν αποστολές με $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Χωρίς αποστολές"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Δεν είναι ακόμα στο Pushbullet — οι αποστολές φτάνουν μέσω email."
+  },
+  "person_muted_title": {
+    "message": "Σε σίγαση"
+  },
+  "mute_person_title": {
+    "message": "Σίγαση"
+  },
+  "unmute_person_title": {
+    "message": "Κατάργηση σίγασης"
+  },
+  "to_person": {
+    "message": "Προς $1"
+  },
+  "back_button_title": {
+    "message": "Πίσω"
+  },
+  "person_avatar_alt": {
+    "message": "Φωτογραφία προφίλ"
   }
 }

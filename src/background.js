@@ -484,6 +484,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'delete_push':
       deletePush(message.iden);
       return;
+    case 'refresh_people':
+      // Chat tab opened: opportunistic people-list refresh (§7 trigger 4),
+      // fire-and-forget. Throttled to 15 min on tab open here, then to 60s
+      // inside refreshPeopleFromServer().
+      maybeRefreshPeopleOnTabOpen();
+      return;
+    case 'set_person_muted':
+      // Mute / unmute the person's chat — the one in-extension chat action
+      // (POST /v2/chats/{iden}); replies with { success } once the server + the
+      // local people entry are updated.
+      setPersonMuted(message.iden, message.email_normalized, message.muted)
+        .then(success => sendResponse({ success }));
+      return true; // Will respond asynchronously
     case 'encryption_updated':
       // Encryption settings changed: reset the drop notice; the next
       // encrypted ephemeral re-evaluates against the new key state
@@ -547,6 +560,23 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     console.log('Page URL pushed via keyboard shortcut:', tab.url);
   }
 });
+
+// Trim a chat object down to the fields we store per person. Written to
+// storage.local only — never to the stale pre-1.11.5 sync copies, which must
+// not gain the new fields. Older {email_normalized, name} entries that predate
+// these fields are tolerated by every consumer until the next fetch upgrades them.
+// keep in sync with options.js trimChatToPerson
+function trimChatToPerson(chat) {
+  return {
+    iden: chat.iden,
+    type: chat.with.type,
+    email: chat.with.email,
+    email_normalized: chat.with.email_normalized,
+    name: chat.with.name || chat.with.email,
+    image_url: chat.with.image_url,
+    muted: chat.muted === true
+  };
+}
 
 // Fetch the devices and people lists from the server when a token exists but
 // the local lists are missing or empty (new machine that received the token
@@ -623,18 +653,86 @@ async function ensureDeviceDataFromServer() {
     const chatsData = await chatsResponse.json();
     const people = (chatsData.chats || [])
       .filter(chat => chat.active === true)
-      .map(chat => ({
-        email_normalized: chat.with.email_normalized,
-        name: chat.with.name
-      }));
+      .map(trimChatToPerson);
 
     const chromeDevice = devices.find(device => device.active && device.pushable !== false && device.type === 'chrome');
     const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
 
-    await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId });
+    await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId, lastPeopleFetch: Date.now() });
     console.log(`Device data fetched from server: ${devices.length} devices, ${people.length} people`);
   } finally {
     isEnsuringDeviceData = false;
+  }
+}
+
+// People-list freshness (§7): there is no chat tickle, so the list is refreshed
+// opportunistically — here, when an incoming push arrives from a sender not yet
+// in the local list. Throttled to at most once a minute via a module-level
+// timestamp so a burst of unknown-sender pushes triggers a single refetch.
+let lastPeopleRefreshAttempt = 0;
+
+async function refreshPeopleFromServer() {
+  if (Date.now() - lastPeopleRefreshAttempt < 60 * 1000) return;
+  lastPeopleRefreshAttempt = Date.now();
+
+  const token = await getAccessToken();
+  if (!token) return;
+
+  try {
+    const response = await fetch('https://api.pushbullet.com/v2/chats', {
+      headers: { 'Access-Token': token }
+    });
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const people = (data.chats || [])
+      .filter(chat => chat.active === true)
+      .map(trimChatToPerson);
+    await chrome.storage.local.set({ people: people, lastPeopleFetch: Date.now() });
+  } catch (error) {
+    console.error('Failed to refresh people from server:', error);
+  }
+}
+
+// Chat tab open (§7 trigger 4): refresh the people list only when the last
+// successful fetch is older than 15 minutes. refreshPeopleFromServer() keeps its
+// own 60s guard on top; fire-and-forget.
+async function maybeRefreshPeopleOnTabOpen() {
+  const data = await chrome.storage.local.get('lastPeopleFetch');
+  const last = data.lastPeopleFetch || 0;
+  if (Date.now() - last < 15 * 60 * 1000) return;
+  refreshPeopleFromServer();
+}
+
+// Mute / unmute a person's chat (POST /v2/chats/{iden} {muted}). On success the
+// local people entry is updated immediately (the source of immediate UI truth),
+// then a server refresh is kicked off to confirm. Returns whether it succeeded.
+async function setPersonMuted(iden, emailNormalized, muted) {
+  const token = await getAccessToken();
+  if (!token || !iden) return false;
+
+  try {
+    const response = await fetch(`https://api.pushbullet.com/v2/chats/${iden}`, {
+      method: 'POST',
+      headers: {
+        'Access-Token': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ muted: muted })
+    });
+    if (!response.ok) return false;
+
+    const data = await chrome.storage.local.get('people');
+    const people = (data.people || []).map(person =>
+      person.email_normalized === emailNormalized ? { ...person, muted: muted } : person);
+    await chrome.storage.local.set({ people: people });
+    // Confirm against the server (throttled inside; the direct write above is
+    // the immediate truth either way).
+    refreshPeopleFromServer();
+    return true;
+  } catch (error) {
+    console.error('Failed to set chat muted state:', error);
+    return false;
   }
 }
 
@@ -911,6 +1009,14 @@ async function handleReconnection() {
   }
 }
 
+// Classify a push by direction before it reaches the device-target buckets.
+// A people push is an incoming person-to-person push (channel and client pushes
+// can also be incoming, so they are excluded); an outgoing push was sent to a
+// person from some device and is conversation-only — never shown as received,
+// notified, or counted.
+const isPeoplePush = push => push.direction === 'incoming' && !push.channel_iden && !push.client_iden;
+const isOutgoingPush = push => push.direction === 'outgoing';
+
 // Refreshes run strictly one at a time. Overlapping runs (ws.onopen plus an
 // immediately-following tickle) would read the same lastModified/pushes
 // baseline and notify and count the same pushes twice; a queued run sees the
@@ -980,7 +1086,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         
         // Save updated pushes array
         if (newPushes.length > 0 || updatedPushes.length > 0) {
-          await chrome.storage.local.set({ pushes: pushes.slice(0, 100) });
+          await chrome.storage.local.set({ pushes: pushes.slice(0, 200) });
         }
 
         // Show notifications for new pushes (only if from tickle, meaning
@@ -990,10 +1096,17 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         // updates when a resume delivers many pushes at once.
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
-          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
-          const localData = await chrome.storage.local.get('chromeDeviceId');
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showPeoplePushes', 'autoOpenLinks', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
+          const people = localData.people || [];
 
           const pushesToNotify = newPushes.filter(push => {
+            // People and outgoing pushes are classified by direction, not by
+            // target device: keep them out of the device buckets below.
+            if (isPeoplePush(push) || isOutgoingPush(push)) {
+              return false;
+            }
+
             // Apply new flexible push filtering
             let shouldShowPush = false;
 
@@ -1041,9 +1154,53 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             return !shouldHideNotification;
           });
 
-          const counted = await Promise.all(pushesToNotify.map(push =>
-            showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false)
-          ));
+          // People pushes: mirror-notification style, attributed to the sender.
+          // Shown and counted when the filter is on (default) and the sender's
+          // chat is not muted. Auto-opened (issue #66) only for senders in the
+          // trusted list, when the auto-open master + its people sub are on and
+          // the Chat surface is enabled — otherwise the auto-open arg stays off.
+          const trustedPeople = (configData.autoOpenTrustedPeople || '').split(',').filter(Boolean);
+          const peopleTasks = [];
+          if (configData.showPeoplePushes !== false) {
+            for (const push of newPushes) {
+              if (!isPeoplePush(push)) continue;
+              const person = people.find(p => p.email_normalized === push.sender_email_normalized);
+              // muted = notifications from this chat will not be shown, so a
+              // muted push is neither notified nor counted (it is still stored
+              // and shown in the popup, which does not check muted). This skip
+              // also keeps muted senders out of the auto-open path below.
+              if (person && person.muted === true) continue;
+              // Unknown sender: refresh the chats list (throttled, fire-and-
+              // forget) so the new person is picked up; the notification
+              // meanwhile falls back to the push's own sender fields.
+              if (!person) refreshPeopleFromServer();
+              const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
+              const iconUrl = await getPersonIconDataUrl(person);
+              // Explicit trusted selection: only checked people auto-open. The
+              // Chat toggle (enableChat, Phase 5; undefined = enabled) gates it
+              // so a hidden option can never keep acting. Resume gating and
+              // hideNotificationOnAutoOpen compose exactly as the device path.
+              const autoOpenForPush = configData.autoOpenLinks
+                && configData.autoOpenLinksFromPeople
+                && configData.enableChat !== false
+                && trustedPeople.includes(push.sender_email_normalized);
+              peopleTasks.push(showNotificationForPush(
+                push,
+                autoOpenForPush && allowAutoOpenLinks,
+                configData.hideNotificationOnAutoOpen || false,
+                { titleOverride, iconUrl }
+              ));
+            }
+          }
+
+          // Device and people pushes share one batch total through the
+          // serialized counter queue (never per-push increments).
+          const counted = await Promise.all([
+            ...pushesToNotify.map(push =>
+              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false)
+            ),
+            ...peopleTasks
+          ]);
 
           const unreadDelta = counted.filter(Boolean).length;
           if (unreadDelta > 0) {
@@ -1069,7 +1226,10 @@ function normalizeOpenUrl(url) {
 // when the push is auto-opened with hideNotificationOnAutoOpen. The caller
 // tallies a whole batch into one counter write, so the decision is made before
 // the side effects below, and their failures neither reject nor change it.
-async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false) {
+// A people push passes { titleOverride, iconUrl } so the sender names the
+// notification and their avatar (or the fallback icon) is shown; device pushes
+// call this with no options and keep the push title with the default icon.
+async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false, { titleOverride, iconUrl } = {}) {
   // Determine if this push will actually be auto-opened
   const autoOpenUrl = (push.type === 'link' && autoOpenLinks) ? normalizeOpenUrl(push.url) : null;
   const willAutoOpen = autoOpenUrl !== null;
@@ -1093,10 +1253,20 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
         notificationBody = push.body || getMessage('new_push');
       }
 
+      // People pushes name the sender in the title, so the push's own title
+      // (if any) folds onto the first line of the message, mirror-style.
+      let notificationTitle = push.title || '';
+      if (titleOverride !== undefined) {
+        notificationTitle = titleOverride;
+        if (push.title) {
+          notificationBody = `${push.title}\n${notificationBody}`;
+        }
+      }
+
       const notificationOptions = {
         type: 'basic',
-        iconUrl: 'assets/icon128.png',
-        title: push.title || '',
+        iconUrl: iconUrl || 'assets/icon128.png',
+        title: notificationTitle,
         message: notificationBody
       };
 
@@ -1146,6 +1316,37 @@ const MIRROR_ICON_MAX_SIZE = 256;
 // circle would otherwise sample that band and render a colored ring, so we
 // zoom into the clean interior instead.
 const MIRROR_ICON_INSET = 0.06;
+// Cap the cached person avatars so the store can't grow without bound.
+const PERSON_AVATAR_CACHE_CAP = 50;
+
+// Circle-crop a decoded bitmap to a PNG data URL, insetting the outer band
+// first (see MIRROR_ICON_INSET). Shared by the mirror-icon and person-avatar
+// notification pipelines; consumes (closes) the bitmap.
+async function bitmapToCircleDataUrl(bitmap) {
+  const srcSquare = Math.min(bitmap.width, bitmap.height);
+  const cropSquare = srcSquare * (1 - MIRROR_ICON_INSET);
+  const size = Math.min(Math.round(cropSquare), MIRROR_ICON_MAX_SIZE);
+  const sx = (bitmap.width - cropSquare) / 2;
+  const sy = (bitmap.height - cropSquare) / 2;
+
+  const canvas = new OffscreenCanvas(size, size);
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+  ctx.drawImage(bitmap, sx, sy, cropSquare, cropSquare, 0, 0, size, size);
+  bitmap.close();
+
+  const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(pngBlob);
+  });
+}
 
 async function getMirrorIconDataUrl(iconBase64) {
   if (!iconBase64 || typeof iconBase64 !== 'string') return null;
@@ -1153,33 +1354,47 @@ async function getMirrorIconDataUrl(iconBase64) {
     const resp = await fetch(`data:image/jpeg;base64,${iconBase64}`);
     const blob = await resp.blob();
     const bitmap = await createImageBitmap(blob);
-
-    const srcSquare = Math.min(bitmap.width, bitmap.height);
-    const cropSquare = srcSquare * (1 - MIRROR_ICON_INSET);
-    const size = Math.min(Math.round(cropSquare), MIRROR_ICON_MAX_SIZE);
-    const sx = (bitmap.width - cropSquare) / 2;
-    const sy = (bitmap.height - cropSquare) / 2;
-
-    const canvas = new OffscreenCanvas(size, size);
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingQuality = 'high';
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.clip();
-    ctx.drawImage(bitmap, sx, sy, cropSquare, cropSquare, 0, 0, size, size);
-    bitmap.close();
-
-    const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
-    return await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(pngBlob);
-    });
+    return await bitmapToCircleDataUrl(bitmap);
   } catch (e) {
     console.error('getMirrorIconDataUrl failed:', e);
     return `data:image/jpeg;base64,${iconBase64}`;
+  }
+}
+
+// Notification avatar for a person: a circle-cropped PNG data URL fetched from
+// their image_url, cached in personAvatars and invalidated when the URL
+// changes. Any failure (no avatar, a CORS-blocked fetch — no host permission
+// is requested — or a decode error) returns null so the caller falls back to
+// icon128.png.
+async function getPersonIconDataUrl(person) {
+  if (!person || !person.image_url) return null;
+  try {
+    const stored = await chrome.storage.local.get('personAvatars');
+    const cache = stored.personAvatars || {};
+    const cached = cache[person.email_normalized];
+    if (cached && cached.image_url === person.image_url && cached.dataUrl) {
+      return cached.dataUrl;
+    }
+
+    const resp = await fetch(person.image_url);
+    if (!resp.ok) return null;
+    const blob = await resp.blob();
+    const bitmap = await createImageBitmap(blob);
+    const dataUrl = await bitmapToCircleDataUrl(bitmap);
+
+    // Re-insert at the end so a refreshed entry counts as freshest, then drop
+    // the oldest (insertion order) once over the cap.
+    const next = { ...cache };
+    delete next[person.email_normalized];
+    next[person.email_normalized] = { image_url: person.image_url, dataUrl };
+    const keys = Object.keys(next);
+    for (const key of keys.slice(0, Math.max(0, keys.length - PERSON_AVATAR_CACHE_CAP))) {
+      delete next[key];
+    }
+    await chrome.storage.local.set({ personAvatars: next });
+    return dataUrl;
+  } catch (e) {
+    return null;
   }
 }
 
@@ -1626,11 +1841,21 @@ async function sendPush(pushData) {
       pushData.source_device_iden = configData.chromeDeviceId;
     }
 
-    // Handle multiple device IDs
+    // Build the target list: one entry per device iden and one per email
+    // (either param may carry a comma-joined list, or be absent). device_iden
+    // and email are mutually exclusive on a single push, so each target owns
+    // exactly one addressing field and the shared base drops both.
     const deviceIds = pushData.device_iden ? pushData.device_iden.split(',').map(id => id.trim()).filter(id => id) : [];
+    const emails = pushData.email ? pushData.email.split(',').map(e => e.trim()).filter(e => e) : [];
+    const { device_iden, email, ...basePushData } = pushData;
+    const targets = [
+      ...deviceIds.map(iden => ({ device_iden: iden })),
+      ...emails.map(addr => ({ email: addr }))
+    ];
 
-    if (deviceIds.length <= 1) {
-      // Single or no device - use original logic
+    if (targets.length <= 1) {
+      // Single or no explicit target - use original logic (an untargeted push
+      // still goes out as-is, i.e. to all devices)
       const response = await fetch('https://api.pushbullet.com/v2/pushes', {
         method: 'POST',
         headers: {
@@ -1645,21 +1870,21 @@ async function sendPush(pushData) {
         await storeSentMessage(push);
       }
     } else {
-      // Multiple devices - send to each one
-      const pushPromises = deviceIds.map(deviceId => {
-        const devicePushData = { ...pushData, device_iden: deviceId };
+      // Multiple targets - one POST each, addressed to a single device or email
+      const pushPromises = targets.map(target => {
+        const targetPushData = { ...basePushData, ...target };
         return fetch('https://api.pushbullet.com/v2/pushes', {
           method: 'POST',
           headers: {
             'Access-Token': token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(devicePushData)
+          body: JSON.stringify(targetPushData)
         });
       });
-      
+
       const responses = await Promise.all(pushPromises);
-      
+
       // Store the first successful push for display
       for (const response of responses) {
         if (response.ok) {

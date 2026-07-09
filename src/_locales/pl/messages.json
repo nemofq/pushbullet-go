@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Skonfiguruj swoje hasło szyfrowania end-to-end, aby zobaczyć powiadomienia."
+  },
+  "show_people_pushes_label": {
+    "message": "Push od osób"
+  },
+  "behavior_tab": {
+    "message": "Zachowanie"
+  },
+  "auto_open_people_label": {
+    "message": "Także linki od osób"
+  },
+  "n_targets": {
+    "message": "$1 celów"
+  },
+  "people_menu_label": {
+    "message": "Osoby"
+  },
+  "chat_tab": {
+    "message": "Czat"
+  },
+  "enable_chat_label": {
+    "message": "Włącz czat z osobami"
+  },
+  "no_people_yet": {
+    "message": "Brak osób"
+  },
+  "manage_people_tip": {
+    "message": "Dodawaj, usuwaj lub blokuj osoby na"
+  },
+  "no_pushes_with_person": {
+    "message": "Brak wypychań z $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Brak wypychań"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Nie korzysta jeszcze z Pushbullet — wypychania dotrą e-mailem."
+  },
+  "person_muted_title": {
+    "message": "Wyciszono"
+  },
+  "mute_person_title": {
+    "message": "Wycisz"
+  },
+  "unmute_person_title": {
+    "message": "Wyłącz wyciszenie"
+  },
+  "to_person": {
+    "message": "Do $1"
+  },
+  "back_button_title": {
+    "message": "Wstecz"
+  },
+  "person_avatar_alt": {
+    "message": "Zdjęcie profilowe"
   }
 }

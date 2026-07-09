@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "הגדר את סיסמת ההצפנה מקצה לקצה כדי לראות את ההתראות."
+  },
+  "n_targets": {
+    "message": "$1 יעדים"
+  },
+  "people_menu_label": {
+    "message": "אנשים"
+  },
+  "behavior_tab": {
+    "message": "התנהגות"
+  },
+  "show_people_pushes_label": {
+    "message": "דחיפות מאנשים"
+  },
+  "auto_open_people_label": {
+    "message": "גם קישורים מאנשים"
+  },
+  "chat_tab": {
+    "message": "צ'אט"
+  },
+  "enable_chat_label": {
+    "message": "אפשר צ'אט עם אנשים"
+  },
+  "no_people_yet": {
+    "message": "אין אנשים עדיין"
+  },
+  "manage_people_tip": {
+    "message": "הוסף, הסר או חסום אנשים בכתובת"
+  },
+  "no_pushes_with_person": {
+    "message": "אין דחיפות עם $1 עדיין"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "אין דחיפות עדיין"
+  },
+  "person_not_on_pushbullet": {
+    "message": "עדיין לא ב-Pushbullet — דחיפות מגיעות באימייל."
+  },
+  "person_muted_title": {
+    "message": "מושתק"
+  },
+  "mute_person_title": {
+    "message": "השתק"
+  },
+  "unmute_person_title": {
+    "message": "בטל השתקה"
+  },
+  "to_person": {
+    "message": "אל $1"
+  },
+  "back_button_title": {
+    "message": "חזרה"
+  },
+  "person_avatar_alt": {
+    "message": "תמונת פרופיל"
   }
 }

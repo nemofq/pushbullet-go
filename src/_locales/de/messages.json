@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Konfigurieren Sie Ihr End-zu-End-Verschlüsselungspasswort, um die Benachrichtigungen zu sehen."
+  },
+  "n_targets": {
+    "message": "$1 Ziele"
+  },
+  "people_menu_label": {
+    "message": "Personen"
+  },
+  "behavior_tab": {
+    "message": "Verhalten"
+  },
+  "show_people_pushes_label": {
+    "message": "Pushes von Personen"
+  },
+  "auto_open_people_label": {
+    "message": "Auch Links von Personen"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Chat mit Personen aktivieren"
+  },
+  "no_people_yet": {
+    "message": "Noch keine Personen"
+  },
+  "manage_people_tip": {
+    "message": "Personen hinzufügen, entfernen oder blockieren auf"
+  },
+  "no_pushes_with_person": {
+    "message": "Noch keine Pushes mit $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Noch keine Pushes"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Noch nicht bei Pushbullet — Pushes kommen per E-Mail an."
+  },
+  "person_muted_title": {
+    "message": "Stummgeschaltet"
+  },
+  "mute_person_title": {
+    "message": "Stummschalten"
+  },
+  "unmute_person_title": {
+    "message": "Stummschaltung aufheben"
+  },
+  "to_person": {
+    "message": "An $1"
+  },
+  "back_button_title": {
+    "message": "Zurück"
+  },
+  "person_avatar_alt": {
+    "message": "Profilbild"
   }
 }

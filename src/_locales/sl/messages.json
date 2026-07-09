@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Nastavite svoje geslo za end-to-end šifriranje, da vidite obvestila."
+  },
+  "n_targets": {
+    "message": "$1 ciljev"
+  },
+  "people_menu_label": {
+    "message": "Osebe"
+  },
+  "behavior_tab": {
+    "message": "Vedenje"
+  },
+  "show_people_pushes_label": {
+    "message": "Pushes od oseb"
+  },
+  "auto_open_people_label": {
+    "message": "Tudi povezave od oseb"
+  },
+  "chat_tab": {
+    "message": "Klepet"
+  },
+  "enable_chat_label": {
+    "message": "Omogoči klepet z osebami"
+  },
+  "no_people_yet": {
+    "message": "Ni oseb"
+  },
+  "manage_people_tip": {
+    "message": "Dodajte, odstranite ali blokirajte osebe na"
+  },
+  "no_pushes_with_person": {
+    "message": "Ni pošiljanj z osebo $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Ni pošiljanj"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Še nima Pushbullet računa — pošiljanja prispejo po e-pošti."
+  },
+  "person_muted_title": {
+    "message": "Utišano"
+  },
+  "mute_person_title": {
+    "message": "Utišaj"
+  },
+  "unmute_person_title": {
+    "message": "Prekliči utišanje"
+  },
+  "to_person": {
+    "message": "Za $1"
+  },
+  "back_button_title": {
+    "message": "Nazaj"
+  },
+  "person_avatar_alt": {
+    "message": "Profilna slika"
   }
 }

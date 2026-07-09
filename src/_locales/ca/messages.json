@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configura la teva contrasenya de xifratge extrem a extrem per veure les notificacions."
+  },
+  "n_targets": {
+    "message": "$1 destinataris"
+  },
+  "people_menu_label": {
+    "message": "Persones"
+  },
+  "behavior_tab": {
+    "message": "Comportament"
+  },
+  "show_people_pushes_label": {
+    "message": "Enviaments de persones"
+  },
+  "auto_open_people_label": {
+    "message": "També enllaços de persones"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Activar Chat amb persones"
+  },
+  "no_people_yet": {
+    "message": "Encara no hi ha persones"
+  },
+  "manage_people_tip": {
+    "message": "Afegeix, elimina o bloqueja persones a"
+  },
+  "no_pushes_with_person": {
+    "message": "Encara no hi ha enviaments amb $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Encara no hi ha enviaments"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Encara no és a Pushbullet - els enviaments arriben per correu electrònic."
+  },
+  "person_muted_title": {
+    "message": "Silenciat"
+  },
+  "mute_person_title": {
+    "message": "Silenciar"
+  },
+  "unmute_person_title": {
+    "message": "Dessilenciar"
+  },
+  "to_person": {
+    "message": "A $1"
+  },
+  "back_button_title": {
+    "message": "Enrere"
+  },
+  "person_avatar_alt": {
+    "message": "Foto de perfil"
   }
 }

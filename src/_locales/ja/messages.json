@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "通知を見るには、エンドツーエンド暗号化パスワードを設定してください。"
+  },
+  "n_targets": {
+    "message": "$1件のターゲット"
+  },
+  "people_menu_label": {
+    "message": "ユーザー"
+  },
+  "behavior_tab": {
+    "message": "動作"
+  },
+  "show_people_pushes_label": {
+    "message": "ユーザーからのプッシュ"
+  },
+  "auto_open_people_label": {
+    "message": "ユーザーからのリンクも自動的に開く"
+  },
+  "chat_tab": {
+    "message": "チャット"
+  },
+  "enable_chat_label": {
+    "message": "ユーザーとのチャットを有効化"
+  },
+  "no_people_yet": {
+    "message": "まだユーザーがありません"
+  },
+  "manage_people_tip": {
+    "message": "ユーザーの追加・削除・ブロックはこちらから:"
+  },
+  "no_pushes_with_person": {
+    "message": "まだ$1とのプッシュがありません"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "まだプッシュなし"
+  },
+  "person_not_on_pushbullet": {
+    "message": "まだPushbulletを利用していないため、プッシュはメールで届きます。"
+  },
+  "person_muted_title": {
+    "message": "ミュート中"
+  },
+  "mute_person_title": {
+    "message": "ミュート"
+  },
+  "unmute_person_title": {
+    "message": "ミュート解除"
+  },
+  "to_person": {
+    "message": "$1へ"
+  },
+  "back_button_title": {
+    "message": "戻る"
+  },
+  "person_avatar_alt": {
+    "message": "プロフィール画像"
   }
 }

@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Налаштуйте свій пароль наскрізного шифрування, щоб побачити сповіщення."
+  },
+  "n_targets": {
+    "message": "$1 цілей"
+  },
+  "people_menu_label": {
+    "message": "Контакти"
+  },
+  "behavior_tab": {
+    "message": "Поведінка"
+  },
+  "show_people_pushes_label": {
+    "message": "Push від контактів"
+  },
+  "auto_open_people_label": {
+    "message": "Також посилання від контактів"
+  },
+  "chat_tab": {
+    "message": "Чат"
+  },
+  "enable_chat_label": {
+    "message": "Увімкнути чат з контактами"
+  },
+  "no_people_yet": {
+    "message": "Контактів ще немає"
+  },
+  "manage_people_tip": {
+    "message": "Додавайте, видаляйте або блокуйте контакти на"
+  },
+  "no_pushes_with_person": {
+    "message": "Push із $1 ще немає"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Push ще немає"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Ще не користується Pushbullet — push надходять електронною поштою."
+  },
+  "person_muted_title": {
+    "message": "Звук вимкнено"
+  },
+  "mute_person_title": {
+    "message": "Вимкнути звук"
+  },
+  "unmute_person_title": {
+    "message": "Увімкнути звук"
+  },
+  "to_person": {
+    "message": "До $1"
+  },
+  "back_button_title": {
+    "message": "Назад"
+  },
+  "person_avatar_alt": {
+    "message": "Фото профілю"
   }
 }

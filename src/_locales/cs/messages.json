@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Nakonfigurujte své heslo end-to-end šifrování pro zobrazení oznámení."
+  },
+  "n_targets": {
+    "message": "$1 cíle"
+  },
+  "people_menu_label": {
+    "message": "Osoby"
+  },
+  "behavior_tab": {
+    "message": "Chování"
+  },
+  "show_people_pushes_label": {
+    "message": "Push od osob"
+  },
+  "auto_open_people_label": {
+    "message": "Také odkazy od osob"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Povolit chat s osobami"
+  },
+  "no_people_yet": {
+    "message": "Zatím žádné osoby"
+  },
+  "manage_people_tip": {
+    "message": "Přidat, odebrat nebo blokovat osoby na"
+  },
+  "no_pushes_with_person": {
+    "message": "Zatím žádný push s $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Zatím žádný push"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Zatím není na Pushbulletu — push přicházejí e-mailem."
+  },
+  "person_muted_title": {
+    "message": "Ztlumeno"
+  },
+  "mute_person_title": {
+    "message": "Ztlumit"
+  },
+  "unmute_person_title": {
+    "message": "Odtlumit"
+  },
+  "to_person": {
+    "message": "Pro $1"
+  },
+  "back_button_title": {
+    "message": "Zpět"
+  },
+  "person_avatar_alt": {
+    "message": "Profilový obrázek"
   }
 }

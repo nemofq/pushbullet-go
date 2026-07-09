@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Määritä päästä-päähän -salaussalasana nähdäksesi ilmoitukset."
+  },
+  "n_targets": {
+    "message": "$1 kohdetta"
+  },
+  "people_menu_label": {
+    "message": "Henkilöt"
+  },
+  "behavior_tab": {
+    "message": "Toiminta"
+  },
+  "show_people_pushes_label": {
+    "message": "Pushit henkilöiltä"
+  },
+  "auto_open_people_label": {
+    "message": "Myös linkit henkilöiltä"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Ota käyttöön Chat henkilöiden kanssa"
+  },
+  "no_people_yet": {
+    "message": "Ei henkilöitä vielä"
+  },
+  "manage_people_tip": {
+    "message": "Lisää, poista tai estä henkilöitä osoitteessa"
+  },
+  "no_pushes_with_person": {
+    "message": "Ei lähetyksiä $1:n kanssa vielä"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Ei lähetyksiä vielä"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Ei vielä Pushbulletissa — lähetykset saapuvat sähköpostitse."
+  },
+  "person_muted_title": {
+    "message": "Mykistetty"
+  },
+  "mute_person_title": {
+    "message": "Mykistä"
+  },
+  "unmute_person_title": {
+    "message": "Poista mykistys"
+  },
+  "to_person": {
+    "message": "$1:lle"
+  },
+  "back_button_title": {
+    "message": "Takaisin"
+  },
+  "person_avatar_alt": {
+    "message": "Profiilikuva"
   }
 }

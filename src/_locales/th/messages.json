@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "กำหนดค่ารหัสผ่านเข้ารหัสแบบ end-to-end เพื่อดูการแจ้งเตือน"
+  },
+  "n_targets": {
+    "message": "$1 เป้าหมาย"
+  },
+  "people_menu_label": {
+    "message": "บุคคล"
+  },
+  "behavior_tab": {
+    "message": "พฤติกรรม"
+  },
+  "show_people_pushes_label": {
+    "message": "พุชจากบุคคล"
+  },
+  "auto_open_people_label": {
+    "message": "ลิงก์จากบุคคลด้วย"
+  },
+  "chat_tab": {
+    "message": "แชท"
+  },
+  "enable_chat_label": {
+    "message": "เปิดใช้งานแชทกับบุคคล"
+  },
+  "no_people_yet": {
+    "message": "ยังไม่มีบุคคล"
+  },
+  "manage_people_tip": {
+    "message": "หากต้องการเพิ่ม ลบ หรือบล็อกบุคคล ให้ไปที่"
+  },
+  "no_pushes_with_person": {
+    "message": "ยังไม่มีพุชกับ $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "ยังไม่มีพุช"
+  },
+  "person_not_on_pushbullet": {
+    "message": "ยังไม่ได้ใช้ Pushbullet — พุชจะมาถึงทางอีเมล"
+  },
+  "person_muted_title": {
+    "message": "ปิดเสียงแล้ว"
+  },
+  "mute_person_title": {
+    "message": "ปิดเสียง"
+  },
+  "unmute_person_title": {
+    "message": "เปิดเสียง"
+  },
+  "to_person": {
+    "message": "ถึง $1"
+  },
+  "back_button_title": {
+    "message": "กลับ"
+  },
+  "person_avatar_alt": {
+    "message": "รูปโปรไฟล์"
   }
 }

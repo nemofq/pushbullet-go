@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Állítsa be a végpontok közötti titkosítási jelszót az értesítések megtekintéséhez."
+  },
+  "n_targets": {
+    "message": "$1 cél"
+  },
+  "people_menu_label": {
+    "message": "Személyek"
+  },
+  "behavior_tab": {
+    "message": "Viselkedés"
+  },
+  "show_people_pushes_label": {
+    "message": "Küldések személyektől"
+  },
+  "auto_open_people_label": {
+    "message": "Linkek személyektől is"
+  },
+  "chat_tab": {
+    "message": "Csevegés"
+  },
+  "enable_chat_label": {
+    "message": "Csevegés személyekkel engedélyezése"
+  },
+  "no_people_yet": {
+    "message": "Még nincs személy"
+  },
+  "manage_people_tip": {
+    "message": "Személyek hozzáadása, eltávolítása vagy letiltása itt:"
+  },
+  "no_pushes_with_person": {
+    "message": "$1: még nincs küldés"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Még nincs küldés"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Még nincs Pushbullet-fiókja — a küldések e-mailben érkeznek."
+  },
+  "person_muted_title": {
+    "message": "Némítva"
+  },
+  "mute_person_title": {
+    "message": "Némítás"
+  },
+  "unmute_person_title": {
+    "message": "Némítás feloldása"
+  },
+  "to_person": {
+    "message": "Címzett: $1"
+  },
+  "back_button_title": {
+    "message": "Vissza"
+  },
+  "person_avatar_alt": {
+    "message": "Profilkép"
   }
 }

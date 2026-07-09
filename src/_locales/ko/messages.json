@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "알림을 보려면 종단간 암호화 비밀번호를 설정하세요."
+  },
+  "n_targets": {
+    "message": "대상 $1개"
+  },
+  "people_menu_label": {
+    "message": "사용자"
+  },
+  "behavior_tab": {
+    "message": "동작"
+  },
+  "show_people_pushes_label": {
+    "message": "사용자가 보낸 푸시"
+  },
+  "auto_open_people_label": {
+    "message": "사용자가 보낸 링크도"
+  },
+  "chat_tab": {
+    "message": "채팅"
+  },
+  "enable_chat_label": {
+    "message": "사용자와의 채팅 활성화"
+  },
+  "no_people_yet": {
+    "message": "아직 사용자가 없습니다"
+  },
+  "manage_people_tip": {
+    "message": "사용자 추가, 삭제 또는 차단은 여기에서:"
+  },
+  "no_pushes_with_person": {
+    "message": "아직 $1님과의 푸시가 없습니다"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "아직 푸시 없음"
+  },
+  "person_not_on_pushbullet": {
+    "message": "아직 Pushbullet 사용자가 아닙니다 — 푸시는 이메일로 도착합니다."
+  },
+  "person_muted_title": {
+    "message": "음소거됨"
+  },
+  "mute_person_title": {
+    "message": "음소거"
+  },
+  "unmute_person_title": {
+    "message": "음소거 해제"
+  },
+  "to_person": {
+    "message": "$1님에게"
+  },
+  "back_button_title": {
+    "message": "뒤로"
+  },
+  "person_avatar_alt": {
+    "message": "프로필 사진"
   }
 }

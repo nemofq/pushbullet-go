@@ -107,6 +107,12 @@
   "n_devices": {
     "message": "$1 devices"
   },
+  "n_targets": {
+    "message": "$1 targets"
+  },
+  "people_menu_label": {
+    "message": "People"
+  },
   "default_target_option": {
     "message": "Default ($1)"
   },
@@ -260,6 +266,9 @@
   "general_tab": {
     "message": "General"
   },
+  "behavior_tab": {
+    "message": "Behavior"
+  },
   "appearance_tab": {
     "message": "Appearance"
   },
@@ -344,6 +353,9 @@
   "pushes_without_target_label": {
     "message": "Pushes without target device"
   },
+  "show_people_pushes_label": {
+    "message": "Pushes from people"
+  },
   "delete_notification": {
     "message": "Delete notification"
   },
@@ -362,7 +374,49 @@
   "hide_notification_on_auto_open_label": {
     "message": "Hide notification when it has auto-opened"
   },
+  "auto_open_people_label": {
+    "message": "Also links from people"
+  },
   "show_os_notifications_label": {
     "message": "Show notifications"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Enable Chat with People"
+  },
+  "no_people_yet": {
+    "message": "No people yet"
+  },
+  "manage_people_tip": {
+    "message": "Add, remove or block people at"
+  },
+  "no_pushes_with_person": {
+    "message": "No pushes with $1 yet"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "No pushes yet"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Not on Pushbullet yet — pushes arrive by email."
+  },
+  "person_muted_title": {
+    "message": "Muted"
+  },
+  "mute_person_title": {
+    "message": "Mute"
+  },
+  "unmute_person_title": {
+    "message": "Unmute"
+  },
+  "to_person": {
+    "message": "To $1"
+  },
+  "back_button_title": {
+    "message": "Back"
+  },
+  "person_avatar_alt": {
+    "message": "Profile picture"
   }
 }

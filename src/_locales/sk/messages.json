@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Nakonfigurujte svoje heslo end-to-end šifrovania na zobrazenie oznámení."
+  },
+  "show_people_pushes_label": {
+    "message": "Push od ľudí"
+  },
+  "behavior_tab": {
+    "message": "Správanie"
+  },
+  "auto_open_people_label": {
+    "message": "Aj odkazy od ľudí"
+  },
+  "n_targets": {
+    "message": "$1 cieľov"
+  },
+  "people_menu_label": {
+    "message": "Ľudia"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Povoliť Chat s ľuďmi"
+  },
+  "no_people_yet": {
+    "message": "Zatiaľ žiadni ľudia"
+  },
+  "manage_people_tip": {
+    "message": "Môžete pridať, odstrániť alebo zablokovať ľudí na"
+  },
+  "no_pushes_with_person": {
+    "message": "Zatiaľ žiadne push správy s $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Zatiaľ žiadne push správy"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Zatiaľ nie je na Pushbullet – push správy prichádzajú e-mailom."
+  },
+  "person_muted_title": {
+    "message": "Stlmené"
+  },
+  "mute_person_title": {
+    "message": "Stlmiť"
+  },
+  "unmute_person_title": {
+    "message": "Zrušiť stlmenie"
+  },
+  "to_person": {
+    "message": "Komu: $1"
+  },
+  "back_button_title": {
+    "message": "Späť"
+  },
+  "person_avatar_alt": {
+    "message": "Profilová fotka"
   }
 }

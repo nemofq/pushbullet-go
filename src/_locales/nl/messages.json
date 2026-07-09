@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configureer je end-to-end versleuteling wachtwoord om de meldingen te zien."
+  },
+  "show_people_pushes_label": {
+    "message": "Pushes van personen"
+  },
+  "behavior_tab": {
+    "message": "Gedrag"
+  },
+  "auto_open_people_label": {
+    "message": "Ook links van personen"
+  },
+  "n_targets": {
+    "message": "$1 doelen"
+  },
+  "people_menu_label": {
+    "message": "Personen"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Chat met personen inschakelen"
+  },
+  "no_people_yet": {
+    "message": "Nog geen personen"
+  },
+  "manage_people_tip": {
+    "message": "Voeg personen toe, verwijder of blokkeer ze op"
+  },
+  "no_pushes_with_person": {
+    "message": "Nog geen pushes met $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Nog geen pushes"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Nog niet op Pushbullet - pushes komen per e-mail binnen."
+  },
+  "person_muted_title": {
+    "message": "Gedempt"
+  },
+  "mute_person_title": {
+    "message": "Dempen"
+  },
+  "unmute_person_title": {
+    "message": "Dempen opheffen"
+  },
+  "to_person": {
+    "message": "Aan $1"
+  },
+  "back_button_title": {
+    "message": "Terug"
+  },
+  "person_avatar_alt": {
+    "message": "Profielfoto"
   }
 }

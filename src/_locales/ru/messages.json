@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Настройте свой пароль сквозного шифрования, чтобы увидеть уведомления."
+  },
+  "show_people_pushes_label": {
+    "message": "Push от людей"
+  },
+  "behavior_tab": {
+    "message": "Поведение"
+  },
+  "auto_open_people_label": {
+    "message": "Также ссылки от людей"
+  },
+  "n_targets": {
+    "message": "$1 получателей"
+  },
+  "people_menu_label": {
+    "message": "Люди"
+  },
+  "chat_tab": {
+    "message": "Чат"
+  },
+  "enable_chat_label": {
+    "message": "Включить чат с людьми"
+  },
+  "no_people_yet": {
+    "message": "Людей пока нет"
+  },
+  "manage_people_tip": {
+    "message": "Можно добавлять, удалять или блокировать людей на"
+  },
+  "no_pushes_with_person": {
+    "message": "Push с $1 пока нет"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Push пока нет"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Пока не в Pushbullet — push приходят по почте."
+  },
+  "person_muted_title": {
+    "message": "Без звука"
+  },
+  "mute_person_title": {
+    "message": "Отключить звук"
+  },
+  "unmute_person_title": {
+    "message": "Включить звук"
+  },
+  "to_person": {
+    "message": "Кому: $1"
+  },
+  "back_button_title": {
+    "message": "Назад"
+  },
+  "person_avatar_alt": {
+    "message": "Фото профиля"
   }
 }

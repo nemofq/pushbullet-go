@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "請配置端對端加密密碼以查看通知。"
+  },
+  "n_targets": {
+    "message": "$1 個目標"
+  },
+  "people_menu_label": {
+    "message": "聯絡人"
+  },
+  "behavior_tab": {
+    "message": "行為"
+  },
+  "show_people_pushes_label": {
+    "message": "來自聯絡人的推送"
+  },
+  "auto_open_people_label": {
+    "message": "來自聯絡人的連結也自動開啟"
+  },
+  "chat_tab": {
+    "message": "聊天"
+  },
+  "enable_chat_label": {
+    "message": "啟用聯絡人聊天"
+  },
+  "no_people_yet": {
+    "message": "暫無聯絡人"
+  },
+  "manage_people_tip": {
+    "message": "如需新增、移除或封鎖聯絡人，請前往"
+  },
+  "no_pushes_with_person": {
+    "message": "暫無與 $1 的推送"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "暫無推送"
+  },
+  "person_not_on_pushbullet": {
+    "message": "尚未使用 Pushbullet，推送將以電子郵件送達。"
+  },
+  "person_muted_title": {
+    "message": "已靜音"
+  },
+  "mute_person_title": {
+    "message": "靜音"
+  },
+  "unmute_person_title": {
+    "message": "取消靜音"
+  },
+  "to_person": {
+    "message": "發給 $1"
+  },
+  "back_button_title": {
+    "message": "返回"
+  },
+  "person_avatar_alt": {
+    "message": "個人大頭貼"
   }
 }

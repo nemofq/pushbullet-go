@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configurez votre mot de passe de chiffrement de bout en bout pour voir les notifications."
+  },
+  "n_targets": {
+    "message": "$1 cibles"
+  },
+  "people_menu_label": {
+    "message": "Personnes"
+  },
+  "behavior_tab": {
+    "message": "Comportement"
+  },
+  "show_people_pushes_label": {
+    "message": "Pushs des personnes"
+  },
+  "auto_open_people_label": {
+    "message": "Aussi les liens des personnes"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Activer le chat avec les personnes"
+  },
+  "no_people_yet": {
+    "message": "Aucune personne"
+  },
+  "manage_people_tip": {
+    "message": "Ajoutez, supprimez ou bloquez des personnes sur"
+  },
+  "no_pushes_with_person": {
+    "message": "Aucun envoi avec $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Aucun envoi"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Pas encore sur Pushbullet — les envois arrivent par e-mail."
+  },
+  "person_muted_title": {
+    "message": "Muet"
+  },
+  "mute_person_title": {
+    "message": "Couper le son"
+  },
+  "unmute_person_title": {
+    "message": "Réactiver le son"
+  },
+  "to_person": {
+    "message": "Vers $1"
+  },
+  "back_button_title": {
+    "message": "Retour"
+  },
+  "person_avatar_alt": {
+    "message": "Photo de profil"
   }
 }

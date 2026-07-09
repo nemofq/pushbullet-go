@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   const hideNotificationOnAutoOpenCheckbox = document.getElementById('hideNotificationOnAutoOpen');
   const hideNotificationOnAutoOpenToggle = document.getElementById('hideNotificationOnAutoOpenToggle');
   const hideNotificationOnAutoOpenContainer = document.getElementById('hideNotificationOnAutoOpenContainer');
+  const autoOpenLinksFromPeopleCheckbox = document.getElementById('autoOpenLinksFromPeople');
+  const autoOpenLinksFromPeopleToggle = document.getElementById('autoOpenLinksFromPeopleToggle');
+  const autoOpenLinksFromPeopleContainer = document.getElementById('autoOpenLinksFromPeopleContainer');
+  const trustedPeoplePickerEl = document.getElementById('trustedPeoplePicker');
+  const trustedPeopleGroup = document.getElementById('trustedPeopleGroup');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
@@ -20,14 +25,19 @@ document.addEventListener('DOMContentLoaded', async function() {
   const showOtherDevicePushesToggle = document.getElementById('showOtherDevicePushesToggle');
   const showNoTargetPushesCheckbox = document.getElementById('showNoTargetPushes');
   const showNoTargetPushesToggle = document.getElementById('showNoTargetPushesToggle');
+  const showPeoplePushesCheckbox = document.getElementById('showPeoplePushes');
+  const showPeoplePushesToggle = document.getElementById('showPeoplePushesToggle');
   const hideBrowserPushesCheckbox = document.getElementById('hideBrowserPushes');
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
   const showSmsShortcutToggle = document.getElementById('showSmsShortcutToggle');
+  const enableChatCheckbox = document.getElementById('enableChat');
+  const enableChatToggle = document.getElementById('enableChatToggle');
   const showQuickShareCheckbox = document.getElementById('showQuickShare');
   const showQuickShareToggle = document.getElementById('showQuickShareToggle');
   const requireInteractionCheckbox = document.getElementById('requireInteraction');
   const requireInteractionToggle = document.getElementById('requireInteractionToggle');
+  const requireInteractionContainer = document.getElementById('requireInteractionContainer');
   const requireInteractionPushesCheckbox = document.getElementById('requireInteractionPushes');
   const requireInteractionPushesToggle = document.getElementById('requireInteractionPushesToggle');
   const requireInteractionPushesContainer = document.getElementById('requireInteractionPushesContainer');
@@ -36,6 +46,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   const requireInteractionMirroredContainer = document.getElementById('requireInteractionMirroredContainer');
   const closeAsDismissCheckbox = document.getElementById('closeAsDismiss');
   const closeAsDismissToggle = document.getElementById('closeAsDismissToggle');
+  const closeAsDismissContainer = document.getElementById('closeAsDismissContainer');
   const displayUnreadCountsCheckbox = document.getElementById('displayUnreadCounts');
   const displayUnreadCountsToggle = document.getElementById('displayUnreadCountsToggle');
   const displayUnreadPushesCheckbox = document.getElementById('displayUnreadPushes');
@@ -46,7 +57,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   const displayUnreadMirroredContainer = document.getElementById('displayUnreadMirroredContainer');
   const encryptionPasswordInput = document.getElementById('encryptionPassword');
   const encryptionPasswordGroup = document.getElementById('encryptionPasswordGroup');
-  const defaultTabGroup = document.getElementById('defaultTabGroup');
   const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
   const playSoundOnNotificationToggle = document.getElementById('playSoundOnNotificationToggle');
   const showOsNotificationsCheckbox = document.getElementById('showOsNotifications');
@@ -67,11 +77,14 @@ document.addEventListener('DOMContentLoaded', async function() {
   // toggling never closes anything, and state only persists on Save.
   const DEVICE_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
 
-  function createDeviceChecklist(container, getAllLabel, getEmptyLabel) {
+  function createDeviceChecklist(container, getAllLabel, getEmptyLabel, labelOf) {
     let devices = [];
     let selected = [];
 
     function deviceLabel(device) {
+      // labelOf lets a non-device list (the trusted-people picker) supply its
+      // own label; device pickers pass none and keep the nickname/model form.
+      if (labelOf) return labelOf(device);
       return device.nickname || `${device.manufacturer} ${device.model}`;
     }
 
@@ -121,10 +134,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
       }
       const fragment = document.createDocumentFragment();
-      fragment.appendChild(createOption('', getAllLabel()));
-      const divider = document.createElement('div');
-      divider.className = 'list-divider';
-      fragment.appendChild(divider);
+      // A null getAllLabel means explicit selection with no "All …" row (the
+      // trusted-people picker: only checked rows count, empty selection = no one).
+      if (getAllLabel) {
+        fragment.appendChild(createOption('', getAllLabel()));
+        const divider = document.createElement('div');
+        divider.className = 'list-divider';
+        fragment.appendChild(divider);
+      }
       devices.forEach(device => {
         fragment.appendChild(createOption(device.iden, deviceLabel(device)));
       });
@@ -179,6 +196,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     otherDevicePickerEl,
     () => window.CustomI18n.getMessage('all_other_devices'),
     () => window.CustomI18n.getMessage('no_devices_yet')
+  );
+  // Trusted-people checklist for auto-open (issue #66). No "All …" row: the plan
+  // requires explicit selection (only checked people auto-open), keyed by
+  // email_normalized. The empty hint reuses the primary device list's key since
+  // people are populated by the same "Retrieve devices and people" button.
+  const trustedPeoplePicker = createDeviceChecklist(
+    trustedPeoplePickerEl,
+    null,
+    () => window.CustomI18n.getMessage('retrieve_devices_first'),
+    person => person.name || person.email || person.email_normalized
   );
 
   // Shared row builder for the value-based lists below (same .list-option
@@ -281,11 +308,20 @@ document.addEventListener('DOMContentLoaded', async function() {
       labelSpan.textContent = current ? itemLabel(current) : '';
     }
 
+    // The value shown as selected: the stored value when its option is
+    // present, otherwise the first option (the fallback surface — e.g. Push
+    // when a saved 'notification' default is hidden because mirroring is off).
+    // The stored value itself is never rewritten here; getValue still returns it.
+    function effectiveValue() {
+      return items.some(item => item.value === value) ? value : (items[0] ? items[0].value : value);
+    }
+
     function renderMenu() {
+      const selectedValue = effectiveValue();
       const fragment = document.createDocumentFragment();
       items.forEach(item => {
         const option = createValueOption(item.value, itemLabel(item));
-        option.classList.toggle('selected', item.value === value);
+        option.classList.toggle('selected', item.value === selectedValue);
         fragment.appendChild(option);
       });
       menu.replaceChildren(fragment);
@@ -328,9 +364,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     return {
       getValue: function() { return value; },
       setValue: function(v) {
-        if (items.some(item => item.value === v)) {
-          value = v;
-        }
+        // Store the desired value even when its option isn't currently shown
+        // (a saved default whose surface is disabled): the display falls back
+        // to the first option, and the saved choice returns once re-enabled.
+        value = v;
+        renderLabel();
+      },
+      setItems: function(newItems) {
+        items = newItems;
         renderLabel();
       },
       rerender: renderLabel
@@ -376,10 +417,21 @@ document.addEventListener('DOMContentLoaded', async function() {
   ];
 
   const languageList = createSingleSelectList(document.getElementById('languageList'), LANGUAGE_OPTIONS);
-  const defaultTabDropdown = createSelectDropdown(document.getElementById('defaultTabDropdown'), [
-    { value: 'push', label: () => window.CustomI18n.getMessage('push_button') },
-    { value: 'notification', label: () => window.CustomI18n.getMessage('notification_button') }
-  ]);
+  // Default-tab options track the enabled popup surfaces: Push is always
+  // available; Notification only while mirroring is on (Chat arrives in a later
+  // phase). Rebuilt via updateDefaultTabVisibility() when mirroring flips. The
+  // saved defaultTab is never rewritten when a surface is disabled.
+  function defaultTabItems() {
+    const items = [{ value: 'push', label: () => window.CustomI18n.getMessage('push_button') }];
+    if (enableChatCheckbox.checked) {
+      items.push({ value: 'chat', label: () => window.CustomI18n.getMessage('chat_tab') });
+    }
+    if (notificationMirroringCheckbox.checked) {
+      items.push({ value: 'notification', label: () => window.CustomI18n.getMessage('notification_button') });
+    }
+    return items;
+  }
+  const defaultTabDropdown = createSelectDropdown(document.getElementById('defaultTabDropdown'), defaultTabItems());
   const colorModeDropdown = createSelectDropdown(document.getElementById('colorModeDropdown'), [
     { value: 'system', label: () => window.CustomI18n.getMessage('follow_system') },
     { value: 'light', label: () => window.CustomI18n.getMessage('light') },
@@ -406,13 +458,19 @@ document.addEventListener('DOMContentLoaded', async function() {
   
   let devices = [];
   let people = [];
+  // Chat surface master (enableChat, Phase 5). Read live from the checkbox so
+  // toggling it updates dependent UI (the people auto-open row + trusted
+  // checklist, and the default-tab dropdown's Chat option) without a reload.
+  function isChatEnabled() {
+    return enableChatCheckbox.checked;
+  }
 
   // Get data from both sync and local storage
   const syncData = await new Promise(resolve => {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -430,6 +488,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     devices = data.devices || [];
     people = data.people || [];
+    // Chat surface master (default enabled). Set before updateAutoOpen* runs so
+    // isChatEnabled() reads the right state during the load pass.
+    enableChatCheckbox.checked = data.enableChat !== false;
+    updateEnableChatToggleVisual();
     populateDeviceSelects();
     
     if (data.remoteDeviceId) {
@@ -452,7 +514,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     hideNotificationOnAutoOpenCheckbox.checked = data.hideNotificationOnAutoOpen || false;
     updateHideNotificationOnAutoOpenToggleVisual();
 
-    // Show/hide the auto-open on resume option based on auto-open links setting
+    // Load auto-open-links-from-people setting (default is false/off) and the
+    // trusted-people selection (comma-joined email_normalized; empty = no one).
+    autoOpenLinksFromPeopleCheckbox.checked = data.autoOpenLinksFromPeople || false;
+    updateAutoOpenLinksFromPeopleToggleVisual();
+    if (data.autoOpenTrustedPeople) {
+      trustedPeoplePicker.setSelected(data.autoOpenTrustedPeople.split(',').map(e => e.trim()).filter(e => e));
+    }
+
+    // Show/hide the auto-open sub-options based on auto-open links setting (the
+    // people row/checklist additionally require the Chat surface to be enabled)
     updateAutoOpenOnResumeVisibility();
     
     // Load notification mirroring setting (default is false/off)
@@ -504,6 +575,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     updateShowOtherDevicePushesToggleVisual();
     updateShowNoTargetPushesToggleVisual();
+
+    // Load pushes-from-people filter (default is true/on)
+    showPeoplePushesCheckbox.checked = data.showPeoplePushes !== false; // Default to true
+    updateShowPeoplePushesToggleVisual();
 
     // Load other device selections ('' or unset means all other devices,
     // which the checklist shows as its selected "All other devices" row)
@@ -608,6 +683,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateHideNotificationOnAutoOpenToggleVisual();
   });
 
+  autoOpenLinksFromPeopleToggle.addEventListener('click', function() {
+    autoOpenLinksFromPeopleCheckbox.checked = !autoOpenLinksFromPeopleCheckbox.checked;
+    updateAutoOpenLinksFromPeopleToggleVisual();
+    updateAutoOpenLinksFromPeopleVisibility();
+  });
+
   notificationMirroringToggle.addEventListener('click', function() {
     notificationMirroringCheckbox.checked = !notificationMirroringCheckbox.checked;
     updateNotificationMirroringToggleVisual();
@@ -656,6 +737,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateShowNoTargetPushesToggleVisual();
   });
 
+  showPeoplePushesToggle.addEventListener('click', function() {
+    showPeoplePushesCheckbox.checked = !showPeoplePushesCheckbox.checked;
+    updateShowPeoplePushesToggleVisual();
+  });
+
   hideBrowserPushesToggle.addEventListener('click', function() {
     hideBrowserPushesCheckbox.checked = !hideBrowserPushesCheckbox.checked;
     updateHideBrowserPushesToggleVisual();
@@ -664,6 +750,15 @@ document.addEventListener('DOMContentLoaded', async function() {
   showSmsShortcutToggle.addEventListener('click', function() {
     showSmsShortcutCheckbox.checked = !showSmsShortcutCheckbox.checked;
     updateShowSmsShortcutToggleVisual();
+  });
+
+  enableChatToggle.addEventListener('click', function() {
+    enableChatCheckbox.checked = !enableChatCheckbox.checked;
+    updateEnableChatToggleVisual();
+    // Chat is the visibility master for the people auto-open row + trusted list
+    // (Behavior), and adds/removes Chat from the default-tab dropdown.
+    updateAutoOpenLinksFromPeopleVisibility();
+    updateDefaultTabVisibility();
   });
 
   showQuickShareToggle.addEventListener('click', function() {
@@ -803,6 +898,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
 
+  // Trim a chat object to the fields we store per person. Written to
+  // storage.local only (never sync), matching background.js.
+  // keep in sync with background.js trimChatToPerson
+  function trimChatToPerson(chat) {
+    return {
+      iden: chat.iden,
+      type: chat.with.type,
+      email: chat.with.email,
+      email_normalized: chat.with.email_normalized,
+      name: chat.with.name || chat.with.email,
+      image_url: chat.with.image_url,
+      muted: chat.muted === true
+    };
+  }
+
   retrieveDevicesButton.addEventListener('click', async function() {
     // Get access token - either from new input or existing stored
     let accessToken = accessTokenInput.value.trim();
@@ -886,13 +996,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       const chatsData = await chatsResponse.json();
       const chats = chatsData.chats || [];
       
-      // Filter active chats and extract needed fields
+      // Filter active chats and trim to the fields we store per person
       people = chats
         .filter(chat => chat.active === true)
-        .map(chat => ({
-          email_normalized: chat.with.email_normalized,
-          name: chat.with.name
-        }));
+        .map(trimChatToPerson);
       
       // Fetch user info for encryption
       const userInfo = await fetchUserIden(accessToken);
@@ -915,7 +1022,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         // key, so drop it when the account can't be confirmed.
         await chrome.storage.sync.remove('userIden');
       }
-      await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId });
+      await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId, lastPeopleFetch: Date.now() });
 
       // Update access token field display after saving (same as "Save" button behavior)
       accessTokenInput.type = 'password';
@@ -1111,13 +1218,17 @@ document.addEventListener('DOMContentLoaded', async function() {
       showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
       selectedOtherDeviceIds: getSelectedOtherDeviceIds(),
       showNoTargetPushes: showNoTargetPushesCheckbox.checked,
+      showPeoplePushes: showPeoplePushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       autoOpenOnResume: autoOpenOnResumeCheckbox.checked,
       hideNotificationOnAutoOpen: hideNotificationOnAutoOpenCheckbox.checked,
+      autoOpenLinksFromPeople: autoOpenLinksFromPeopleCheckbox.checked,
+      autoOpenTrustedPeople: trustedPeoplePicker.getSelected().join(','),
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
+      enableChat: enableChatCheckbox.checked,
       showQuickShare: showQuickShareCheckbox.checked,
       requireInteraction: requireInteractionCheckbox.checked,
       requireInteractionPushes: requireInteractionPushesCheckbox.checked,
@@ -1184,12 +1295,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       showOtherDevicePushes: saveData.showOtherDevicePushes,
       selectedOtherDeviceIds: saveData.selectedOtherDeviceIds,
       showNoTargetPushes: saveData.showNoTargetPushes,
+      showPeoplePushes: saveData.showPeoplePushes,
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
       autoOpenOnResume: saveData.autoOpenOnResume,
       hideNotificationOnAutoOpen: saveData.hideNotificationOnAutoOpen,
+      autoOpenLinksFromPeople: saveData.autoOpenLinksFromPeople,
+      autoOpenTrustedPeople: saveData.autoOpenTrustedPeople,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
+      enableChat: saveData.enableChat,
       showQuickShare: saveData.showQuickShare,
       requireInteraction: saveData.requireInteraction,
       requireInteractionPushes: saveData.requireInteractionPushes,
@@ -1242,6 +1357,18 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Also populate the other device list
     populateOtherDeviceSelect();
+
+    // Populate the trusted-people checklist (auto-open). The checklist keys on
+    // `iden`, so people are mapped onto email_normalized — the identity key that
+    // matches incoming pushes' sender_email_normalized and is persisted in
+    // autoOpenTrustedPeople.
+    trustedPeoplePicker.setDevices(people
+      .filter(person => person.email_normalized)
+      .map(person => ({
+        iden: person.email_normalized,
+        name: person.name,
+        email: person.email
+      })));
   }
 
   function populateOtherDeviceSelect() {
@@ -1310,8 +1437,28 @@ document.addEventListener('DOMContentLoaded', async function() {
       autoOpenOnResumeContainer.style.display = 'none';
       hideNotificationOnAutoOpenContainer.style.display = 'none';
     }
+    // The people auto-open row/checklist also require the Chat surface enabled.
+    updateAutoOpenLinksFromPeopleVisibility();
   }
-  
+
+  function updateAutoOpenLinksFromPeopleToggleVisual() {
+    if (autoOpenLinksFromPeopleCheckbox.checked) {
+      autoOpenLinksFromPeopleToggle.classList.add('active');
+    } else {
+      autoOpenLinksFromPeopleToggle.classList.remove('active');
+    }
+  }
+
+  function updateAutoOpenLinksFromPeopleVisibility() {
+    // Row shows only while the auto-open master is on and the Chat surface is
+    // enabled (a Chat option shouldn't be offered while Chat is off); the
+    // trusted checklist additionally needs the people sub-toggle on.
+    const showRow = autoOpenLinksCheckbox.checked && isChatEnabled();
+    autoOpenLinksFromPeopleContainer.style.display = showRow ? 'flex' : 'none';
+    trustedPeopleGroup.style.display =
+      (showRow && autoOpenLinksFromPeopleCheckbox.checked) ? 'block' : 'none';
+  }
+
   function updateNotificationMirroringToggleVisual() {
     if (notificationMirroringCheckbox.checked) {
       notificationMirroringToggle.classList.add('active');
@@ -1354,6 +1501,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
 
+  function updateShowPeoplePushesToggleVisual() {
+    if (showPeoplePushesCheckbox.checked) {
+      showPeoplePushesToggle.classList.add('active');
+    } else {
+      showPeoplePushesToggle.classList.remove('active');
+    }
+  }
+
   function updateHideBrowserPushesToggleVisual() {
     if (hideBrowserPushesCheckbox.checked) {
       hideBrowserPushesToggle.classList.add('active');
@@ -1369,6 +1524,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       showSmsShortcutToggle.classList.remove('active');
     }
   }
+
+  function updateEnableChatToggleVisual() {
+    if (enableChatCheckbox.checked) {
+      enableChatToggle.classList.add('active');
+    } else {
+      enableChatToggle.classList.remove('active');
+    }
+  }
   
   function updateShowQuickShareToggleVisual() {
     if (showQuickShareCheckbox.checked) {
@@ -1379,11 +1542,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   
   function updateDefaultTabVisibility() {
-    if (notificationMirroringCheckbox.checked) {
-      defaultTabGroup.style.display = 'block';
-    } else {
-      defaultTabGroup.style.display = 'none';
-    }
+    // The control is always visible now; only its option list tracks the
+    // enabled surfaces, rebuilt when mirroring flips. The stored defaultTab is
+    // never rewritten here (see createSelectDropdown setItems/setValue) — the
+    // dropdown just displays the Push fallback while a saved surface is off.
+    defaultTabDropdown.setItems(defaultTabItems());
   }
   
   function updateRequireInteractionToggleVisual() {
@@ -1411,7 +1574,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   
   function updateRequireInteractionVisibility() {
-    if (requireInteractionCheckbox.checked) {
+    // Pushes/Mirrored subs show only while both the Show notifications master
+    // and Require interaction are on (they nest under Show notifications now).
+    if (showOsNotificationsCheckbox.checked && requireInteractionCheckbox.checked) {
       requireInteractionPushesContainer.style.display = 'flex';
       updateRequireInteractionMirroredVisibility();
     } else {
@@ -1421,7 +1586,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   
   function updateRequireInteractionMirroredVisibility() {
-    if (requireInteractionCheckbox.checked && notificationMirroringCheckbox.checked) {
+    if (showOsNotificationsCheckbox.checked && requireInteractionCheckbox.checked && notificationMirroringCheckbox.checked) {
       requireInteractionMirroredContainer.style.display = 'flex';
     } else {
       requireInteractionMirroredContainer.style.display = 'none';
@@ -1495,13 +1660,22 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function updateShowOsNotificationsVisibility() {
+    // Show notifications is the master for all notification behavior: its direct
+    // sub-rows (hide-browser-pushes, play-sound, require-interaction,
+    // close-as-dismiss) follow it. UI-only — the stored values are untouched.
     if (showOsNotificationsCheckbox.checked) {
       hideBrowserPushesContainer.style.display = 'flex';
       playSoundOnNotificationContainer.style.display = 'flex';
+      requireInteractionContainer.style.display = 'flex';
+      closeAsDismissContainer.style.display = 'flex';
     } else {
       hideBrowserPushesContainer.style.display = 'none';
       playSoundOnNotificationContainer.style.display = 'none';
+      requireInteractionContainer.style.display = 'none';
+      closeAsDismissContainer.style.display = 'none';
     }
+    // Require-interaction's own Pushes/Mirrored subs need this master too.
+    updateRequireInteractionVisibility();
   }
   
   function showStatus(message, type) {
@@ -1567,6 +1741,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Re-render the custom controls whose labels are message-based
     remoteDevicePicker.rerender();
     otherDevicePicker.rerender();
+    trustedPeoplePicker.rerender();
     languageList.rerender();
     defaultTabDropdown.rerender();
     colorModeDropdown.rerender();

@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Bildirimleri görmek için uçtan uca şifreleme parolanızı yapılandırın."
+  },
+  "n_targets": {
+    "message": "$1 hedef"
+  },
+  "people_menu_label": {
+    "message": "Kişiler"
+  },
+  "behavior_tab": {
+    "message": "Davranış"
+  },
+  "show_people_pushes_label": {
+    "message": "Kişilerden gelen bildirimler"
+  },
+  "auto_open_people_label": {
+    "message": "Kişilerden gelen bağlantıları da otomatik aç"
+  },
+  "chat_tab": {
+    "message": "Sohbet"
+  },
+  "enable_chat_label": {
+    "message": "Kişilerle Sohbeti Etkinleştir"
+  },
+  "no_people_yet": {
+    "message": "Henüz kişi yok"
+  },
+  "manage_people_tip": {
+    "message": "Kişi eklemek, kaldırmak veya engellemek için şu adresi ziyaret edin:"
+  },
+  "no_pushes_with_person": {
+    "message": "$1 ile henüz push yok"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Henüz push yok"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Henüz Pushbullet'te değil — push'lar e-posta ile ulaşır."
+  },
+  "person_muted_title": {
+    "message": "Sessize alındı"
+  },
+  "mute_person_title": {
+    "message": "Sessize al"
+  },
+  "unmute_person_title": {
+    "message": "Sesi aç"
+  },
+  "to_person": {
+    "message": "$1'a"
+  },
+  "back_button_title": {
+    "message": "Geri"
+  },
+  "person_avatar_alt": {
+    "message": "Profil fotoğrafı"
   }
 }

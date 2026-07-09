@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Конфигурирайте своята парола за шифроване от край до край, за да видите известията."
+  },
+  "n_targets": {
+    "message": "$1 цели"
+  },
+  "people_menu_label": {
+    "message": "Хора"
+  },
+  "behavior_tab": {
+    "message": "Поведение"
+  },
+  "show_people_pushes_label": {
+    "message": "Изпращания от хора"
+  },
+  "auto_open_people_label": {
+    "message": "Също и линкове от хора"
+  },
+  "chat_tab": {
+    "message": "Чат"
+  },
+  "enable_chat_label": {
+    "message": "Активирай чат с хора"
+  },
+  "no_people_yet": {
+    "message": "Все още няма хора"
+  },
+  "manage_people_tip": {
+    "message": "Добавете, премахнете или блокирайте хора на"
+  },
+  "no_pushes_with_person": {
+    "message": "Все още няма изпращания с $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Все още няма изпращания"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Все още не използва Pushbullet — изпращанията пристигат по имейл."
+  },
+  "person_muted_title": {
+    "message": "Заглушен"
+  },
+  "mute_person_title": {
+    "message": "Заглуши"
+  },
+  "unmute_person_title": {
+    "message": "Отглуши"
+  },
+  "to_person": {
+    "message": "До $1"
+  },
+  "back_button_title": {
+    "message": "Назад"
+  },
+  "person_avatar_alt": {
+    "message": "Профилна снимка"
   }
 }

@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Konfigurera ditt end-to-end krypteringslösenord för att se aviseringarna."
+  },
+  "n_targets": {
+    "message": "$1 mottagare"
+  },
+  "people_menu_label": {
+    "message": "Personer"
+  },
+  "behavior_tab": {
+    "message": "Beteende"
+  },
+  "show_people_pushes_label": {
+    "message": "Pushes från personer"
+  },
+  "auto_open_people_label": {
+    "message": "Även länkar från personer"
+  },
+  "chat_tab": {
+    "message": "Chatt"
+  },
+  "enable_chat_label": {
+    "message": "Aktivera chatt med personer"
+  },
+  "no_people_yet": {
+    "message": "Inga personer ännu"
+  },
+  "manage_people_tip": {
+    "message": "Lägg till, ta bort eller blockera personer på"
+  },
+  "no_pushes_with_person": {
+    "message": "Inga pushes med $1 ännu"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Inga pushes ännu"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Inte på Pushbullet ännu — pushes kommer via e-post."
+  },
+  "person_muted_title": {
+    "message": "Tystad"
+  },
+  "mute_person_title": {
+    "message": "Tysta"
+  },
+  "unmute_person_title": {
+    "message": "Avtysta"
+  },
+  "to_person": {
+    "message": "Till $1"
+  },
+  "back_button_title": {
+    "message": "Tillbaka"
+  },
+  "person_avatar_alt": {
+    "message": "Profilbild"
   }
 }

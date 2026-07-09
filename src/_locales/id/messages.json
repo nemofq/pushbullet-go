@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Konfigurasikan kata sandi enkripsi ujung-ke-ujung Anda untuk melihat notifikasi."
+  },
+  "n_targets": {
+    "message": "$1 tujuan"
+  },
+  "people_menu_label": {
+    "message": "Orang"
+  },
+  "behavior_tab": {
+    "message": "Perilaku"
+  },
+  "show_people_pushes_label": {
+    "message": "Push dari orang"
+  },
+  "auto_open_people_label": {
+    "message": "Juga tautan dari orang"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Aktifkan Chat dengan Orang"
+  },
+  "no_people_yet": {
+    "message": "Belum ada orang"
+  },
+  "manage_people_tip": {
+    "message": "Tambah, hapus, atau blokir orang di"
+  },
+  "no_pushes_with_person": {
+    "message": "Belum ada push dengan $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Belum ada push"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Belum menggunakan Pushbullet — push akan tiba melalui email."
+  },
+  "person_muted_title": {
+    "message": "Dibisukan"
+  },
+  "mute_person_title": {
+    "message": "Bisukan"
+  },
+  "unmute_person_title": {
+    "message": "Bunyikan"
+  },
+  "to_person": {
+    "message": "Ke $1"
+  },
+  "back_button_title": {
+    "message": "Kembali"
+  },
+  "person_avatar_alt": {
+    "message": "Foto profil"
   }
 }

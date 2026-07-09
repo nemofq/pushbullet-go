@@ -364,5 +364,59 @@
   },
   "mirror_encryption_text": {
     "message": "Konfigurer din end-to-end krypteringsadgangskode for at se notifikationerne."
+  },
+  "n_targets": {
+    "message": "$1 mål"
+  },
+  "people_menu_label": {
+    "message": "Personer"
+  },
+  "behavior_tab": {
+    "message": "Adfærd"
+  },
+  "show_people_pushes_label": {
+    "message": "Pushes fra personer"
+  },
+  "auto_open_people_label": {
+    "message": "Også links fra personer"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Aktivér chat med personer"
+  },
+  "no_people_yet": {
+    "message": "Ingen personer endnu"
+  },
+  "manage_people_tip": {
+    "message": "Tilføj, fjern eller blokér personer på"
+  },
+  "no_pushes_with_person": {
+    "message": "Ingen pushes med $1 endnu"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Ingen pushes endnu"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Ikke på Pushbullet endnu — pushes ankommer via mail."
+  },
+  "person_muted_title": {
+    "message": "Lydløs"
+  },
+  "mute_person_title": {
+    "message": "Lydløs"
+  },
+  "unmute_person_title": {
+    "message": "Fjern lydløs"
+  },
+  "to_person": {
+    "message": "Til $1"
+  },
+  "back_button_title": {
+    "message": "Tilbage"
+  },
+  "person_avatar_alt": {
+    "message": "Profilbillede"
   }
 }
