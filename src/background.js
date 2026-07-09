@@ -412,9 +412,28 @@ initializeBackgroundI18n().then(async () => {
   await setupContextMenus();
 });
 
+// Seeds the user's default ON the first time the account has people; an
+// explicit value is never overwritten.
+async function seedEnableChatDefault() {
+  try {
+    const { people, enableChat } = await chrome.storage.local.get(['people', 'enableChat']);
+    if (enableChat === undefined && (people || []).length > 0) {
+      await chrome.storage.local.set({ enableChat: true });
+    }
+  } catch (error) {
+    console.error('Failed to seed enableChat default:', error);
+  }
+}
+
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace === 'local' && (changes.devices || changes.people)) {
     await setupContextMenus();
+  }
+  if (namespace === 'local' && changes.people) {
+    // Seed the Chat-default the first time the account has people; this branch
+    // catches every people writer (incl. the options-page Retrieve, whose write
+    // wakes the service worker). An explicit value is never overwritten.
+    await seedEnableChatDefault();
   }
   if (namespace === 'local' && changes.languageMode) {
     // Language changed, reinitialize i18n and update context menus
@@ -774,6 +793,11 @@ async function initializeExtension() {
 
   // Update badge on initialization
   await updateBadge();
+
+  // Seed the Chat-default for installs that already had people before this
+  // logic existed: the storage.onChanged people branch only fires on future
+  // writes, so cover the already-present case here once (a no-op afterwards).
+  await seedEnableChatDefault();
 
   // Repopulate local device data if it's missing (never awaited — must not
   // delay connection setup)
@@ -1165,10 +1189,9 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           // trusted list, when the auto-open master + its people sub are on and
           // the Chat surface is enabled — otherwise the auto-open arg stays off.
           const trustedPeople = (configData.autoOpenTrustedPeople || '').split(',').filter(Boolean);
-          // Chat surface default: enabled only once the account has people; an
-          // explicit setting wins (true = on, false = off, undefined = adaptive).
-          const chatEnabled = configData.enableChat === true
-            || (configData.enableChat === undefined && people.length > 0);
+          // undefined = not yet seeded, behaves as off; the background seeds
+          // true once people first exist.
+          const chatEnabled = configData.enableChat === true;
           const peopleTasks = [];
           if (configData.showPeoplePushes !== false) {
             for (const push of newPushes) {
@@ -1184,10 +1207,18 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
               // meanwhile falls back to the push's own sender fields.
               if (!person) refreshPeopleFromServer();
               const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
-              const iconUrl = await getPersonIconDataUrl(person);
+              // Unknown senders have no person record yet; synthesize one from
+              // the push's sender fields so getPersonIconDataUrl renders the same
+              // letter avatar the popup will show once the chats refresh lands.
+              const iconPerson = person || {
+                name: push.sender_name,
+                email: push.sender_email,
+                email_normalized: push.sender_email_normalized
+              };
+              const iconUrl = await getPersonIconDataUrl(iconPerson);
               // Explicit trusted selection: only checked people auto-open. The
-              // Chat surface (chatEnabled, adaptive default above) gates it so a
-              // hidden option can never keep acting. Resume gating and
+              // Chat surface (chatEnabled above) gates it so a hidden option can
+              // never keep acting. Resume gating and
               // hideNotificationOnAutoOpen compose exactly as the device path.
               const autoOpenForPush = configData.autoOpenLinks
                 && configData.autoOpenLinksFromPeople
@@ -1338,6 +1369,18 @@ const MIRROR_ICON_INSET = 0.06;
 // Cap the cached person avatars so the store can't grow without bound.
 const PERSON_AVATAR_CACHE_CAP = 50;
 
+// Encode an OffscreenCanvas to a PNG data URL. Shared tail of the circle-crop
+// and letter-avatar pipelines.
+async function canvasToPngDataUrl(canvas) {
+  const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(pngBlob);
+  });
+}
+
 // Circle-crop a decoded bitmap to a PNG data URL, insetting the outer band
 // first (see MIRROR_ICON_INSET). Shared by the mirror-icon and person-avatar
 // notification pipelines; consumes (closes) the bitmap.
@@ -1358,13 +1401,7 @@ async function bitmapToCircleDataUrl(bitmap) {
   ctx.drawImage(bitmap, sx, sy, cropSquare, cropSquare, 0, 0, size, size);
   bitmap.close();
 
-  const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
-  return await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(pngBlob);
-  });
+  return await canvasToPngDataUrl(canvas);
 }
 
 async function getMirrorIconDataUrl(iconBase64) {
@@ -1380,40 +1417,128 @@ async function getMirrorIconDataUrl(iconBase64) {
   }
 }
 
-// Notification avatar for a person: a circle-cropped PNG data URL fetched from
-// their image_url, cached in personAvatars and invalidated when the URL
-// changes. Any failure (no avatar, a CORS-blocked fetch — no host permission
-// is requested — or a decode error) returns null so the caller falls back to
-// icon128.png.
-async function getPersonIconDataUrl(person) {
-  if (!person || !person.image_url) return null;
+// Letter-avatar palette + hash, duplicated from popup.js so a generated
+// notification avatar matches the popup's letter fallback exactly.
+// keep in sync with popup.js
+const AVATAR_HUES = [262, 24, 202, 340, 174, 288, 16];
+// keep in sync with popup.js
+const hueFor = s => AVATAR_HUES[[...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_HUES.length];
+
+// Generate a letter avatar (128x128 PNG data URL): a solid deterministic-hue
+// circle with the sender's initial in white, matching the popup's fillAvatar
+// letter branch — hue keyed on email_normalized||email||name, initial from the
+// first char of name||email||'?'. Deterministic and cheap, so it is generated
+// per call and never cached. Returns null on any failure so the caller falls
+// back to icon128.png.
+async function getLetterAvatarDataUrl(person) {
   try {
-    const stored = await chrome.storage.local.get('personAvatars');
-    const cache = stored.personAvatars || {};
-    const cached = cache[person.email_normalized];
-    if (cached && cached.image_url === person.image_url && cached.dataUrl) {
-      return cached.dataUrl;
-    }
+    const size = 128;
+    const key = person.email_normalized || person.email || person.name || '';
+    const initial = (person.name || person.email || '?').charAt(0).toUpperCase();
 
-    const resp = await fetch(person.image_url);
-    if (!resp.ok) return null;
-    const blob = await resp.blob();
-    const bitmap = await createImageBitmap(blob);
-    const dataUrl = await bitmapToCircleDataUrl(bitmap);
+    const canvas = new OffscreenCanvas(size, size);
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    // Full-circle hue fill (same hsl as the popup's inline background).
+    ctx.fillStyle = `hsl(${hueFor(key)}, 45%, 52%)`;
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    // White initial, centered. textBaseline 'middle' sits a hair high for caps,
+    // so the baseline is nudged down a few px for optical centering.
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 64px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(initial, size / 2, size / 2 + 4);
 
-    // Re-insert at the end so a refreshed entry counts as freshest, then drop
-    // the oldest (insertion order) once over the cap.
+    return await canvasToPngDataUrl(canvas);
+  } catch (e) {
+    return null;
+  }
+}
+
+// Insert or refresh a personAvatars entry at the freshest position, then evict
+// the oldest (insertion order) until the store is within
+// PERSON_AVATAR_CACHE_CAP. Entries are either successes ({ image_url, dataUrl })
+// or negative-cached failures ({ image_url, failed: true }); both kinds count
+// toward the cap. A write failure is swallowed — the avatar was already
+// produced for the caller.
+async function putPersonAvatar(cache, emailNormalized, entry) {
+  try {
     const next = { ...cache };
-    delete next[person.email_normalized];
-    next[person.email_normalized] = { image_url: person.image_url, dataUrl };
+    delete next[emailNormalized];
+    next[emailNormalized] = entry;
     const keys = Object.keys(next);
     for (const key of keys.slice(0, Math.max(0, keys.length - PERSON_AVATAR_CACHE_CAP))) {
       delete next[key];
     }
     await chrome.storage.local.set({ personAvatars: next });
+  } catch (e) {
+    // Non-fatal.
+  }
+}
+
+// Notification avatar for a person. Resolution order:
+//   1. cached success ({ image_url, dataUrl })      -> the cropped photo
+//   2. cached failure ({ image_url, failed: true }) -> letter avatar
+//   3. image_url is an https dl.pushbulletusercontent.com URL -> fetch it; on
+//      success cache + return the photo, on any failure (non-ok / network /
+//      decode) negative-cache the image_url and return the letter avatar
+//   4. absent / unparseable / non-whitelisted image_url -> letter avatar
+//   5. letter generation itself fails -> null (caller uses icon128.png)
+// Only dl.pushbulletusercontent.com is ever fetched: it is verified to send
+// `access-control-allow-origin: *`. static.pushbullet.com (Google profile
+// photos) sends no CORS headers, so a fetch there can only fail and spam an
+// unsuppressible CORS error onto the extensions page — it, and every other
+// host, is never requested. Cache entries invalidate when image_url changes.
+async function getPersonIconDataUrl(person) {
+  if (!person) return null;
+
+  let cache = {};
+  try {
+    const stored = await chrome.storage.local.get('personAvatars');
+    cache = stored.personAvatars || {};
+    const cached = cache[person.email_normalized];
+    if (cached && cached.image_url === person.image_url) {
+      if (cached.dataUrl) return cached.dataUrl;                       // cached success
+      if (cached.failed) return await getLetterAvatarDataUrl(person);  // cached failure
+    }
+  } catch (e) {
+    // Storage read failed; fall through to a fresh fetch/letter attempt.
+  }
+
+  // Whitelist gate: only build a request for an https URL whose host is exactly
+  // dl.pushbulletusercontent.com. Anything unparseable, http, or any other host
+  // (including static.pushbullet.com) never issues a network request.
+  let fetchable = false;
+  if (person.image_url) {
+    try {
+      const u = new URL(person.image_url);
+      fetchable = u.protocol === 'https:' && u.hostname === 'dl.pushbulletusercontent.com';
+    } catch (e) {
+      fetchable = false;
+    }
+  }
+
+  if (!fetchable) {
+    return await getLetterAvatarDataUrl(person);
+  }
+
+  try {
+    const resp = await fetch(person.image_url);
+    if (!resp.ok) throw new Error(`avatar fetch failed: ${resp.status}`);
+    const blob = await resp.blob();
+    const bitmap = await createImageBitmap(blob);
+    const dataUrl = await bitmapToCircleDataUrl(bitmap);
+    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, dataUrl });
     return dataUrl;
   } catch (e) {
-    return null;
+    // Negative-cache this image_url so it is not retried (or re-logged) until it
+    // changes, then fall back to the letter avatar.
+    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, failed: true });
+    return await getLetterAvatarDataUrl(person);
   }
 }
 

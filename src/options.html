@@ -333,6 +333,26 @@
       white-space: nowrap;
     }
 
+    /* Muted email line beside the name on trusted-people rows only (rows with
+       .has-subtext). Device pickers never carry it, so their layout is
+       unchanged. The name yields to its natural width so the email fills the
+       remainder; both ellipsize when cramped. */
+    .device-list .opt-subtext {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-align: left;
+    }
+
+    .device-list .list-option.has-subtext .opt-text {
+      flex: 0 1 auto;
+      max-width: 55%;
+    }
+
     .device-list .opt-check {
       display: flex;
       flex-shrink: 0;

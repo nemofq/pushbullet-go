@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // the Push tab restores it from this cached value without an async re-read.
   let targetChipEnabled = false;
 
-  // Deterministic letter-avatar hue (matches prototype/people/index.html).
+  // Deterministic letter-avatar hue — keep in sync with background.js, which
+  // draws the same letter circles for notification icons.
   const AVATAR_HUES = [262, 24, 202, 340, 174, 288, 16];
   const hueFor = s => AVATAR_HUES[[...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_HUES.length];
   // Bell icons for the conversation mute button + the list muted glyph.
@@ -456,12 +457,11 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    const localData = await chrome.storage.local.get(['notificationMirroring', 'enableChat', 'defaultTab', 'people']);
+    const localData = await chrome.storage.local.get(['notificationMirroring', 'enableChat', 'defaultTab']);
     const mirroringOn = !!localData.notificationMirroring;
-    // Chat surface default: enabled only once the account has people; an
-    // explicit setting wins (true = on, false = off, undefined = adaptive).
-    const chatOn = localData.enableChat === true
-      || (localData.enableChat === undefined && (localData.people || []).length > 0);
+    // undefined = not yet seeded, behaves as off; the background seeds true once
+    // people first exist.
+    const chatOn = localData.enableChat === true;
 
     // Per-button visibility (fixed order); the switcher shows with >1 surface.
     chatTab.style.display = chatOn ? '' : 'none';
@@ -865,12 +865,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const people = peopleData.people || [];
     const peopleByEmail = new Map(people.map(p => [p.email_normalized, p]));
 
-    // Chat surface default: enabled only once the account has people; an
-    // explicit setting wins (true = on, false = off, undefined = adaptive).
+    // undefined = not yet seeded, behaves as off; the background seeds true once
+    // people first exist.
     // People pushes live in the Chat tab when it is enabled; the timeline only
     // carries them (with captions) as a fallback when Chat is off.
-    const chatEnabled = configData.enableChat === true
-      || (configData.enableChat === undefined && people.length > 0);
+    const chatEnabled = configData.enableChat === true;
 
     // Get received messages (filtered by new flexible filtering settings)
     let receivedMessages = receivedData.pushes || [];
@@ -1487,10 +1486,9 @@ document.addEventListener('DOMContentLoaded', function() {
     targetDevices = devices.filter(device => device.active && device.pushable !== false);
 
     // People join the menu as per-send targets only while Chat is enabled.
-    // Chat surface default: enabled only once the account has people; an
-    // explicit setting wins (true = on, false = off, undefined = adaptive).
-    const chatEnabled = configData.enableChat === true
-      || (configData.enableChat === undefined && (configData.people || []).length > 0);
+    // undefined = not yet seeded, behaves as off; the background seeds true once
+    // people first exist.
+    const chatEnabled = configData.enableChat === true;
     targetPeople = chatEnabled ? (configData.people || []) : [];
 
     // Drop selections that no longer point at an existing pushable device / person
@@ -2013,11 +2011,11 @@ document.addEventListener('DOMContentLoaded', function() {
       // fall back (see checkNotificationMirroring).
       checkNotificationMirroring({ preserveCurrent: true });
     }
-    if (areaName === 'local' && (changes.enableChat || changes.people)) {
-      // Chat surface toggled, or the people list changed — with the adaptive
-      // default (enabled once the account has people) the first person arriving
-      // (e.g. after Retrieve) flips Chat visibility live. Same preserve-or-
-      // fall-back behavior.
+    if (areaName === 'local' && changes.enableChat) {
+      // Chat surface toggled. undefined = not yet seeded, behaves as off; the
+      // background seeds true once people first exist, and that enableChat write
+      // (not the people write) is what flips Chat visibility live after Retrieve.
+      // Same preserve-or-fall-back behavior.
       checkNotificationMirroring({ preserveCurrent: true });
     }
     if (areaName === 'local' && changes.mirrorDecryptIssue) {

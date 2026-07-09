@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   const showSmsShortcutToggle = document.getElementById('showSmsShortcutToggle');
   const enableChatCheckbox = document.getElementById('enableChat');
   const enableChatToggle = document.getElementById('enableChatToggle');
+  // Retrieve-then-Save on a freshly loaded page must not write the checkbox's
+  // pre-seed unchecked state back as an explicit false (see the Retrieve
+  // success path, which mirrors the background's one-time seeding in-page).
+  let enableChatWasUndefined = false;
+  let enableChatTouched = false;
   const showQuickShareCheckbox = document.getElementById('showQuickShare');
   const showQuickShareToggle = document.getElementById('showQuickShareToggle');
   const requireInteractionCheckbox = document.getElementById('requireInteraction');
@@ -86,7 +91,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   // aren't renamable). The pencil and its editor are interactive, so renameable
   // rows are a <div role="button"> — nesting them inside the row's native
   // <button> is invalid HTML and swallows their clicks.
-  function createDeviceChecklist(container, getAllLabel, getEmptyLabel, labelOf, renameable) {
+  // sublabelOf (trusted-people picker only) supplies a muted secondary string
+  // (the person's email) rendered inline after the label so near-identical
+  // names stay distinguishable; other pickers leave it undefined → no subtext.
+  function createDeviceChecklist(container, getAllLabel, getEmptyLabel, labelOf, renameable, sublabelOf) {
     let devices = [];
     let selected = [];
 
@@ -97,7 +105,13 @@ document.addEventListener('DOMContentLoaded', async function() {
       return device.nickname || `${device.manufacturer} ${device.model}`;
     }
 
-    function createOption(iden, label) {
+    function deviceSublabel(device) {
+      // Only the trusted-people picker supplies this; every other picker leaves
+      // sublabelOf undefined, so device rows never gain a subtext.
+      return sublabelOf ? sublabelOf(device) : '';
+    }
+
+    function createOption(iden, label, sublabel) {
       // Only device rows (iden set) in a renameable picker carry the pencil +
       // inline editor, so those become a <div role="button">; the "All …" row
       // and every non-renameable picker keep the native <button>.
@@ -119,7 +133,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         option.type = 'button';
       }
       option.dataset.iden = iden;
-      option.title = label;
+      // With a subtext, the tooltip carries both halves at full length
+      // ("Name — email") since either can ellipsize on the row.
+      option.title = sublabel ? `${label} — ${sublabel}` : label;
       if (iden) {
         // device rows are independent toggles → leading checkbox
         const checkbox = document.createElement('span');
@@ -131,6 +147,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       text.className = 'opt-text';
       text.textContent = label;
       option.appendChild(text);
+      if (sublabel) {
+        // Muted email line on the same row (people picker only); has-subtext
+        // lets the label yield width to it. Never present on device/"All …"
+        // rows, so their layout is untouched.
+        option.classList.add('has-subtext');
+        const subtext = document.createElement('span');
+        subtext.className = 'opt-subtext';
+        subtext.textContent = sublabel;
+        option.appendChild(subtext);
+      }
       if (!iden) {
         // the "All …" row is a single current-state choice → trailing ✓
         const check = document.createElement('span');
@@ -238,7 +264,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         fragment.appendChild(divider);
       }
       devices.forEach(device => {
-        fragment.appendChild(createOption(device.iden, deviceLabel(device)));
+        fragment.appendChild(createOption(device.iden, deviceLabel(device), deviceSublabel(device)));
       });
       container.replaceChildren(fragment);
       markSelection();
@@ -300,11 +326,22 @@ document.addEventListener('DOMContentLoaded', async function() {
   // requires explicit selection (only checked people auto-open), keyed by
   // email_normalized. The empty hint reuses the primary device list's key since
   // people are populated by the same "Retrieve devices and people" button.
+  // The row label is the person's name (email for nameless contacts); a muted
+  // subtext repeats their normalized email so two similar names stay apart.
+  const personDisplayLabel = person => person.name || person.email || person.email_normalized;
   const trustedPeoplePicker = createDeviceChecklist(
     trustedPeoplePickerEl,
     null,
     () => window.CustomI18n.getMessage('retrieve_devices_first'),
-    person => person.name || person.email || person.email_normalized
+    personDisplayLabel,
+    false,
+    person => {
+      const email = person.email_normalized;
+      if (!email) return '';
+      // Suppress the subtext for email-only contacts whose name already IS that
+      // email (case-only differences included) — no point showing it twice.
+      return personDisplayLabel(person).toLowerCase() === email.toLowerCase() ? '' : email;
+    }
   );
 
   // Shared row builder for the value-based lists below (same .list-option
@@ -587,12 +624,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     devices = data.devices || [];
     people = data.people || [];
-    // Chat surface master. Default: enabled only once the account has people; an
-    // explicit setting wins (true = on, false = off, undefined = adaptive). Set
-    // before updateAutoOpen* runs so isChatEnabled() reads the right state during
-    // the load pass. Toggling + saving always writes the explicit boolean.
-    enableChatCheckbox.checked = data.enableChat === true
-      || (data.enableChat === undefined && people.length > 0);
+    // Chat surface master. undefined = not yet seeded, behaves as off; the
+    // background seeds true once people first exist. Set before updateAutoOpen*
+    // runs so isChatEnabled() reads the right state during the load pass.
+    // Toggling + saving always writes the explicit boolean.
+    enableChatCheckbox.checked = data.enableChat === true;
+    enableChatWasUndefined = data.enableChat === undefined;
     updateEnableChatToggleVisual();
     populateDeviceSelects();
     
@@ -864,6 +901,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 
   enableChatToggle.addEventListener('click', function() {
+    enableChatTouched = true;
     enableChatCheckbox.checked = !enableChatCheckbox.checked;
     updateEnableChatToggleVisual();
     // Chat is the visibility master for the people auto-open row + trusted list
@@ -1176,6 +1214,19 @@ document.addEventListener('DOMContentLoaded', async function() {
       
       populateDeviceSelects();
 
+      // Mirror the background's one-time enableChat seeding in-page: this
+      // checkbox loaded before any people existed, so without this a Save
+      // right after Retrieve would write the still-unchecked state back as an
+      // explicit false, overriding the seed. Never fires once the stored
+      // value is explicit or the user has touched the toggle themselves.
+      if (enableChatWasUndefined && !enableChatTouched && people.length > 0 && !enableChatCheckbox.checked) {
+        enableChatCheckbox.checked = true;
+        enableChatWasUndefined = false;
+        updateEnableChatToggleVisual();
+        updateAutoOpenLinksFromPeopleVisibility();
+        updateDefaultTabVisibility();
+      }
+
       // Notify background script to establish connection
       chrome.runtime.sendMessage({ type: 'token_updated' });
 
@@ -1481,7 +1532,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       .map(person => ({
         iden: person.email_normalized,
         name: person.name,
-        email: person.email
+        email: person.email,
+        email_normalized: person.email_normalized
       })));
   }
 
