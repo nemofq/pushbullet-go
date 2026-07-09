@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Preimenuj"
+  },
+  "chats_label": {
+    "message": "Klepeti"
   }
 }

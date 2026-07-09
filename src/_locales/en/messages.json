@@ -290,6 +290,9 @@
   "mirrored_notifications_label": {
     "message": "Mirrored Notifications"
   },
+  "chats_label": {
+    "message": "Chats"
+  },
   "close_as_dismiss_label": {
     "message": "Treat native close of Chrome notification as dismiss action"
   },

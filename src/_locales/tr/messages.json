@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Yeniden adlandır"
+  },
+  "chats_label": {
+    "message": "Sohbetler"
   }
 }

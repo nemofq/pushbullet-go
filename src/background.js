@@ -444,8 +444,15 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
       await setupContextMenus();
     });
   }
+  // Recompute the derived chat unread count when any of its inputs change: the
+  // people list (membership + mute), the per-person read stamps the popup writes
+  // on opening a conversation, or the "Pushes from people" filter. Push arrivals
+  // are handled by the notify batch, and popup deletions by deletePush.
+  if (namespace === 'local' && (changes.people || changes.peopleLastRead || changes.showPeoplePushes)) {
+    await updateChatUnreadCount();
+  }
   // Update badge when display settings change
-  if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored)) {
+  if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored || changes.displayUnreadChats)) {
     await updateBadge();
   }
 });
@@ -486,7 +493,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendPush(message.data);
       return;
     case 'clear_unread_pushes':
-      clearUnreadPushCount();
+      handleClearUnreadPushes();
       return;
     case 'clear_unread_mirrors':
       markMirrorNotificationsRead();
@@ -762,7 +769,7 @@ async function setPersonMuted(iden, emailNormalized, muted) {
 
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
-  const localData = await chrome.storage.local.get(['lastModified', 'lastMirrorReadTime']);
+  const localData = await chrome.storage.local.get(['lastModified', 'lastMirrorReadTime', 'chatReadFloor']);
   accessToken = data.accessToken;
 
   // Restore lastModified from storage to survive extension restarts
@@ -777,9 +784,19 @@ async function initializeExtension() {
     await chrome.storage.local.set({ lastMirrorReadTime: Date.now() / 1000 });
   }
 
+  // Same day-zero guard for the derived chat unread count: seed the read floor
+  // at now the first time we run (existing installs and fresh setups alike), so
+  // historical people pushes already in the cache never badge retroactively.
+  if (localData.chatReadFloor === undefined) {
+    await chrome.storage.local.set({ chatReadFloor: Date.now() / 1000 });
+  }
+
   // Recompute the derived unread count on startup so the cached value can
   // never stay stale across service worker restarts.
   await updateMirrorNotifications(() => null);
+
+  // Same startup recompute for the derived chat unread count.
+  await updateChatUnreadCount();
 
   if (accessToken) {
     // Initialize encryption if key is stored (userIden should be available from options page)
@@ -1224,28 +1241,53 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
                 && configData.autoOpenLinksFromPeople
                 && chatEnabled
                 && trustedPeople.includes(push.sender_email_normalized);
-              peopleTasks.push(showNotificationForPush(
+              // Keep the push alongside its task so a false result (auto-opened
+              // + hidden) can be traced back to the iden after the batch.
+              peopleTasks.push({
                 push,
-                autoOpenForPush && allowAutoOpenLinks,
-                configData.hideNotificationOnAutoOpen || false,
-                { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true }
-              ));
+                promise: showNotificationForPush(
+                  push,
+                  autoOpenForPush && allowAutoOpenLinks,
+                  configData.hideNotificationOnAutoOpen || false,
+                  { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true }
+                )
+              });
             }
           }
 
-          // Device and people pushes share one batch total through the
-          // serialized counter queue (never per-push increments).
-          const counted = await Promise.all([
-            ...pushesToNotify.map(push =>
+          // Device pushes feed the incremental push counter; people pushes are
+          // counted separately by the derived updateChatUnreadCount() below, so
+          // they are awaited here (for completion + side effects) but excluded
+          // from unreadDelta. Both sets run concurrently.
+          const [deviceResults, peopleResults] = await Promise.all([
+            Promise.all(pushesToNotify.map(push =>
               showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false, { autoOpenFiles: configData.autoOpenFiles === true })
-            ),
-            ...peopleTasks
+            )),
+            Promise.all(peopleTasks.map(task => task.promise))
           ]);
 
-          const unreadDelta = counted.filter(Boolean).length;
+          const unreadDelta = deviceResults.filter(Boolean).length;
           if (unreadDelta > 0) {
             await incrementUnreadPushCount(unreadDelta);
           }
+
+          // A people task resolving false means the push was auto-opened with
+          // its notification hidden (trusted auto-open, issue #66): record its
+          // iden so the derived chat count and the popup dot both treat it as
+          // already consumed — the people analogue of a device push returning
+          // false and being left out of unreadDelta. One read-modify-write,
+          // newest appended, oldest dropped past the 100 cap.
+          const autoOpenedIdens = peopleTasks
+            .filter((task, i) => peopleResults[i] === false)
+            .map(task => task.push.iden);
+          if (autoOpenedIdens.length > 0) {
+            const stored = await chrome.storage.local.get('chatAutoOpenedIdens');
+            const merged = [...(stored.chatAutoOpenedIdens || []), ...autoOpenedIdens].slice(-100);
+            await chrome.storage.local.set({ chatAutoOpenedIdens: merged });
+          }
+
+          // Recompute the derived chat unread count once for the whole batch.
+          await updateChatUnreadCount();
         }
       }
       
@@ -2055,6 +2097,72 @@ async function clearUnreadPushCount() {
   return updateUnreadCount('unreadPushCount', () => 0);
 }
 
+// The Push tab was opened (clear_unread_pushes). Always reset the device push
+// counter. When Chat is disabled, people pushes live in the Push timeline
+// rather than a separate Chat surface, so opening the Push tab is also their
+// read event: stamp the chat read floor at now and recompute so the derived
+// chat count clears too. When Chat is enabled the Chat surface owns those reads
+// per-person (peopleLastRead), so the floor is left untouched here.
+async function handleClearUnreadPushes() {
+  await clearUnreadPushCount();
+  const data = await chrome.storage.local.get('enableChat');
+  if (data.enableChat !== true) {
+    await chrome.storage.local.set({ chatReadFloor: Date.now() / 1000 });
+    await updateChatUnreadCount();
+  }
+}
+
+// The unread chat count is derived, not bookkept — the same pattern the mirror
+// count uses (recomputeUnreadMirrorCount). It is the number of cached pushes
+// that are ALL of:
+//   - a people push: incoming and person-to-person (isPeoplePush)
+//   - not dismissed (push.dismissed !== true)
+//   - from a sender present in the local people list
+//   - whose person is not muted (person.muted !== true)
+//   - allowed by the "Pushes from people" filter (showPeoplePushes !== false)
+//   - not a hidden trusted auto-open (push.iden ∉ chatAutoOpenedIdens)
+//   - newer than that sender's read stamp and the global chat read floor:
+//       push.created > max(peopleLastRead[sender] ?? 0, chatReadFloor ?? 0)
+// Counted regardless of enableChat — only the clearing surface differs by mode,
+// not the counting. Recomputed (never incremented), serialized through its own
+// promise-chain queue (mirror of unreadCountOps/mirrorStoreOps) so overlapping
+// recomputes can't interleave their read-modify-writes.
+let chatCountOps = Promise.resolve();
+
+function updateChatUnreadCount() {
+  const run = chatCountOps.then(async () => {
+    try {
+      const data = await chrome.storage.local.get(['pushes', 'people', 'peopleLastRead', 'showPeoplePushes', 'chatAutoOpenedIdens', 'chatReadFloor']);
+      const pushes = data.pushes || [];
+      const people = data.people || [];
+      const peopleLastRead = data.peopleLastRead || {};
+      const autoOpenedIdens = data.chatAutoOpenedIdens || [];
+      const floor = data.chatReadFloor ?? 0;
+      const showPeoplePushes = data.showPeoplePushes !== false;
+
+      let count = 0;
+      if (showPeoplePushes) {
+        for (const push of pushes) {
+          if (!isPeoplePush(push)) continue;
+          if (push.dismissed === true) continue;
+          const person = people.find(p => p.email_normalized === push.sender_email_normalized);
+          if (!person || person.muted === true) continue;
+          if (autoOpenedIdens.includes(push.iden)) continue;
+          const readAt = Math.max(peopleLastRead[push.sender_email_normalized] ?? 0, floor);
+          if ((push.created ?? 0) > readAt) count++;
+        }
+      }
+
+      await chrome.storage.local.set({ unreadChatCount: count });
+      await updateBadge();
+    } catch (error) {
+      console.error('Failed to update unread chat count:', error);
+    }
+  });
+  chatCountOps = run.catch(() => {});
+  return run;
+}
+
 async function updateBadge() {
   try {
     // PRIORITY 1: Show OFF badge when not connected
@@ -2069,8 +2177,10 @@ async function updateBadge() {
       'displayUnreadCounts',
       'displayUnreadPushes',
       'displayUnreadMirrored',
+      'displayUnreadChats',
       'unreadPushCount',
-      'unreadMirrorCount'
+      'unreadMirrorCount',
+      'unreadChatCount'
     ]);
 
     // Check if badge display is enabled
@@ -2078,19 +2188,24 @@ async function updateBadge() {
       chrome.action.setBadgeText({ text: '' });
       return;
     }
-    
+
     const pushCount = data.unreadPushCount || 0;
     const mirrorCount = data.unreadMirrorCount || 0;
+    const chatCount = data.unreadChatCount || 0;
     const showPushes = data.displayUnreadPushes !== false; // Default true
     const showMirrored = data.displayUnreadMirrored !== false; // Default true
-    
+    const showChats = data.displayUnreadChats !== false; // Default true
+
     let totalCount = 0;
-    
+
     if (showPushes) {
       totalCount += pushCount;
     }
     if (showMirrored) {
       totalCount += mirrorCount;
+    }
+    if (showChats) {
+      totalCount += chatCount;
     }
     
     // Set badge text
@@ -2568,10 +2683,14 @@ async function clearPushHistory() {
   try {
     await chrome.storage.local.set({
       pushes: [],
-      sentMessages: []
+      sentMessages: [],
+      // Cache emptied ⇒ the derived chat count is definitionally 0; write it
+      // atomically with the list reset so no window shows a stale chat badge.
+      unreadChatCount: 0
     });
-    // Reset the counter through the serialized queue (which also refreshes
-    // the badge) so an in-flight batch increment can't overwrite it
+    // Reset the counter through the serialized queue (which also refreshes the
+    // badge, picking up unreadChatCount: 0 above) so an in-flight batch
+    // increment can't overwrite it
     await clearUnreadPushCount();
     console.log('Push history cleared');
   } catch (error) {
@@ -2599,6 +2718,9 @@ async function deletePush(iden) {
     const sentMessages = (data.sentMessages || []).filter(m => m.iden !== iden);
 
     await chrome.storage.local.set({ pushes, sentMessages });
+    // A deleted push may have been an unread people push; recompute the derived
+    // chat count (the general pushes-change path deliberately doesn't).
+    await updateChatUnreadCount();
     console.log('Push deleted:', iden);
   } catch (error) {
     console.error('Failed to delete push:', error);

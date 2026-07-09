@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Μετονομασία"
+  },
+  "chats_label": {
+    "message": "Συνομιλίες"
   }
 }

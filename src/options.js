@@ -63,6 +63,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const displayUnreadMirroredCheckbox = document.getElementById('displayUnreadMirrored');
   const displayUnreadMirroredToggle = document.getElementById('displayUnreadMirroredToggle');
   const displayUnreadMirroredContainer = document.getElementById('displayUnreadMirroredContainer');
+  const displayUnreadChatsCheckbox = document.getElementById('displayUnreadChats');
+  const displayUnreadChatsToggle = document.getElementById('displayUnreadChatsToggle');
+  const displayUnreadChatsContainer = document.getElementById('displayUnreadChatsContainer');
   const encryptionPasswordInput = document.getElementById('encryptionPassword');
   const encryptionPasswordGroup = document.getElementById('encryptionPasswordGroup');
   const playSoundOnNotificationCheckbox = document.getElementById('playSoundOnNotification');
@@ -606,7 +609,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -765,7 +768,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDisplayUnreadPushesToggleVisual();
     displayUnreadMirroredCheckbox.checked = data.displayUnreadMirrored !== false; // Default to true
     updateDisplayUnreadMirroredToggleVisual();
-    
+    displayUnreadChatsCheckbox.checked = data.displayUnreadChats !== false; // Default to true
+    updateDisplayUnreadChatsToggleVisual();
+
     // Show/hide the display unread counts sub-options based on main setting
     updateDisplayUnreadCountsVisibility();
     
@@ -796,7 +801,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Update conditional visibility for display unread mirrored option
     updateDisplayUnreadMirroredVisibility();
-    
+
+    // Update conditional visibility for display unread chats option
+    updateDisplayUnreadChatsVisibility();
+
     updateRetrieveButton();
   })(data);
   
@@ -855,8 +863,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadMirroredCheckbox.checked = false;
       updateDisplayUnreadMirroredToggleVisual();
       
-      // Auto-disable main Display unread counts switch if both sub-switches are off
-      if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+      // Auto-disable main Display unread counts switch if all sub-switches are off
+      if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
         displayUnreadCountsCheckbox.checked = false;
         updateDisplayUnreadCountsToggleVisual();
         updateDisplayUnreadCountsVisibility();
@@ -905,9 +913,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     enableChatCheckbox.checked = !enableChatCheckbox.checked;
     updateEnableChatToggleVisual();
     // Chat is the visibility master for the people auto-open row + trusted list
-    // (Behavior), and adds/removes Chat from the default-tab dropdown.
+    // (Behavior), and adds/removes Chat from the default-tab dropdown. It also
+    // gates the "↳ Chats" unread-count sub-row (Appearance).
     updateAutoOpenLinksFromPeopleVisibility();
     updateDefaultTabVisibility();
+    updateDisplayUnreadChatsVisibility();
   });
 
   showQuickShareToggle.addEventListener('click', function() {
@@ -962,17 +972,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     displayUnreadCountsCheckbox.checked = !displayUnreadCountsCheckbox.checked;
     updateDisplayUnreadCountsToggleVisual();
     updateDisplayUnreadCountsVisibility();
-    
-    // Auto-enable both sub-switches when main switch is turned on
+
+    // Auto-enable the sub-switches when main switch is turned on
     if (displayUnreadCountsCheckbox.checked) {
       displayUnreadPushesCheckbox.checked = true;
       updateDisplayUnreadPushesToggleVisual();
       displayUnreadMirroredCheckbox.checked = true;
       updateDisplayUnreadMirroredToggleVisual();
+      displayUnreadChatsCheckbox.checked = true;
+      updateDisplayUnreadChatsToggleVisual();
     }
-    
-    // Auto-disable main switch if both sub-switches are off
-    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+
+    // Auto-disable main switch if all sub-switches are off
+    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
       displayUnreadCountsCheckbox.checked = false;
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
@@ -982,9 +994,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   displayUnreadPushesToggle.addEventListener('click', function() {
     displayUnreadPushesCheckbox.checked = !displayUnreadPushesCheckbox.checked;
     updateDisplayUnreadPushesToggleVisual();
-    
-    // Auto-disable main switch if both sub-switches are off
-    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+
+    // Auto-disable main switch if all sub-switches are off
+    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
       displayUnreadCountsCheckbox.checked = false;
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
@@ -994,9 +1006,21 @@ document.addEventListener('DOMContentLoaded', async function() {
   displayUnreadMirroredToggle.addEventListener('click', function() {
     displayUnreadMirroredCheckbox.checked = !displayUnreadMirroredCheckbox.checked;
     updateDisplayUnreadMirroredToggleVisual();
-    
-    // Auto-disable main switch if both sub-switches are off
-    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked) {
+
+    // Auto-disable main switch if all sub-switches are off
+    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
+      displayUnreadCountsCheckbox.checked = false;
+      updateDisplayUnreadCountsToggleVisual();
+      updateDisplayUnreadCountsVisibility();
+    }
+  });
+
+  displayUnreadChatsToggle.addEventListener('click', function() {
+    displayUnreadChatsCheckbox.checked = !displayUnreadChatsCheckbox.checked;
+    updateDisplayUnreadChatsToggleVisual();
+
+    // Auto-disable main switch if all sub-switches are off
+    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
       displayUnreadCountsCheckbox.checked = false;
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
@@ -1199,9 +1223,13 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (pushesData.pushes && pushesData.pushes.length > 0) {
             // Store the initial pushes and set lastModified
             const lastModified = pushesData.pushes[0].modified;
-            await chrome.storage.local.set({ 
+            await chrome.storage.local.set({
               pushes: pushesData.pushes.slice(0, 100),
-              lastModified: lastModified 
+              lastModified: lastModified,
+              // Brand-new account: stamp the chat read floor at now so the
+              // historical people pushes in this initial fetch never badge
+              // (mirrors the background's initializeExtension seed).
+              chatReadFloor: Date.now() / 1000
             });
             console.log(`Initial setup: Retrieved ${pushesData.pushes.length} pushes, lastModified set to ${lastModified}`);
           }
@@ -1401,6 +1429,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadCounts: displayUnreadCountsCheckbox.checked,
       displayUnreadPushes: displayUnreadPushesCheckbox.checked,
       displayUnreadMirrored: displayUnreadMirroredCheckbox.checked,
+      displayUnreadChats: displayUnreadChatsCheckbox.checked,
       languageMode: languageList.getValue(),
       colorMode: colorModeDropdown.getValue(),
       defaultTab: defaultTabDropdown.getValue(),
@@ -1478,6 +1507,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadCounts: saveData.displayUnreadCounts,
       displayUnreadPushes: saveData.displayUnreadPushes,
       displayUnreadMirrored: saveData.displayUnreadMirrored,
+      displayUnreadChats: saveData.displayUnreadChats,
       languageMode: saveData.languageMode,
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab,
@@ -1832,22 +1862,43 @@ document.addEventListener('DOMContentLoaded', async function() {
       displayUnreadMirroredToggle.classList.remove('active');
     }
   }
-  
+
+  function updateDisplayUnreadChatsToggleVisual() {
+    if (displayUnreadChatsCheckbox.checked) {
+      displayUnreadChatsToggle.classList.add('active');
+    } else {
+      displayUnreadChatsToggle.classList.remove('active');
+    }
+  }
+
   function updateDisplayUnreadCountsVisibility() {
     if (displayUnreadCountsCheckbox.checked) {
       displayUnreadPushesContainer.style.display = 'flex';
       updateDisplayUnreadMirroredVisibility();
+      updateDisplayUnreadChatsVisibility();
     } else {
       displayUnreadPushesContainer.style.display = 'none';
       displayUnreadMirroredContainer.style.display = 'none';
+      displayUnreadChatsContainer.style.display = 'none';
     }
   }
-  
+
   function updateDisplayUnreadMirroredVisibility() {
     if (displayUnreadCountsCheckbox.checked && notificationMirroringCheckbox.checked) {
       displayUnreadMirroredContainer.style.display = 'flex';
     } else {
       displayUnreadMirroredContainer.style.display = 'none';
+    }
+  }
+
+  // Mirrors updateDisplayUnreadMirroredVisibility, but the master-gate is the
+  // Chat surface (enableChat) rather than notification mirroring: the Chats
+  // sub-row shows only when unread counts are on AND Chat is enabled.
+  function updateDisplayUnreadChatsVisibility() {
+    if (displayUnreadCountsCheckbox.checked && isChatEnabled()) {
+      displayUnreadChatsContainer.style.display = 'flex';
+    } else {
+      displayUnreadChatsContainer.style.display = 'none';
     }
   }
   

@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "重新命名"
+  },
+  "chats_label": {
+    "message": "聊天"
   }
 }

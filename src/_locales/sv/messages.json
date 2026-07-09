@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Byt namn"
+  },
+  "chats_label": {
+    "message": "Chattar"
   }
 }

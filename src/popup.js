@@ -573,9 +573,11 @@ document.addEventListener('DOMContentLoaded', function() {
     currentTab = tab;
 
     if (tab === 'chat') {
-      // Chat surface (list or conversation). Deliberately does NOT clear the
-      // unread-push or unread-mirror counts — Chat tracks reads per-person
-      // (peopleLastRead), independent of both badges.
+      // Chat surface (list or conversation). The Chat tab itself clears nothing:
+      // opening a conversation is the read event (per-person, via stampPersonRead
+      // → peopleLastRead), and the derived unread-chat badge follows from the
+      // background recompute. The unread-push and unread-mirror counters are
+      // untouched here — each surface owns its own reads.
       pushTab.classList.remove('active');
       chatTab.classList.add('active');
       notificationTab.classList.remove('active');
@@ -1238,23 +1240,37 @@ document.addEventListener('DOMContentLoaded', function() {
   // opened. Writing it triggers a storage.onChanged re-render that clears dots.
   async function stampPersonRead(emailNormalized) {
     if (!emailNormalized) return;
-    const data = await chrome.storage.local.get('peopleLastRead');
+    const data = await chrome.storage.local.get(['peopleLastRead', 'pushes']);
     const peopleLastRead = data.peopleLastRead || {};
-    peopleLastRead[emailNormalized] = Math.floor(Date.now() / 1000);
+    // Clock-skew guard (same as the mirror-notification read stamp): stamp past
+    // the newest incoming push in this conversation, not just the wall clock, so
+    // a push carrying a future created (phone/server clock ahead) is still marked
+    // read on open. The while-open re-stamp path reuses this function and so
+    // inherits the guard against the just-arrived push it re-stamps against.
+    const newest = (data.pushes || []).reduce((max, p) => {
+      if (p.sender_email_normalized !== emailNormalized || p.direction !== 'incoming') return max;
+      const t = p.created || 0;
+      return t > max ? t : max;
+    }, 0);
+    peopleLastRead[emailNormalized] = Math.max(Date.now() / 1000, newest);
     await chrome.storage.local.set({ peopleLastRead });
   }
 
   async function renderPeopleList() {
-    const [peopleData, pushesData, sentData, readData] = await Promise.all([
+    const [peopleData, pushesData, sentData, readData, chatMetaData] = await Promise.all([
       chrome.storage.local.get('people'),
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.local.get('peopleLastRead')
+      chrome.storage.local.get('peopleLastRead'),
+      chrome.storage.local.get(['chatReadFloor', 'chatAutoOpenedIdens'])
     ]);
     const people = peopleData.people || [];
     const pushes = pushesData.pushes || [];
     const sentMessages = sentData.sentMessages || [];
     const peopleLastRead = readData.peopleLastRead || {};
+    // Dot inputs mirror the derived badge count (background updateChatUnreadCount).
+    const chatReadFloor = chatMetaData.chatReadFloor ?? 0;
+    const autoOpenedIdens = chatMetaData.chatAutoOpenedIdens || [];
 
     const fragment = document.createDocumentFragment();
 
@@ -1273,12 +1289,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Per-person activity from the local push caches: latest item (either
-    // direction) drives the snippet + time; the latest INCOMING drives unread.
+    // direction) drives the snippet + time; incoming pushes drive the unread dot
+    // (per the predicate below).
     const rows = people.map(person => {
       const key = person.email_normalized;
       let latestItem = null;
       let latestTime = 0;
-      let latestIncomingTime = 0;
+      // Unread threshold: this person's read stamp, floored by the global chat
+      // read floor (mirrors the badge's max(peopleLastRead ?? 0, chatReadFloor ?? 0)).
+      const readThreshold = Math.max(peopleLastRead[key] ?? 0, chatReadFloor);
+      let hasUnreadIncoming = false;
       const consider = item => {
         if (!key) return;
         if (item.sender_email_normalized !== key && item.receiver_email_normalized !== key) return;
@@ -1287,9 +1307,14 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       pushes.forEach(push => {
         consider(push);
-        if (push.sender_email_normalized === key && push.direction === 'incoming') {
-          const t = itemTime(push);
-          if (t > latestIncomingTime) latestIncomingTime = t;
+        // Unread-dot predicate: matches the derived badge count minus the mute
+        // clause — a muted person's dot still shows here, but the badge excludes
+        // them. An incoming, non-dismissed push not consumed by a hidden
+        // auto-open and newer than the read threshold marks the person unread.
+        if (push.sender_email_normalized === key && push.direction === 'incoming' &&
+            push.dismissed !== true && !autoOpenedIdens.includes(push.iden) &&
+            itemTime(push) > readThreshold) {
+          hasUnreadIncoming = true;
         }
       });
       sentMessages.forEach(consider);
@@ -1304,9 +1329,7 @@ document.addEventListener('DOMContentLoaded', function() {
           : window.CustomI18n.getMessage('no_pushes_yet_snippet');
       }
 
-      // Absent read key = never opened → unread when any incoming exists.
-      const readAt = peopleLastRead[key];
-      const unread = latestIncomingTime > 0 && (readAt === undefined || latestIncomingTime > readAt);
+      const unread = hasUnreadIncoming;
 
       return { person, latestTime, snippet, unread, sortName: personDisplayName(person).toLowerCase() };
     });

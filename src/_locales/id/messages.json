@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Ganti nama"
+  },
+  "chats_label": {
+    "message": "Chat"
   }
 }

@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Rinomina"
+  },
+  "chats_label": {
+    "message": "Chat"
   }
 }

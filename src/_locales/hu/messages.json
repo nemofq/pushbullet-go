@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Átnevezés"
+  },
+  "chats_label": {
+    "message": "Csevegések"
   }
 }

@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "שנה שם"
+  },
+  "chats_label": {
+    "message": "צ'אטים"
   }
 }

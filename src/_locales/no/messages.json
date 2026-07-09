@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Omdøp"
+  },
+  "chats_label": {
+    "message": "Chatter"
   }
 }

@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Đổi tên"
+  },
+  "chats_label": {
+    "message": "Chat"
   }
 }

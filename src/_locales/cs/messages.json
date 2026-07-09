@@ -424,5 +424,8 @@
   },
   "rename_device_title": {
     "message": "Přejmenovat"
+  },
+  "chats_label": {
+    "message": "Chaty"
   }
 }
