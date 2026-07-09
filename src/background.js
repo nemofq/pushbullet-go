@@ -645,7 +645,10 @@ async function ensureDeviceDataFromServer() {
       }
     }
 
-    const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats', {
+    // ?active=true asks the server to omit deleted chats; the client-side
+    // active filter below stays as belt-and-braces (deleted objects are
+    // returned by default per the API docs).
+    const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats?active=true', {
       headers: { 'Access-Token': token }
     });
     if (!chatsResponse.ok) return; // Save nothing partial; retry later
@@ -679,7 +682,9 @@ async function refreshPeopleFromServer() {
   if (!token) return;
 
   try {
-    const response = await fetch('https://api.pushbullet.com/v2/chats', {
+    // ?active=true asks the server to omit deleted chats; the client-side
+    // active filter below stays as belt-and-braces.
+    const response = await fetch('https://api.pushbullet.com/v2/chats?active=true', {
       headers: { 'Access-Token': token }
     });
     if (!response.ok) return;
@@ -1096,7 +1101,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         // updates when a resume delivers many pushes at once.
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
-          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showPeoplePushes', 'autoOpenLinks', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showPeoplePushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
           const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
           const people = localData.people || [];
 
@@ -1160,6 +1165,10 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           // trusted list, when the auto-open master + its people sub are on and
           // the Chat surface is enabled — otherwise the auto-open arg stays off.
           const trustedPeople = (configData.autoOpenTrustedPeople || '').split(',').filter(Boolean);
+          // Chat surface default: enabled only once the account has people; an
+          // explicit setting wins (true = on, false = off, undefined = adaptive).
+          const chatEnabled = configData.enableChat === true
+            || (configData.enableChat === undefined && people.length > 0);
           const peopleTasks = [];
           if (configData.showPeoplePushes !== false) {
             for (const push of newPushes) {
@@ -1177,18 +1186,18 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
               const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
               const iconUrl = await getPersonIconDataUrl(person);
               // Explicit trusted selection: only checked people auto-open. The
-              // Chat toggle (enableChat, Phase 5; undefined = enabled) gates it
-              // so a hidden option can never keep acting. Resume gating and
+              // Chat surface (chatEnabled, adaptive default above) gates it so a
+              // hidden option can never keep acting. Resume gating and
               // hideNotificationOnAutoOpen compose exactly as the device path.
               const autoOpenForPush = configData.autoOpenLinks
                 && configData.autoOpenLinksFromPeople
-                && configData.enableChat !== false
+                && chatEnabled
                 && trustedPeople.includes(push.sender_email_normalized);
               peopleTasks.push(showNotificationForPush(
                 push,
                 autoOpenForPush && allowAutoOpenLinks,
                 configData.hideNotificationOnAutoOpen || false,
-                { titleOverride, iconUrl }
+                { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true }
               ));
             }
           }
@@ -1197,7 +1206,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           // serialized counter queue (never per-push increments).
           const counted = await Promise.all([
             ...pushesToNotify.map(push =>
-              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false)
+              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false, { autoOpenFiles: configData.autoOpenFiles === true })
             ),
             ...peopleTasks
           ]);
@@ -1228,10 +1237,20 @@ function normalizeOpenUrl(url) {
 // the side effects below, and their failures neither reject nor change it.
 // A people push passes { titleOverride, iconUrl } so the sender names the
 // notification and their avatar (or the fallback icon) is shown; device pushes
-// call this with no options and keep the push title with the default icon.
-async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false, { titleOverride, iconUrl } = {}) {
+// keep the push title with the default icon. autoOpenLinks is the composed gate
+// (master / trusted-people): when it is on, link pushes auto-open their url and
+// — only if autoOpenFiles is also on — file pushes auto-open their file_url,
+// mirroring the notification Open button.
+async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false, { titleOverride, iconUrl, autoOpenFiles } = {}) {
   // Determine if this push will actually be auto-opened
-  const autoOpenUrl = (push.type === 'link' && autoOpenLinks) ? normalizeOpenUrl(push.url) : null;
+  let autoOpenUrl = null;
+  if (autoOpenLinks) {
+    if (push.type === 'link') {
+      autoOpenUrl = normalizeOpenUrl(push.url);
+    } else if (push.type === 'file' && autoOpenFiles && push.file_url) {
+      autoOpenUrl = push.file_url;
+    }
+  }
   const willAutoOpen = autoOpenUrl !== null;
 
   // Skip notification creation if both conditions are met:

@@ -378,7 +378,7 @@
     "message": "דחיפות מאנשים"
   },
   "auto_open_people_label": {
-    "message": "גם קישורים מאנשים"
+    "message": "גם דחיפות מאנשים"
   },
   "chat_tab": {
     "message": "צ'אט"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "תמונת פרופיל"
+  },
+  "auto_open_files_label": {
+    "message": "גם דחיפות קבצים (תמונות)"
+  },
+  "rename_device_title": {
+    "message": "שנה שם"
   }
 }

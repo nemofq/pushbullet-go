@@ -378,7 +378,7 @@
     "message": "Pushes von Personen"
   },
   "auto_open_people_label": {
-    "message": "Auch Links von Personen"
+    "message": "Auch Pushes von Personen"
   },
   "chat_tab": {
     "message": "Chat"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilbild"
+  },
+  "auto_open_files_label": {
+    "message": "Auch Pushes von Dateien (Bilder)"
+  },
+  "rename_device_title": {
+    "message": "Umbenennen"
   }
 }

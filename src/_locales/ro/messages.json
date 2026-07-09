@@ -372,7 +372,7 @@
     "message": "Comportament"
   },
   "auto_open_people_label": {
-    "message": "De asemenea, link-urile de la persoane"
+    "message": "De asemenea, push-uri de la persoane"
   },
   "n_targets": {
     "message": "$1 ținte"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Poză de profil"
+  },
+  "auto_open_files_label": {
+    "message": "De asemenea, push-uri de fișiere (imagini)"
+  },
+  "rename_device_title": {
+    "message": "Redenumire"
   }
 }

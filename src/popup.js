@@ -436,8 +436,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Computes which popup surfaces are enabled and lands on the right tab.
-  // Fixed tab order Push | Chat | Notification: Push is always enabled, Chat iff
-  // enableChat !== false, Notification iff mirroring is on; the switcher shows
+  // Fixed tab order Push | Chat | Notification: Push is always enabled, Chat per
+  // the adaptive default (below), Notification iff mirroring is on; the switcher shows
   // only when signed in and at least two surfaces are enabled. Pass
   // { preserveCurrent: true } for reactive surface-toggle changes so an active,
   // still-available tab is kept — otherwise (initial load / reconnect) the saved
@@ -456,9 +456,12 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    const localData = await chrome.storage.local.get(['notificationMirroring', 'enableChat', 'defaultTab']);
+    const localData = await chrome.storage.local.get(['notificationMirroring', 'enableChat', 'defaultTab', 'people']);
     const mirroringOn = !!localData.notificationMirroring;
-    const chatOn = localData.enableChat !== false;
+    // Chat surface default: enabled only once the account has people; an
+    // explicit setting wins (true = on, false = off, undefined = adaptive).
+    const chatOn = localData.enableChat === true
+      || (localData.enableChat === undefined && (localData.people || []).length > 0);
 
     // Per-button visibility (fixed order); the switcher shows with >1 surface.
     chatTab.style.display = chatOn ? '' : 'none';
@@ -852,14 +855,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const [receivedData, sentData, configData, localData, peopleData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes']),
+      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'enableChat']),
       chrome.storage.local.get('chromeDeviceId'),
       chrome.storage.local.get('people')
     ]);
 
     // People lookup (by email_normalized) for the timestamp-line attribution
     // captions on people pushes / sent-to-person messages.
-    const peopleByEmail = new Map((peopleData.people || []).map(p => [p.email_normalized, p]));
+    const people = peopleData.people || [];
+    const peopleByEmail = new Map(people.map(p => [p.email_normalized, p]));
+
+    // Chat surface default: enabled only once the account has people; an
+    // explicit setting wins (true = on, false = off, undefined = adaptive).
+    // People pushes live in the Chat tab when it is enabled; the timeline only
+    // carries them (with captions) as a fallback when Chat is off.
+    const chatEnabled = configData.enableChat === true
+      || (configData.enableChat === undefined && people.length > 0);
 
     // Get received messages (filtered by new flexible filtering settings)
     let receivedMessages = receivedData.pushes || [];
@@ -871,6 +882,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
       }
       if (isPeoplePush(push)) {
+        // When Chat is on, received people pushes live only in the conversation.
+        if (chatEnabled) return false;
         return configData.showPeoplePushes !== false; // Default is true
       }
 
@@ -890,8 +903,10 @@ document.addEventListener('DOMContentLoaded', function() {
       return false;
     });
     
-    // Get sent messages
-    const sentMessages = sentData.sentMessages || [];
+    // Get sent messages. When Chat is on, entries addressed to a person
+    // (receiver_email) live only in the conversation, so drop them here.
+    const sentMessages = (sentData.sentMessages || []).filter(msg =>
+      !(chatEnabled && msg.receiver_email));
     
     // Combine and sort by timestamp
     const allMessages = [
@@ -1472,7 +1487,11 @@ document.addEventListener('DOMContentLoaded', function() {
     targetDevices = devices.filter(device => device.active && device.pushable !== false);
 
     // People join the menu as per-send targets only while Chat is enabled.
-    targetPeople = configData.enableChat !== false ? (configData.people || []) : [];
+    // Chat surface default: enabled only once the account has people; an
+    // explicit setting wins (true = on, false = off, undefined = adaptive).
+    const chatEnabled = configData.enableChat === true
+      || (configData.enableChat === undefined && (configData.people || []).length > 0);
+    targetPeople = chatEnabled ? (configData.people || []) : [];
 
     // Drop selections that no longer point at an existing pushable device / person
     perSendTargetIdens = perSendTargetIdens.filter(iden =>
@@ -1994,8 +2013,11 @@ document.addEventListener('DOMContentLoaded', function() {
       // fall back (see checkNotificationMirroring).
       checkNotificationMirroring({ preserveCurrent: true });
     }
-    if (areaName === 'local' && changes.enableChat) {
-      // Chat surface toggled: same preserve-or-fall-back behavior.
+    if (areaName === 'local' && (changes.enableChat || changes.people)) {
+      // Chat surface toggled, or the people list changed — with the adaptive
+      // default (enabled once the account has people) the first person arriving
+      // (e.g. after Retrieve) flips Chat visibility live. Same preserve-or-
+      // fall-back behavior.
       checkNotificationMirroring({ preserveCurrent: true });
     }
     if (areaName === 'local' && changes.mirrorDecryptIssue) {

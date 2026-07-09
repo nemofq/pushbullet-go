@@ -378,7 +378,7 @@
     "message": "Pushes från personer"
   },
   "auto_open_people_label": {
-    "message": "Även länkar från personer"
+    "message": "Även pushes från personer"
   },
   "chat_tab": {
     "message": "Chatt"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilbild"
+  },
+  "auto_open_files_label": {
+    "message": "Även pushes av filer (bilder)"
+  },
+  "rename_device_title": {
+    "message": "Byt namn"
   }
 }

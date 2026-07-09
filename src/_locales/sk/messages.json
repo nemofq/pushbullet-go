@@ -372,7 +372,7 @@
     "message": "Správanie"
   },
   "auto_open_people_label": {
-    "message": "Aj odkazy od ľudí"
+    "message": "Aj push od ľudí"
   },
   "n_targets": {
     "message": "$1 cieľov"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilová fotka"
+  },
+  "auto_open_files_label": {
+    "message": "Aj push súborov (obrázky)"
+  },
+  "rename_device_title": {
+    "message": "Premenovať"
   }
 }

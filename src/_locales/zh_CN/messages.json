@@ -378,7 +378,7 @@
     "message": "来自联系人的推送"
   },
   "auto_open_people_label": {
-    "message": "来自联系人的链接也自动打开"
+    "message": "来自联系人的推送也自动打开"
   },
   "chat_tab": {
     "message": "聊天"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "头像"
+  },
+  "auto_open_files_label": {
+    "message": "文件推送（含图片）也自动打开"
+  },
+  "rename_device_title": {
+    "message": "重命名"
   }
 }

@@ -378,7 +378,7 @@
     "message": "Enviaments de persones"
   },
   "auto_open_people_label": {
-    "message": "També enllaços de persones"
+    "message": "També enviaments de persones"
   },
   "chat_tab": {
     "message": "Chat"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Foto de perfil"
+  },
+  "auto_open_files_label": {
+    "message": "També enviaments de fitxers (imatges)"
+  },
+  "rename_device_title": {
+    "message": "Reanomenar"
   }
 }

@@ -378,7 +378,7 @@
     "message": "Küldések személyektől"
   },
   "auto_open_people_label": {
-    "message": "Linkek személyektől is"
+    "message": "Küldések személyektől is"
   },
   "chat_tab": {
     "message": "Csevegés"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilkép"
+  },
+  "auto_open_files_label": {
+    "message": "Fájlküldések (képek) is"
+  },
+  "rename_device_title": {
+    "message": "Átnevezés"
   }
 }

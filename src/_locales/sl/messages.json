@@ -378,7 +378,7 @@
     "message": "Pushes od oseb"
   },
   "auto_open_people_label": {
-    "message": "Tudi povezave od oseb"
+    "message": "Tudi pushes od oseb"
   },
   "chat_tab": {
     "message": "Klepet"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilna slika"
+  },
+  "auto_open_files_label": {
+    "message": "Tudi pushes datotek (slike)"
+  },
+  "rename_device_title": {
+    "message": "Preimenuj"
   }
 }

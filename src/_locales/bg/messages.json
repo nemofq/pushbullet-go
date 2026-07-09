@@ -378,7 +378,7 @@
     "message": "Изпращания от хора"
   },
   "auto_open_people_label": {
-    "message": "Също и линкове от хора"
+    "message": "Също и изпращания от хора"
   },
   "chat_tab": {
     "message": "Чат"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Профилна снимка"
+  },
+  "auto_open_files_label": {
+    "message": "Също и файлови изпращания (изображения)"
+  },
+  "rename_device_title": {
+    "message": "Преименуване"
   }
 }

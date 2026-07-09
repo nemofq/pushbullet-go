@@ -372,7 +372,7 @@
     "message": "Oppførsel"
   },
   "auto_open_people_label": {
-    "message": "Også lenker fra personer"
+    "message": "Også pushes fra personer"
   },
   "n_targets": {
     "message": "$1 mål"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilbilde"
+  },
+  "auto_open_files_label": {
+    "message": "Også pushes av filer (bilder)"
+  },
+  "rename_device_title": {
+    "message": "Omdøp"
   }
 }

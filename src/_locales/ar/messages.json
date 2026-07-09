@@ -378,7 +378,7 @@
     "message": "الإرسالات من الأشخاص"
   },
   "auto_open_people_label": {
-    "message": "أيضًا الروابط من الأشخاص"
+    "message": "أيضًا الإرسالات من الأشخاص"
   },
   "chat_tab": {
     "message": "الدردشة"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "صورة الملف الشخصي"
+  },
+  "auto_open_files_label": {
+    "message": "أيضًا إرسالات الملفات (الصور)"
+  },
+  "rename_device_title": {
+    "message": "إعادة تسمية"
   }
 }

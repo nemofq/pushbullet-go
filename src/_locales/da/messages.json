@@ -378,7 +378,7 @@
     "message": "Pushes fra personer"
   },
   "auto_open_people_label": {
-    "message": "Også links fra personer"
+    "message": "Også pushes fra personer"
   },
   "chat_tab": {
     "message": "Chat"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilbillede"
+  },
+  "auto_open_files_label": {
+    "message": "Også pushes af filer (billeder)"
+  },
+  "rename_device_title": {
+    "message": "Omdøb"
   }
 }

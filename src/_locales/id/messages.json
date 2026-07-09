@@ -378,7 +378,7 @@
     "message": "Push dari orang"
   },
   "auto_open_people_label": {
-    "message": "Juga tautan dari orang"
+    "message": "Juga push dari orang"
   },
   "chat_tab": {
     "message": "Chat"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Foto profil"
+  },
+  "auto_open_files_label": {
+    "message": "Juga push file (gambar)"
+  },
+  "rename_device_title": {
+    "message": "Ganti nama"
   }
 }

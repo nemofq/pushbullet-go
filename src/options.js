@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const saveStatus = document.getElementById('saveStatus');
   const autoOpenLinksCheckbox = document.getElementById('autoOpenLinks');
   const autoOpenLinksToggle = document.getElementById('autoOpenLinksToggle');
+  const autoOpenFilesCheckbox = document.getElementById('autoOpenFiles');
+  const autoOpenFilesToggle = document.getElementById('autoOpenFilesToggle');
+  const autoOpenFilesContainer = document.getElementById('autoOpenFilesContainer');
   const autoOpenOnResumeCheckbox = document.getElementById('autoOpenOnResume');
   const autoOpenOnResumeToggle = document.getElementById('autoOpenOnResumeToggle');
   const autoOpenOnResumeContainer = document.getElementById('autoOpenOnResumeContainer');
@@ -76,8 +79,14 @@ document.addEventListener('DOMContentLoaded', async function() {
   // target menu. The top "All …" row is the empty selection ([] = all);
   // toggling never closes anything, and state only persists on Save.
   const DEVICE_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
+  const PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>';
 
-  function createDeviceChecklist(container, getAllLabel, getEmptyLabel, labelOf) {
+  // renameable (device pickers only) adds a hover-reveal pencil to each device
+  // row for inline rename; the trusted-people picker passes it falsy (people
+  // aren't renamable). The pencil and its editor are interactive, so renameable
+  // rows are a <div role="button"> — nesting them inside the row's native
+  // <button> is invalid HTML and swallows their clicks.
+  function createDeviceChecklist(container, getAllLabel, getEmptyLabel, labelOf, renameable) {
     let devices = [];
     let selected = [];
 
@@ -89,9 +98,26 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function createOption(iden, label) {
-      const option = document.createElement('button');
+      // Only device rows (iden set) in a renameable picker carry the pencil +
+      // inline editor, so those become a <div role="button">; the "All …" row
+      // and every non-renameable picker keep the native <button>.
+      const isRenameRow = Boolean(renameable && iden);
+      const option = document.createElement(isRenameRow ? 'div' : 'button');
       option.className = 'list-option';
-      option.type = 'button';
+      if (isRenameRow) {
+        option.setAttribute('role', 'button');
+        option.tabIndex = 0;
+        option.addEventListener('keydown', function(e) {
+          // Restore the native button's Space/Enter activation; the editor's
+          // own keydown stops propagation, so it never reaches this handler.
+          if (e.target === option && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            option.click();
+          }
+        });
+      } else {
+        option.type = 'button';
+      }
       option.dataset.iden = iden;
       option.title = label;
       if (iden) {
@@ -112,7 +138,76 @@ document.addEventListener('DOMContentLoaded', async function() {
         check.innerHTML = DEVICE_CHECK_SVG;
         option.appendChild(check);
       }
+      if (isRenameRow) {
+        const pencil = document.createElement('button');
+        pencil.type = 'button';
+        pencil.className = 'opt-pencil';
+        pencil.title = window.CustomI18n.getMessage('rename_device_title');
+        pencil.innerHTML = PENCIL_SVG;
+        pencil.addEventListener('click', function(e) {
+          e.stopPropagation(); // never toggle the row's selection
+          beginRename(iden, text, pencil);
+        });
+        option.appendChild(pencil);
+      }
       return option;
+    }
+
+    // Swap a device row's label for a compact inline editor. Enter saves via the
+    // API; Escape, blur, or an empty/unchanged value cancels. A successful save
+    // re-renders the whole list; a failed one silently restores the old label
+    // (same optimistic-revert stance as the chat mute bell).
+    function beginRename(iden, textSpan, pencil) {
+      const currentLabel = textSpan.textContent;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'opt-rename-input';
+      input.value = currentLabel;
+      let done = false;
+
+      function restore() {
+        input.replaceWith(textSpan);
+        pencil.style.display = '';
+      }
+
+      function cancel() {
+        if (done) return;
+        done = true;
+        restore();
+      }
+
+      async function commit() {
+        if (done) return;
+        const nickname = input.value.trim();
+        if (!nickname || nickname === currentLabel) {
+          cancel();
+          return;
+        }
+        done = true; // stop the disable-triggered blur / stray Escape from firing
+        input.disabled = true;
+        const ok = await renameDevice(iden, nickname);
+        // On success renameDevice re-rendered the list and detached this input;
+        // on failure quietly fall back to the previous label.
+        if (!ok) restore();
+      }
+
+      input.addEventListener('keydown', function(e) {
+        e.stopPropagation();
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          commit();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          cancel();
+        }
+      });
+      input.addEventListener('blur', cancel);
+      input.addEventListener('click', function(e) { e.stopPropagation(); });
+
+      pencil.style.display = 'none';
+      textSpan.replaceWith(input);
+      input.focus();
+      input.select();
     }
 
     function markSelection() {
@@ -190,12 +285,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   const remoteDevicePicker = createDeviceChecklist(
     remoteDevicePickerEl,
     () => window.CustomI18n.getMessage('all_devices'),
-    () => window.CustomI18n.getMessage('retrieve_devices_first')
+    () => window.CustomI18n.getMessage('retrieve_devices_first'),
+    undefined,
+    true
   );
   const otherDevicePicker = createDeviceChecklist(
     otherDevicePickerEl,
     () => window.CustomI18n.getMessage('all_other_devices'),
-    () => window.CustomI18n.getMessage('no_devices_yet')
+    () => window.CustomI18n.getMessage('no_devices_yet'),
+    undefined,
+    true
   );
   // Trusted-people checklist for auto-open (issue #66). No "All …" row: the plan
   // requires explicit selection (only checked people auto-open), keyed by
@@ -470,7 +569,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -488,9 +587,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     devices = data.devices || [];
     people = data.people || [];
-    // Chat surface master (default enabled). Set before updateAutoOpen* runs so
-    // isChatEnabled() reads the right state during the load pass.
-    enableChatCheckbox.checked = data.enableChat !== false;
+    // Chat surface master. Default: enabled only once the account has people; an
+    // explicit setting wins (true = on, false = off, undefined = adaptive). Set
+    // before updateAutoOpen* runs so isChatEnabled() reads the right state during
+    // the load pass. Toggling + saving always writes the explicit boolean.
+    enableChatCheckbox.checked = data.enableChat === true
+      || (data.enableChat === undefined && people.length > 0);
     updateEnableChatToggleVisual();
     populateDeviceSelects();
     
@@ -505,7 +607,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load auto-open links setting (default is false/off)
     autoOpenLinksCheckbox.checked = data.autoOpenLinks || false;
     updateToggleVisual();
-    
+
+    // Load auto-open file pushes sub-option (default is false/off)
+    autoOpenFilesCheckbox.checked = data.autoOpenFiles === true;
+    updateAutoOpenFilesToggleVisual();
+
     // Load auto-open on resume setting (default is false/off)
     autoOpenOnResumeCheckbox.checked = data.autoOpenOnResume || false;
     updateAutoOpenOnResumeToggleVisual();
@@ -671,6 +777,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     autoOpenLinksCheckbox.checked = !autoOpenLinksCheckbox.checked;
     updateToggleVisual();
     updateAutoOpenOnResumeVisibility();
+  });
+
+  autoOpenFilesToggle.addEventListener('click', function() {
+    autoOpenFilesCheckbox.checked = !autoOpenFilesCheckbox.checked;
+    updateAutoOpenFilesToggleVisual();
   });
 
   autoOpenOnResumeToggle.addEventListener('click', function() {
@@ -981,8 +1092,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
       }
       
-      // Fetch chats (people)
-      const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats', {
+      // Fetch chats (people). ?active=true asks the server to omit deleted
+      // chats; the client-side active filter below stays as belt-and-braces.
+      const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats?active=true', {
         headers: {
           'Access-Token': accessToken
         },
@@ -1221,6 +1333,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       showPeoplePushes: showPeoplePushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
+      autoOpenFiles: autoOpenFilesCheckbox.checked,
       autoOpenOnResume: autoOpenOnResumeCheckbox.checked,
       hideNotificationOnAutoOpen: hideNotificationOnAutoOpenCheckbox.checked,
       autoOpenLinksFromPeople: autoOpenLinksFromPeopleCheckbox.checked,
@@ -1298,6 +1411,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       showPeoplePushes: saveData.showPeoplePushes,
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
+      autoOpenFiles: saveData.autoOpenFiles,
       autoOpenOnResume: saveData.autoOpenOnResume,
       hideNotificationOnAutoOpen: saveData.hideNotificationOnAutoOpen,
       autoOpenLinksFromPeople: saveData.autoOpenLinksFromPeople,
@@ -1378,6 +1492,38 @@ document.addEventListener('DOMContentLoaded', async function() {
     ));
   }
 
+  // Rename a device server-side (documented POST /v2/devices/{iden}), then patch
+  // the in-memory device list and persist it to storage.local only — never the
+  // stale sync copies. Resolves true on success; false (missing token, network,
+  // or API error) tells the caller to revert the inline editor. The storage
+  // write drives the popup/context-menu refresh via their onChanged listeners;
+  // populateDeviceSelects() refreshes both option-page checklists here.
+  async function renameDevice(iden, nickname) {
+    const { accessToken } = await new Promise(resolve => {
+      chrome.storage.sync.get(['accessToken'], resolve);
+    });
+    if (!accessToken) return false;
+    try {
+      const response = await fetch(`https://api.pushbullet.com/v2/devices/${iden}`, {
+        method: 'POST',
+        headers: {
+          'Access-Token': accessToken,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nickname }),
+        credentials: 'omit'
+      });
+      if (!response.ok) return false;
+      const device = devices.find(d => d.iden === iden);
+      if (device) device.nickname = nickname;
+      await new Promise(resolve => chrome.storage.local.set({ devices }, resolve));
+      populateDeviceSelects();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function updateOtherDeviceListVisibility() {
     if (showOtherDevicePushesCheckbox.checked) {
       otherDeviceListGroup.style.display = 'block';
@@ -1413,6 +1559,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
+  function updateAutoOpenFilesToggleVisual() {
+    if (autoOpenFilesCheckbox.checked) {
+      autoOpenFilesToggle.classList.add('active');
+    } else {
+      autoOpenFilesToggle.classList.remove('active');
+    }
+  }
+
   function updateAutoOpenOnResumeToggleVisual() {
     if (autoOpenOnResumeCheckbox.checked) {
       autoOpenOnResumeToggle.classList.add('active');
@@ -1431,9 +1585,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   function updateAutoOpenOnResumeVisibility() {
     if (autoOpenLinksCheckbox.checked) {
+      autoOpenFilesContainer.style.display = 'flex';
       autoOpenOnResumeContainer.style.display = 'flex';
       hideNotificationOnAutoOpenContainer.style.display = 'flex';
     } else {
+      autoOpenFilesContainer.style.display = 'none';
       autoOpenOnResumeContainer.style.display = 'none';
       hideNotificationOnAutoOpenContainer.style.display = 'none';
     }

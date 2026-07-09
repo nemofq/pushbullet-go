@@ -378,7 +378,7 @@
     "message": "Αποστολές από επαφές"
   },
   "auto_open_people_label": {
-    "message": "Επίσης σύνδεσμοι από επαφές"
+    "message": "Επίσης αποστολές από επαφές"
   },
   "chat_tab": {
     "message": "Συνομιλία"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Φωτογραφία προφίλ"
+  },
+  "auto_open_files_label": {
+    "message": "Επίσης αποστολές αρχείων (εικόνες)"
+  },
+  "rename_device_title": {
+    "message": "Μετονομασία"
   }
 }

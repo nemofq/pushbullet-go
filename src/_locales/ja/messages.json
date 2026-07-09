@@ -378,7 +378,7 @@
     "message": "ユーザーからのプッシュ"
   },
   "auto_open_people_label": {
-    "message": "ユーザーからのリンクも自動的に開く"
+    "message": "ユーザーからのプッシュも自動的に開く"
   },
   "chat_tab": {
     "message": "チャット"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "プロフィール画像"
+  },
+  "auto_open_files_label": {
+    "message": "ファイルのプッシュ（画像を含む）も自動的に開く"
+  },
+  "rename_device_title": {
+    "message": "名前変更"
   }
 }

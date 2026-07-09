@@ -140,6 +140,9 @@
   "auto_open_links_label": {
     "message": "Auto-open in new tab (inactive) when receiving a link"
   },
+  "auto_open_files_label": {
+    "message": "Also include file (image) pushes"
+  },
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
   },
@@ -375,7 +378,7 @@
     "message": "Hide notification when it has auto-opened"
   },
   "auto_open_people_label": {
-    "message": "Also links from people"
+    "message": "Also include pushes from people"
   },
   "show_os_notifications_label": {
     "message": "Show notifications"
@@ -409,6 +412,9 @@
   },
   "unmute_person_title": {
     "message": "Unmute"
+  },
+  "rename_device_title": {
+    "message": "Rename"
   },
   "to_person": {
     "message": "To $1"

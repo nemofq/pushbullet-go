@@ -390,6 +390,60 @@
       margin: 6px 4px;
     }
 
+    /* Ghost pencil for inline device rename — hidden at rest, revealed on row
+       hover/focus (mirrors the popup's copy-button), green on hover.
+       width:auto is load-bearing: the page's global `button` rule sets
+       width:100%, which would make this flex-shrink:0 item swallow the whole
+       row and collapse the flex:1 label next to it to zero width. */
+    .device-list .opt-pencil {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      width: auto;
+      padding: 4px;
+      margin-left: 2px;
+      opacity: 0;
+      transition: opacity 0.2s, color 0.2s;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .device-list .opt-pencil svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .device-list .list-option:hover .opt-pencil,
+    .device-list .list-option:focus-within .opt-pencil {
+      opacity: 1;
+    }
+
+    .device-list .opt-pencil:hover {
+      color: var(--toggle-active);
+    }
+
+    /* Compact inline editor that replaces the label span while renaming. */
+    .device-list .opt-rename-input {
+      flex: 1;
+      min-width: 0;
+      padding: 2px 6px;
+      border: 1px solid var(--border-secondary);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      box-sizing: border-box;
+    }
+
+    .device-list .opt-rename-input:focus {
+      outline: none;
+      border-color: var(--toggle-active);
+    }
+
     /* Custom dropdown (single-select) — closed face styled like the inputs;
        the open menu reuses the device-list row/checkmark language. */
     .dropdown {
@@ -694,13 +748,23 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
+      <div class="toggle-container" id="autoOpenFilesContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="auto_open_files_label">Also include file (image) pushes</span>
+        </label>
+        <input type="checkbox" id="autoOpenFiles" class="toggle-input">
+        <div class="toggle-switch" id="autoOpenFilesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
       <!-- Auto-open links from trusted people (issue #66). Shown only while the
            auto-open master is on and the Chat surface is enabled; the trusted
            checklist below is explicit-selection (only checked people auto-open). -->
       <div class="toggle-container" id="autoOpenLinksFromPeopleContainer" style="display: none; margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="auto_open_people_label">Also links from people</span>
+          <span data-i18n="auto_open_people_label">Also include pushes from people</span>
         </label>
         <input type="checkbox" id="autoOpenLinksFromPeople" class="toggle-input">
         <div class="toggle-switch" id="autoOpenLinksFromPeopleToggle">

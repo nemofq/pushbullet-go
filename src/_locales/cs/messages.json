@@ -378,7 +378,7 @@
     "message": "Push od osob"
   },
   "auto_open_people_label": {
-    "message": "Také odkazy od osob"
+    "message": "Také push od osob"
   },
   "chat_tab": {
     "message": "Chat"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profilový obrázek"
+  },
+  "auto_open_files_label": {
+    "message": "Také push souborů (obrázky)"
+  },
+  "rename_device_title": {
+    "message": "Přejmenovat"
   }
 }

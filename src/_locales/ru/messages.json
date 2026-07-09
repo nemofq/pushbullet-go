@@ -372,7 +372,7 @@
     "message": "Поведение"
   },
   "auto_open_people_label": {
-    "message": "Также ссылки от людей"
+    "message": "Также push от людей"
   },
   "n_targets": {
     "message": "$1 получателей"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Фото профиля"
+  },
+  "auto_open_files_label": {
+    "message": "Также push файлов (изображения)"
+  },
+  "rename_device_title": {
+    "message": "Переименовать"
   }
 }

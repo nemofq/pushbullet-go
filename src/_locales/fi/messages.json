@@ -378,7 +378,7 @@
     "message": "Pushit henkilöiltä"
   },
   "auto_open_people_label": {
-    "message": "Myös linkit henkilöiltä"
+    "message": "Myös pushit henkilöiltä"
   },
   "chat_tab": {
     "message": "Chat"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profiilikuva"
+  },
+  "auto_open_files_label": {
+    "message": "Myös tiedostopushit (kuvat)"
+  },
+  "rename_device_title": {
+    "message": "Nimeä uudelleen"
   }
 }

@@ -372,7 +372,7 @@
     "message": "Gedrag"
   },
   "auto_open_people_label": {
-    "message": "Ook links van personen"
+    "message": "Ook pushes van personen"
   },
   "n_targets": {
     "message": "$1 doelen"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Profielfoto"
+  },
+  "auto_open_files_label": {
+    "message": "Ook pushes van bestanden (afbeeldingen)"
+  },
+  "rename_device_title": {
+    "message": "Hernoemen"
   }
 }

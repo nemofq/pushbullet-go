@@ -372,7 +372,7 @@
     "message": "Zachowanie"
   },
   "auto_open_people_label": {
-    "message": "Także linki od osób"
+    "message": "Także push od osób"
   },
   "n_targets": {
     "message": "$1 celów"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Zdjęcie profilowe"
+  },
+  "auto_open_files_label": {
+    "message": "Także push plików (obrazy)"
+  },
+  "rename_device_title": {
+    "message": "Zmień nazwę"
   }
 }

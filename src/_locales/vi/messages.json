@@ -378,7 +378,7 @@
     "message": "Push từ người"
   },
   "auto_open_people_label": {
-    "message": "Cả liên kết từ người"
+    "message": "Cả push từ người"
   },
   "chat_tab": {
     "message": "Chat"
@@ -418,5 +418,11 @@
   },
   "person_avatar_alt": {
     "message": "Ảnh đại diện"
+  },
+  "auto_open_files_label": {
+    "message": "Cả push tệp (hình ảnh)"
+  },
+  "rename_device_title": {
+    "message": "Đổi tên"
   }
 }
