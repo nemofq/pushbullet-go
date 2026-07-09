@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function() {
   const accessTokenInput = document.getElementById('accessToken');
+  const deviceNameInput = document.getElementById('deviceName');
   const remoteDevicePickerEl = document.getElementById('remoteDevicePicker');
   const saveSettingsButton = document.getElementById('saveSettings');
   const retrieveDevicesButton = document.getElementById('retrieveDevices');
@@ -412,7 +413,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices','deviceName', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -431,6 +432,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     devices = data.devices || [];
     people = data.people || [];
     populateDeviceSelects();
+    if (!data.deviceName) {
+       data.deviceName="Chrome";
+    }
+    if (data.deviceName) {
+      deviceNameInput.value = data.deviceName;
+    }
     
     if (data.remoteDeviceId) {
       remoteDevicePicker.setSelected(data.remoteDeviceId.split(',').map(id => id.trim()).filter(id => id));
@@ -835,7 +842,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       devices = devicesData.devices || [];
       
       // Check if there's a Chrome device, if not create one
-      const hasChromeDevice = devices.some(device => device.type === 'chrome');
+      let hasChromeDevice = devices.some(device => device.type === 'chrome');
+      let deviceName=deviceNameInput.value;
+      if (deviceName==''){
+         deviceName="Chrome";
+      }
+      hasChromeDevice = devices.some(device => device.nickname === deviceName);
       if (!hasChromeDevice) {
         console.log('No Chrome device found, creating one...');
         const createDeviceResponse = await fetch('https://api.pushbullet.com/v2/devices', {
@@ -845,7 +857,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            nickname: 'Chrome',
+            nickname: deviceName,
             type: 'chrome',
             model: 'Chrome'
           }),
@@ -1105,6 +1117,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       accessToken: accessTokenToSave,
       remoteDeviceId: selectedRemoteDevices || '',
       devices: devices,
+      deviceName: deviceNameInput.value,
       people: people,
       showPerSendTarget: showPerSendTargetCheckbox.checked,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
@@ -1174,9 +1187,13 @@ document.addEventListener('DOMContentLoaded', async function() {
       syncSaveData.userIden = userIdenToSave;
     }
 
+    if (deviceNameInput.value==''){
+       deviceNameInput.value="Chrome";
+    }
 
     const localSaveData = {
       devices: saveData.devices,
+      deviceName: deviceNameInput.value,
       people: saveData.people,
       remoteDeviceId: saveData.remoteDeviceId,
       showPerSendTarget: saveData.showPerSendTarget,

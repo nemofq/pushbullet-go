@@ -573,7 +573,7 @@ async function ensureDeviceDataFromServer() {
     // The migration copies the device list but chromeDeviceId was never in
     // sync, so only a completed fetch (which records chromeDeviceId - even as
     // null for accounts with no usable Chrome device) satisfies this gate
-    const localData = await chrome.storage.local.get(['devices', 'chromeDeviceId']);
+    const localData = await chrome.storage.local.get(['devices', 'chromeDeviceId','deviceName']);
     if (localData.devices && localData.devices.length > 0 && localData.chromeDeviceId !== undefined) return;
 
     const devicesResponse = await fetch('https://api.pushbullet.com/v2/devices', {
@@ -586,7 +586,11 @@ async function ensureDeviceDataFromServer() {
 
     // Deleted devices come back as inactive tombstones and still count here,
     // so a device the user removed on pushbullet.com is not resurrected
-    const hasChromeDevice = devices.some(device => device.type === 'chrome');
+    let hasChromeDevice = devices.some(device => device.type === 'chrome');
+    if (localData.deviceName) {
+       hasChromeDevice = devices.some(device => device.nickname === localData.deviceName);
+    }
+
     if (!hasChromeDevice) {
       console.log('No Chrome device found, creating one...');
       const createDeviceResponse = await fetch('https://api.pushbullet.com/v2/devices', {
@@ -596,7 +600,7 @@ async function ensureDeviceDataFromServer() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          nickname: 'Chrome',
+          nickname: localData.deviceName,
           type: 'chrome',
           model: 'Chrome'
         })
