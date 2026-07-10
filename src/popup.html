@@ -849,7 +849,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 8px 10px;
+      /* Taller rows give the second line's unread pill floor clearance — with
+         8px it was the lowest element in the row, hugging the bottom edge and
+         reading as dropped. */
+      padding: 11px 10px;
       border-radius: 8px;
       cursor: pointer;
       position: relative;
