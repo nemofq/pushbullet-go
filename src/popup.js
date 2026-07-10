@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const targetControlLabel = document.getElementById('targetControlLabel');
   const targetMenu = document.getElementById('targetMenu');
   const chatTab = document.getElementById('chatTab');
+  const pushTabCount = document.getElementById('pushTabCount');
+  const chatTabCount = document.getElementById('chatTabCount');
+  const notificationTabCount = document.getElementById('notificationTabCount');
   const peopleList = document.getElementById('peopleList');
   const convWrap = document.getElementById('convWrap');
   const convBack = document.getElementById('convBack');
@@ -89,6 +92,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Only load messages after checking access token to ensure proper display
     debouncedLoadMessages();
     checkNotificationMirroring();
+    // Populate the per-tab unread pills once the switcher exists; storage
+    // .onChanged keeps them live thereafter.
+    updateTabCounts();
     checkQuickShare();
     initTargetSelector();
     updateConnectionStatus();
@@ -657,6 +663,40 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       renderPeopleList();
     }
+  }
+
+  // Per-tab unread pills mirror the toolbar badge composition exactly (see
+  // background.js updateBadge): a component shows only when the master
+  // displayUnreadCounts is on, its own sub-toggle is not explicitly false, and
+  // its count is > 0. Push ← unreadPushCount, Chat ← unreadChatCount,
+  // Notification ← unreadMirrorCount, with the same 99+ cap as the badge. The
+  // existing clear paths (Push tab → clear_unread_pushes, conversation open →
+  // per-person read, Notification tab → clear_unread_mirrors) all land as counter
+  // writes that re-invoke this via storage.onChanged, so switchTab needs no
+  // manual call.
+  async function updateTabCounts() {
+    const data = await chrome.storage.local.get([
+      'unreadPushCount',
+      'unreadChatCount',
+      'unreadMirrorCount',
+      'displayUnreadCounts',
+      'displayUnreadPushes',
+      'displayUnreadChats',
+      'displayUnreadMirrored'
+    ]);
+    const master = !!data.displayUnreadCounts;
+    const setPill = (el, show, count) => {
+      if (show && count > 0) {
+        el.textContent = count > 99 ? '99+' : String(count);
+        el.hidden = false;
+      } else {
+        el.textContent = '';
+        el.hidden = true;
+      }
+    };
+    setPill(pushTabCount, master && data.displayUnreadPushes !== false, data.unreadPushCount || 0);
+    setPill(chatTabCount, master && data.displayUnreadChats !== false, data.unreadChatCount || 0);
+    setPill(notificationTabCount, master && data.displayUnreadMirrored !== false, data.unreadMirrorCount || 0);
   }
 
   function updateConnectionStatus() {
@@ -1289,8 +1329,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Per-person activity from the local push caches: latest item (either
-    // direction) drives the snippet + time; incoming pushes drive the unread dot
-    // (per the predicate below).
+    // direction) drives the snippet + time; incoming pushes drive the unread
+    // count (per the predicate below).
     const rows = people.map(person => {
       const key = person.email_normalized;
       let latestItem = null;
@@ -1298,7 +1338,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Unread threshold: this person's read stamp, floored by the global chat
       // read floor (mirrors the badge's max(peopleLastRead ?? 0, chatReadFloor ?? 0)).
       const readThreshold = Math.max(peopleLastRead[key] ?? 0, chatReadFloor);
-      let hasUnreadIncoming = false;
+      let unreadCount = 0;
       const consider = item => {
         if (!key) return;
         if (item.sender_email_normalized !== key && item.receiver_email_normalized !== key) return;
@@ -1307,14 +1347,14 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       pushes.forEach(push => {
         consider(push);
-        // Unread-dot predicate: matches the derived badge count minus the mute
-        // clause — a muted person's dot still shows here, but the badge excludes
-        // them. An incoming, non-dismissed push not consumed by a hidden
-        // auto-open and newer than the read threshold marks the person unread.
+        // Unread-count predicate: matches the derived badge count minus the mute
+        // clause — a muted person's count still shows here, but the badge excludes
+        // them. Each incoming, non-dismissed push not consumed by a hidden
+        // auto-open and newer than the read threshold adds to the person's count.
         if (push.sender_email_normalized === key && push.direction === 'incoming' &&
             push.dismissed !== true && !autoOpenedIdens.includes(push.iden) &&
             itemTime(push) > readThreshold) {
-          hasUnreadIncoming = true;
+          unreadCount++;
         }
       });
       sentMessages.forEach(consider);
@@ -1329,9 +1369,7 @@ document.addEventListener('DOMContentLoaded', function() {
           : window.CustomI18n.getMessage('no_pushes_yet_snippet');
       }
 
-      const unread = hasUnreadIncoming;
-
-      return { person, latestTime, snippet, unread, sortName: personDisplayName(person).toLowerCase() };
+      return { person, latestTime, snippet, unreadCount, sortName: personDisplayName(person).toLowerCase() };
     });
 
     // Sort: most recent activity first; no-activity people fall to the bottom;
@@ -1344,7 +1382,7 @@ document.addEventListener('DOMContentLoaded', function() {
     rows.forEach(r => {
       const person = r.person;
       const row = document.createElement('div');
-      row.className = 'person-row' + (r.unread ? ' unread' : '');
+      row.className = 'person-row' + (r.unreadCount > 0 ? ' unread' : '');
       row.appendChild(buildAvatar(person));
 
       const main = document.createElement('div');
@@ -1383,10 +1421,11 @@ document.addEventListener('DOMContentLoaded', function() {
         timeDiv.title = ts.title;
         meta.appendChild(timeDiv);
       }
-      if (r.unread) {
-        const dot = document.createElement('div');
-        dot.className = 'unread-dot';
-        meta.appendChild(dot);
+      if (r.unreadCount > 0) {
+        const countEl = document.createElement('div');
+        countEl.className = 'unread-count';
+        countEl.textContent = r.unreadCount > 99 ? '99+' : String(r.unreadCount);
+        meta.appendChild(countEl);
       }
       row.appendChild(meta);
 
@@ -2097,6 +2136,14 @@ document.addEventListener('DOMContentLoaded', function() {
       // are enabled (Push always, Chat/Notification per their toggles). The
       // saved value itself is never rewritten here.
       checkNotificationMirroring();
+    }
+    if (areaName === 'local' && (changes.unreadPushCount || changes.unreadChatCount ||
+        changes.unreadMirrorCount || changes.displayUnreadCounts || changes.displayUnreadPushes ||
+        changes.displayUnreadChats || changes.displayUnreadMirrored)) {
+      // Any toolbar-badge input changed → refresh the per-tab pills to match.
+      // Covers the clear paths too (Push/Notification tab open, conversation
+      // read), so switchTab needs no manual refresh.
+      updateTabCounts();
     }
   });
 });

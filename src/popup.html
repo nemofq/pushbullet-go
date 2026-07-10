@@ -190,6 +190,32 @@
       color: var(--text-primary);
     }
 
+    /* Per-tab unread pill: mirrors the toolbar badge composition, sized down for
+       the 13px tab row. It lives after the label inside the button, so
+       initializeI18n's textContent writes (which target the .tab-label span)
+       never wipe it. */
+    .tab-button .tab-count {
+      background: var(--button-primary);
+      color: var(--text-white);
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 15px;
+      height: 15px;
+      line-height: 15px;
+      border-radius: 8px;
+      padding: 0 4px;
+      margin-left: 5px;
+      display: inline-block;
+      vertical-align: 1px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    /* Re-assert hiding: the class selector above outweighs the UA [hidden] rule. */
+    .tab-button .tab-count[hidden] {
+      display: none;
+    }
+
     .status {
       width: 13px;
       height: 13px;
@@ -909,23 +935,39 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 5px;
+      /* Mirror the 2px name→snippet rhythm of the main column, and keep the
+         time+count stack (~35px) under the 36px avatar so the avatar — not this
+         column — drives row height; both columns then center together and their
+         first lines (time / name) align. */
+      gap: 2px;
       flex-shrink: 0;
       min-height: 34px;
-      justify-content: center;
+      /* Pin a lone time to the top so it stays on the name's line whether or not
+         the unread count occupies the second line — no vertical shift. The
+         retained min-height keeps this column two lines tall. */
+      justify-content: flex-start;
     }
 
     .person-time {
       font-size: 11px;
       color: var(--text-tertiary);
       white-space: nowrap;
+      /* Optically drop the 11px time onto the 14px name's line. */
+      line-height: 17px;
     }
 
-    .unread-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+    .unread-count {
       background: var(--button-primary);
+      color: var(--text-white);
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 16px;
+      height: 16px;
+      line-height: 16px;
+      border-radius: 8px;
+      padding: 0 4px;
+      box-sizing: border-box;
+      text-align: center;
     }
 
     /* quiet footer tip: add/remove people happens on pushbullet.com */
@@ -1461,9 +1503,9 @@
         <span data-i18n="sms_button">SMS</span>
       </a>
       <div class="tab-switcher" id="tabSwitcher" style="display: none;">
-        <button id="pushTab" class="tab-button active" data-i18n="push_button">Push</button>
-        <button id="chatTab" class="tab-button" data-i18n="chat_tab" style="display: none;">Chat</button>
-        <button id="notificationTab" class="tab-button" data-i18n="notification_button" style="display: none;">Notification</button>
+        <button id="pushTab" class="tab-button active"><span class="tab-label" data-i18n="push_button">Push</span><span class="tab-count" id="pushTabCount" hidden></span></button>
+        <button id="chatTab" class="tab-button" style="display: none;"><span class="tab-label" data-i18n="chat_tab">Chat</span><span class="tab-count" id="chatTabCount" hidden></span></button>
+        <button id="notificationTab" class="tab-button" style="display: none;"><span class="tab-label" data-i18n="notification_button">Notification</span><span class="tab-count" id="notificationTabCount" hidden></span></button>
       </div>
       <button id="retryConnection"
         style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;"
