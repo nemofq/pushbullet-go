@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Konfigurasikan kata sandi enkripsi ujung-ke-ujung Anda untuk melihat notifikasi."
   },
-  "n_targets": {
-    "message": "$1 tujuan"
-  },
-  "people_menu_label": {
-    "message": "Orang"
-  },
   "behavior_tab": {
     "message": "Perilaku"
   },

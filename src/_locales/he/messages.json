@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "הגדר את סיסמת ההצפנה מקצה לקצה כדי לראות את ההתראות."
   },
-  "n_targets": {
-    "message": "$1 יעדים"
-  },
-  "people_menu_label": {
-    "message": "אנשים"
-  },
   "behavior_tab": {
     "message": "התנהגות"
   },

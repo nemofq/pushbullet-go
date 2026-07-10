@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Bildirimleri görmek için uçtan uca şifreleme parolanızı yapılandırın."
   },
-  "n_targets": {
-    "message": "$1 hedef"
-  },
-  "people_menu_label": {
-    "message": "Kişiler"
-  },
   "behavior_tab": {
     "message": "Davranış"
   },

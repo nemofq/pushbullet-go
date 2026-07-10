@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Nakonfigurujte své heslo end-to-end šifrování pro zobrazení oznámení."
   },
-  "n_targets": {
-    "message": "$1 cíle"
-  },
-  "people_menu_label": {
-    "message": "Osoby"
-  },
   "behavior_tab": {
     "message": "Chování"
   },

@@ -374,12 +374,6 @@
   "auto_open_people_label": {
     "message": "Ook pushes van personen"
   },
-  "n_targets": {
-    "message": "$1 doelen"
-  },
-  "people_menu_label": {
-    "message": "Personen"
-  },
   "chat_tab": {
     "message": "Chat"
   },

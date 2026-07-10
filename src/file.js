@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressFill = document.getElementById('progressFill');
   const status = document.getElementById('status');
 
-  // One-shot target override threaded in by the popup's per-send selector
-  // (comma-joined device idens in `to`, people emails in `email`). Scoped to
-  // this window only — it dies with the window, so it can't leak into the next
-  // file send.
+  // One-shot target override threaded in by the popup: comma-joined device
+  // idens in `to` (per-send selector) or the conversation recipient's email in
+  // `email` (Chat). Scoped to this window only — it dies with the window, so it
+  // can't leak into the next file send.
   const params = new URLSearchParams(window.location.search);
   const targetOverride = params.get('to');
   const emailOverride = params.get('email');

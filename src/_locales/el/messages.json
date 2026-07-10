@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Ρυθμίστε τον κωδικό κρυπτογράφησης από άκρο σε άκρο για να δείτε τις ειδοποιήσεις."
   },
-  "n_targets": {
-    "message": "$1 παραλήπτες"
-  },
-  "people_menu_label": {
-    "message": "Επαφές"
-  },
   "behavior_tab": {
     "message": "Συμπεριφορά"
   },

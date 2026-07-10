@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Configura tu contraseña de cifrado extremo a extremo para ver las notificaciones."
   },
-  "n_targets": {
-    "message": "$1 destinos"
-  },
-  "people_menu_label": {
-    "message": "Personas"
-  },
   "behavior_tab": {
     "message": "Comportamiento"
   },

@@ -107,12 +107,6 @@
   "n_devices": {
     "message": "$1 devices"
   },
-  "n_targets": {
-    "message": "$1 targets"
-  },
-  "people_menu_label": {
-    "message": "People"
-  },
   "default_target_option": {
     "message": "Default ($1)"
   },

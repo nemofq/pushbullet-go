@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "请配置端到端加密密码以查看通知。"
   },
-  "n_targets": {
-    "message": "$1 个目标"
-  },
-  "people_menu_label": {
-    "message": "联系人"
-  },
   "behavior_tab": {
     "message": "行为"
   },

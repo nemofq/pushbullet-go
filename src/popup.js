@@ -35,15 +35,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const convMuteIcon = document.getElementById('convMuteIcon');
   const convMessages = document.getElementById('convMessages');
 
-  // Per-popup target override applying to sends from this popup until it closes
-  // (or the ✕ clears it): device idens and people emails are tracked in two
-  // parallel arrays so a send can mix both kinds. Both [] = use the configured
-  // default (remoteDeviceId). In-memory only, never persisted — closing the
-  // popup is the natural reset.
+  // Per-popup target override: an array of device idens applying to sends
+  // from this popup until it closes (or the ✕ clears it). [] = use the
+  // configured default (remoteDeviceId). In-memory only, never persisted —
+  // closing the popup is the natural reset.
   let perSendTargetIdens = [];
-  let perSendTargetEmails = [];
   let targetDevices = [];
-  let targetPeople = [];
   let defaultTargetLabel = '';
   let hasConfiguredDefault = false;
 
@@ -278,21 +275,16 @@ document.addEventListener('DOMContentLoaded', function() {
   sendFileButton.addEventListener('click', () => {
     console.log('Popup: Send File button clicked');
 
-    // Thread the current target(s) into the file window via query params —
-    // device idens in `to`, people emails in `email`, each only when present
+    // Thread the current target into the file window via query params — the
+    // conversation recipient's email, else the Push-tab device idens in `to`
     // (they die with the window, so nothing can leak into a later file send)
     const params = new URLSearchParams();
     if (currentTab === 'chat' && chatView === 'conv' && currentPerson) {
       // Conversation: the file goes to this person only (single email); the
       // per-send picker does not apply here.
       params.set('email', currentPerson.email_normalized);
-    } else {
-      if (perSendTargetIdens.length) {
-        params.set('to', perSendTargetIdens.join(','));
-      }
-      if (perSendTargetEmails.length) {
-        params.set('email', perSendTargetEmails.join(','));
-      }
+    } else if (perSendTargetIdens.length) {
+      params.set('to', perSendTargetIdens.join(','));
     }
     const query = params.toString();
     const fileUrl = query ? `file.html?${query}` : 'file.html';
@@ -330,28 +322,15 @@ document.addEventListener('DOMContentLoaded', function() {
   targetMenu.addEventListener('click', (e) => {
     const option = e.target.closest('.menu-option');
     if (!option) return;
-    const email = option.dataset.email;
-    if (email) {
-      // people row toggle (keyed by email_normalized)
-      const index = perSendTargetEmails.indexOf(email);
-      if (index === -1) {
-        perSendTargetEmails.push(email);
-      } else {
-        perSendTargetEmails.splice(index, 1);
-      }
+    const iden = option.dataset.iden;
+    if (!iden) {
+      perSendTargetIdens = [];
     } else {
-      const iden = option.dataset.iden;
-      if (!iden) {
-        // default row → back to the configured default, clearing every pick
-        perSendTargetIdens = [];
-        perSendTargetEmails = [];
+      const index = perSendTargetIdens.indexOf(iden);
+      if (index === -1) {
+        perSendTargetIdens.push(iden);
       } else {
-        const index = perSendTargetIdens.indexOf(iden);
-        if (index === -1) {
-          perSendTargetIdens.push(iden);
-        } else {
-          perSendTargetIdens.splice(index, 1);
-        }
+        perSendTargetIdens.splice(index, 1);
       }
     }
     renderTargetControl();
@@ -1526,37 +1505,19 @@ document.addEventListener('DOMContentLoaded', function() {
     return device.nickname || `${device.manufacturer} ${device.model}`;
   }
 
-  // People rows are labelled by name, falling back to the email (type:"email"
-  // people have no name), and keyed by email_normalized everywhere.
-  function personLabel(person) {
-    return person.name || person.email;
-  }
-
   function selectedTargetDevices() {
     return targetDevices.filter(device => perSendTargetIdens.includes(device.iden));
   }
 
-  function selectedTargetPeople() {
-    return targetPeople.filter(person => perSendTargetEmails.includes(person.email_normalized));
-  }
-
   async function initTargetSelector() {
-    const configData = await chrome.storage.local.get(['showPerSendTarget', 'remoteDeviceId', 'devices', 'people', 'enableChat']);
+    const configData = await chrome.storage.local.get(['showPerSendTarget', 'remoteDeviceId', 'devices']);
 
     const devices = configData.devices || [];
     targetDevices = devices.filter(device => device.active && device.pushable !== false);
 
-    // People join the menu as per-send targets only while Chat is enabled.
-    // undefined = not yet seeded, behaves as off; the background seeds true once
-    // people first exist.
-    const chatEnabled = configData.enableChat === true;
-    targetPeople = chatEnabled ? (configData.people || []) : [];
-
-    // Drop selections that no longer point at an existing pushable device / person
+    // Drop selections that no longer point at an existing pushable device
     perSendTargetIdens = perSendTargetIdens.filter(iden =>
       targetDevices.some(device => device.iden === iden));
-    perSendTargetEmails = perSendTargetEmails.filter(email =>
-      targetPeople.some(person => person.email_normalized === email));
 
     // The default chip reflects the configured default target (remoteDeviceId),
     // which may be specific device(s) — "All devices" only when none is set.
@@ -1572,9 +1533,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Hidden when the option is off (default on), or when there's nothing to
-    // choose between (≤1 pushable target across devices + people). With no
-    // people this is exactly the previous `targetDevices.length > 1` gate.
-    const enabled = configData.showPerSendTarget !== false && (targetDevices.length + targetPeople.length) > 1;
+    // choose between (≤1 pushable device).
+    const enabled = configData.showPerSendTarget !== false && targetDevices.length > 1;
     targetChipEnabled = enabled;
     // In a conversation the chip is always hidden (the header names the
     // recipient); elsewhere it follows the computed enabled state.
@@ -1582,17 +1542,14 @@ document.addEventListener('DOMContentLoaded', function() {
     targetControl.hidden = inConversation || !enabled;
     if (!enabled) {
       perSendTargetIdens = [];
-      perSendTargetEmails = [];
       closeTargetMenu();
     }
     renderTargetControl();
   }
 
   function renderTargetControl() {
-    const selectedDevices = selectedTargetDevices();
-    const selectedPeople = selectedTargetPeople();
-    const total = selectedDevices.length + selectedPeople.length;
-    if (total === 0) {
+    const selected = selectedTargetDevices();
+    if (selected.length === 0) {
       targetControl.classList.add('is-default');
       targetControl.classList.remove('is-custom');
       targetControlLabel.textContent = defaultTargetLabel;
@@ -1600,42 +1557,23 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       targetControl.classList.remove('is-default');
       targetControl.classList.add('is-custom');
-      // Names listed devices-first, matching the menu order.
-      const names = [
-        ...selectedDevices.map(deviceLabel),
-        ...selectedPeople.map(personLabel)
-      ];
-      let label;
-      if (total === 1) {
-        label = names[0];
-      } else if (selectedPeople.length > 0) {
-        // any person in the mix → "N targets"; all devices → "N devices"
-        label = window.CustomI18n.getMessage('n_targets', [String(total)]);
-      } else {
-        label = window.CustomI18n.getMessage('n_devices', [String(total)]);
-      }
-      targetControlLabel.textContent = label;
-      targetControl.title = window.CustomI18n.getMessage('target_custom_tooltip', [names.join(', ')]);
+      targetControlLabel.textContent = selected.length === 1
+        ? deviceLabel(selected[0])
+        : window.CustomI18n.getMessage('n_devices', [String(selected.length)]);
+      targetControl.title = window.CustomI18n.getMessage('target_custom_tooltip', [selected.map(deviceLabel).join(', ')]);
     }
   }
 
-  function createTargetMenuOption(iden, label, email) {
+  function createTargetMenuOption(iden, label) {
     const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
     const option = document.createElement('button');
     option.className = 'menu-option';
     option.type = 'button';
-    // People rows key by email; device rows by iden; the default/all row keeps
-    // the empty iden. Device and people rows are both independent toggles.
-    const isToggle = !!iden || !!email;
-    if (email) {
-      option.dataset.email = email;
-    } else {
-      option.dataset.iden = iden;
-    }
+    option.dataset.iden = iden;
     option.title = label;
 
-    if (isToggle) {
-      // device / people rows are independent toggles → leading checkbox
+    if (iden) {
+      // device rows are independent toggles → leading checkbox
       const checkbox = document.createElement('span');
       checkbox.className = 'opt-checkbox';
       checkbox.innerHTML = CHECK_SVG;
@@ -1647,7 +1585,7 @@ document.addEventListener('DOMContentLoaded', function() {
     text.textContent = label;
     option.appendChild(text);
 
-    if (!isToggle) {
+    if (!iden) {
       // the default/all row is a single current-state choice → trailing ✓
       const check = document.createElement('span');
       check.className = 'opt-check';
@@ -1695,41 +1633,16 @@ document.addEventListener('DOMContentLoaded', function() {
       fragment.appendChild(createTargetMenuOption(device.iden, deviceLabel(device)));
     });
 
-    // People section: divider + small tertiary label + one toggle row per
-    // person, mixed freely with the device rows above. targetPeople is already
-    // gated on enableChat (empty when Chat is off).
-    if (targetPeople.length) {
-      const peopleDivider = document.createElement('div');
-      peopleDivider.className = 'menu-divider';
-      fragment.appendChild(peopleDivider);
-
-      const peopleLabel = document.createElement('div');
-      peopleLabel.className = 'menu-section-label';
-      peopleLabel.textContent = window.CustomI18n.getMessage('people_menu_label');
-      fragment.appendChild(peopleLabel);
-
-      targetPeople.forEach(person => {
-        fragment.appendChild(createTargetMenuOption(null, personLabel(person), person.email_normalized));
-      });
-    }
-
     targetMenu.replaceChildren(fragment);
     markTargetMenuSelection();
   }
 
   function markTargetMenuSelection() {
     targetMenu.querySelectorAll('.menu-option').forEach(option => {
-      const email = option.dataset.email;
       const iden = option.dataset.iden;
-      let isSelected;
-      if (email) {
-        isSelected = perSendTargetEmails.includes(email);
-      } else if (iden) {
-        isSelected = perSendTargetIdens.includes(iden);
-      } else {
-        // default/all row — selected only when nothing is overridden
-        isSelected = perSendTargetIdens.length === 0 && perSendTargetEmails.length === 0;
-      }
+      const isSelected = iden
+        ? perSendTargetIdens.includes(iden)
+        : perSendTargetIdens.length === 0;
       option.classList.toggle('selected', isSelected);
     });
   }
@@ -1746,25 +1659,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // Snaps the control back to its quiet default face — the ✕ and option-off
   // paths. Sends do NOT reset it; closing the popup does (in-memory only).
   function resetPerSendTarget() {
-    if (perSendTargetIdens.length || perSendTargetEmails.length) {
+    if (perSendTargetIdens.length) {
       perSendTargetIdens = [];
-      perSendTargetEmails = [];
       renderTargetControl();
     }
   }
 
   // Apply the current per-send selection to a push payload: selected devices →
-  // device_iden, selected people → email (either may be absent). With no
-  // per-send override, fall back to the configured default device(s) — this
-  // keeps quick-share and typed sends device-only by default.
+  // device_iden. With no per-send override, fall back to the configured default
+  // device(s) — this keeps quick-share and typed sends on the default target.
   function applyPerSendTargets(pushData, remoteDeviceId) {
-    if (perSendTargetIdens.length || perSendTargetEmails.length) {
-      if (perSendTargetIdens.length) {
-        pushData.device_iden = perSendTargetIdens.join(',');
-      }
-      if (perSendTargetEmails.length) {
-        pushData.email = perSendTargetEmails.join(',');
-      }
+    if (perSendTargetIdens.length) {
+      pushData.device_iden = perSendTargetIdens.join(',');
     } else if (remoteDeviceId) {
       pushData.device_iden = remoteDeviceId;
     }
@@ -1883,16 +1789,10 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error(window.CustomI18n.getMessage('no_access_token'));
       }
 
-      // Snapshot the target(s) now (before the upload await) — devices and/or
-      // people; fall back to the configured default device when nothing is
-      // overridden.
-      const target = (perSendTargetIdens.length || perSendTargetEmails.length)
-        ? {
-            device_iden: perSendTargetIdens.length ? perSendTargetIdens.join(',') : undefined,
-            email: perSendTargetEmails.length ? perSendTargetEmails.join(',') : undefined
-          }
-        : { device_iden: configData.remoteDeviceId };
-      await uploadPastedFile(file, tokenData.accessToken, target);
+      const targetDeviceIds = perSendTargetIdens.length
+        ? perSendTargetIdens.join(',')
+        : configData.remoteDeviceId;
+      await uploadPastedFile(file, tokenData.accessToken, targetDeviceIds);
 
       bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + window.CustomI18n.getMessage('uploaded_successfully');
       setTimeout(() => {
@@ -1912,7 +1812,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  async function uploadPastedFile(file, accessToken, target) {
+  async function uploadPastedFile(file, accessToken, remoteDeviceId) {
     const uploadRequest = await fetch('https://api.pushbullet.com/v2/upload-request', {
       method: 'POST',
       headers: {
@@ -1955,11 +1855,8 @@ document.addEventListener('DOMContentLoaded', function() {
       file_url: uploadData.file_url
     };
 
-    if (target.device_iden) {
-      pushData.device_iden = target.device_iden;
-    }
-    if (target.email) {
-      pushData.email = target.email;
+    if (remoteDeviceId) {
+      pushData.device_iden = remoteDeviceId;
     }
 
     // Use the background script's sendPush function which handles multiple devices
@@ -2088,7 +1985,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (areaName === 'local' && changes.showQuickShare) {
       checkQuickShare();
     }
-    if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId || changes.devices || changes.people || changes.enableChat)) {
+    if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId || changes.devices)) {
       initTargetSelector();
     }
     if (areaName === 'local' && changes.people && currentTab === 'chat') {

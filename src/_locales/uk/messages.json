@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Налаштуйте свій пароль наскрізного шифрування, щоб побачити сповіщення."
   },
-  "n_targets": {
-    "message": "$1 цілей"
-  },
-  "people_menu_label": {
-    "message": "Контакти"
-  },
   "behavior_tab": {
     "message": "Поведінка"
   },

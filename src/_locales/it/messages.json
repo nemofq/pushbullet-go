@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Configura la tua password di crittografia end-to-end per vedere le notifiche."
   },
-  "n_targets": {
-    "message": "$1 destinazioni"
-  },
-  "people_menu_label": {
-    "message": "Persone"
-  },
   "behavior_tab": {
     "message": "Comportamento"
   },

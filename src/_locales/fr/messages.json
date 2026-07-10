@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Configurez votre mot de passe de chiffrement de bout en bout pour voir les notifications."
   },
-  "n_targets": {
-    "message": "$1 cibles"
-  },
-  "people_menu_label": {
-    "message": "Personnes"
-  },
   "behavior_tab": {
     "message": "Comportement"
   },

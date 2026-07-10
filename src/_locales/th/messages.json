@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "กำหนดค่ารหัสผ่านเข้ารหัสแบบ end-to-end เพื่อดูการแจ้งเตือน"
   },
-  "n_targets": {
-    "message": "$1 เป้าหมาย"
-  },
-  "people_menu_label": {
-    "message": "บุคคล"
-  },
   "behavior_tab": {
     "message": "พฤติกรรม"
   },

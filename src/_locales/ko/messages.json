@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "알림을 보려면 종단간 암호화 비밀번호를 설정하세요."
   },
-  "n_targets": {
-    "message": "대상 $1개"
-  },
-  "people_menu_label": {
-    "message": "사용자"
-  },
   "behavior_tab": {
     "message": "동작"
   },

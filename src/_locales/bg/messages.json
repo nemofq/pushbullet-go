@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Конфигурирайте своята парола за шифроване от край до край, за да видите известията."
   },
-  "n_targets": {
-    "message": "$1 цели"
-  },
-  "people_menu_label": {
-    "message": "Хора"
-  },
   "behavior_tab": {
     "message": "Поведение"
   },

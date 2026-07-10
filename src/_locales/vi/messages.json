@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Cấu hình mật khẩu mã hóa end-to-end để xem thông báo."
   },
-  "n_targets": {
-    "message": "$1 mục tiêu"
-  },
-  "people_menu_label": {
-    "message": "Người"
-  },
   "behavior_tab": {
     "message": "Hành vi"
   },

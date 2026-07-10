@@ -374,12 +374,6 @@
   "auto_open_people_label": {
     "message": "Aj push od ľudí"
   },
-  "n_targets": {
-    "message": "$1 cieľov"
-  },
-  "people_menu_label": {
-    "message": "Ľudia"
-  },
   "chat_tab": {
     "message": "Chat"
   },

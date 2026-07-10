@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "قم بإعداد كلمة مرور التشفير الشامل لرؤية الإشعارات."
   },
-  "n_targets": {
-    "message": "$1 أهداف"
-  },
-  "people_menu_label": {
-    "message": "أشخاص"
-  },
   "behavior_tab": {
     "message": "السلوك"
   },

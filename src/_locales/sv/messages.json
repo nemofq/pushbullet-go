@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Konfigurera ditt end-to-end krypteringslösenord för att se aviseringarna."
   },
-  "n_targets": {
-    "message": "$1 mottagare"
-  },
-  "people_menu_label": {
-    "message": "Personer"
-  },
   "behavior_tab": {
     "message": "Beteende"
   },

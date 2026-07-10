@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Konfigurer din end-to-end krypteringsadgangskode for at se notifikationerne."
   },
-  "n_targets": {
-    "message": "$1 mål"
-  },
-  "people_menu_label": {
-    "message": "Personer"
-  },
   "behavior_tab": {
     "message": "Adfærd"
   },

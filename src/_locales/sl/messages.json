@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Nastavite svoje geslo za end-to-end šifriranje, da vidite obvestila."
   },
-  "n_targets": {
-    "message": "$1 ciljev"
-  },
-  "people_menu_label": {
-    "message": "Osebe"
-  },
   "behavior_tab": {
     "message": "Vedenje"
   },

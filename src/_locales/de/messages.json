@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Konfigurieren Sie Ihr End-zu-End-Verschlüsselungspasswort, um die Benachrichtigungen zu sehen."
   },
-  "n_targets": {
-    "message": "$1 Ziele"
-  },
-  "people_menu_label": {
-    "message": "Personen"
-  },
   "behavior_tab": {
     "message": "Verhalten"
   },

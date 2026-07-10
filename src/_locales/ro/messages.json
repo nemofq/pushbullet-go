@@ -374,12 +374,6 @@
   "auto_open_people_label": {
     "message": "De asemenea, push-uri de la persoane"
   },
-  "n_targets": {
-    "message": "$1 ținte"
-  },
-  "people_menu_label": {
-    "message": "Persoane"
-  },
   "chat_tab": {
     "message": "Chat"
   },

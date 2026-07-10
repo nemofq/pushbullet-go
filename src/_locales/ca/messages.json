@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Configura la teva contrasenya de xifratge extrem a extrem per veure les notificacions."
   },
-  "n_targets": {
-    "message": "$1 destinataris"
-  },
-  "people_menu_label": {
-    "message": "Persones"
-  },
   "behavior_tab": {
     "message": "Comportament"
   },

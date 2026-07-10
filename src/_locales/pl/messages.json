@@ -374,12 +374,6 @@
   "auto_open_people_label": {
     "message": "Także push od osób"
   },
-  "n_targets": {
-    "message": "$1 celów"
-  },
-  "people_menu_label": {
-    "message": "Osoby"
-  },
   "chat_tab": {
     "message": "Czat"
   },

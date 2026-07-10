@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Määritä päästä-päähän -salaussalasana nähdäksesi ilmoitukset."
   },
-  "n_targets": {
-    "message": "$1 kohdetta"
-  },
-  "people_menu_label": {
-    "message": "Henkilöt"
-  },
   "behavior_tab": {
     "message": "Toiminta"
   },

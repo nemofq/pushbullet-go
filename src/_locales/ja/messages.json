@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "通知を見るには、エンドツーエンド暗号化パスワードを設定してください。"
   },
-  "n_targets": {
-    "message": "$1件のターゲット"
-  },
-  "people_menu_label": {
-    "message": "ユーザー"
-  },
   "behavior_tab": {
     "message": "動作"
   },

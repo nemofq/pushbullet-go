@@ -365,12 +365,6 @@
   "mirror_encryption_text": {
     "message": "Állítsa be a végpontok közötti titkosítási jelszót az értesítések megtekintéséhez."
   },
-  "n_targets": {
-    "message": "$1 cél"
-  },
-  "people_menu_label": {
-    "message": "Személyek"
-  },
   "behavior_tab": {
     "message": "Viselkedés"
   },
