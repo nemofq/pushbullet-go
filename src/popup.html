@@ -852,7 +852,7 @@
       /* Taller rows give the second line's unread pill floor clearance — with
          8px it was the lowest element in the row, hugging the bottom edge and
          reading as dropped. */
-      padding: 11px 10px;
+      padding: 10px 10px;
       border-radius: 8px;
       cursor: pointer;
       position: relative;
@@ -931,22 +931,23 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      /* 4px line rhythm, mirrored by .person-meta's gap so the snippet and the
-         unread pill sit on the same visual line. */
-      margin-top: 4px;
+      /* 6px line rhythm, mirrored by .person-meta's gap so the snippet and the
+         unread pill sit on the same visual line; the row centers its content,
+         so the wider rhythm spreads name up / message down. */
+      margin-top: 6px;
     }
 
     .person-meta {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      /* Mirror the main column's 4px name→snippet rhythm: line 1 = time (on
+      /* Mirror the main column's 6px name→snippet rhythm: line 1 = time (on
          the name's line), line 2 = unread pill (on the snippet's line). The
          min-height matches the two-line main column so a lone time stays on
          the name line instead of centering when there is no pill. */
-      gap: 4px;
+      gap: 6px;
       flex-shrink: 0;
-      min-height: 37px;
+      min-height: 40px;
       /* Pin a lone time to the top so it stays on the name's line whether or not
          the unread count occupies the second line — no vertical shift. The
          retained min-height keeps this column two lines tall. */
