@@ -928,20 +928,22 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      margin-top: 2px;
+      /* 4px line rhythm, mirrored by .person-meta's gap so the snippet and the
+         unread pill sit on the same visual line. */
+      margin-top: 4px;
     }
 
     .person-meta {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      /* Mirror the 2px name→snippet rhythm of the main column, and keep the
-         time+count stack (~35px) under the 36px avatar so the avatar — not this
-         column — drives row height; both columns then center together and their
-         first lines (time / name) align. */
-      gap: 2px;
+      /* Mirror the main column's 4px name→snippet rhythm: line 1 = time (on
+         the name's line), line 2 = unread pill (on the snippet's line). The
+         min-height matches the two-line main column so a lone time stays on
+         the name line instead of centering when there is no pill. */
+      gap: 4px;
       flex-shrink: 0;
-      min-height: 34px;
+      min-height: 37px;
       /* Pin a lone time to the top so it stays on the name's line whether or not
          the unread count occupies the second line — no vertical shift. The
          retained min-height keeps this column two lines tall. */
