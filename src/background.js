@@ -426,7 +426,7 @@ async function seedEnableChatDefault() {
 }
 
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
-  if (namespace === 'local' && (changes.devices || changes.people)) {
+  if (namespace === 'local' && (changes.devices || changes.people || changes.enableContextMenu)) {
     await setupContextMenus();
   }
   if (namespace === 'local' && changes.people) {
@@ -2236,8 +2236,16 @@ async function setupContextMenus() {
       // an update doesn't read local before the lists land (the concurrency
       // guard above drops the rebuild the migration would otherwise trigger)
       await devicesPeopleMigration;
-      // Get stored devices and people data
-      const data = await chrome.storage.local.get(['devices', 'people']);
+      // Get stored devices, people & enableContextMenu data
+      const data = await chrome.storage.local.get(['devices', 'people', 'enableContextMenu']);
+
+      // Don't create context menu if option is manually disabled (default is true or not set)
+      if (data.enableContextMenu === false) {
+        isSettingUpContextMenus = false;
+        
+        return resolve();
+      }
+
       const devices = data.devices || [];
       const people = data.people || [];
     

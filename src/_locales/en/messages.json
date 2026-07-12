@@ -92,6 +92,9 @@
   "show_per_send_target_label": {
     "message": "Show per-send target picker in popup"
   },
+  "enable_context_menu_label": {
+    "message": "Enable right-click context menu"
+  },
   "all_devices": {
     "message": "All devices"
   },
