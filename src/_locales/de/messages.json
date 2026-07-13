@@ -81,7 +81,7 @@
     "message": "Abgerufen"
   },
   "target_devices_label": {
-    "message": "Standard-Zielgeräte:"
+    "message": "Pushes senden an:"
   },
   "choose_devices_tip": {
     "message": "Das Standardziel für Pushs, die Sie senden – aus dem Popup, dem Rechtsklick-Menü und dem Tastaturkürzel."
@@ -285,16 +285,16 @@
     "message": "OAuth Fehler:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Nur Pushes für folgende benachrichtigen und anzeigen"
+    "message": "Pushes anzeigen"
   },
   "current_chrome_devices_label": {
-    "message": "Aktuelles Gerät - Chrome(s)"
+    "message": "Gesendet an dieses Chrome"
   },
   "other_devices_label": {
-    "message": "Andere Geräte"
+    "message": "Gesendet an andere Geräte"
   },
   "pushes_without_target_label": {
-    "message": "Pushes ohne Zielgerät"
+    "message": "Gesendet an „Alle Geräte“ (kein Zielgerät)"
   },
   "delete_notification": {
     "message": "Benachrichtigung löschen"
@@ -369,7 +369,7 @@
     "message": "Verhalten"
   },
   "show_people_pushes_label": {
-    "message": "Pushes von Personen"
+    "message": "Von Personen"
   },
   "auto_open_people_label": {
     "message": "Auch Pushes von Personen"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "Gilt sowohl für die Liste im Popup als auch für Benachrichtigungen."
   }
 }

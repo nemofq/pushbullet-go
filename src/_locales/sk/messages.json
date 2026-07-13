@@ -81,7 +81,7 @@
     "message": "Získané"
   },
   "target_devices_label": {
-    "message": "Predvolené cieľové zariadenia:"
+    "message": "Kam odosielať push:"
   },
   "choose_devices_tip": {
     "message": "Predvolený cieľ pre správy, ktoré odošlete – z popup-u, kontextového menu a klávesovej skratky."
@@ -285,16 +285,16 @@
     "message": "OAuth chyba:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Upozorniť a zobraziť push iba pre nasledujúce"
+    "message": "Zobraziť push"
   },
   "current_chrome_devices_label": {
-    "message": "Aktuálne zariadenie - Chrome"
+    "message": "Odoslané na tento Chrome"
   },
   "other_devices_label": {
-    "message": "Iné zariadenia"
+    "message": "Odoslané na iné zariadenia"
   },
   "pushes_without_target_label": {
-    "message": "Push bez cieľového zariadenia"
+    "message": "Odoslané na „Všetky zariadenia“ (bez cieľa)"
   },
   "delete_notification": {
     "message": "Odstrániť upozornenie"
@@ -366,7 +366,7 @@
     "message": "Nakonfigurujte svoje heslo end-to-end šifrovania na zobrazenie oznámení."
   },
   "show_people_pushes_label": {
-    "message": "Push od ľudí"
+    "message": "Od ľudí"
   },
   "behavior_tab": {
     "message": "Správanie"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chaty"
+  },
+  "show_pushes_tip": {
+    "message": "Platí pre zoznam v popup-e aj pre oznámenia."
   }
 }

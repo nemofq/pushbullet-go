@@ -81,7 +81,7 @@
     "message": "가져옴"
   },
   "target_devices_label": {
-    "message": "기본 대상 기기:"
+    "message": "푸시 보낼 기기:"
   },
   "choose_devices_tip": {
     "message": "팝업, 오른쪽 클릭 메뉴, 키보드 단축키로 보낼 푸시의 기본 대상입니다."
@@ -285,16 +285,16 @@
     "message": "OAuth 오류:"
   },
   "only_notify_show_pushes_title": {
-    "message": "다음 푸시만 알림 및 표시"
+    "message": "푸시 표시"
   },
   "current_chrome_devices_label": {
-    "message": "현재 기기 - Chrome(s)"
+    "message": "이 Chrome으로 보낸 푸시"
   },
   "other_devices_label": {
-    "message": "다른 기기"
+    "message": "다른 기기로 보낸 푸시"
   },
   "pushes_without_target_label": {
-    "message": "대상 기기 없는 푸시"
+    "message": "“모든 기기”로 보낸 푸시 (대상 없음)"
   },
   "delete_notification": {
     "message": "알림 삭제"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "채팅"
+  },
+  "show_pushes_tip": {
+    "message": "팝업 목록과 알림 모두에 적용됩니다."
   }
 }

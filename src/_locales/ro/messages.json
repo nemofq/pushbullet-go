@@ -81,7 +81,7 @@
     "message": "Recuperat"
   },
   "target_devices_label": {
-    "message": "Dispozitive țintă implicite:"
+    "message": "Trimite push-uri către:"
   },
   "choose_devices_tip": {
     "message": "Destinația implicită pentru push-urile trimise — din popup, meniul cu clic dreapta și scurtătura de tastatură."
@@ -285,16 +285,16 @@
     "message": "Eroare OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Notifică și arată push-uri doar pentru următoarele"
+    "message": "Afișează push-urile"
   },
   "current_chrome_devices_label": {
-    "message": "Dispozitiv curent - Chrome(uri)"
+    "message": "Trimise către acest Chrome"
   },
   "other_devices_label": {
-    "message": "Alte dispozitive"
+    "message": "Trimise către alte dispozitive"
   },
   "pushes_without_target_label": {
-    "message": "Push-uri fără dispozitiv țintă"
+    "message": "Trimise către „Toate dispozitivele” (fără țintă)"
   },
   "delete_notification": {
     "message": "Șterge notificarea"
@@ -366,7 +366,7 @@
     "message": "Configurați parola de criptare end-to-end pentru a vedea notificările."
   },
   "show_people_pushes_label": {
-    "message": "Push-uri de la persoane"
+    "message": "De la persoane"
   },
   "behavior_tab": {
     "message": "Comportament"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chat-uri"
+  },
+  "show_pushes_tip": {
+    "message": "Se aplică atât listei de push-uri din popup, cât și notificărilor."
   }
 }

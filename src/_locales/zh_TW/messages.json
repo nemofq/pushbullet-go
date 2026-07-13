@@ -81,7 +81,7 @@
     "message": "獲取完成"
   },
   "target_devices_label": {
-    "message": "預設目標裝置："
+    "message": "傳送推送至："
   },
   "choose_devices_tip": {
     "message": "您透過彈出視窗、右鍵選單或鍵盤快速鍵傳送推送時的預設目標裝置。"
@@ -285,16 +285,16 @@
     "message": "OAuth 錯誤："
   },
   "only_notify_show_pushes_title": {
-    "message": "僅通知和顯示以下推送"
+    "message": "顯示推送"
   },
   "current_chrome_devices_label": {
-    "message": "目前裝置 - Chrome(s)"
+    "message": "傳送到此 Chrome 的推送"
   },
   "other_devices_label": {
-    "message": "其他裝置"
+    "message": "傳送到其他裝置的推送"
   },
   "pushes_without_target_label": {
-    "message": "無目標裝置的推送"
+    "message": "傳送到「所有裝置」（無目標）的推送"
   },
   "delete_notification": {
     "message": "刪除通知"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "聊天"
+  },
+  "show_pushes_tip": {
+    "message": "同時適用於彈出視窗中的清單和通知。"
   }
 }

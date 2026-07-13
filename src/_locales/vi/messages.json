@@ -81,7 +81,7 @@
     "message": "Đã lấy"
   },
   "target_devices_label": {
-    "message": "Thiết bị nhận mặc định:"
+    "message": "Gửi push tới:"
   },
   "choose_devices_tip": {
     "message": "Đích mặc định cho các push bạn gửi - từ popup, menu chuột phải và phím tắt bàn phím."
@@ -285,16 +285,16 @@
     "message": "Lỗi OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Chỉ thông báo và hiển thị push cho các mục sau"
+    "message": "Hiển thị push"
   },
   "current_chrome_devices_label": {
-    "message": "Thiết bị hiện tại - Chrome"
+    "message": "Đã gửi tới Chrome này"
   },
   "other_devices_label": {
-    "message": "Thiết bị khác"
+    "message": "Đã gửi tới thiết bị khác"
   },
   "pushes_without_target_label": {
-    "message": "Push không có thiết bị đích"
+    "message": "Đã gửi tới “Tất cả thiết bị” (không có đích)"
   },
   "delete_notification": {
     "message": "Xóa thông báo"
@@ -369,7 +369,7 @@
     "message": "Hành vi"
   },
   "show_people_pushes_label": {
-    "message": "Push từ người"
+    "message": "Từ người"
   },
   "auto_open_people_label": {
     "message": "Cả push từ người"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chat"
+  },
+  "show_pushes_tip": {
+    "message": "Áp dụng cho cả danh sách push trong popup và thông báo."
   }
 }

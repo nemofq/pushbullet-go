@@ -81,7 +81,7 @@
     "message": "Lekérve"
   },
   "target_devices_label": {
-    "message": "Alapértelmezett céleszközök:"
+    "message": "Push küldése ide:"
   },
   "choose_devices_tip": {
     "message": "Az alapértelmezett cél a küldött push üzenetekhez – a felugró ablakból, a jobb klikk menüből és a billentyűparancsból."
@@ -285,16 +285,16 @@
     "message": "OAuth hiba:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Értesítés és megjelenítés csak a következőknél"
+    "message": "Küldések megjelenítése"
   },
   "current_chrome_devices_label": {
-    "message": "Jelenlegi eszköz - Chrome(ok)"
+    "message": "Erre a Chrome-ra küldött"
   },
   "other_devices_label": {
-    "message": "Egyéb eszközök"
+    "message": "Más eszközökre küldött"
   },
   "pushes_without_target_label": {
-    "message": "Céleszköz nélküli küldések"
+    "message": "„Minden eszköz”-re küldött (céleszköz nélkül)"
   },
   "delete_notification": {
     "message": "Értesítés törlése"
@@ -369,7 +369,7 @@
     "message": "Viselkedés"
   },
   "show_people_pushes_label": {
-    "message": "Küldések személyektől"
+    "message": "Személyektől küldött"
   },
   "auto_open_people_label": {
     "message": "Küldések személyektől is"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Csevegések"
+  },
+  "show_pushes_tip": {
+    "message": "A felugró ablak listájára és az értesítésekre is vonatkozik."
   }
 }

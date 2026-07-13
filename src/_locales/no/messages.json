@@ -81,7 +81,7 @@
     "message": "Hentet"
   },
   "target_devices_label": {
-    "message": "Standard målenheter:"
+    "message": "Send pushes til:"
   },
   "choose_devices_tip": {
     "message": "Standard mål for sendinger du sender – fra popup, høyreklikkmenyen og tastatursnarvei."
@@ -285,16 +285,16 @@
     "message": "OAuth feil:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Varsle og vis kun pushes for følgende"
+    "message": "Vis pushes"
   },
   "current_chrome_devices_label": {
-    "message": "Nåværende enhet - Chrome(r)"
+    "message": "Sendt til denne Chrome-enheten"
   },
   "other_devices_label": {
-    "message": "Andre enheter"
+    "message": "Sendt til andre enheter"
   },
   "pushes_without_target_label": {
-    "message": "Pushes uten målenhet"
+    "message": "Sendt til «Alle enheter» (uten mål)"
   },
   "delete_notification": {
     "message": "Slett varsel"
@@ -366,7 +366,7 @@
     "message": "Konfigurer ditt ende-til-ende-krypteringspassord for å se varslene."
   },
   "show_people_pushes_label": {
-    "message": "Pushes fra personer"
+    "message": "Fra personer"
   },
   "behavior_tab": {
     "message": "Oppførsel"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chatter"
+  },
+  "show_pushes_tip": {
+    "message": "Gjelder både push-listen i popup og varslene."
   }
 }

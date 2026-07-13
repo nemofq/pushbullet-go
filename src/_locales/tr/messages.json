@@ -81,7 +81,7 @@
     "message": "Getirildi"
   },
   "target_devices_label": {
-    "message": "Varsayılan Hedef Cihazlar:"
+    "message": "Push gönderilecek cihazlar:"
   },
   "choose_devices_tip": {
     "message": "Gönderdiğiniz push'ların varsayılan hedefi — popup'tan, sağ tık menüsünden ve klavye kısayolundan."
@@ -285,16 +285,16 @@
     "message": "OAuth hatası:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Yalnızca şunlar için bildirim ve gösterim"
+    "message": "Push'ları göster"
   },
   "current_chrome_devices_label": {
-    "message": "Geçerli cihaz - Chrome"
+    "message": "Bu Chrome'a gönderilen push'lar"
   },
   "other_devices_label": {
-    "message": "Diğer cihazlar"
+    "message": "Diğer cihazlara gönderilen push'lar"
   },
   "pushes_without_target_label": {
-    "message": "Hedef cihaz olmayan bildirimler"
+    "message": "“Tüm cihazlar”a gönderilen push'lar (hedefsiz)"
   },
   "delete_notification": {
     "message": "Bildirimi sil"
@@ -369,7 +369,7 @@
     "message": "Davranış"
   },
   "show_people_pushes_label": {
-    "message": "Kişilerden gelen bildirimler"
+    "message": "Kişilerden gelen push'lar"
   },
   "auto_open_people_label": {
     "message": "Kişilerden gelen bildirimleri de otomatik aç"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Sohbetler"
+  },
+  "show_pushes_tip": {
+    "message": "Hem popup'taki liste hem de bildirimler için geçerlidir."
   }
 }

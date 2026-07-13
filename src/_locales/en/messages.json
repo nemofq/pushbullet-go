@@ -84,7 +84,7 @@
     "message": "Couldn't retrieve devices and people. Check access token and try again."
   },
   "target_devices_label": {
-    "message": "Default Target Devices:"
+    "message": "Send pushes to:"
   },
   "choose_devices_tip": {
     "message": "The default target for pushes you send - from the popup, the right-click menu, and the keyboard shortcut."
@@ -342,19 +342,22 @@
     "message": "OAuth error:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Only notify and show pushes for the following"
+    "message": "Show pushes"
+  },
+  "show_pushes_tip": {
+    "message": "Applies to both the popup list and notifications."
   },
   "current_chrome_devices_label": {
-    "message": "Current device - Chrome(s)"
+    "message": "Sent to this Chrome"
   },
   "other_devices_label": {
-    "message": "Other devices"
+    "message": "Sent to other devices"
   },
   "pushes_without_target_label": {
-    "message": "Pushes without target device"
+    "message": "Sent to \"All devices\" (no target)"
   },
   "show_people_pushes_label": {
-    "message": "Pushes from people"
+    "message": "From people"
   },
   "delete_notification": {
     "message": "Delete notification"

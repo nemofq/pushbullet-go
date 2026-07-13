@@ -81,7 +81,7 @@
     "message": "Haettu"
   },
   "target_devices_label": {
-    "message": "Oletuskohdelaitteet:"
+    "message": "Lähetä pushit laitteille:"
   },
   "choose_devices_tip": {
     "message": "Oletuskohde lähettämillesi pusheille – ponnahdusikkunasta, hiiren kakkospainikkeen valikosta ja pikanäppäimestä."
@@ -285,16 +285,16 @@
     "message": "OAuth-virhe:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Ilmoita ja näytä pushit vain seuraaville"
+    "message": "Näytä pushit"
   },
   "current_chrome_devices_label": {
-    "message": "Nykyinen laite - Chrome(t)"
+    "message": "Lähetetty tälle Chromelle"
   },
   "other_devices_label": {
-    "message": "Muut laitteet"
+    "message": "Lähetetty muille laitteille"
   },
   "pushes_without_target_label": {
-    "message": "Pushit ilman kohdelaitetta"
+    "message": "Lähetetty kohteeseen ”Kaikki laitteet” (ei kohdetta)"
   },
   "delete_notification": {
     "message": "Poista ilmoitus"
@@ -369,7 +369,7 @@
     "message": "Toiminta"
   },
   "show_people_pushes_label": {
-    "message": "Pushit henkilöiltä"
+    "message": "Henkilöiltä"
   },
   "auto_open_people_label": {
     "message": "Myös pushit henkilöiltä"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chatit"
+  },
+  "show_pushes_tip": {
+    "message": "Koskee sekä ponnahdusikkunan listaa että ilmoituksia."
   }
 }

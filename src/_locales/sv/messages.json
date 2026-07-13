@@ -81,7 +81,7 @@
     "message": "Hämtat"
   },
   "target_devices_label": {
-    "message": "Standardmålenheter:"
+    "message": "Skicka pushes till:"
   },
   "choose_devices_tip": {
     "message": "Standardmål för pushar du skickar – från popup-fönstret, högerklicksmenyn och tangentbordsgenvägen."
@@ -285,16 +285,16 @@
     "message": "OAuth-fel:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Meddela och visa endast pushes för följande"
+    "message": "Visa pushes"
   },
   "current_chrome_devices_label": {
-    "message": "Aktuell enhet - Chrome"
+    "message": "Skickade till denna Chrome"
   },
   "other_devices_label": {
-    "message": "Andra enheter"
+    "message": "Skickade till andra enheter"
   },
   "pushes_without_target_label": {
-    "message": "Pushes utan målenhet"
+    "message": "Skickade till ”Alla enheter” (utan mål)"
   },
   "delete_notification": {
     "message": "Ta bort avisering"
@@ -369,7 +369,7 @@
     "message": "Beteende"
   },
   "show_people_pushes_label": {
-    "message": "Pushes från personer"
+    "message": "Från personer"
   },
   "auto_open_people_label": {
     "message": "Även pushes från personer"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chattar"
+  },
+  "show_pushes_tip": {
+    "message": "Gäller både listan i popup-fönstret och aviseringarna."
   }
 }

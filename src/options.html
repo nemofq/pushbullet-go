@@ -680,7 +680,7 @@
           devices and people</button>
       </div>
       <div class="form-group">
-        <label data-i18n="target_devices_label">Default Target Devices:</label>
+        <label data-i18n="target_devices_label">Send pushes to:</label>
         <div id="remoteDevicePicker" class="device-list"></div>
         <div class="tip" data-i18n="choose_devices_tip">
           The default target for pushes you send - from the popup, the right-click menu, and the keyboard shortcut.
@@ -697,12 +697,13 @@
         </div>
       </div>
       <div class="form-group">
-        <label data-i18n="only_notify_show_pushes_title">Only notify and show pushes for the following</label>
+        <label data-i18n="only_notify_show_pushes_title">Show pushes</label>
+        <div class="tip" data-i18n="show_pushes_tip">Applies to both the popup list and notifications.</div>
       </div>
       <div class="toggle-container" style="margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="current_chrome_devices_label">Current device - Chrome(s)</span>
+          <span data-i18n="current_chrome_devices_label">Sent to this Chrome</span>
         </label>
         <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
         <div class="toggle-switch" id="onlyBrowserPushesToggle">
@@ -712,7 +713,7 @@
       <div class="toggle-container" style="margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="other_devices_label">Other devices</span>
+          <span data-i18n="other_devices_label">Sent to other devices</span>
         </label>
         <input type="checkbox" id="showOtherDevicePushes" class="toggle-input">
         <div class="toggle-switch" id="showOtherDevicePushesToggle">
@@ -728,7 +729,7 @@
       <div class="toggle-container" style="margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="pushes_without_target_label">Pushes without target device</span>
+          <span data-i18n="pushes_without_target_label">Sent to "All devices" (no target)</span>
         </label>
         <input type="checkbox" id="showNoTargetPushes" class="toggle-input">
         <div class="toggle-switch" id="showNoTargetPushesToggle">
@@ -738,7 +739,7 @@
       <div class="toggle-container" style="margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="show_people_pushes_label">Pushes from people</span>
+          <span data-i18n="show_people_pushes_label">From people</span>
         </label>
         <input type="checkbox" id="showPeoplePushes" class="toggle-input">
         <div class="toggle-switch" id="showPeoplePushesToggle">

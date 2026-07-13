@@ -81,7 +81,7 @@
     "message": "Извлечено"
   },
   "target_devices_label": {
-    "message": "Подразбиращи се целеви устройства:"
+    "message": "Изпращай до:"
   },
   "choose_devices_tip": {
     "message": "Подразбиращата се цел за изпращанията ви — от изскачащия прозорец, контекстното меню и клавишната комбинация."
@@ -285,16 +285,16 @@
     "message": "OAuth грешка:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Показвай известия само за следните изпращания"
+    "message": "Показвай изпращания"
   },
   "current_chrome_devices_label": {
-    "message": "Текущо устройство - Chrome(s)"
+    "message": "Изпратени до този Chrome"
   },
   "other_devices_label": {
-    "message": "Други устройства"
+    "message": "Изпратени до други устройства"
   },
   "pushes_without_target_label": {
-    "message": "Изпращания без целево устройство"
+    "message": "Изпратени до „Всички устройства“ (без цел)"
   },
   "delete_notification": {
     "message": "Изтрий известието"
@@ -369,7 +369,7 @@
     "message": "Поведение"
   },
   "show_people_pushes_label": {
-    "message": "Изпращания от хора"
+    "message": "От хора"
   },
   "auto_open_people_label": {
     "message": "Също и изпращания от хора"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Чатове"
+  },
+  "show_pushes_tip": {
+    "message": "Важи както за списъка в изскачащия прозорец, така и за известията."
   }
 }

@@ -81,7 +81,7 @@
     "message": "Recuperat"
   },
   "target_devices_label": {
-    "message": "Dispositius destinataris per defecte:"
+    "message": "Enviar enviaments a:"
   },
   "choose_devices_tip": {
     "message": "El destinatari per defecte dels enviaments que fas, des de la finestra emergent, el menú contextual i la drecera de teclat."
@@ -285,16 +285,16 @@
     "message": "Error OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Només notificar i mostrar enviaments per als següents"
+    "message": "Mostra enviaments"
   },
   "current_chrome_devices_label": {
-    "message": "Dispositiu actual - Chrome(s)"
+    "message": "Enviats a aquest Chrome"
   },
   "other_devices_label": {
-    "message": "Altres dispositius"
+    "message": "Enviats a altres dispositius"
   },
   "pushes_without_target_label": {
-    "message": "Enviaments sense dispositiu destinatari"
+    "message": "Enviats a «Tots els dispositius» (sense destinatari)"
   },
   "delete_notification": {
     "message": "Eliminar notificació"
@@ -369,7 +369,7 @@
     "message": "Comportament"
   },
   "show_people_pushes_label": {
-    "message": "Enviaments de persones"
+    "message": "De persones"
   },
   "auto_open_people_label": {
     "message": "També enviaments de persones"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "S'aplica tant a la llista de la finestra emergent com a les notificacions."
   }
 }

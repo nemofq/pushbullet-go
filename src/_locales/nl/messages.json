@@ -81,7 +81,7 @@
     "message": "Opgehaald"
   },
   "target_devices_label": {
-    "message": "Standaard doelapparaten:"
+    "message": "Stuur pushes naar:"
   },
   "choose_devices_tip": {
     "message": "De standaard bestemming voor pushes die je verstuurt – vanuit de popup, het rechtsklikmenu en de sneltoets."
@@ -285,16 +285,16 @@
     "message": "OAuth fout:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Alleen melden en tonen voor de volgende pushes"
+    "message": "Pushes tonen"
   },
   "current_chrome_devices_label": {
-    "message": "Huidig apparaat - Chrome(s)"
+    "message": "Verzonden naar deze Chrome"
   },
   "other_devices_label": {
-    "message": "Andere apparaten"
+    "message": "Verzonden naar andere apparaten"
   },
   "pushes_without_target_label": {
-    "message": "Pushes zonder doelapparaat"
+    "message": "Verzonden naar \"Alle apparaten\" (geen doel)"
   },
   "delete_notification": {
     "message": "Melding verwijderen"
@@ -366,7 +366,7 @@
     "message": "Configureer je end-to-end versleuteling wachtwoord om de meldingen te zien."
   },
   "show_people_pushes_label": {
-    "message": "Pushes van personen"
+    "message": "Van personen"
   },
   "behavior_tab": {
     "message": "Gedrag"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "Geldt voor zowel de lijst in de popup als meldingen."
   }
 }

@@ -81,7 +81,7 @@
     "message": "Pridobljeno"
   },
   "target_devices_label": {
-    "message": "Privzete ciljne naprave:"
+    "message": "Pošlji potiske na:"
   },
   "choose_devices_tip": {
     "message": "Privzeta ciljna naprava za potiske, ki jih pošljete – iz pojavnega okna, kontekstnega menija in bližnjice na tipkovnici."
@@ -285,16 +285,16 @@
     "message": "OAuth napaka:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Obvešča in prikaži pushes samo za naslednje"
+    "message": "Prikaži potiske"
   },
   "current_chrome_devices_label": {
-    "message": "Trenutna naprava - Chrome"
+    "message": "Poslano na ta Chrome"
   },
   "other_devices_label": {
-    "message": "Druge naprave"
+    "message": "Poslano na druge naprave"
   },
   "pushes_without_target_label": {
-    "message": "Pushes brez ciljne naprave"
+    "message": "Poslano na »Vse naprave« (brez cilja)"
   },
   "delete_notification": {
     "message": "Izbriši obvestilo"
@@ -369,7 +369,7 @@
     "message": "Vedenje"
   },
   "show_people_pushes_label": {
-    "message": "Pushes od oseb"
+    "message": "Od oseb"
   },
   "auto_open_people_label": {
     "message": "Tudi pushes od oseb"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Klepeti"
+  },
+  "show_pushes_tip": {
+    "message": "Velja tako za seznam v pojavnem oknu kot za obvestila."
   }
 }

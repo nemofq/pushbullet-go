@@ -81,7 +81,7 @@
     "message": "Recuperato"
   },
   "target_devices_label": {
-    "message": "Dispositivi di destinazione predefiniti:"
+    "message": "Invia push a:"
   },
   "choose_devices_tip": {
     "message": "La destinazione predefinita per i push che invii - dal popup, dal menu contestuale e dalla scorciatoia da tastiera."
@@ -285,16 +285,16 @@
     "message": "Errore OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Notifica e mostra push solo per i seguenti"
+    "message": "Mostra push"
   },
   "current_chrome_devices_label": {
-    "message": "Dispositivo corrente - Chrome(s)"
+    "message": "inviati a questo Chrome"
   },
   "other_devices_label": {
-    "message": "Altri dispositivi"
+    "message": "inviati ad altri dispositivi"
   },
   "pushes_without_target_label": {
-    "message": "Push senza dispositivo di destinazione"
+    "message": "inviati a «Tutti i dispositivi» (nessuna destinazione)"
   },
   "delete_notification": {
     "message": "Elimina notifica"
@@ -369,7 +369,7 @@
     "message": "Comportamento"
   },
   "show_people_pushes_label": {
-    "message": "Push dalle persone"
+    "message": "dalle persone"
   },
   "auto_open_people_label": {
     "message": "Anche i push dalle persone"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chat"
+  },
+  "show_pushes_tip": {
+    "message": "Si applica sia all'elenco del popup che alle notifiche."
   }
 }

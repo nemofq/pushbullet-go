@@ -81,7 +81,7 @@
     "message": "Ανακτήθηκε"
   },
   "target_devices_label": {
-    "message": "Προεπιλεγμένες συσκευές-στόχοι:"
+    "message": "Αποστολή προωθήσεων σε:"
   },
   "choose_devices_tip": {
     "message": "Ο προεπιλεγμένος στόχος για τις προωθήσεις που στέλνετε — από το popup, το μενού δεξί κλικ και τη συντόμευση πληκτρολογίου."
@@ -285,16 +285,16 @@
     "message": "Σφάλμα OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Μόνο ειδοποίηση και εμφάνιση προωθήσεων για τα ακόλουθα"
+    "message": "Εμφάνιση προωθήσεων"
   },
   "current_chrome_devices_label": {
-    "message": "Τρέχουσα συσκευή - Chrome(s)"
+    "message": "Σταλμένες σε αυτό το Chrome"
   },
   "other_devices_label": {
-    "message": "Άλλες συσκευές"
+    "message": "Σταλμένες σε άλλες συσκευές"
   },
   "pushes_without_target_label": {
-    "message": "Προωθήσεις χωρίς συσκευή-στόχο"
+    "message": "Σταλμένες σε «Όλες οι συσκευές» (χωρίς στόχο)"
   },
   "delete_notification": {
     "message": "Διαγραφή ειδοποίησης"
@@ -369,7 +369,7 @@
     "message": "Συμπεριφορά"
   },
   "show_people_pushes_label": {
-    "message": "Αποστολές από επαφές"
+    "message": "Από επαφές"
   },
   "auto_open_people_label": {
     "message": "Επίσης αποστολές από επαφές"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Συνομιλίες"
+  },
+  "show_pushes_tip": {
+    "message": "Ισχύει τόσο για τη λίστα στο popup όσο και για τις ειδοποιήσεις."
   }
 }

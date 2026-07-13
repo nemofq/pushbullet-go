@@ -81,7 +81,7 @@
     "message": "Načteno"
   },
   "target_devices_label": {
-    "message": "Výchozí cílová zařízení:"
+    "message": "Kam odesílat push:"
   },
   "choose_devices_tip": {
     "message": "Výchozí cíl pro push, které odesíláte – z popup okna, kontextové nabídky a klávesové zkratky."
@@ -285,16 +285,16 @@
     "message": "OAuth chyba:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Pouze upozornit a zobrazit push pro následující"
+    "message": "Zobrazit push"
   },
   "current_chrome_devices_label": {
-    "message": "Aktuální zařízení - Chrome(s)"
+    "message": "Odesláno na tento Chrome"
   },
   "other_devices_label": {
-    "message": "Další zařízení"
+    "message": "Odesláno na další zařízení"
   },
   "pushes_without_target_label": {
-    "message": "Push bez cílového zařízení"
+    "message": "Odesláno na „Všechna zařízení“ (bez cíle)"
   },
   "delete_notification": {
     "message": "Smazat oznámení"
@@ -369,7 +369,7 @@
     "message": "Chování"
   },
   "show_people_pushes_label": {
-    "message": "Push od osob"
+    "message": "Odesláno od osob"
   },
   "auto_open_people_label": {
     "message": "Také push od osob"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chaty"
+  },
+  "show_pushes_tip": {
+    "message": "Platí pro seznam v popup i pro oznámení."
   }
 }

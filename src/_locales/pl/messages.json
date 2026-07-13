@@ -81,7 +81,7 @@
     "message": "Pobrano"
   },
   "target_devices_label": {
-    "message": "Domyślne urządzenia docelowe:"
+    "message": "Wysyłanie push do:"
   },
   "choose_devices_tip": {
     "message": "Domyślny cel dla wysyłanych push – z okna popup, menu kontekstowego i skrótu klawiszowego."
@@ -285,16 +285,16 @@
     "message": "Błąd OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Powiadamiaj i pokazuj push tylko dla następujących"
+    "message": "Pokazuj push"
   },
   "current_chrome_devices_label": {
-    "message": "Obecne urządzenie - Chrome"
+    "message": "Wysłane do tego Chrome"
   },
   "other_devices_label": {
-    "message": "Inne urządzenia"
+    "message": "Wysłane do innych urządzeń"
   },
   "pushes_without_target_label": {
-    "message": "Push bez urządzenia docelowego"
+    "message": "Wysłane do „Wszystkich urządzeń” (bez celu)"
   },
   "delete_notification": {
     "message": "Usuń powiadomienie"
@@ -366,7 +366,7 @@
     "message": "Skonfiguruj swoje hasło szyfrowania end-to-end, aby zobaczyć powiadomienia."
   },
   "show_people_pushes_label": {
-    "message": "Push od osób"
+    "message": "Od osób"
   },
   "behavior_tab": {
     "message": "Zachowanie"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Czaty"
+  },
+  "show_pushes_tip": {
+    "message": "Dotyczy zarówno listy w oknie popup, jak i powiadomień."
   }
 }

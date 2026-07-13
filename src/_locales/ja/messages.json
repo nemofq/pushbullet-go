@@ -81,7 +81,7 @@
     "message": "取得完了"
   },
   "target_devices_label": {
-    "message": "既定の対象デバイス:"
+    "message": "プッシュの送信先:"
   },
   "choose_devices_tip": {
     "message": "ポップアップ、右クリックメニュー、キーボード ショートカットから送信するプッシュのデフォルト ターゲットです。"
@@ -285,16 +285,16 @@
     "message": "OAuthエラー:"
   },
   "only_notify_show_pushes_title": {
-    "message": "以下のプッシュのみ通知して表示"
+    "message": "プッシュを表示"
   },
   "current_chrome_devices_label": {
-    "message": "現在のデバイス - Chrome(s)"
+    "message": "このChromeへのプッシュ"
   },
   "other_devices_label": {
-    "message": "他のデバイス"
+    "message": "他のデバイスへのプッシュ"
   },
   "pushes_without_target_label": {
-    "message": "ターゲットデバイスなしのプッシュ"
+    "message": "「すべてのデバイス」へのプッシュ（ターゲットなし）"
   },
   "delete_notification": {
     "message": "通知を削除"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "チャット"
+  },
+  "show_pushes_tip": {
+    "message": "ポップアップの一覧と通知の両方に適用されます。"
   }
 }

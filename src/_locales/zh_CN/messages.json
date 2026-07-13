@@ -81,7 +81,7 @@
     "message": "获取完成"
   },
   "target_devices_label": {
-    "message": "默认目标设备："
+    "message": "推送到："
   },
   "choose_devices_tip": {
     "message": "发送推送时的默认目标——适用于弹窗、右键菜单及键盘快捷键。"
@@ -285,16 +285,16 @@
     "message": "OAuth 错误："
   },
   "only_notify_show_pushes_title": {
-    "message": "仅通知和显示以下推送"
+    "message": "显示推送"
   },
   "current_chrome_devices_label": {
-    "message": "当前设备 - Chrome(s)"
+    "message": "发送到当前 Chrome 的推送"
   },
   "other_devices_label": {
-    "message": "其他设备"
+    "message": "发送到其他设备的推送"
   },
   "pushes_without_target_label": {
-    "message": "无目标设备的推送"
+    "message": "发送到“所有设备”的推送（无目标）"
   },
   "delete_notification": {
     "message": "删除通知"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "聊天"
+  },
+  "show_pushes_tip": {
+    "message": "同时适用于弹窗列表和通知。"
   }
 }

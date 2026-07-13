@@ -81,7 +81,7 @@
     "message": "Получено"
   },
   "target_devices_label": {
-    "message": "Целевые устройства по умолчанию:"
+    "message": "Отправлять push на:"
   },
   "choose_devices_tip": {
     "message": "Устройство по умолчанию для push-отправок — из всплывающего окна, контекстного меню и горячей клавиши."
@@ -285,16 +285,16 @@
     "message": "Ошибка OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Уведомлять и показывать push только для следующих"
+    "message": "Показывать push"
   },
   "current_chrome_devices_label": {
-    "message": "Текущее устройство - Chrome"
+    "message": "Push на этот Chrome"
   },
   "other_devices_label": {
-    "message": "Другие устройства"
+    "message": "Push на другие устройства"
   },
   "pushes_without_target_label": {
-    "message": "Push без целевого устройства"
+    "message": "Push на «Все устройства» (без получателя)"
   },
   "delete_notification": {
     "message": "Удалить уведомление"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Чаты"
+  },
+  "show_pushes_tip": {
+    "message": "Распространяется как на список всплывающего окна, так и на уведомления."
   }
 }

@@ -81,7 +81,7 @@
     "message": "Diambil"
   },
   "target_devices_label": {
-    "message": "Perangkat Tujuan Bawaan:"
+    "message": "Kirim push ke:"
   },
   "choose_devices_tip": {
     "message": "Tujuan bawaan untuk push yang Anda kirim — dari popup, menu klik kanan, dan pintasan keyboard."
@@ -285,16 +285,16 @@
     "message": "Kesalahan OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Hanya beri tahu dan tampilkan push untuk berikut ini"
+    "message": "Tampilkan push"
   },
   "current_chrome_devices_label": {
-    "message": "Perangkat saat ini - Chrome(s)"
+    "message": "Dikirim ke Chrome ini"
   },
   "other_devices_label": {
-    "message": "Perangkat lain"
+    "message": "Dikirim ke perangkat lain"
   },
   "pushes_without_target_label": {
-    "message": "Push tanpa perangkat target"
+    "message": "Dikirim ke “Semua perangkat” (tanpa target)"
   },
   "delete_notification": {
     "message": "Hapus notifikasi"
@@ -369,7 +369,7 @@
     "message": "Perilaku"
   },
   "show_people_pushes_label": {
-    "message": "Push dari orang"
+    "message": "Dari orang"
   },
   "auto_open_people_label": {
     "message": "Juga push dari orang"
@@ -421,5 +421,8 @@
   },
   "chats_label": {
     "message": "Chat"
+  },
+  "show_pushes_tip": {
+    "message": "Berlaku untuk daftar di popup maupun notifikasi."
   }
 }
