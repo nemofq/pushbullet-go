@@ -78,6 +78,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const otherDeviceListGroup = document.getElementById('otherDeviceListGroup');
   const showPerSendTargetCheckbox = document.getElementById('showPerSendTarget');
   const showPerSendTargetToggle = document.getElementById('showPerSendTargetToggle');
+  const enableContextMenuCheckbox = document.getElementById('enableContextMenu');
+  const enableContextMenuToggle = document.getElementById('enableContextMenuToggle');
 
   // Tab elements
   const tabs = document.querySelectorAll('.tab');
@@ -609,7 +611,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -792,6 +794,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     showOsNotificationsCheckbox.checked = data.showOsNotifications !== false; // Default to true
     updateShowOsNotificationsToggleVisual();
     updateShowOsNotificationsVisibility();
+
+    // Load context menu setting (default is true/on)
+    enableContextMenuCheckbox.checked = data.enableContextMenu !== false; // Default to true
+    updateEnableContextMenuToggleVisual();
     
     // Update conditional visibility for default tab option
     updateDefaultTabVisibility();
@@ -1036,6 +1042,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     showOsNotificationsCheckbox.checked = !showOsNotificationsCheckbox.checked;
     updateShowOsNotificationsToggleVisual();
     updateShowOsNotificationsVisibility();
+  });
+
+  enableContextMenuToggle.addEventListener('click', function() {
+    enableContextMenuCheckbox.checked = !enableContextMenuCheckbox.checked;
+    updateEnableContextMenuToggleVisual();
   });
 
   // Resolve the account iden behind an access token via /v2/users/me. The
@@ -1434,7 +1445,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       colorMode: colorModeDropdown.getValue(),
       defaultTab: defaultTabDropdown.getValue(),
       playSoundOnNotification: playSoundOnNotificationCheckbox.checked,
-      showOsNotifications: showOsNotificationsCheckbox.checked
+      showOsNotifications: showOsNotificationsCheckbox.checked,
+      enableContextMenu: enableContextMenuCheckbox.checked
     };
     
     // Handle encryption password - derive key and store locally
@@ -1512,7 +1524,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab,
       playSoundOnNotification: saveData.playSoundOnNotification,
-      showOsNotifications: saveData.showOsNotifications
+      showOsNotifications: saveData.showOsNotifications,
+      enableContextMenu: saveData.enableContextMenu
     };
     
     // Save to both storages
@@ -1712,6 +1725,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       showPerSendTargetToggle.classList.add('active');
     } else {
       showPerSendTargetToggle.classList.remove('active');
+    }
+  }
+
+  function updateEnableContextMenuToggleVisual() {
+    if (enableContextMenuCheckbox.checked) {
+      enableContextMenuToggle.classList.add('active');
+    } else {
+      enableContextMenuToggle.classList.remove('active');
     }
   }
 
