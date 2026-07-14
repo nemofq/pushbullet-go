@@ -1375,9 +1375,17 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
         ];
       }
 
-      // Check if require interaction is enabled for pushes
-      const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'showOsNotifications']);
-      if (notifPrefs.requireInteraction && notifPrefs.requireInteractionPushes) {
+      // Check if require interaction is enabled for this notification's
+      // category. People pushes have their own Chats switch; absent means
+      // follow the Pushes switch (their gate before the split), so existing
+      // setups keep persisting until the user saves an explicit choice.
+      const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'requireInteractionChats', 'showOsNotifications']);
+      const requireForCategory = isPeoplePush(push)
+        ? (notifPrefs.requireInteractionChats !== undefined
+          ? notifPrefs.requireInteractionChats
+          : notifPrefs.requireInteractionPushes)
+        : notifPrefs.requireInteractionPushes;
+      if (notifPrefs.requireInteraction && requireForCategory) {
         notificationOptions.requireInteraction = true;
       }
 

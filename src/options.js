@@ -52,6 +52,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const requireInteractionMirroredCheckbox = document.getElementById('requireInteractionMirrored');
   const requireInteractionMirroredToggle = document.getElementById('requireInteractionMirroredToggle');
   const requireInteractionMirroredContainer = document.getElementById('requireInteractionMirroredContainer');
+  const requireInteractionChatsCheckbox = document.getElementById('requireInteractionChats');
+  const requireInteractionChatsToggle = document.getElementById('requireInteractionChatsToggle');
+  const requireInteractionChatsContainer = document.getElementById('requireInteractionChatsContainer');
   const closeAsDismissCheckbox = document.getElementById('closeAsDismiss');
   const closeAsDismissToggle = document.getElementById('closeAsDismissToggle');
   const closeAsDismissContainer = document.getElementById('closeAsDismissContainer');
@@ -611,7 +614,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -755,7 +758,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateRequireInteractionPushesToggleVisual();
     requireInteractionMirroredCheckbox.checked = data.requireInteractionMirrored || false; // Default to false
     updateRequireInteractionMirroredToggleVisual();
-    
+    // Absent = follow the Pushes switch (people-push notifications rode it
+    // before the Chats split), so existing setups keep their behavior until
+    // the user saves an explicit choice.
+    requireInteractionChatsCheckbox.checked = data.requireInteractionChats !== undefined
+      ? data.requireInteractionChats
+      : (data.requireInteractionPushes || false);
+    updateRequireInteractionChatsToggleVisual();
+
     // Show/hide the require interaction sub-options based on main setting
     updateRequireInteractionVisibility();
     
@@ -804,6 +814,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Update conditional visibility for require interaction mirrored option
     updateRequireInteractionMirroredVisibility();
+
+    // Update conditional visibility for require interaction chats option
+    updateRequireInteractionChatsVisibility();
     
     // Update conditional visibility for display unread mirrored option
     updateDisplayUnreadMirroredVisibility();
@@ -920,10 +933,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateEnableChatToggleVisual();
     // Chat is the visibility master for the people auto-open row + trusted list
     // (Behavior), and adds/removes Chat from the default-tab dropdown. It also
-    // gates the "↳ Chats" unread-count sub-row (Appearance).
+    // gates the "↳ Chats" sub-rows under Display unread counts (Appearance)
+    // and Require interaction (Behavior).
     updateAutoOpenLinksFromPeopleVisibility();
     updateDefaultTabVisibility();
     updateDisplayUnreadChatsVisibility();
+    updateRequireInteractionChatsVisibility();
+
+    // Auto-enable the Chats sub-switch when Chat is enabled while require
+    // interaction is on (same pattern as mirroring's Mirrored seeding)
+    if (enableChatCheckbox.checked && requireInteractionCheckbox.checked) {
+      requireInteractionChatsCheckbox.checked = true;
+      updateRequireInteractionChatsToggleVisual();
+    }
   });
 
   showQuickShareToggle.addEventListener('click', function() {
@@ -936,21 +958,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateRequireInteractionToggleVisual();
     updateRequireInteractionVisibility();
     
-    // Auto-enable both sub-switches when main switch is turned on
+    // Auto-enable all sub-switches when main switch is turned on
     if (requireInteractionCheckbox.checked) {
       requireInteractionPushesCheckbox.checked = true;
       updateRequireInteractionPushesToggleVisual();
       requireInteractionMirroredCheckbox.checked = true;
       updateRequireInteractionMirroredToggleVisual();
+      requireInteractionChatsCheckbox.checked = true;
+      updateRequireInteractionChatsToggleVisual();
     }
   });
 
   requireInteractionPushesToggle.addEventListener('click', function() {
     requireInteractionPushesCheckbox.checked = !requireInteractionPushesCheckbox.checked;
     updateRequireInteractionPushesToggleVisual();
-    
-    // Auto-disable main switch if both sub-switches are off
-    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked) {
+
+    // Auto-disable main switch if all sub-switches are off
+    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked && !requireInteractionChatsCheckbox.checked) {
       requireInteractionCheckbox.checked = false;
       updateRequireInteractionToggleVisual();
       updateRequireInteractionVisibility();
@@ -960,9 +984,21 @@ document.addEventListener('DOMContentLoaded', async function() {
   requireInteractionMirroredToggle.addEventListener('click', function() {
     requireInteractionMirroredCheckbox.checked = !requireInteractionMirroredCheckbox.checked;
     updateRequireInteractionMirroredToggleVisual();
-    
-    // Auto-disable main switch if both sub-switches are off
-    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked) {
+
+    // Auto-disable main switch if all sub-switches are off
+    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked && !requireInteractionChatsCheckbox.checked) {
+      requireInteractionCheckbox.checked = false;
+      updateRequireInteractionToggleVisual();
+      updateRequireInteractionVisibility();
+    }
+  });
+
+  requireInteractionChatsToggle.addEventListener('click', function() {
+    requireInteractionChatsCheckbox.checked = !requireInteractionChatsCheckbox.checked;
+    updateRequireInteractionChatsToggleVisual();
+
+    // Auto-disable main switch if all sub-switches are off
+    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked && !requireInteractionChatsCheckbox.checked) {
       requireInteractionCheckbox.checked = false;
       updateRequireInteractionToggleVisual();
       updateRequireInteractionVisibility();
@@ -1436,6 +1472,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteraction: requireInteractionCheckbox.checked,
       requireInteractionPushes: requireInteractionPushesCheckbox.checked,
       requireInteractionMirrored: requireInteractionMirroredCheckbox.checked,
+      requireInteractionChats: requireInteractionChatsCheckbox.checked,
       closeAsDismiss: closeAsDismissCheckbox.checked,
       displayUnreadCounts: displayUnreadCountsCheckbox.checked,
       displayUnreadPushes: displayUnreadPushesCheckbox.checked,
@@ -1515,6 +1552,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteraction: saveData.requireInteraction,
       requireInteractionPushes: saveData.requireInteractionPushes,
       requireInteractionMirrored: saveData.requireInteractionMirrored,
+      requireInteractionChats: saveData.requireInteractionChats,
       closeAsDismiss: saveData.closeAsDismiss,
       displayUnreadCounts: saveData.displayUnreadCounts,
       displayUnreadPushes: saveData.displayUnreadPushes,
@@ -1831,16 +1869,27 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteractionMirroredToggle.classList.remove('active');
     }
   }
+
+  function updateRequireInteractionChatsToggleVisual() {
+    if (requireInteractionChatsCheckbox.checked) {
+      requireInteractionChatsToggle.classList.add('active');
+    } else {
+      requireInteractionChatsToggle.classList.remove('active');
+    }
+  }
   
   function updateRequireInteractionVisibility() {
-    // Pushes/Mirrored subs show only while both the Show notifications master
-    // and Require interaction are on (they nest under Show notifications now).
+    // Pushes/Mirrored/Chats subs show only while both the Show notifications
+    // master and Require interaction are on (they nest under Show
+    // notifications now).
     if (showOsNotificationsCheckbox.checked && requireInteractionCheckbox.checked) {
       requireInteractionPushesContainer.style.display = 'flex';
       updateRequireInteractionMirroredVisibility();
+      updateRequireInteractionChatsVisibility();
     } else {
       requireInteractionPushesContainer.style.display = 'none';
       requireInteractionMirroredContainer.style.display = 'none';
+      requireInteractionChatsContainer.style.display = 'none';
     }
   }
   
@@ -1849,6 +1898,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteractionMirroredContainer.style.display = 'flex';
     } else {
       requireInteractionMirroredContainer.style.display = 'none';
+    }
+  }
+
+  function updateRequireInteractionChatsVisibility() {
+    // Chat gates its row the way mirroring gates the Mirrored row; the stored
+    // value is untouched while hidden.
+    if (showOsNotificationsCheckbox.checked && requireInteractionCheckbox.checked && isChatEnabled()) {
+      requireInteractionChatsContainer.style.display = 'flex';
+    } else {
+      requireInteractionChatsContainer.style.display = 'none';
     }
   }
   
