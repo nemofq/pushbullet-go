@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Zielauswahl pro Senden im Popup anzeigen"
   },
+  "enable_context_menu_label": {
+    "message": "Kontextmenü per Rechtsklick aktivieren"
+  },
   "all_devices": {
     "message": "Alle Geräte"
   },

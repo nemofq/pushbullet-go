@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Afișează selector de destinație per-trimitere în popup"
   },
+  "enable_context_menu_label": {
+    "message": "Activează meniul contextual la clic-dreapta"
+  },
   "all_devices": {
     "message": "Toate dispozitivele"
   },

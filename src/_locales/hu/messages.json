@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Céleszköz-választó megjelenítése a popup-ban"
   },
+  "enable_context_menu_label": {
+    "message": "Helyi menü engedélyezése jobb kattintással"
+  },
   "all_devices": {
     "message": "Minden eszköz"
   },

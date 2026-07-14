@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Mostrar seletor de destino por envio no popup"
   },
+  "enable_context_menu_label": {
+    "message": "Ativar menu de contexto do botão direito do mouse"
+  },
   "all_devices": {
     "message": "Todos os dispositivos"
   },

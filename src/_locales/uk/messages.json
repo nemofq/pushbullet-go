@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Показати вибір отримувача для кожного надсилання у спливаючому вікні"
   },
+  "enable_context_menu_label": {
+    "message": "Увімкнути контекстне меню правою кнопкою миші"
+  },
   "all_devices": {
     "message": "Усі пристрої"
   },

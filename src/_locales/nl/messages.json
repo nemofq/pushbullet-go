@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Doelkiezer per verzending in popup tonen"
   },
+  "enable_context_menu_label": {
+    "message": "Contextmenu bij rechtsklikken inschakelen"
+  },
   "all_devices": {
     "message": "Alle apparaten"
   },

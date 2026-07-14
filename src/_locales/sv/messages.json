@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Visa målväljare per sändning i popup"
   },
+  "enable_context_menu_label": {
+    "message": "Aktivera snabbmeny vid högerklick"
+  },
   "all_devices": {
     "message": "Alla enheter"
   },

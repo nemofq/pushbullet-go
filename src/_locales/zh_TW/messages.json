@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "在彈出視窗中顯示單次傳送目標選擇器"
   },
+  "enable_context_menu_label": {
+    "message": "啟用右鍵選單"
+  },
   "all_devices": {
     "message": "所有裝置"
   },

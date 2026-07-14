@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Mostra el selector de destinatari per enviament al popup"
   },
+  "enable_context_menu_label": {
+    "message": "Activa el menú contextual del clic dret"
+  },
   "all_devices": {
     "message": "Tots els dispositius"
   },

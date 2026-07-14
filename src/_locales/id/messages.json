@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Tampilkan pemilih tujuan per-pengiriman di popup"
   },
+  "enable_context_menu_label": {
+    "message": "Aktifkan menu konteks klik kanan"
+  },
   "all_devices": {
     "message": "Semua perangkat"
   },

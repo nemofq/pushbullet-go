@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Afficher le sélecteur de destination par envoi dans la popup"
   },
+  "enable_context_menu_label": {
+    "message": "Activer le menu contextuel du clic droit"
+  },
   "all_devices": {
     "message": "Tous les appareils"
   },

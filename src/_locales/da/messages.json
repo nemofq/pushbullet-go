@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Vis målvælger per send i popup"
   },
+  "enable_context_menu_label": {
+    "message": "Aktivér kontekstmenu ved højreklik"
+  },
   "all_devices": {
     "message": "Alle enheder"
   },

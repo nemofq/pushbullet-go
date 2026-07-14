@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "팝업에서 전송별 대상 선택기 표시"
   },
+  "enable_context_menu_label": {
+    "message": "마우스 오른쪽 버튼 메뉴 활성화"
+  },
   "all_devices": {
     "message": "모든 기기"
   },

@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Näytä kohdevalitsin ponnahdusikkunassa"
   },
+  "enable_context_menu_label": {
+    "message": "Ota käyttöön hiiren oikean painikkeen pikavalikko"
+  },
   "all_devices": {
     "message": "Kaikki laitteet"
   },

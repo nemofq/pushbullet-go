@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "إظهار محدد الهدف لكل إرسال في النافذة المنبثقة"
   },
+  "enable_context_menu_label": {
+    "message": "تفعيل قائمة النقر بزر الماوس الأيمن"
+  },
   "all_devices": {
     "message": "جميع الأجهزة"
   },

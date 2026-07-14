@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "แสดงตัวเลือกเป้าหมายต่อการส่งในป๊อปอัพ"
   },
+  "enable_context_menu_label": {
+    "message": "เปิดใช้งานเมนูคลิกขวา"
+  },
   "all_devices": {
     "message": "ทุกเครื่อง"
   },

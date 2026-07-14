@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Hiển thị bộ chọn đích mỗi lần gửi trong popup"
   },
+  "enable_context_menu_label": {
+    "message": "Bật menu chuột phải"
+  },
   "all_devices": {
     "message": "Tất cả thiết bị"
   },

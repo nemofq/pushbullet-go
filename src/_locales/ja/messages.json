@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "ポップアップに送信ごとのターゲット選択を表示"
   },
+  "enable_context_menu_label": {
+    "message": "右クリックメニューを有効にする"
+  },
   "all_devices": {
     "message": "すべてのデバイス"
   },

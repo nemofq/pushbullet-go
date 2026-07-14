@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Gönderim başına hedef seçiciyi popup'ta göster"
   },
+  "enable_context_menu_label": {
+    "message": "Sağ tık bağlam menüsünü etkinleştir"
+  },
   "all_devices": {
     "message": "Tüm cihazlar"
   },

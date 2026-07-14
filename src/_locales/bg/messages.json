@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Показвай избор на цел за всяко изпращане в popup"
   },
+  "enable_context_menu_label": {
+    "message": "Активиране на контекстното меню при десен клик"
+  },
   "all_devices": {
     "message": "Всички устройства"
   },

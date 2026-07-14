@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Mostra selettore destinazione per invio nel popup"
   },
+  "enable_context_menu_label": {
+    "message": "Attiva il menu contestuale del tasto destro"
+  },
   "all_devices": {
     "message": "Tutti i dispositivi"
   },

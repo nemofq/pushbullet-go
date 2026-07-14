@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Prikaži izbirnik cilja za vsako pošiljanje v popup"
   },
+  "enable_context_menu_label": {
+    "message": "Omogoči kontekstni meni ob desnem kliku"
+  },
   "all_devices": {
     "message": "Vse naprave"
   },

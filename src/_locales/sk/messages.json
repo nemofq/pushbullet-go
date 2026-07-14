@@ -317,6 +317,9 @@
   "show_per_send_target_label": {
     "message": "Zobraziť výber cieľa pre každé odoslanie v popup"
   },
+  "enable_context_menu_label": {
+    "message": "Povoliť kontextovú ponuku pravým tlačidlom myši"
+  },
   "all_devices": {
     "message": "Všetky zariadenia"
   },
