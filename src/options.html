@@ -155,6 +155,14 @@
       margin-bottom: 20px;
     }
 
+    /* Hairline that opens each sectioned group (a titled group, or a master
+       option with sub-options). Consecutive one-line options cluster without
+       a divider between them; the first group of each tab has none. */
+    .group-start {
+      border-top: 1px solid var(--border-primary);
+      padding-top: 18px;
+    }
+
     label {
       display: block;
       margin-bottom: 8px;
@@ -679,7 +687,7 @@
         <button id="retrieveDevices" class="retrieve-button" disabled data-i18n="retrieve_devices_button">Retrieve
           devices and people</button>
       </div>
-      <div class="form-group">
+      <div class="form-group group-start">
         <label data-i18n="target_devices_label">Send pushes to:</label>
         <div id="remoteDevicePicker" class="device-list"></div>
         <div class="tip" data-i18n="choose_devices_tip">
@@ -696,7 +704,7 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group group-start">
         <label data-i18n="only_notify_show_pushes_title">Show pushes</label>
         <div class="tip" data-i18n="show_pushes_tip">Applies to both the popup list and notifications.</div>
       </div>
@@ -804,7 +812,7 @@
       <div class="form-group" id="trustedPeopleGroup" style="display: none; margin-left: 24px;">
         <div id="trustedPeoplePicker" class="device-list"></div>
       </div>
-      <div class="toggle-container">
+      <div class="toggle-container group-start">
         <label class="toggle-label" data-i18n="show_os_notifications_label">Show notifications</label>
         <input type="checkbox" id="showOsNotifications" class="toggle-input">
         <div class="toggle-switch" id="showOsNotificationsToggle">
@@ -911,11 +919,11 @@
         <div class="tip" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your
           password is never stored. Must be the same on all devices.</div>
       </div>
-      <div class="form-group" id="defaultTabGroup">
+      <div class="form-group group-start" id="defaultTabGroup">
         <label data-i18n="default_tab_label">Default tab in popup:</label>
         <div id="defaultTabDropdown"></div>
       </div>
-      <div class="toggle-container">
+      <div class="toggle-container group-start">
         <label class="toggle-label" data-i18n="display_unread_counts_label">Display unread counts</label>
         <input type="checkbox" id="displayUnreadCounts" class="toggle-input">
         <div class="toggle-switch" id="displayUnreadCountsToggle">
@@ -952,7 +960,7 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="toggle-container">
+      <div class="toggle-container group-start">
         <label class="toggle-label" data-i18n="show_quick_share_label">Show quick share for current page</label>
         <input type="checkbox" id="showQuickShare" class="toggle-input">
         <div class="toggle-switch" id="showQuickShareToggle">
@@ -966,11 +974,11 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group group-start">
         <label data-i18n="language_label">Language:</label>
         <div id="languageList" class="device-list"></div>
       </div>
-      <div class="form-group">
+      <div class="form-group group-start">
         <label data-i18n="color_mode_label">Color Mode:</label>
         <div id="colorModeDropdown"></div>
       </div>
