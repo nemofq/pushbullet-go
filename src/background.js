@@ -713,12 +713,20 @@ async function ensureDeviceDataFromServer() {
 // timestamp so a burst of unknown-sender pushes triggers a single refetch.
 let lastPeopleRefreshAttempt = 0;
 
+// Bumped on every targeted local write to `people` (currently the mute
+// toggle). refreshPeopleFromServer snapshots it before fetching and discards
+// its response if the token moved while the request was in flight — a
+// wholesale write from a stale snapshot must never overwrite a newer local
+// fact; the next refresh, whose request post-dates the write, reconciles.
+let peopleWriteToken = 0;
+
 async function refreshPeopleFromServer() {
   if (Date.now() - lastPeopleRefreshAttempt < 60 * 1000) return;
   lastPeopleRefreshAttempt = Date.now();
 
   const token = await getAccessToken();
   if (!token) return;
+  const writeTokenAtFetch = peopleWriteToken;
 
   try {
     // ?active=true asks the server to omit deleted chats; the client-side
@@ -729,6 +737,9 @@ async function refreshPeopleFromServer() {
     if (!response.ok) return;
 
     const data = await response.json();
+    // A targeted write landed while this fetch was in flight: this response
+    // pre-dates it — discard instead of overwriting (see peopleWriteToken).
+    if (writeTokenAtFetch !== peopleWriteToken) return;
     const people = (data.chats || [])
       .filter(chat => chat.active === true)
       .map(trimChatToPerson);
@@ -749,8 +760,8 @@ async function maybeRefreshPeopleOnTabOpen() {
 }
 
 // Mute / unmute a person's chat (POST /v2/chats/{iden} {muted}). On success the
-// local people entry is updated immediately (the source of immediate UI truth),
-// then a server refresh is kicked off to confirm. Returns whether it succeeded.
+// local people entry is updated immediately from the POST response body — the
+// updated chat object, the post-mute truth. Returns whether it succeeded.
 async function setPersonMuted(iden, emailNormalized, muted) {
   const token = await getAccessToken();
   if (!token || !iden) return false;
@@ -766,13 +777,25 @@ async function setPersonMuted(iden, emailNormalized, muted) {
     });
     if (!response.ok) return false;
 
+    // The response body is the updated chat object — the post-mute truth —
+    // so apply it directly instead of refetching to confirm (the old confirm
+    // refetch was throttled into a no-op by the refresh's own 60s guard).
+    // Fall back to flipping the flag if the body ever lacks the shape.
+    let updatedPerson = null;
+    try {
+      const chat = await response.json();
+      if (chat && chat.with) updatedPerson = trimChatToPerson(chat);
+    } catch (e) {
+      // Body unusable; the flag-flip below covers it.
+    }
+
     const data = await chrome.storage.local.get('people');
     const people = (data.people || []).map(person =>
-      person.email_normalized === emailNormalized ? { ...person, muted: muted } : person);
+      person.email_normalized === emailNormalized
+        ? (updatedPerson || { ...person, muted: muted })
+        : person);
+    peopleWriteToken++;
     await chrome.storage.local.set({ people: people });
-    // Confirm against the server (throttled inside; the direct write above is
-    // the immediate truth either way).
-    refreshPeopleFromServer();
     return true;
   } catch (error) {
     console.error('Failed to set chat muted state:', error);
