@@ -1768,10 +1768,20 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error(window.CustomI18n.getMessage('no_access_token'));
       }
 
-      const targetDeviceIds = perSendTargetIdens.length
-        ? perSendTargetIdens.join(',')
-        : configData.remoteDeviceId;
-      await uploadPastedFile(file, tokenData.accessToken, targetDeviceIds);
+      // Conversation paste/drop: the file goes to this person only — the
+      // per-send picker and configured default do not apply here (the header
+      // names the recipient), matching the typed-send and Send File paths.
+      let target;
+      if (currentTab === 'chat' && chatView === 'conv' && currentPerson) {
+        target = { email: currentPerson.email_normalized };
+      } else if (perSendTargetIdens.length) {
+        target = { device_iden: perSendTargetIdens.join(',') };
+      } else if (configData.remoteDeviceId) {
+        target = { device_iden: configData.remoteDeviceId };
+      } else {
+        target = {};
+      }
+      await uploadPastedFile(file, tokenData.accessToken, target);
 
       bodyInput.placeholder = fileType.charAt(0).toUpperCase() + fileType.slice(1) + window.CustomI18n.getMessage('uploaded_successfully');
       setTimeout(() => {
@@ -1791,7 +1801,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  async function uploadPastedFile(file, accessToken, remoteDeviceId) {
+  async function uploadPastedFile(file, accessToken, target) {
     const uploadRequest = await fetch('https://api.pushbullet.com/v2/upload-request', {
       method: 'POST',
       headers: {
@@ -1834,8 +1844,11 @@ document.addEventListener('DOMContentLoaded', function() {
       file_url: uploadData.file_url
     };
 
-    if (remoteDeviceId) {
-      pushData.device_iden = remoteDeviceId;
+    if (target.device_iden) {
+      pushData.device_iden = target.device_iden;
+    }
+    if (target.email) {
+      pushData.email = target.email;
     }
 
     // Use the background script's sendPush function which handles multiple devices
