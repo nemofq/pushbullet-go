@@ -2209,7 +2209,7 @@ let chatCountOps = Promise.resolve();
 function updateChatUnreadCount() {
   const run = chatCountOps.then(async () => {
     try {
-      const data = await chrome.storage.local.get(['pushes', 'people', 'peopleLastRead', 'enableChat', 'chatAutoOpenedIdens', 'chatReadFloor']);
+      const data = await chrome.storage.local.get(['pushes', 'people', 'peopleLastRead', 'enableChat', 'chatAutoOpenedIdens', 'chatReadFloor', 'unreadChatCount']);
       const pushes = data.pushes || [];
       const people = data.people || [];
       const peopleLastRead = data.peopleLastRead || {};
@@ -2230,8 +2230,12 @@ function updateChatUnreadCount() {
         }
       }
 
-      await chrome.storage.local.set({ unreadChatCount: count });
-      await updateBadge();
+      // Skip the write + badge refresh when nothing changed — this recompute
+      // runs on every service-worker wake and most runs are no-ops.
+      if (count !== (data.unreadChatCount || 0)) {
+        await chrome.storage.local.set({ unreadChatCount: count });
+        await updateBadge();
+      }
     } catch (error) {
       console.error('Failed to update unread chat count:', error);
     }
@@ -2777,6 +2781,12 @@ async function clearPushHistory() {
     // badge, picking up unreadChatCount: 0 above) so an in-flight batch
     // increment can't overwrite it
     await clearUnreadPushCount();
+    // Converge the chat counter too: a recompute already in flight may have
+    // read the pre-clear pushes and would write a stale count back over the
+    // atomic zero above — this enqueued recompute runs after it and reads the
+    // emptied cache, so the cleared state always wins (same pattern as
+    // clearPersonHistory).
+    await updateChatUnreadCount();
     console.log('Push history cleared');
   } catch (error) {
     console.error('Failed to clear push history:', error);
