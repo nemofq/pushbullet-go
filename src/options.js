@@ -1455,8 +1455,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       // General settings
       accessToken: accessTokenToSave,
       remoteDeviceId: selectedRemoteDevices || '',
-      devices: devices,
-      people: people,
+      // devices/people are deliberately NOT saved here: they aren't settings,
+      // and every real writer (Retrieve, inline rename, the background
+      // refreshers) persists them itself. Writing this page's load-time
+      // snapshot would clobber runtime state (mute flags, entry upgrades).
       showPerSendTarget: showPerSendTargetCheckbox.checked,
       onlyBrowserPushes: onlyBrowserPushesCheckbox.checked,
       showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
@@ -1534,8 +1536,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 
     const localSaveData = {
-      devices: saveData.devices,
-      people: saveData.people,
       remoteDeviceId: saveData.remoteDeviceId,
       showPerSendTarget: saveData.showPerSendTarget,
       onlyBrowserPushes: saveData.onlyBrowserPushes,
@@ -1569,6 +1569,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       showOsNotifications: saveData.showOsNotifications,
       enableContextMenu: saveData.enableContextMenu
     };
+
+    // enableChat is only persisted once it means something: the user touched
+    // the toggle, or the account has people (so the checkbox shows a real
+    // state rather than the pre-seed default). A people-less, untouched Save
+    // must keep the key absent — an explicit false here would foreclose
+    // seedEnableChatDefault forever (and could overwrite a seed that landed
+    // while this page was open).
+    if (!enableChatTouched && people.length === 0) {
+      delete localSaveData.enableChat;
+    }
     
     // Save to both storages
     if (dropUserIden) {
