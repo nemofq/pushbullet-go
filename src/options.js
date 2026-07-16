@@ -28,8 +28,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   const showOtherDevicePushesToggle = document.getElementById('showOtherDevicePushesToggle');
   const showNoTargetPushesCheckbox = document.getElementById('showNoTargetPushes');
   const showNoTargetPushesToggle = document.getElementById('showNoTargetPushesToggle');
-  const showPeoplePushesCheckbox = document.getElementById('showPeoplePushes');
-  const showPeoplePushesToggle = document.getElementById('showPeoplePushesToggle');
   const hideBrowserPushesCheckbox = document.getElementById('hideBrowserPushes');
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
@@ -614,7 +612,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -726,10 +724,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     updateShowOtherDevicePushesToggleVisual();
     updateShowNoTargetPushesToggleVisual();
-
-    // Load pushes-from-people filter (default is true/on)
-    showPeoplePushesCheckbox.checked = data.showPeoplePushes !== false; // Default to true
-    updateShowPeoplePushesToggleVisual();
 
     // Load other device selections ('' or unset means all other devices,
     // which the checklist shows as its selected "All other devices" row)
@@ -910,11 +904,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   showNoTargetPushesToggle.addEventListener('click', function() {
     showNoTargetPushesCheckbox.checked = !showNoTargetPushesCheckbox.checked;
     updateShowNoTargetPushesToggleVisual();
-  });
-
-  showPeoplePushesToggle.addEventListener('click', function() {
-    showPeoplePushesCheckbox.checked = !showPeoplePushesCheckbox.checked;
-    updateShowPeoplePushesToggleVisual();
   });
 
   hideBrowserPushesToggle.addEventListener('click', function() {
@@ -1456,7 +1445,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
       selectedOtherDeviceIds: getSelectedOtherDeviceIds(),
       showNoTargetPushes: showNoTargetPushesCheckbox.checked,
-      showPeoplePushes: showPeoplePushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       autoOpenFiles: autoOpenFilesCheckbox.checked,
@@ -1537,7 +1525,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       showOtherDevicePushes: saveData.showOtherDevicePushes,
       selectedOtherDeviceIds: saveData.selectedOtherDeviceIds,
       showNoTargetPushes: saveData.showNoTargetPushes,
-      showPeoplePushes: saveData.showPeoplePushes,
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
       autoOpenFiles: saveData.autoOpenFiles,
@@ -1795,14 +1782,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       showNoTargetPushesToggle.classList.add('active');
     } else {
       showNoTargetPushesToggle.classList.remove('active');
-    }
-  }
-
-  function updateShowPeoplePushesToggleVisual() {
-    if (showPeoplePushesCheckbox.checked) {
-      showPeoplePushesToggle.classList.add('active');
-    } else {
-      showPeoplePushesToggle.classList.remove('active');
     }
   }
 

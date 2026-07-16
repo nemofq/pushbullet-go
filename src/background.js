@@ -445,10 +445,20 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
     });
   }
   // Recompute the derived chat unread count when any of its inputs change: the
-  // people list (membership + mute), the per-person read stamps the popup writes
-  // on opening a conversation, or the "Pushes from people" filter. Push arrivals
-  // are handled by the notify batch, and popup deletions by deletePush.
-  if (namespace === 'local' && (changes.people || changes.peopleLastRead || changes.showPeoplePushes)) {
+  // people list (membership + mute), or the per-person read stamps the popup
+  // writes on opening a conversation. Push arrivals are handled by the notify
+  // batch, and popup deletions by deletePush.
+  if (namespace === 'local' && (changes.people || changes.peopleLastRead)) {
+    await updateChatUnreadCount();
+  }
+  // Chat surface toggled. Enabling stamps a fresh read floor so people
+  // pushes that accumulated while Chat was off never badge retroactively
+  // (they were out of scope); the recompute then settles the count in
+  // both directions (to 0 on disable).
+  if (namespace === 'local' && changes.enableChat) {
+    if (changes.enableChat.newValue === true && changes.enableChat.oldValue !== true) {
+      await chrome.storage.local.set({ chatReadFloor: Date.now() / 1000 });
+    }
     await updateChatUnreadCount();
   }
   // Update badge when display settings change
@@ -493,7 +503,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendPush(message.data);
       return;
     case 'clear_unread_pushes':
-      handleClearUnreadPushes();
+      clearUnreadPushCount();
       return;
     case 'clear_unread_mirrors':
       markMirrorNotificationsRead();
@@ -1055,13 +1065,35 @@ async function handleReconnection() {
   }
 }
 
-// Classify a push by direction before it reaches the device-target buckets.
-// A people push is an incoming person-to-person push (channel and client pushes
-// can also be incoming, so they are excluded); an outgoing push was sent to a
-// person from some device and is conversation-only — never shown as received,
-// notified, or counted.
-const isPeoplePush = push => push.direction === 'incoming' && !push.channel_iden && !push.client_iden;
-const isOutgoingPush = push => push.direction === 'outgoing';
+// classifyPush(push) — the single classifier for every push. Consumers act
+// only on the tag they own; a tag they don't recognize is inert to them, so
+// ignored (and any future) kinds are skipped everywhere by construction.
+//
+//   'ignored'      — channel pushes. Unsupported: kept in the cache
+//                    (faithful server mirror), consumed by no surface.
+//   'people'       — a human wrote to me. sender_email_normalized is also
+//                    the conversation key, so every people push is
+//                    displayable by construction. Chat surface only, and
+//                    only while Chat is enabled.
+//   'conversation' — I wrote to a human (receiver key — the official
+//                    client's own gate). Sent bubble in that thread only;
+//                    never a Push-tab bubble, never notified, never counted.
+//   'device'       — my own device traffic (direction self, both
+//                    directions), app/OAuth-created pushes (incoming with
+//                    no human sender — e.g. this extension's own OAuth
+//                    sends), receiver-less outgoing, and any unforeseen
+//                    shape. Exactly the pre-Chat behavior: target buckets,
+//                    device notifications, push counter. Deliberate
+//                    fail-safe — a surprise shape behaves like v1.11; it
+//                    can never vanish and never impersonate a person.
+// keep in sync with the copy in popup.js
+function classifyPush(push) {
+  if (push.channel_iden) return 'ignored';
+  if (push.direction === 'self') return 'device';
+  if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
+  if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
+  return 'device'; // unknown direction — fail toward v1.11 visibility
+}
 
 // Refreshes run strictly one at a time. Overlapping runs (ws.onopen plus an
 // immediately-following tickle) would read the same lastModified/pushes
@@ -1142,14 +1174,14 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         // updates when a resume delivers many pushes at once.
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
-          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showPeoplePushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
           const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
           const people = localData.people || [];
 
           const pushesToNotify = newPushes.filter(push => {
-            // People and outgoing pushes are classified by direction, not by
-            // target device: keep them out of the device buckets below.
-            if (isPeoplePush(push) || isOutgoingPush(push)) {
+            // Only device-tagged pushes use these buckets; people, conversation,
+            // and ignored (channel) pushes never notify through this lane.
+            if (classifyPush(push) !== 'device') {
               return false;
             }
 
@@ -1201,58 +1233,59 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           });
 
           // People pushes: mirror-notification style, attributed to the sender.
-          // Shown and counted when the filter is on (default) and the sender's
-          // chat is not muted. Auto-opened (issue #66) only for senders in the
-          // trusted list, when the auto-open master + its people sub are on and
-          // the Chat surface is enabled — otherwise the auto-open arg stays off.
+          // Notified and counted while Chat is enabled and the sender's chat is
+          // not muted. Auto-opened (issue #66) only for senders in the trusted
+          // list, when the auto-open master + its people sub are on and the Chat
+          // surface is enabled — otherwise the auto-open arg stays off.
           const trustedPeople = (configData.autoOpenTrustedPeople || '').split(',').filter(Boolean);
           // undefined = not yet seeded, behaves as off; the background seeds
           // true once people first exist.
           const chatEnabled = configData.enableChat === true;
           const peopleTasks = [];
-          if (configData.showPeoplePushes !== false) {
-            for (const push of newPushes) {
-              if (!isPeoplePush(push)) continue;
-              const person = people.find(p => p.email_normalized === push.sender_email_normalized);
-              // muted = notifications from this chat will not be shown, so a
-              // muted push is neither notified nor counted (it is still stored
-              // and shown in the popup, which does not check muted). This skip
-              // also keeps muted senders out of the auto-open path below.
-              if (person && person.muted === true) continue;
-              // Unknown sender: refresh the chats list (throttled, fire-and-
-              // forget) so the new person is picked up; the notification
-              // meanwhile falls back to the push's own sender fields.
-              if (!person) refreshPeopleFromServer();
-              const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
-              // Unknown senders have no person record yet; synthesize one from
-              // the push's sender fields so getPersonIconDataUrl renders the same
-              // letter avatar the popup will show once the chats refresh lands.
-              const iconPerson = person || {
-                name: push.sender_name,
-                email: push.sender_email,
-                email_normalized: push.sender_email_normalized
-              };
-              const iconUrl = await getPersonIconDataUrl(iconPerson);
-              // Explicit trusted selection: only checked people auto-open. The
-              // Chat surface (chatEnabled above) gates it so a hidden option can
-              // never keep acting. Resume gating and
-              // hideNotificationOnAutoOpen compose exactly as the device path.
-              const autoOpenForPush = configData.autoOpenLinks
-                && configData.autoOpenLinksFromPeople
-                && chatEnabled
-                && trustedPeople.includes(push.sender_email_normalized);
-              // Keep the push alongside its task so a false result (auto-opened
-              // + hidden) can be traced back to the iden after the batch.
-              peopleTasks.push({
+          for (const push of newPushes) {
+            if (classifyPush(push) !== 'people') continue;
+            const person = people.find(p => p.email_normalized === push.sender_email_normalized);
+            // Unknown sender: refresh the chats list (throttled, fire-and-forget)
+            // even while Chat is off — this write is what lets
+            // seedEnableChatDefault flip Chat on when people first exist.
+            if (!person) refreshPeopleFromServer();
+            // Chat disabled: people pushes are out of scope — stored, but never
+            // notified, auto-opened, or counted.
+            if (!chatEnabled) continue;
+            // muted = notifications from this chat will not be shown, so a
+            // muted push is neither notified nor counted (it is still stored
+            // and shown in the popup, which does not check muted). This skip
+            // also keeps muted senders out of the auto-open path below.
+            if (person && person.muted === true) continue;
+            const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
+            // Unknown senders have no person record yet; synthesize one from
+            // the push's sender fields so getPersonIconDataUrl renders the same
+            // letter avatar the popup will show once the chats refresh lands.
+            const iconPerson = person || {
+              name: push.sender_name,
+              email: push.sender_email,
+              email_normalized: push.sender_email_normalized
+            };
+            const iconUrl = await getPersonIconDataUrl(iconPerson);
+            // Explicit trusted selection: only checked people auto-open. The
+            // Chat surface (chatEnabled above) gates it so a hidden option can
+            // never keep acting. Resume gating and
+            // hideNotificationOnAutoOpen compose exactly as the device path.
+            const autoOpenForPush = configData.autoOpenLinks
+              && configData.autoOpenLinksFromPeople
+              && chatEnabled
+              && trustedPeople.includes(push.sender_email_normalized);
+            // Keep the push alongside its task so a false result (auto-opened
+            // + hidden) can be traced back to the iden after the batch.
+            peopleTasks.push({
+              push,
+              promise: showNotificationForPush(
                 push,
-                promise: showNotificationForPush(
-                  push,
-                  autoOpenForPush && allowAutoOpenLinks,
-                  configData.hideNotificationOnAutoOpen || false,
-                  { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true }
-                )
-              });
-            }
+                autoOpenForPush && allowAutoOpenLinks,
+                configData.hideNotificationOnAutoOpen || false,
+                { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true }
+              )
+            });
           }
 
           // Device pushes feed the incremental push counter; people pushes are
@@ -1380,7 +1413,7 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
       // follow the Pushes switch (their gate before the split), so existing
       // setups keep persisting until the user saves an explicit choice.
       const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'requireInteractionChats', 'showOsNotifications']);
-      const requireForCategory = isPeoplePush(push)
+      const requireForCategory = classifyPush(push) === 'people'
         ? (notifPrefs.requireInteractionChats !== undefined
           ? notifPrefs.requireInteractionChats
           : notifPrefs.requireInteractionPushes)
@@ -2105,53 +2138,38 @@ async function clearUnreadPushCount() {
   return updateUnreadCount('unreadPushCount', () => 0);
 }
 
-// The Push tab was opened (clear_unread_pushes). Always reset the device push
-// counter. When Chat is disabled, people pushes live in the Push timeline
-// rather than a separate Chat surface, so opening the Push tab is also their
-// read event: stamp the chat read floor at now and recompute so the derived
-// chat count clears too. When Chat is enabled the Chat surface owns those reads
-// per-person (peopleLastRead), so the floor is left untouched here.
-async function handleClearUnreadPushes() {
-  await clearUnreadPushCount();
-  const data = await chrome.storage.local.get('enableChat');
-  if (data.enableChat !== true) {
-    await chrome.storage.local.set({ chatReadFloor: Date.now() / 1000 });
-    await updateChatUnreadCount();
-  }
-}
-
 // The unread chat count is derived, not bookkept — the same pattern the mirror
 // count uses (recomputeUnreadMirrorCount). It is the number of cached pushes
 // that are ALL of:
-//   - a people push: incoming and person-to-person (isPeoplePush)
+//   - tagged 'people' by classifyPush (a human wrote to me)
 //   - not dismissed (push.dismissed !== true)
 //   - from a sender present in the local people list
 //   - whose person is not muted (person.muted !== true)
-//   - allowed by the "Pushes from people" filter (showPeoplePushes !== false)
 //   - not a hidden trusted auto-open (push.iden ∉ chatAutoOpenedIdens)
 //   - newer than that sender's read stamp and the global chat read floor:
 //       push.created > max(peopleLastRead[sender] ?? 0, chatReadFloor ?? 0)
-// Counted regardless of enableChat — only the clearing surface differs by mode,
-// not the counting. Recomputed (never incremented), serialized through its own
-// promise-chain queue (mirror of unreadCountOps/mirrorStoreOps) so overlapping
-// recomputes can't interleave their read-modify-writes.
+// It is 0 whenever Chat is disabled — people pushes are out of scope then; the
+// enableChat onChanged branch below recomputes on toggle. Recomputed (never
+// incremented), serialized through its own promise-chain queue (mirror of
+// unreadCountOps/mirrorStoreOps) so overlapping recomputes can't interleave
+// their read-modify-writes.
 let chatCountOps = Promise.resolve();
 
 function updateChatUnreadCount() {
   const run = chatCountOps.then(async () => {
     try {
-      const data = await chrome.storage.local.get(['pushes', 'people', 'peopleLastRead', 'showPeoplePushes', 'chatAutoOpenedIdens', 'chatReadFloor']);
+      const data = await chrome.storage.local.get(['pushes', 'people', 'peopleLastRead', 'enableChat', 'chatAutoOpenedIdens', 'chatReadFloor']);
       const pushes = data.pushes || [];
       const people = data.people || [];
       const peopleLastRead = data.peopleLastRead || {};
       const autoOpenedIdens = data.chatAutoOpenedIdens || [];
       const floor = data.chatReadFloor ?? 0;
-      const showPeoplePushes = data.showPeoplePushes !== false;
+      const chatEnabled = data.enableChat === true;
 
       let count = 0;
-      if (showPeoplePushes) {
+      if (chatEnabled) {
         for (const push of pushes) {
-          if (!isPeoplePush(push)) continue;
+          if (classifyPush(push) !== 'people') continue;
           if (push.dismissed === true) continue;
           const person = people.find(p => p.email_normalized === push.sender_email_normalized);
           if (!person || person.muted === true) continue;

@@ -108,27 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!window.CustomI18n) return;
     document.querySelectorAll('[data-ts]').forEach(node => {
       const ts = window.CustomI18n.formatTimestamp(Number(node.dataset.ts));
+      node.textContent = ts.text;
       node.title = ts.title;
-      // Nodes carrying a sender/recipient caption (people-push timeline rows)
-      // keep it across refreshes; plain timestamp nodes just take the new text.
-      renderTimestampContent(node, ts.text, node.dataset.tsCaption);
     });
-  }
-
-  // Fill a message-timestamp node with either a bare relative time or a
-  // "<name> · time" caption line (people-push attribution). Caption text is set
-  // via textContent so user-supplied names can never inject markup.
-  function renderTimestampContent(node, tsText, caption) {
-    if (caption) {
-      node.replaceChildren();
-      const nameSpan = document.createElement('span');
-      nameSpan.className = 'ts-name';
-      nameSpan.textContent = caption;
-      node.appendChild(nameSpan);
-      node.appendChild(document.createTextNode(' · ' + tsText));
-    } else {
-      node.textContent = tsText;
-    }
   }
   setInterval(refreshTimestamps, 60000);
   
@@ -743,21 +725,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 16); // Optimized for smooth 60fps updates
   }
 
-  // Classify a push by direction (matches background.js): a people push is an
-  // incoming person-to-person push (channel/client pushes excluded); an
-  // outgoing push was sent to a person and belongs only to the conversation view.
-  const isPeoplePush = push => push.direction === 'incoming' && !push.channel_iden && !push.client_iden;
-  const isOutgoingPush = push => push.direction === 'outgoing';
+  // classifyPush(push) — the single classifier for every push. Consumers act
+  // only on the tag they own; a tag they don't recognize is inert to them, so
+  // ignored (and any future) kinds are skipped everywhere by construction.
+  //
+  //   'ignored'      — channel pushes. Unsupported: kept in the cache
+  //                    (faithful server mirror), consumed by no surface.
+  //   'people'       — a human wrote to me. sender_email_normalized is also
+  //                    the conversation key, so every people push is
+  //                    displayable by construction. Chat surface only, and
+  //                    only while Chat is enabled.
+  //   'conversation' — I wrote to a human (receiver key — the official
+  //                    client's own gate). Sent bubble in that thread only;
+  //                    never a Push-tab bubble, never notified, never counted.
+  //   'device'       — my own device traffic (direction self, both
+  //                    directions), app/OAuth-created pushes (incoming with
+  //                    no human sender — e.g. this extension's own OAuth
+  //                    sends), receiver-less outgoing, and any unforeseen
+  //                    shape. Exactly the pre-Chat behavior: target buckets,
+  //                    device notifications, push counter. Deliberate
+  //                    fail-safe — a surprise shape behaves like v1.11; it
+  //                    can never vanish and never impersonate a person.
+  // keep in sync with the copy in background.js
+  function classifyPush(push) {
+    if (push.channel_iden) return 'ignored';
+    if (push.direction === 'self') return 'device';
+    if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
+    if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
+    return 'device'; // unknown direction — fail toward v1.11 visibility
+  }
 
   // Shared bubble builder for both the main Push timeline and the conversation
   // view: builds one .message-row (timestamp line + note/link/file/image bubble
-  // + copy/delete buttons) from a push. `messageType` is 'received' | 'sent';
-  // `caption` (or null) is the sender/recipient attribution shown on the
-  // timestamp line — used by the main timeline for people pushes, always null in
-  // the conversation (its header already names the person). `scrollContainer` is
-  // scrolled to the bottom once an image bubble finishes loading. With a null
-  // caption the output is identical to the pre-extraction inline markup.
-  function buildMessageRow(push, messageType, caption, scrollContainer) {
+  // + copy/delete buttons) from a push. `messageType` is 'received' | 'sent'.
+  // `scrollContainer` is scrolled to the bottom once an image bubble finishes
+  // loading.
+  function buildMessageRow(push, messageType, scrollContainer) {
     const messageRowDiv = document.createElement('div');
     messageRowDiv.className = `message-row ${messageType}`;
 
@@ -767,10 +770,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const ts = window.CustomI18n.formatTimestamp(timestamp);
     timestampDiv.dataset.ts = timestamp;
     timestampDiv.title = ts.title;
-    if (caption) {
-      timestampDiv.dataset.tsCaption = caption;
-    }
-    renderTimestampContent(timestampDiv, ts.text, caption);
+    timestampDiv.textContent = ts.text;
 
     const messageContentDiv = document.createElement('div');
     messageContentDiv.className = 'message-content';
@@ -872,38 +872,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadMessages(preserveScrollTop = null) {
-    const [receivedData, sentData, configData, localData, peopleData] = await Promise.all([
+    const [receivedData, sentData, configData, localData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showPeoplePushes', 'enableChat']),
-      chrome.storage.local.get('chromeDeviceId'),
-      chrome.storage.local.get('people')
+      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes']),
+      chrome.storage.local.get('chromeDeviceId')
     ]);
-
-    // People lookup (by email_normalized) for the timestamp-line attribution
-    // captions on people pushes / sent-to-person messages.
-    const people = peopleData.people || [];
-    const peopleByEmail = new Map(people.map(p => [p.email_normalized, p]));
-
-    // undefined = not yet seeded, behaves as off; the background seeds true once
-    // people first exist.
-    // People pushes live in the Chat tab when it is enabled; the timeline only
-    // carries them (with captions) as a fallback when Chat is off.
-    const chatEnabled = configData.enableChat === true;
 
     // Get received messages (filtered by new flexible filtering settings)
     let receivedMessages = receivedData.pushes || [];
     receivedMessages = receivedMessages.filter(push => {
-      // Classify by direction before device bucketing: outgoing pushes belong
-      // only to the conversation view, and people pushes have their own filter
-      // (default on) instead of mis-bucketing as "no target device".
-      if (isOutgoingPush(push)) {
+      // Only device pushes belong to this timeline; people ('people'),
+      // sent-to-person ('conversation'), and channel ('ignored') pushes
+      // never render here.
+      if (classifyPush(push) !== 'device') {
         return false;
-      }
-      if (isPeoplePush(push)) {
-        // When Chat is on, received people pushes live only in the conversation.
-        if (chatEnabled) return false;
-        return configData.showPeoplePushes !== false; // Default is true
       }
 
       const targetDeviceIden = push.target_device_iden;
@@ -922,10 +905,11 @@ document.addEventListener('DOMContentLoaded', function() {
       return false;
     });
     
-    // Get sent messages. When Chat is on, entries addressed to a person
-    // (receiver_email) live only in the conversation, so drop them here.
-    const sentMessages = (sentData.sentMessages || []).filter(msg =>
-      !(chatEnabled && msg.receiver_email));
+    // Sent entries follow the same rule: only device-tagged sends (own
+    // token sends are 'self'; OAuth-created sends come back 'incoming'
+    // with no sender email) render here — conversation sends live only
+    // in their thread.
+    const sentMessages = (sentData.sentMessages || []).filter(msg => classifyPush(msg) === 'device');
     
     // Combine and sort by timestamp
     const allMessages = [
@@ -966,19 +950,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     allMessages.reverse().forEach(push => {
-      // People-push attribution on the timestamp line: incoming people pushes
-      // show the sender name; sent-to-person messages show "To <name>". Name
-      // resolves via the people list, then the push's own fields.
-      let caption = null;
-      if (push.messageType === 'received' && isPeoplePush(push)) {
-        const person = peopleByEmail.get(push.sender_email_normalized);
-        caption = (person && person.name) || push.sender_name || push.sender_email || null;
-      } else if (push.messageType === 'sent' && push.receiver_email) {
-        const person = peopleByEmail.get(push.receiver_email_normalized);
-        const name = (person && person.name) || push.receiver_email;
-        caption = window.CustomI18n.getMessage('to_person', [name]);
-      }
-      fragment.appendChild(buildMessageRow(push, push.messageType, caption, messagesList));
+      fragment.appendChild(buildMessageRow(push, push.messageType, messagesList));
     });
     
     // Replace content atomically to prevent flashing
@@ -1267,7 +1239,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // read on open. The while-open re-stamp path reuses this function and so
     // inherits the guard against the just-arrived push it re-stamps against.
     const newest = (data.pushes || []).reduce((max, p) => {
-      if (p.sender_email_normalized !== emailNormalized || p.direction !== 'incoming') return max;
+      if (classifyPush(p) !== 'people' || p.sender_email_normalized !== emailNormalized) return max;
       const t = p.created || 0;
       return t > max ? t : max;
     }, 0);
@@ -1320,7 +1292,10 @@ document.addEventListener('DOMContentLoaded', function() {
       let unreadCount = 0;
       const consider = item => {
         if (!key) return;
-        if (item.sender_email_normalized !== key && item.receiver_email_normalized !== key) return;
+        const kind = classifyPush(item);
+        const matchesPerson = (kind === 'people' && item.sender_email_normalized === key)
+          || (kind === 'conversation' && item.receiver_email_normalized === key);
+        if (!matchesPerson) return;
         const t = itemTime(item);
         if (t >= latestTime) { latestTime = t; latestItem = item; }
       };
@@ -1328,9 +1303,9 @@ document.addEventListener('DOMContentLoaded', function() {
         consider(push);
         // Unread-count predicate: matches the derived badge count minus the mute
         // clause — a muted person's count still shows here, but the badge excludes
-        // them. Each incoming, non-dismissed push not consumed by a hidden
+        // them. Each people-tagged, non-dismissed push not consumed by a hidden
         // auto-open and newer than the read threshold adds to the person's count.
-        if (push.sender_email_normalized === key && push.direction === 'incoming' &&
+        if (push.sender_email_normalized === key && classifyPush(push) === 'people' &&
             push.dismissed !== true && !autoOpenedIdens.includes(push.iden) &&
             itemTime(push) > readThreshold) {
           unreadCount++;
@@ -1462,8 +1437,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const pushes = pushesData.pushes || [];
     const sentMessages = sentData.sentMessages || [];
 
-    const matches = item =>
-      item.sender_email_normalized === key || item.receiver_email_normalized === key;
+    const matches = item => {
+      const kind = classifyPush(item);
+      return (kind === 'people' && item.sender_email_normalized === key)
+        || (kind === 'conversation' && item.receiver_email_normalized === key);
+    };
 
     // Merge pushes ∪ sentMessages, dedupe by iden (prefer the pushes copy — an
     // own send appears in both once the tickle lands), filter to this person.
@@ -1484,10 +1462,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const fragment = document.createDocumentFragment();
     merged.forEach(push => {
-      // incoming → received bubble; outgoing/self → sent bubble. No caption in
-      // the conversation — the header already names the person.
-      const messageType = push.direction === 'incoming' ? 'received' : 'sent';
-      fragment.appendChild(buildMessageRow(push, messageType, null, convMessages));
+      // people-tagged → received bubble; my own sends ('conversation') →
+      // sent bubble. No caption in the conversation — the header already
+      // names the person.
+      const messageType = classifyPush(push) === 'people' ? 'received' : 'sent';
+      fragment.appendChild(buildMessageRow(push, messageType, convMessages));
     });
     convMessages.replaceChildren(fragment);
 
