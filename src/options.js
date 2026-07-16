@@ -607,6 +607,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     return enableChatCheckbox.checked;
   }
 
+  // The Mirrored/Chats sub-switches only participate in the master's
+  // auto-disable while their surface is on — a hidden sub must not hold
+  // the master hostage. (Auto-ENABLE still seeds all subs: pre-setting a
+  // hidden sub just matches the default it will show with later.)
+  function applicableRequireInteractionSubs() {
+    const subs = [requireInteractionPushesCheckbox];
+    if (notificationMirroringCheckbox.checked) subs.push(requireInteractionMirroredCheckbox);
+    if (isChatEnabled()) subs.push(requireInteractionChatsCheckbox);
+    return subs;
+  }
+  function applicableDisplayUnreadSubs() {
+    const subs = [displayUnreadPushesCheckbox];
+    if (notificationMirroringCheckbox.checked) subs.push(displayUnreadMirroredCheckbox);
+    if (isChatEnabled()) subs.push(displayUnreadChatsCheckbox);
+    return subs;
+  }
+
   // Get data from both sync and local storage
   const syncData = await new Promise(resolve => {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
@@ -877,7 +894,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       updateDisplayUnreadMirroredToggleVisual();
       
       // Auto-disable main Display unread counts switch if all sub-switches are off
-      if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
+      if (applicableDisplayUnreadSubs().every(cb => !cb.checked)) {
         displayUnreadCountsCheckbox.checked = false;
         updateDisplayUnreadCountsToggleVisual();
         updateDisplayUnreadCountsVisibility();
@@ -963,7 +980,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateRequireInteractionPushesToggleVisual();
 
     // Auto-disable main switch if all sub-switches are off
-    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked && !requireInteractionChatsCheckbox.checked) {
+    if (applicableRequireInteractionSubs().every(cb => !cb.checked)) {
       requireInteractionCheckbox.checked = false;
       updateRequireInteractionToggleVisual();
       updateRequireInteractionVisibility();
@@ -975,7 +992,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateRequireInteractionMirroredToggleVisual();
 
     // Auto-disable main switch if all sub-switches are off
-    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked && !requireInteractionChatsCheckbox.checked) {
+    if (applicableRequireInteractionSubs().every(cb => !cb.checked)) {
       requireInteractionCheckbox.checked = false;
       updateRequireInteractionToggleVisual();
       updateRequireInteractionVisibility();
@@ -987,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateRequireInteractionChatsToggleVisual();
 
     // Auto-disable main switch if all sub-switches are off
-    if (!requireInteractionPushesCheckbox.checked && !requireInteractionMirroredCheckbox.checked && !requireInteractionChatsCheckbox.checked) {
+    if (applicableRequireInteractionSubs().every(cb => !cb.checked)) {
       requireInteractionCheckbox.checked = false;
       updateRequireInteractionToggleVisual();
       updateRequireInteractionVisibility();
@@ -1015,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // Auto-disable main switch if all sub-switches are off
-    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
+    if (applicableDisplayUnreadSubs().every(cb => !cb.checked)) {
       displayUnreadCountsCheckbox.checked = false;
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
@@ -1027,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDisplayUnreadPushesToggleVisual();
 
     // Auto-disable main switch if all sub-switches are off
-    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
+    if (applicableDisplayUnreadSubs().every(cb => !cb.checked)) {
       displayUnreadCountsCheckbox.checked = false;
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
@@ -1039,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDisplayUnreadMirroredToggleVisual();
 
     // Auto-disable main switch if all sub-switches are off
-    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
+    if (applicableDisplayUnreadSubs().every(cb => !cb.checked)) {
       displayUnreadCountsCheckbox.checked = false;
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
@@ -1051,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDisplayUnreadChatsToggleVisual();
 
     // Auto-disable main switch if all sub-switches are off
-    if (!displayUnreadPushesCheckbox.checked && !displayUnreadMirroredCheckbox.checked && !displayUnreadChatsCheckbox.checked) {
+    if (applicableDisplayUnreadSubs().every(cb => !cb.checked)) {
       displayUnreadCountsCheckbox.checked = false;
       updateDisplayUnreadCountsToggleVisual();
       updateDisplayUnreadCountsVisibility();
