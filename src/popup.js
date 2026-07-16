@@ -1989,17 +1989,32 @@ document.addEventListener('DOMContentLoaded', function() {
     if (areaName === 'local' && (changes.showPerSendTarget || changes.remoteDeviceId || changes.devices)) {
       initTargetSelector();
     }
-    if (areaName === 'local' && changes.people && currentTab === 'chat') {
-      // People list changed (mute/name/avatar upgrade, added/removed people):
-      // refresh the open conversation's person + timeline, or the list.
+    if (areaName === 'local' && changes.people) {
+      // People list changed (mute/name/avatar upgrade, added/removed people).
+      // The open conversation's person is re-resolved regardless of which tab
+      // is active, so a deletion landing while another tab is up can't leave
+      // a stale conversation to re-render later; rendering itself only
+      // happens while the Chat surface is visible.
       if (chatView === 'conv' && currentPerson) {
         const updated = (changes.people.newValue || []).find(p => p.email_normalized === currentPerson.email_normalized);
         if (updated) {
           currentPerson = updated;
-          refreshConversationHeader();
+          if (currentTab === 'chat') {
+            refreshConversationHeader();
+            renderConversation();
+          }
+        } else {
+          // The person vanished from the account's chats (deleted elsewhere):
+          // a conversation for them would be a dead shell — its mute bell
+          // targets a deleted chat iden and its header can never update.
+          // Fall back to the list, which re-renders without them.
+          chatView = 'list';
+          currentPerson = null;
+          if (currentTab === 'chat') {
+            updateChatView();
+          }
         }
-        renderConversation();
-      } else {
+      } else if (currentTab === 'chat') {
         renderPeopleList();
       }
     }
