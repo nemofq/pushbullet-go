@@ -1263,7 +1263,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           // not muted. Auto-opened (issue #66) only for senders in the trusted
           // list, when the auto-open master + its people sub are on and the Chat
           // surface is enabled — otherwise the auto-open arg stays off.
-          const trustedPeople = (configData.autoOpenTrustedPeople || '').split(',').filter(Boolean);
+          const trustedPeople = (configData.autoOpenTrustedPeople || '').split(',').map(e => e.trim()).filter(Boolean);
           // undefined = not yet seeded, behaves as off; the background seeds
           // true once people first exist.
           const chatEnabled = configData.enableChat === true;

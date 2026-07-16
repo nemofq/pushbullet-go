@@ -560,9 +560,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   const languageList = createSingleSelectList(document.getElementById('languageList'), LANGUAGE_OPTIONS);
   // Default-tab options track the enabled popup surfaces: Push is always
-  // available; Notification only while mirroring is on (Chat arrives in a later
-  // phase). Rebuilt via updateDefaultTabVisibility() when mirroring flips. The
-  // saved defaultTab is never rewritten when a surface is disabled.
+  // available; Chat while the Chat surface is enabled; Notification while
+  // mirroring is on. Rebuilt via updateDefaultTabVisibility() when either
+  // surface flips. The saved defaultTab is never rewritten when a surface is
+  // disabled.
   function defaultTabItems() {
     const items = [{ value: 'push', label: () => window.CustomI18n.getMessage('push_button') }];
     if (enableChatCheckbox.checked) {
