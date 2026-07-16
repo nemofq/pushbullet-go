@@ -1298,13 +1298,17 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
               email_normalized: push.sender_email_normalized
             };
             const iconUrl = await getPersonIconDataUrl(iconPerson);
-            // Explicit trusted selection: only checked people auto-open. The
-            // Chat surface (chatEnabled above) gates it so a hidden option can
-            // never keep acting. Resume gating and
+            // Explicit trusted selection: only checked people auto-open, and
+            // only while the sender is still in the chats list — deleting the
+            // chat revokes the grant the moment the local list refreshes (the
+            // options checklist can neither show nor edit a grant for a person
+            // who is gone). The Chat surface (chatEnabled above) gates it so a
+            // hidden option can never keep acting. Resume gating and
             // hideNotificationOnAutoOpen compose exactly as the device path.
             const autoOpenForPush = configData.autoOpenLinks
               && configData.autoOpenLinksFromPeople
               && chatEnabled
+              && !!person
               && trustedPeople.includes(push.sender_email_normalized);
             // Keep the push alongside its task so a false result (auto-opened
             // + hidden) can be traced back to the iden after the batch.
