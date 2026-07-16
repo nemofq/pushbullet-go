@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "動作"
   },
-  "show_people_pushes_label": {
-    "message": "ユーザーからのプッシュ"
-  },
   "auto_open_people_label": {
     "message": "ユーザーからのプッシュも自動的に開く"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "ミュート解除"
-  },
-  "to_person": {
-    "message": "$1へ"
   },
   "back_button_title": {
     "message": "戻る"

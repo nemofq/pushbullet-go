@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "동작"
   },
-  "show_people_pushes_label": {
-    "message": "사용자가 보낸 푸시"
-  },
   "auto_open_people_label": {
     "message": "사용자가 보낸 푸시도"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "음소거 해제"
-  },
-  "to_person": {
-    "message": "$1님에게"
   },
   "back_button_title": {
     "message": "뒤로"

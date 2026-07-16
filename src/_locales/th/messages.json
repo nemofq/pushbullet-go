@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "พฤติกรรม"
   },
-  "show_people_pushes_label": {
-    "message": "พุชจากบุคคล"
-  },
   "auto_open_people_label": {
     "message": "พุชจากบุคคลด้วย"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "เปิดเสียง"
-  },
-  "to_person": {
-    "message": "ถึง $1"
   },
   "back_button_title": {
     "message": "กลับ"

@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "Comportement"
   },
-  "show_people_pushes_label": {
-    "message": "Des personnes"
-  },
   "auto_open_people_label": {
     "message": "Aussi les pushs des personnes"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Réactiver le son"
-  },
-  "to_person": {
-    "message": "Vers $1"
   },
   "back_button_title": {
     "message": "Retour"

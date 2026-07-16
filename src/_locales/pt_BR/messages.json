@@ -368,9 +368,6 @@
   "mirror_encryption_text": {
     "message": "Configure sua senha de criptografia ponta a ponta para ver as notificações."
   },
-  "show_people_pushes_label": {
-    "message": "De pessoas"
-  },
   "behavior_tab": {
     "message": "Comportamento"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Dessilenciar"
-  },
-  "to_person": {
-    "message": "Para $1"
   },
   "back_button_title": {
     "message": "Voltar"

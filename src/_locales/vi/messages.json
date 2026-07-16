@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "Hành vi"
   },
-  "show_people_pushes_label": {
-    "message": "Từ người"
-  },
   "auto_open_people_label": {
     "message": "Cả push từ người"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Bật tiếng"
-  },
-  "to_person": {
-    "message": "Tới $1"
   },
   "back_button_title": {
     "message": "Quay lại"

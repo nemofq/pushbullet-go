@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "Comportamiento"
   },
-  "show_people_pushes_label": {
-    "message": "De personas"
-  },
   "auto_open_people_label": {
     "message": "También envíos de personas"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Reactivar"
-  },
-  "to_person": {
-    "message": "Para $1"
   },
   "back_button_title": {
     "message": "Atrás"

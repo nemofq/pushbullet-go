@@ -368,9 +368,6 @@
   "mirror_encryption_text": {
     "message": "Nakonfigurujte svoje heslo end-to-end šifrovania na zobrazenie oznámení."
   },
-  "show_people_pushes_label": {
-    "message": "Od ľudí"
-  },
   "behavior_tab": {
     "message": "Správanie"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Zrušiť stlmenie"
-  },
-  "to_person": {
-    "message": "Komu: $1"
   },
   "back_button_title": {
     "message": "Späť"

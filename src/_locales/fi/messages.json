@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "Toiminta"
   },
-  "show_people_pushes_label": {
-    "message": "Henkilöiltä"
-  },
   "auto_open_people_label": {
     "message": "Myös pushit henkilöiltä"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Poista mykistys"
-  },
-  "to_person": {
-    "message": "$1:lle"
   },
   "back_button_title": {
     "message": "Takaisin"

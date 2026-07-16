@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "Davranış"
   },
-  "show_people_pushes_label": {
-    "message": "Kişilerden gelen push'lar"
-  },
   "auto_open_people_label": {
     "message": "Kişilerden gelen bildirimleri de otomatik aç"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Sesi aç"
-  },
-  "to_person": {
-    "message": "$1'a"
   },
   "back_button_title": {
     "message": "Geri"

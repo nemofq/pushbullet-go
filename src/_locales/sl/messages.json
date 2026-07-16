@@ -371,9 +371,6 @@
   "behavior_tab": {
     "message": "Vedenje"
   },
-  "show_people_pushes_label": {
-    "message": "Od oseb"
-  },
   "auto_open_people_label": {
     "message": "Tudi pushes od oseb"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Prekliči utišanje"
-  },
-  "to_person": {
-    "message": "Za $1"
   },
   "back_button_title": {
     "message": "Nazaj"

@@ -359,9 +359,6 @@
   "pushes_without_target_label": {
     "message": "Sent to \"All devices\" (no target)"
   },
-  "show_people_pushes_label": {
-    "message": "From people"
-  },
   "delete_notification": {
     "message": "Delete notification"
   },
@@ -418,9 +415,6 @@
   },
   "rename_device_title": {
     "message": "Rename"
-  },
-  "to_person": {
-    "message": "To $1"
   },
   "back_button_title": {
     "message": "Back"

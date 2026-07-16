@@ -368,9 +368,6 @@
   "mirror_encryption_text": {
     "message": "Настройте свой пароль сквозного шифрования, чтобы увидеть уведомления."
   },
-  "show_people_pushes_label": {
-    "message": "Push от людей"
-  },
   "behavior_tab": {
     "message": "Поведение"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Включить звук"
-  },
-  "to_person": {
-    "message": "Кому: $1"
   },
   "back_button_title": {
     "message": "Назад"

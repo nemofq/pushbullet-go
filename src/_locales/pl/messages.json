@@ -368,9 +368,6 @@
   "mirror_encryption_text": {
     "message": "Skonfiguruj swoje hasło szyfrowania end-to-end, aby zobaczyć powiadomienia."
   },
-  "show_people_pushes_label": {
-    "message": "Od osób"
-  },
   "behavior_tab": {
     "message": "Zachowanie"
   },
@@ -406,9 +403,6 @@
   },
   "unmute_person_title": {
     "message": "Wyłącz wyciszenie"
-  },
-  "to_person": {
-    "message": "Do $1"
   },
   "back_button_title": {
     "message": "Wstecz"
