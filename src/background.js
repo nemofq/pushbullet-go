@@ -1252,6 +1252,11 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             // even while Chat is off — this write is what lets
             // seedEnableChatDefault flip Chat on when people first exist.
             if (!person) refreshPeopleFromServer();
+            // Already dismissed (device-lane parity, see the pushesToNotify
+            // filter): a remote dismissal bumps `modified` and can re-deliver
+            // an old push the cache no longer holds — it must be cached
+            // silently, never toasted, auto-opened, or counted.
+            if (push.dismissed === true) continue;
             // Chat disabled: people pushes are out of scope — stored, but never
             // notified, auto-opened, or counted.
             if (!chatEnabled) continue;
@@ -1323,6 +1328,12 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           }
 
           // Recompute the derived chat unread count once for the whole batch.
+          await updateChatUnreadCount();
+        } else if (newPushes.length > 0 || updatedPushes.length > 0) {
+          // The cache changed without the notify path running — update-only
+          // batches (e.g. remote dismissals streaming in) and non-tickle
+          // refreshes. Dismissed pushes must stop counting, so settle the
+          // derived chat count here too.
           await updateChatUnreadCount();
         }
       }
@@ -1901,8 +1912,18 @@ async function dismissPush(pushIden) {
     
     if (response.ok) {
       console.log('Push dismissed successfully');
-      // Decrement unread push count when successfully dismissed
-      await decrementUnreadPushCount();
+      // Route the counter side effect by category: device pushes decrement
+      // the incremental counter they were counted into. People pushes are
+      // counted by the derived chat recompute instead — their dismissal
+      // settles when the server's update echo lands (the updatedPushes
+      // recompute in doRefreshPushList), so decrementing here would eat an
+      // unrelated device unread. A cache miss (aged-out push) keeps the old
+      // decrement behavior.
+      const data = await chrome.storage.local.get('pushes');
+      const push = (data.pushes || []).find(p => p.iden === pushIden);
+      if (!push || classifyPush(push) !== 'people') {
+        await decrementUnreadPushCount();
+      }
     } else {
       console.error('Failed to dismiss push:', response.statusText);
     }
