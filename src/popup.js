@@ -1461,6 +1461,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const fragment = document.createDocumentFragment();
+    // Same clear-local-history affordance as the Push tab, scoped to this
+    // conversation (clear_person_history keeps every other chat's history).
+    const clearButton = document.createElement('button');
+    clearButton.className = 'clear-history-button';
+    clearButton.textContent = window.CustomI18n.getMessage('clear_push_history');
+    clearButton.onclick = () => {
+      chrome.runtime.sendMessage({ type: 'clear_person_history', email_normalized: key });
+    };
+    fragment.appendChild(clearButton);
     merged.forEach(push => {
       // people-tagged → received bubble; my own sends ('conversation') →
       // sent bubble. No caption in the conversation — the header already

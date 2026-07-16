@@ -511,6 +511,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'clear_push_history':
       clearPushHistory();
       return;
+    case 'clear_person_history':
+      clearPersonHistory(message.email_normalized);
+      return;
     case 'clear_mirror_history':
       clearMirrorHistory();
       return;
@@ -2729,6 +2732,32 @@ async function clearPushHistory() {
     console.log('Push history cleared');
   } catch (error) {
     console.error('Failed to clear push history:', error);
+  }
+}
+
+// Clear one conversation's local history — the per-person analogue of
+// clearPushHistory (popup button at the top of the conversation). Removes the
+// person's pushes and sent messages from the local caches only (the server is
+// never touched), then recomputes the derived chat count through its
+// serialized queue — other conversations' unreads must survive, so no atomic
+// zero here.
+async function clearPersonHistory(emailNormalized) {
+  if (!emailNormalized) return;
+  try {
+    const data = await chrome.storage.local.get(['pushes', 'sentMessages']);
+    const belongsToPerson = p => {
+      const kind = classifyPush(p);
+      return (kind === 'people' && p.sender_email_normalized === emailNormalized)
+        || (kind === 'conversation' && p.receiver_email_normalized === emailNormalized);
+    };
+    await chrome.storage.local.set({
+      pushes: (data.pushes || []).filter(p => !belongsToPerson(p)),
+      sentMessages: (data.sentMessages || []).filter(m => !belongsToPerson(m))
+    });
+    await updateChatUnreadCount();
+    console.log('Person history cleared:', emailNormalized);
+  } catch (error) {
+    console.error('Failed to clear person history:', error);
   }
 }
 
