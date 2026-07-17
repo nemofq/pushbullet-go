@@ -363,7 +363,7 @@
     "message": "Delete notification"
   },
   "copy_notification": {
-    "message": "Copy notification"
+    "message": "Copy text"
   },
   "delete_push": {
     "message": "Delete push"

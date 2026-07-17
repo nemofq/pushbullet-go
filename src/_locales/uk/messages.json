@@ -300,7 +300,7 @@
     "message": "Видалити сповіщення"
   },
   "copy_notification": {
-    "message": "Копіювати сповіщення"
+    "message": "Копіювати текст"
   },
   "delete_push": {
     "message": "Видалити push"

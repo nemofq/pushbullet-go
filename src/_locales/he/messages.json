@@ -300,7 +300,7 @@
     "message": "מחק התראה"
   },
   "copy_notification": {
-    "message": "העתק התראה"
+    "message": "העתק טקסט"
   },
   "delete_push": {
     "message": "מחק דחיפה"

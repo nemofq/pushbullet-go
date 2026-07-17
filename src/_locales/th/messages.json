@@ -300,7 +300,7 @@
     "message": "ลบการแจ้งเตือน"
   },
   "copy_notification": {
-    "message": "คัดลอกการแจ้งเตือน"
+    "message": "คัดลอกข้อความ"
   },
   "delete_push": {
     "message": "ลบ push"

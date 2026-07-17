@@ -300,7 +300,7 @@
     "message": "通知を削除"
   },
   "copy_notification": {
-    "message": "通知をコピー"
+    "message": "テキストをコピー"
   },
   "delete_push": {
     "message": "プッシュを削除"

@@ -300,7 +300,7 @@
     "message": "Supprimer la notification"
   },
   "copy_notification": {
-    "message": "Copier la notification"
+    "message": "Copier le texte"
   },
   "delete_push": {
     "message": "Supprimer le push"

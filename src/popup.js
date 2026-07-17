@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let lastConnectionStatus = null;
   let loadMessagesTimeout = null;
   let loadNotificationsTimeout = null;
+  let pendingNotificationsScrollTop = null;
   setInterval(updateConnectionStatus, 2000);
 
   retryButton.addEventListener('click', () => {
@@ -716,11 +717,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function debouncedLoadNotifications(preserveScrollTop = null) {
+    // One trailing-edge window can absorb several storage events; a "reveal
+    // new content" call (null) must not be downgraded by a later
+    // preserve-scroll call — an entry write and its thumbnail write land as
+    // separate events moments apart.
+    pendingNotificationsScrollTop = loadNotificationsTimeout && pendingNotificationsScrollTop === null
+      ? null
+      : preserveScrollTop;
     if (loadNotificationsTimeout) {
       clearTimeout(loadNotificationsTimeout);
     }
     loadNotificationsTimeout = setTimeout(() => {
-      loadNotifications(preserveScrollTop);
+      loadNotifications(pendingNotificationsScrollTop);
       loadNotificationsTimeout = null;
     }, 16); // Optimized for smooth 60fps updates
   }
@@ -969,8 +977,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadNotifications(preserveScrollTop = null) {
-    const data = await chrome.storage.local.get(['mirrorNotifications', 'mirrorDecryptIssue']);
+    const data = await chrome.storage.local.get(['mirrorNotifications', 'mirrorDecryptIssue', 'mirrorImages']);
     const notifications = data.mirrorNotifications || [];
+    const mirrorImages = data.mirrorImages || {};
 
     // Encrypted ephemerals are being dropped (missing or wrong encryption
     // password), so the list is frozen: show why, in place of stale entries,
@@ -1079,6 +1088,16 @@ document.addEventListener('DOMContentLoaded', function() {
         bodyDiv.className = 'notification-body';
         bodyDiv.textContent = notification.body;
         cardDiv.appendChild(bodyDiv);
+      }
+
+      // Big-picture thumbnail (if the background stored one for this entry)
+      const imageDataUrl = mirrorImages[notification.id];
+      if (imageDataUrl) {
+        const imageEl = document.createElement('img');
+        imageEl.className = 'notification-image';
+        imageEl.src = imageDataUrl;
+        imageEl.alt = '';
+        cardDiv.appendChild(imageEl);
       }
 
       // Actions section with verification code, copy and delete buttons
@@ -1944,15 +1963,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     }
-    if (areaName === 'local' && changes.mirrorNotifications) {
+    if (areaName === 'local' && (changes.mirrorNotifications || changes.mirrorImages)) {
       // Scroll to bottom only when new content arrived, i.e. a new or updated
       // entry at the front of the stored array; deletions and dismissed-flag
-      // writes (same entries, same order) keep the scroll position.
-      const oldLength = changes.mirrorNotifications.oldValue?.length || 0;
-      const newLength = changes.mirrorNotifications.newValue?.length || 0;
-      const oldFirst = changes.mirrorNotifications.oldValue?.[0];
-      const newFirst = changes.mirrorNotifications.newValue?.[0];
-      const hasNewContent = newLength >= oldLength && !!newFirst &&
+      // writes (same entries, same order) keep the scroll position. A thumbnail
+      // write lands moments after its entry write and is usually coalesced by
+      // the debounce; a thumbnail-only change keeps the scroll position.
+      const entryChange = changes.mirrorNotifications;
+      const oldLength = entryChange?.oldValue?.length || 0;
+      const newLength = entryChange?.newValue?.length || 0;
+      const oldFirst = entryChange?.oldValue?.[0];
+      const newFirst = entryChange?.newValue?.[0];
+      const hasNewContent = !!entryChange && newLength >= oldLength && !!newFirst &&
         (!oldFirst || newFirst.id !== oldFirst.id ||
           (newFirst.receivedAt ?? newFirst.created) !== (oldFirst.receivedAt ?? oldFirst.created));
 

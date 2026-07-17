@@ -1493,15 +1493,16 @@ const MIRROR_ICON_INSET = 0.06;
 // Cap the cached person avatars so the store can't grow without bound.
 const PERSON_AVATAR_CACHE_CAP = 50;
 
-// Encode an OffscreenCanvas to a PNG data URL. Shared tail of the circle-crop
-// and letter-avatar pipelines.
-async function canvasToPngDataUrl(canvas) {
-  const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
+// Encode an OffscreenCanvas to a data URL (PNG unless told otherwise). Shared
+// tail of the circle-crop, letter-avatar, and mirror-image thumbnail
+// pipelines.
+async function canvasToDataUrl(canvas, type = 'image/png', quality) {
+  const blob = await canvas.convertToBlob({ type, quality });
   return await new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
     reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(pngBlob);
+    reader.readAsDataURL(blob);
   });
 }
 
@@ -1525,7 +1526,7 @@ async function bitmapToCircleDataUrl(bitmap) {
   ctx.drawImage(bitmap, sx, sy, cropSquare, cropSquare, 0, 0, size, size);
   bitmap.close();
 
-  return await canvasToPngDataUrl(canvas);
+  return await canvasToDataUrl(canvas);
 }
 
 async function getMirrorIconDataUrl(iconBase64) {
@@ -1538,6 +1539,35 @@ async function getMirrorIconDataUrl(iconBase64) {
   } catch (e) {
     console.error('getMirrorIconDataUrl failed:', e);
     return `data:image/jpeg;base64,${iconBase64}`;
+  }
+}
+
+// Stored mirror-image thumbnails: longest-side cap and JPEG quality. Always
+// re-encoding (even when no downscale is needed) bounds every stored thumb to
+// tens of KB regardless of what the phone sends.
+const MIRROR_IMAGE_THUMB_MAX = 480;
+const MIRROR_IMAGE_THUMB_QUALITY = 0.75;
+// Thumbnails kept in mirrorImages (insertion order = recency).
+const MIRROR_IMAGE_CACHE_CAP = 20;
+
+async function getMirrorImageThumbDataUrl(imageBase64) {
+  try {
+    const resp = await fetch(`data:image/jpeg;base64,${imageBase64}`);
+    const blob = await resp.blob();
+    const bitmap = await createImageBitmap(blob);
+    const scale = Math.min(1, MIRROR_IMAGE_THUMB_MAX / Math.max(bitmap.width, bitmap.height));
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = new OffscreenCanvas(width, height);
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    bitmap.close();
+    return await canvasToDataUrl(canvas, 'image/jpeg', MIRROR_IMAGE_THUMB_QUALITY);
+  } catch (e) {
+    // Undecodable image: store no thumbnail; the toast path is unaffected.
+    console.error('getMirrorImageThumbDataUrl failed:', e);
+    return null;
   }
 }
 
@@ -1665,6 +1695,27 @@ function updateMirrorNotifications(mutate) {
   return run;
 }
 
+// mirrorImages ({ entryUuid: thumbnail dataUrl }, insertion order = recency) is
+// read-modify-write from the same concurrent entry points as
+// mirrorNotifications, so its ops ride the same queue. mutate() gets the
+// stored map and returns the next one, or falsy to skip the write.
+function updateMirrorImages(mutate) {
+  const run = mirrorStoreOps.then(async () => {
+    try {
+      const data = await chrome.storage.local.get('mirrorImages');
+      const images = data.mirrorImages || {};
+      const next = await mutate(images);
+      if (next) {
+        await chrome.storage.local.set({ mirrorImages: next });
+      }
+    } catch (error) {
+      console.error('Failed to update mirrorImages:', error);
+    }
+  });
+  mirrorStoreOps = run.catch(() => {});
+  return run;
+}
+
 // The unread mirror count is derived, not bookkept: the number of entries
 // with activity newer than the last time the popup's notifications tab was
 // opened, excluding dismissed ones. Recomputed inside the queue after every
@@ -1705,6 +1756,14 @@ async function handleMirrorNotification(mirrorData) {
     return;
   }
 
+  // Mirrors of big-picture notifications carry an undocumented `image` field
+  // (base64 JPEG, sibling of `icon`) that official clients send and consume.
+  // It stays out of notificationData: entries are persisted a hundred deep, so
+  // the raw payload is never stored — only a bounded thumbnail, keyed by entry
+  // UUID in mirrorImages.
+  const imageBase64 = typeof mirrorData.image === 'string' && mirrorData.image ? mirrorData.image : null;
+  const imageThumb = imageBase64 ? await getMirrorImageThumbDataUrl(imageBase64) : null;
+
   // Extract needed fields for storage
   const notificationData = {
     id: crypto.randomUUID(), // Generate unique ID for reliable deletion
@@ -1741,6 +1800,7 @@ async function handleMirrorNotification(mirrorData) {
   // entries stay in the list as history; their Android slot starts over as a
   // new entry.
   let isUpdate = false;
+  let keptIds;
   await updateMirrorNotifications((notifications) => {
     const existingIndex = notifications.findIndex(n => isSameMirrorNotification(n, notificationData));
     if (existingIndex !== -1 && !notifications[existingIndex].dismissed) {
@@ -1749,14 +1809,40 @@ async function handleMirrorNotification(mirrorData) {
       isUpdate = true;
     }
     notifications.unshift(notificationData);
-    return notifications.slice(0, 100);
+    const next = notifications.slice(0, 100);
+    keptIds = new Set(next.map(n => n.id));
+    return next;
   });
 
+  // Maintain the thumbnail map when there is one to write, or when an
+  // in-place update must drop a stale one (a re-posted notification without a
+  // picture must not keep showing the old picture).
+  if (imageThumb || isUpdate) {
+    await updateMirrorImages((images) => {
+      const next = { ...images };
+      // Entries evicted from the 100-entry history must not leak thumbnails.
+      for (const id of Object.keys(next)) {
+        if (keptIds && !keptIds.has(id)) {
+          delete next[id];
+        }
+      }
+      delete next[notificationData.id];
+      if (imageThumb) {
+        next[notificationData.id] = imageThumb;
+        const ids = Object.keys(next);
+        for (const id of ids.slice(0, Math.max(0, ids.length - MIRROR_IMAGE_CACHE_CAP))) {
+          delete next[id];
+        }
+      }
+      return next;
+    });
+  }
+
   // Create or replace Chrome notification
-  await showMirrorNotification(notificationData, isUpdate);
+  await showMirrorNotification(notificationData, isUpdate, imageBase64);
 }
 
-async function showMirrorNotification(notificationData, isUpdate = false) {
+async function showMirrorNotification(notificationData, isUpdate = false, imageBase64 = null) {
   const appName = notificationData.application_name || notificationData.package_name || getMessage('unknown_app');
 
   let message = '';
@@ -1768,10 +1854,13 @@ async function showMirrorNotification(notificationData, isUpdate = false) {
   }
 
   const notificationOptions = {
-    type: 'basic',
+    type: imageBase64 ? 'image' : 'basic',
     title: appName,
     message: message.trim() || getMessage('new_notification')
   };
+  if (imageBase64) {
+    notificationOptions.imageUrl = `data:image/jpeg;base64,${imageBase64}`;
+  }
 
   const processedIconUrl = await getMirrorIconDataUrl(notificationData.icon);
   notificationOptions.iconUrl = processedIconUrl || 'assets/icon128.png';
@@ -1801,7 +1890,16 @@ async function showMirrorNotification(notificationData, isUpdate = false) {
       // show nothing at all once the old toast is gone.
       await chrome.notifications.clear(notificationId);
     }
-    chrome.notifications.create(notificationId, notificationOptions);
+    chrome.notifications.create(notificationId, notificationOptions, () => {
+      // A corrupt or oversized image may fail create() outright; it must
+      // degrade the toast to the plain form, never suppress it.
+      if (chrome.runtime.lastError && notificationOptions.type === 'image') {
+        console.warn('Image toast rejected, retrying as basic:', chrome.runtime.lastError.message);
+        const fallbackOptions = { ...notificationOptions, type: 'basic' };
+        delete fallbackOptions.imageUrl;
+        chrome.notifications.create(notificationId, fallbackOptions, () => void chrome.runtime.lastError);
+      }
+    });
   }
 
   // Play alert sound
@@ -2821,6 +2919,7 @@ async function clearPersonHistory(emailNormalized) {
 
 async function clearMirrorHistory() {
   await updateMirrorNotifications(() => []);
+  await updateMirrorImages(() => ({}));
   console.log('Mirror notification history cleared');
 }
 
@@ -2828,6 +2927,14 @@ async function deleteNotification(id) {
   // Filter out the notification with the matching unique ID
   await updateMirrorNotifications(notifications =>
     notifications.filter(notification => notification.id !== id));
+  await updateMirrorImages((images) => {
+    if (!(id in images)) {
+      return null;
+    }
+    const next = { ...images };
+    delete next[id];
+    return next;
+  });
   console.log('Notification deleted:', id);
 }
 

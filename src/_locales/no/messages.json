@@ -300,7 +300,7 @@
     "message": "Slett varsel"
   },
   "copy_notification": {
-    "message": "Kopier varsel"
+    "message": "Kopier tekst"
   },
   "delete_push": {
     "message": "Slett push"

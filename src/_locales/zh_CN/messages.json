@@ -300,7 +300,7 @@
     "message": "删除通知"
   },
   "copy_notification": {
-    "message": "复制通知"
+    "message": "复制文本"
   },
   "delete_push": {
     "message": "删除推送"

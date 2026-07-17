@@ -300,7 +300,7 @@
     "message": "알림 삭제"
   },
   "copy_notification": {
-    "message": "알림 복사"
+    "message": "텍스트 복사"
   },
   "delete_push": {
     "message": "푸시 삭제"

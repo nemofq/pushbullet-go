@@ -300,7 +300,7 @@
     "message": "حذف الإشعار"
   },
   "copy_notification": {
-    "message": "نسخ الإشعار"
+    "message": "نسخ النص"
   },
   "delete_push": {
     "message": "حذف الإرسال"

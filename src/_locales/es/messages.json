@@ -300,7 +300,7 @@
     "message": "Eliminar notificación"
   },
   "copy_notification": {
-    "message": "Copiar notificación"
+    "message": "Copiar texto"
   },
   "delete_push": {
     "message": "Eliminar envío"
