@@ -1655,7 +1655,10 @@ async function getPersonIconDataUrl(person) {
   }
 
   try {
-    const resp = await fetch(person.image_url);
+    // Time-bound the request (headers and body both): the people notify loop
+    // awaits this before the batch's device toasts are created, so a hung
+    // download must fail fast rather than stall the notification queue.
+    const resp = await fetch(person.image_url, { signal: AbortSignal.timeout(5000) });
     if (!resp.ok) throw new Error(`avatar fetch failed: ${resp.status}`);
     const blob = await resp.blob();
     const bitmap = await createImageBitmap(blob);
@@ -1663,8 +1666,14 @@ async function getPersonIconDataUrl(person) {
     await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, dataUrl });
     return dataUrl;
   } catch (e) {
-    // Negative-cache this image_url so it is not retried (or re-logged) until it
-    // changes, then fall back to the default avatar.
+    // A timeout is transient: fall back for this batch but skip the negative
+    // cache so the photo is retried on the next notification.
+    if (e && e.name === 'TimeoutError') {
+      return PERSON_FALLBACK_ICON;
+    }
+    // Everything else (non-ok, network, decode): negative-cache this image_url
+    // so it is not retried (or re-logged) until it changes, then fall back to
+    // the default avatar.
     await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, failed: true });
     return PERSON_FALLBACK_ICON;
   }
