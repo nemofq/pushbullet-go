@@ -805,7 +805,7 @@ async function setPersonMuted(iden, emailNormalized, muted) {
 
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
-  const localData = await chrome.storage.local.get(['lastModified', 'lastMirrorReadTime', 'chatReadFloor']);
+  const localData = await chrome.storage.local.get(['lastModified', 'lastMirrorReadTime', 'chatReadFloor', 'people', 'lastPeopleFetch']);
   accessToken = data.accessToken;
 
   // Restore lastModified from storage to survive extension restarts
@@ -857,6 +857,16 @@ async function initializeExtension() {
   ensureDeviceDataFromServer().catch(error => {
     console.error('Failed to ensure device data:', error);
   });
+
+  // One-time people refresh for installs whose stored records predate the
+  // wide people trim ({email_normalized, name} only — no muted flag, so
+  // server-side mutes would go unhonored until a manual Chat-tab open).
+  // lastPeopleFetch is stamped only on a successful fetch, so this retries
+  // across startups until one lands, then never fires again. Fire-and-forget —
+  // must not delay connection setup.
+  if ((localData.people || []).length > 0 && localData.lastPeopleFetch === undefined) {
+    refreshPeopleFromServer();
+  }
 }
 
 
