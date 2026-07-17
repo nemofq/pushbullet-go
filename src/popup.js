@@ -529,8 +529,12 @@ document.addEventListener('DOMContentLoaded', function() {
     quickShareSend.disabled = true;
 
     setTimeout(() => {
-      // Hide the quick share element after sending
+      // Hide the quick share element after sending, and restore the button so
+      // a later re-show (returning from another tab re-runs checkQuickShare)
+      // offers a working Send again instead of the spent checkmark.
       quickShareContainer.style.display = 'none';
+      quickShareSend.textContent = originalText;
+      quickShareSend.disabled = false;
     }, 1500);
   }
 
@@ -538,6 +542,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sendForm = document.querySelector('.send-form');
     const clearNotificationsBar = document.getElementById('clearNotificationsBar');
 
+    const tabChanged = currentTab !== tab;
     currentTab = tab;
 
     if (tab === 'chat') {
@@ -568,8 +573,12 @@ document.addEventListener('DOMContentLoaded', function() {
       // Restore the per-send target chip a conversation may have force-hidden.
       targetControl.hidden = !targetChipEnabled;
       // Restore the quick-share bar the Chat surface hid (shows only when
-      // enabled + on a shareable page).
-      checkQuickShare();
+      // enabled + on a shareable page). Only on a real switch: re-entrant
+      // calls (the disconnected status tick forces this tab every 2s) must
+      // not re-query the active tab or resurrect the bar after a send.
+      if (tabChanged) {
+        checkQuickShare();
+      }
 
 
       // Clear unread push count when pushes tab is opened
