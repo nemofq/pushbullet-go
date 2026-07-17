@@ -81,7 +81,7 @@
     "message": "Obtenido"
   },
   "target_devices_label": {
-    "message": "Dispositivos destino predeterminados:"
+    "message": "Enviar envíos a:"
   },
   "choose_devices_tip": {
     "message": "El destino predeterminado para los envíos desde el popup, el menú contextual y el atajo de teclado."
@@ -285,22 +285,22 @@
     "message": "Error de OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Solo notificar y mostrar envíos para lo siguiente"
+    "message": "Mostrar envíos"
   },
   "current_chrome_devices_label": {
-    "message": "Dispositivo actual - Chrome(s)"
+    "message": "Enviados a este Chrome"
   },
   "other_devices_label": {
-    "message": "Otros dispositivos"
+    "message": "Enviados a otros dispositivos"
   },
   "pushes_without_target_label": {
-    "message": "Envíos sin dispositivo destino"
+    "message": "Enviados a «Todos los dispositivos» (sin destino)"
   },
   "delete_notification": {
     "message": "Eliminar notificación"
   },
   "copy_notification": {
-    "message": "Copiar notificación"
+    "message": "Copiar texto"
   },
   "delete_push": {
     "message": "Eliminar envío"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Mostrar selector de destino por envío en el popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Activar menú contextual del clic derecho"
   },
   "all_devices": {
     "message": "Todos los dispositivos"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configura tu contraseña de cifrado extremo a extremo para ver las notificaciones."
+  },
+  "behavior_tab": {
+    "message": "Comportamiento"
+  },
+  "auto_open_people_label": {
+    "message": "También envíos de personas"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Habilitar chat con personas"
+  },
+  "no_people_yet": {
+    "message": "Aún no hay personas"
+  },
+  "manage_people_tip": {
+    "message": "Agrega, elimina o bloquea personas en"
+  },
+  "no_pushes_with_person": {
+    "message": "Aún no hay envíos con $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Aún no hay envíos"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Aún no está en Pushbullet — los envíos llegan por correo electrónico."
+  },
+  "person_muted_title": {
+    "message": "Silenciado"
+  },
+  "mute_person_title": {
+    "message": "Silenciar"
+  },
+  "unmute_person_title": {
+    "message": "Reactivar"
+  },
+  "back_button_title": {
+    "message": "Atrás"
+  },
+  "person_avatar_alt": {
+    "message": "Foto de perfil"
+  },
+  "auto_open_files_label": {
+    "message": "También envíos de archivos (imágenes)"
+  },
+  "rename_device_title": {
+    "message": "Renombrar"
+  },
+  "chats_label": {
+    "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "Se aplica tanto a la lista del popup como a las notificaciones."
   }
 }

@@ -81,7 +81,7 @@
     "message": "تم الاسترجاع"
   },
   "target_devices_label": {
-    "message": "الأجهزة المستهدفة الافتراضية:"
+    "message": "إرسال الإرسالات إلى:"
   },
   "choose_devices_tip": {
     "message": "الهدف الافتراضي للإرسالات التي ترسلها - من النافذة المنبثقة، وقائمة النقر بزر الأيمن، واختصار لوحة المفاتيح."
@@ -285,22 +285,22 @@
     "message": "خطأ OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "إشعار وعرض الإرسالات فقط للتالي"
+    "message": "إظهار الإرسالات"
   },
   "current_chrome_devices_label": {
-    "message": "الجهاز الحالي - Chrome(s)"
+    "message": "الإرسالات إلى هذا Chrome"
   },
   "other_devices_label": {
-    "message": "الأجهزة الأخرى"
+    "message": "الإرسالات إلى الأجهزة الأخرى"
   },
   "pushes_without_target_label": {
-    "message": "الإرسالات بدون جهاز مستهدف"
+    "message": "الإرسالات إلى «جميع الأجهزة» (بدون جهاز مستهدف)"
   },
   "delete_notification": {
     "message": "حذف الإشعار"
   },
   "copy_notification": {
-    "message": "نسخ الإشعار"
+    "message": "نسخ النص"
   },
   "delete_push": {
     "message": "حذف الإرسال"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "إظهار محدد الهدف لكل إرسال في النافذة المنبثقة"
+  },
+  "enable_context_menu_label": {
+    "message": "تفعيل قائمة النقر بزر الماوس الأيمن"
   },
   "all_devices": {
     "message": "جميع الأجهزة"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "قم بإعداد كلمة مرور التشفير الشامل لرؤية الإشعارات."
+  },
+  "behavior_tab": {
+    "message": "السلوك"
+  },
+  "auto_open_people_label": {
+    "message": "أيضًا الإرسالات من الأشخاص"
+  },
+  "chat_tab": {
+    "message": "الدردشة"
+  },
+  "enable_chat_label": {
+    "message": "تفعيل الدردشة مع الأشخاص"
+  },
+  "no_people_yet": {
+    "message": "لا يوجد أشخاص بعد"
+  },
+  "manage_people_tip": {
+    "message": "أضف الأشخاص أو احذفهم أو احظرهم في"
+  },
+  "no_pushes_with_person": {
+    "message": "لا توجد إرسالات مع $1 بعد"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "لا توجد إرسالات بعد"
+  },
+  "person_not_on_pushbullet": {
+    "message": "ليس على Pushbullet بعد — تصل الإرسالات عبر البريد الإلكتروني."
+  },
+  "person_muted_title": {
+    "message": "مكتوم"
+  },
+  "mute_person_title": {
+    "message": "كتم"
+  },
+  "unmute_person_title": {
+    "message": "إلغاء الكتم"
+  },
+  "back_button_title": {
+    "message": "رجوع"
+  },
+  "person_avatar_alt": {
+    "message": "صورة الملف الشخصي"
+  },
+  "auto_open_files_label": {
+    "message": "أيضًا إرسالات الملفات (الصور)"
+  },
+  "rename_device_title": {
+    "message": "إعادة تسمية"
+  },
+  "chats_label": {
+    "message": "الدردشات"
+  },
+  "show_pushes_tip": {
+    "message": "ينطبق على كل من قائمة الإرسالات في النافذة المنبثقة والإشعارات."
   }
 }

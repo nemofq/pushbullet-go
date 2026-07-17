@@ -81,7 +81,7 @@
     "message": "Recuperato"
   },
   "target_devices_label": {
-    "message": "Dispositivi di destinazione predefiniti:"
+    "message": "Invia push a:"
   },
   "choose_devices_tip": {
     "message": "La destinazione predefinita per i push che invii - dal popup, dal menu contestuale e dalla scorciatoia da tastiera."
@@ -285,22 +285,22 @@
     "message": "Errore OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Notifica e mostra push solo per i seguenti"
+    "message": "Mostra push"
   },
   "current_chrome_devices_label": {
-    "message": "Dispositivo corrente - Chrome(s)"
+    "message": "inviati a questo Chrome"
   },
   "other_devices_label": {
-    "message": "Altri dispositivi"
+    "message": "inviati ad altri dispositivi"
   },
   "pushes_without_target_label": {
-    "message": "Push senza dispositivo di destinazione"
+    "message": "inviati a «Tutti i dispositivi» (nessuna destinazione)"
   },
   "delete_notification": {
     "message": "Elimina notifica"
   },
   "copy_notification": {
-    "message": "Copia notifica"
+    "message": "Copia testo"
   },
   "delete_push": {
     "message": "Elimina push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Mostra selettore destinazione per invio nel popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Attiva il menu contestuale del tasto destro"
   },
   "all_devices": {
     "message": "Tutti i dispositivi"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configura la tua password di crittografia end-to-end per vedere le notifiche."
+  },
+  "behavior_tab": {
+    "message": "Comportamento"
+  },
+  "auto_open_people_label": {
+    "message": "Anche i push dalle persone"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Abilita Chat con le persone"
+  },
+  "no_people_yet": {
+    "message": "Nessuna persona"
+  },
+  "manage_people_tip": {
+    "message": "Aggiungi, rimuovi o blocca persone su"
+  },
+  "no_pushes_with_person": {
+    "message": "Nessun push con $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Nessun push"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Non è ancora su Pushbullet — i push arrivano via email."
+  },
+  "person_muted_title": {
+    "message": "Silenziato"
+  },
+  "mute_person_title": {
+    "message": "Silenzia"
+  },
+  "unmute_person_title": {
+    "message": "Riattiva"
+  },
+  "back_button_title": {
+    "message": "Indietro"
+  },
+  "person_avatar_alt": {
+    "message": "Immagine del profilo"
+  },
+  "auto_open_files_label": {
+    "message": "Anche i push dei file (immagini)"
+  },
+  "rename_device_title": {
+    "message": "Rinomina"
+  },
+  "chats_label": {
+    "message": "Chat"
+  },
+  "show_pushes_tip": {
+    "message": "Si applica sia all'elenco del popup che alle notifiche."
   }
 }

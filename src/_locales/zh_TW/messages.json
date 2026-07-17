@@ -81,7 +81,7 @@
     "message": "獲取完成"
   },
   "target_devices_label": {
-    "message": "預設目標裝置："
+    "message": "傳送推送至："
   },
   "choose_devices_tip": {
     "message": "您透過彈出視窗、右鍵選單或鍵盤快速鍵傳送推送時的預設目標裝置。"
@@ -231,7 +231,7 @@
     "message": "將目前頁面網址傳送至選定的裝置"
   },
   "require_interaction_label": {
-    "message": "需要互動才能隱藏Chrome通知"
+    "message": "需要互動才能隱藏 Chrome 通知"
   },
   "pushes_label": {
     "message": "推送"
@@ -240,7 +240,7 @@
     "message": "鏡像通知"
   },
   "close_as_dismiss_label": {
-    "message": "將Chrome通知的原生關閉視為拒絕操作"
+    "message": "將 Chrome 通知的原生關閉視為拒絕操作"
   },
   "display_unread_counts_label": {
     "message": "顯示未讀計數"
@@ -285,22 +285,22 @@
     "message": "OAuth 錯誤："
   },
   "only_notify_show_pushes_title": {
-    "message": "僅通知和顯示以下推送"
+    "message": "顯示推送"
   },
   "current_chrome_devices_label": {
-    "message": "目前裝置 - Chrome(s)"
+    "message": "傳送到此 Chrome 的推送"
   },
   "other_devices_label": {
-    "message": "其他裝置"
+    "message": "傳送到其他裝置的推送"
   },
   "pushes_without_target_label": {
-    "message": "無目標裝置的推送"
+    "message": "傳送到「所有裝置」（無目標）的推送"
   },
   "delete_notification": {
     "message": "刪除通知"
   },
   "copy_notification": {
-    "message": "複製通知"
+    "message": "複製文字"
   },
   "delete_push": {
     "message": "刪除推送"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "在彈出視窗中顯示單次傳送目標選擇器"
+  },
+  "enable_context_menu_label": {
+    "message": "啟用右鍵選單"
   },
   "all_devices": {
     "message": "所有裝置"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "請配置端對端加密密碼以查看通知。"
+  },
+  "behavior_tab": {
+    "message": "行為"
+  },
+  "auto_open_people_label": {
+    "message": "來自聯絡人的推送也自動開啟"
+  },
+  "chat_tab": {
+    "message": "聊天"
+  },
+  "enable_chat_label": {
+    "message": "啟用聯絡人聊天"
+  },
+  "no_people_yet": {
+    "message": "暫無聯絡人"
+  },
+  "manage_people_tip": {
+    "message": "如需新增、移除或封鎖聯絡人，請前往"
+  },
+  "no_pushes_with_person": {
+    "message": "暫無與 $1 的推送"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "暫無推送"
+  },
+  "person_not_on_pushbullet": {
+    "message": "尚未使用 Pushbullet，推送將以電子郵件送達。"
+  },
+  "person_muted_title": {
+    "message": "已靜音"
+  },
+  "mute_person_title": {
+    "message": "靜音"
+  },
+  "unmute_person_title": {
+    "message": "取消靜音"
+  },
+  "back_button_title": {
+    "message": "返回"
+  },
+  "person_avatar_alt": {
+    "message": "個人大頭貼"
+  },
+  "auto_open_files_label": {
+    "message": "檔案推送（含圖片）也自動開啟"
+  },
+  "rename_device_title": {
+    "message": "重新命名"
+  },
+  "chats_label": {
+    "message": "聊天"
+  },
+  "show_pushes_tip": {
+    "message": "同時適用於彈出視窗中的清單和通知。"
   }
 }

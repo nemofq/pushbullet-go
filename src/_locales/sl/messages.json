@@ -81,7 +81,7 @@
     "message": "Pridobljeno"
   },
   "target_devices_label": {
-    "message": "Privzete ciljne naprave:"
+    "message": "Pošlji potiske na:"
   },
   "choose_devices_tip": {
     "message": "Privzeta ciljna naprava za potiske, ki jih pošljete – iz pojavnega okna, kontekstnega menija in bližnjice na tipkovnici."
@@ -285,22 +285,22 @@
     "message": "OAuth napaka:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Obvešča in prikaži pushes samo za naslednje"
+    "message": "Prikaži potiske"
   },
   "current_chrome_devices_label": {
-    "message": "Trenutna naprava - Chrome"
+    "message": "Poslano na ta Chrome"
   },
   "other_devices_label": {
-    "message": "Druge naprave"
+    "message": "Poslano na druge naprave"
   },
   "pushes_without_target_label": {
-    "message": "Pushes brez ciljne naprave"
+    "message": "Poslano na »Vse naprave« (brez cilja)"
   },
   "delete_notification": {
     "message": "Izbriši obvestilo"
   },
   "copy_notification": {
-    "message": "Kopiraj obvestilo"
+    "message": "Kopiraj besedilo"
   },
   "delete_push": {
     "message": "Izbriši push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Prikaži izbirnik cilja za vsako pošiljanje v popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Omogoči kontekstni meni ob desnem kliku"
   },
   "all_devices": {
     "message": "Vse naprave"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Nastavite svoje geslo za end-to-end šifriranje, da vidite obvestila."
+  },
+  "behavior_tab": {
+    "message": "Vedenje"
+  },
+  "auto_open_people_label": {
+    "message": "Tudi pushes od oseb"
+  },
+  "chat_tab": {
+    "message": "Klepet"
+  },
+  "enable_chat_label": {
+    "message": "Omogoči klepet z osebami"
+  },
+  "no_people_yet": {
+    "message": "Ni oseb"
+  },
+  "manage_people_tip": {
+    "message": "Dodajte, odstranite ali blokirajte osebe na"
+  },
+  "no_pushes_with_person": {
+    "message": "Ni pošiljanj z osebo $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Ni pošiljanj"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Še nima Pushbullet računa — pošiljanja prispejo po e-pošti."
+  },
+  "person_muted_title": {
+    "message": "Utišano"
+  },
+  "mute_person_title": {
+    "message": "Utišaj"
+  },
+  "unmute_person_title": {
+    "message": "Prekliči utišanje"
+  },
+  "back_button_title": {
+    "message": "Nazaj"
+  },
+  "person_avatar_alt": {
+    "message": "Profilna slika"
+  },
+  "auto_open_files_label": {
+    "message": "Tudi pushes datotek (slike)"
+  },
+  "rename_device_title": {
+    "message": "Preimenuj"
+  },
+  "chats_label": {
+    "message": "Klepeti"
+  },
+  "show_pushes_tip": {
+    "message": "Velja tako za seznam v pojavnem oknu kot za obvestila."
   }
 }

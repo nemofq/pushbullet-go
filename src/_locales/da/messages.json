@@ -81,7 +81,7 @@
     "message": "Hentet"
   },
   "target_devices_label": {
-    "message": "Standard målenheder:"
+    "message": "Send pushes til:"
   },
   "choose_devices_tip": {
     "message": "Standardmålet for push du sender – fra popup, højrekliksmenuen og tastaturgenvejen."
@@ -285,22 +285,22 @@
     "message": "OAuth fejl:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Underret og vis kun pushes for følgende"
+    "message": "Vis pushes"
   },
   "current_chrome_devices_label": {
-    "message": "Nuværende enhed - Chrome(s)"
+    "message": "Sendt til denne Chrome"
   },
   "other_devices_label": {
-    "message": "Andre enheder"
+    "message": "Sendt til andre enheder"
   },
   "pushes_without_target_label": {
-    "message": "Pushes uden målenhed"
+    "message": "Sendt til »Alle enheder« (uden målenhed)"
   },
   "delete_notification": {
     "message": "Slet notifikation"
   },
   "copy_notification": {
-    "message": "Kopiér notifikation"
+    "message": "Kopiér tekst"
   },
   "delete_push": {
     "message": "Slet push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Vis målvælger per send i popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Aktivér kontekstmenu ved højreklik"
   },
   "all_devices": {
     "message": "Alle enheder"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Konfigurer din end-to-end krypteringsadgangskode for at se notifikationerne."
+  },
+  "behavior_tab": {
+    "message": "Adfærd"
+  },
+  "auto_open_people_label": {
+    "message": "Også pushes fra personer"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Aktivér chat med personer"
+  },
+  "no_people_yet": {
+    "message": "Ingen personer endnu"
+  },
+  "manage_people_tip": {
+    "message": "Tilføj, fjern eller blokér personer på"
+  },
+  "no_pushes_with_person": {
+    "message": "Ingen pushes med $1 endnu"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Ingen pushes endnu"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Ikke på Pushbullet endnu — pushes ankommer via mail."
+  },
+  "person_muted_title": {
+    "message": "Lydløs"
+  },
+  "mute_person_title": {
+    "message": "Lydløs"
+  },
+  "unmute_person_title": {
+    "message": "Fjern lydløs"
+  },
+  "back_button_title": {
+    "message": "Tilbage"
+  },
+  "person_avatar_alt": {
+    "message": "Profilbillede"
+  },
+  "auto_open_files_label": {
+    "message": "Også pushes af filer (billeder)"
+  },
+  "rename_device_title": {
+    "message": "Omdøb"
+  },
+  "chats_label": {
+    "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "Gælder for både popup-listen og notifikationer."
   }
 }

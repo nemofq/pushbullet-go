@@ -81,7 +81,7 @@
     "message": "Pobrano"
   },
   "target_devices_label": {
-    "message": "Domyślne urządzenia docelowe:"
+    "message": "Wysyłanie push do:"
   },
   "choose_devices_tip": {
     "message": "Domyślny cel dla wysyłanych push – z okna popup, menu kontekstowego i skrótu klawiszowego."
@@ -285,22 +285,22 @@
     "message": "Błąd OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Powiadamiaj i pokazuj push tylko dla następujących"
+    "message": "Pokazuj push"
   },
   "current_chrome_devices_label": {
-    "message": "Obecne urządzenie - Chrome"
+    "message": "Wysłane do tego Chrome"
   },
   "other_devices_label": {
-    "message": "Inne urządzenia"
+    "message": "Wysłane do innych urządzeń"
   },
   "pushes_without_target_label": {
-    "message": "Push bez urządzenia docelowego"
+    "message": "Wysłane do „Wszystkich urządzeń” (bez celu)"
   },
   "delete_notification": {
     "message": "Usuń powiadomienie"
   },
   "copy_notification": {
-    "message": "Kopiuj powiadomienie"
+    "message": "Kopiuj tekst"
   },
   "delete_push": {
     "message": "Usuń push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Pokaż wybór celu wysyłki w oknie popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Włącz menu kontekstowe pod prawym przyciskiem myszy"
   },
   "all_devices": {
     "message": "Wszystkie urządzenia"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Skonfiguruj swoje hasło szyfrowania end-to-end, aby zobaczyć powiadomienia."
+  },
+  "behavior_tab": {
+    "message": "Zachowanie"
+  },
+  "auto_open_people_label": {
+    "message": "Także push od osób"
+  },
+  "chat_tab": {
+    "message": "Czat"
+  },
+  "enable_chat_label": {
+    "message": "Włącz czat z osobami"
+  },
+  "no_people_yet": {
+    "message": "Brak osób"
+  },
+  "manage_people_tip": {
+    "message": "Dodawaj, usuwaj lub blokuj osoby na"
+  },
+  "no_pushes_with_person": {
+    "message": "Brak wypychań z $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Brak wypychań"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Nie korzysta jeszcze z Pushbullet — wypychania dotrą e-mailem."
+  },
+  "person_muted_title": {
+    "message": "Wyciszono"
+  },
+  "mute_person_title": {
+    "message": "Wycisz"
+  },
+  "unmute_person_title": {
+    "message": "Wyłącz wyciszenie"
+  },
+  "back_button_title": {
+    "message": "Wstecz"
+  },
+  "person_avatar_alt": {
+    "message": "Zdjęcie profilowe"
+  },
+  "auto_open_files_label": {
+    "message": "Także push plików (obrazy)"
+  },
+  "rename_device_title": {
+    "message": "Zmień nazwę"
+  },
+  "chats_label": {
+    "message": "Czaty"
+  },
+  "show_pushes_tip": {
+    "message": "Dotyczy zarówno listy w oknie popup, jak i powiadomień."
   }
 }

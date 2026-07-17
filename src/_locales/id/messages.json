@@ -81,7 +81,7 @@
     "message": "Diambil"
   },
   "target_devices_label": {
-    "message": "Perangkat Tujuan Bawaan:"
+    "message": "Kirim push ke:"
   },
   "choose_devices_tip": {
     "message": "Tujuan bawaan untuk push yang Anda kirim — dari popup, menu klik kanan, dan pintasan keyboard."
@@ -285,22 +285,22 @@
     "message": "Kesalahan OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Hanya beri tahu dan tampilkan push untuk berikut ini"
+    "message": "Tampilkan push"
   },
   "current_chrome_devices_label": {
-    "message": "Perangkat saat ini - Chrome(s)"
+    "message": "Dikirim ke Chrome ini"
   },
   "other_devices_label": {
-    "message": "Perangkat lain"
+    "message": "Dikirim ke perangkat lain"
   },
   "pushes_without_target_label": {
-    "message": "Push tanpa perangkat target"
+    "message": "Dikirim ke “Semua perangkat” (tanpa target)"
   },
   "delete_notification": {
     "message": "Hapus notifikasi"
   },
   "copy_notification": {
-    "message": "Salin notifikasi"
+    "message": "Salin teks"
   },
   "delete_push": {
     "message": "Hapus push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Tampilkan pemilih tujuan per-pengiriman di popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Aktifkan menu konteks klik kanan"
   },
   "all_devices": {
     "message": "Semua perangkat"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Konfigurasikan kata sandi enkripsi ujung-ke-ujung Anda untuk melihat notifikasi."
+  },
+  "behavior_tab": {
+    "message": "Perilaku"
+  },
+  "auto_open_people_label": {
+    "message": "Juga push dari orang"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Aktifkan Chat dengan Orang"
+  },
+  "no_people_yet": {
+    "message": "Belum ada orang"
+  },
+  "manage_people_tip": {
+    "message": "Tambah, hapus, atau blokir orang di"
+  },
+  "no_pushes_with_person": {
+    "message": "Belum ada push dengan $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Belum ada push"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Belum menggunakan Pushbullet — push akan tiba melalui email."
+  },
+  "person_muted_title": {
+    "message": "Dibisukan"
+  },
+  "mute_person_title": {
+    "message": "Bisukan"
+  },
+  "unmute_person_title": {
+    "message": "Bunyikan"
+  },
+  "back_button_title": {
+    "message": "Kembali"
+  },
+  "person_avatar_alt": {
+    "message": "Foto profil"
+  },
+  "auto_open_files_label": {
+    "message": "Juga push file (gambar)"
+  },
+  "rename_device_title": {
+    "message": "Ganti nama"
+  },
+  "chats_label": {
+    "message": "Chat"
+  },
+  "show_pushes_tip": {
+    "message": "Berlaku untuk daftar di popup maupun notifikasi."
   }
 }

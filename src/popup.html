@@ -190,6 +190,32 @@
       color: var(--text-primary);
     }
 
+    /* Per-tab unread pill: mirrors the toolbar badge composition, sized down for
+       the 13px tab row. It lives after the label inside the button, so
+       initializeI18n's textContent writes (which target the .tab-label span)
+       never wipe it. */
+    .tab-button .tab-count {
+      background: var(--button-primary);
+      color: var(--text-white);
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 15px;
+      height: 15px;
+      line-height: 15px;
+      border-radius: 8px;
+      padding: 0 4px;
+      margin-left: 5px;
+      display: inline-block;
+      vertical-align: 1px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    /* Re-assert hiding: the class selector above outweighs the UA [hidden] rule. */
+    .tab-button .tab-count[hidden] {
+      display: none;
+    }
+
     .status {
       width: 13px;
       height: 13px;
@@ -803,6 +829,255 @@
       opacity: 1;
     }
 
+    /* ================================================================
+       Chat tab components (person list + conversation)
+       ================================================================ */
+
+    .person-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      /* Taller rows give the second line's unread pill floor clearance — with
+         8px it was the lowest element in the row, hugging the bottom edge and
+         reading as dropped. */
+      padding: 10px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .person-row:hover {
+      background: var(--bg-secondary);
+    }
+
+    .person-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .person-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .person-avatar.md {
+      width: 32px;
+      height: 32px;
+      font-size: 13px;
+    }
+
+    .person-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .person-name {
+      font-size: 14px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .person-name .nm {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .person-row.unread .person-name .nm {
+      font-weight: 700;
+    }
+
+    .person-name .muted-glyph {
+      display: inline-flex;
+      flex-shrink: 0;
+      color: var(--text-tertiary);
+    }
+
+    .person-name .muted-glyph svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .person-snippet {
+      font-size: 12px;
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      /* 6px line rhythm, mirrored by .person-meta's gap so the snippet and the
+         unread pill sit on the same visual line; the row centers its content,
+         so the wider rhythm spreads name up / message down. */
+      margin-top: 6px;
+    }
+
+    .person-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      /* Mirror the main column's 6px name→snippet rhythm: line 1 = time (on
+         the name's line), line 2 = unread pill (on the snippet's line). The
+         min-height matches the two-line main column so a lone time stays on
+         the name line instead of centering when there is no pill. */
+      gap: 6px;
+      flex-shrink: 0;
+      min-height: 40px;
+      /* Pin a lone time to the top so it stays on the name's line whether or not
+         the unread count occupies the second line — no vertical shift. The
+         retained min-height keeps this column two lines tall. */
+      justify-content: flex-start;
+    }
+
+    .person-time {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      /* Optically drop the 11px time onto the 14px name's line. */
+      line-height: 17px;
+    }
+
+    .unread-count {
+      background: var(--button-primary);
+      color: var(--text-white);
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 16px;
+      height: 16px;
+      line-height: 16px;
+      border-radius: 8px;
+      padding: 0 4px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    /* quiet footer tip: add/remove people happens on pushbullet.com */
+    .people-tip {
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+      padding: 10px 10px 6px;
+      margin-top: auto;
+    }
+
+    .people-tip a {
+      color: var(--button-primary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .people-tip a:hover {
+      text-decoration: underline;
+    }
+
+    .people-empty {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-top: 60px;
+      padding: 0 30px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .people-empty h3 {
+      font-size: 16px;
+      font-weight: normal;
+      color: var(--text-primary);
+      margin: 0 0 10px;
+    }
+
+    .people-empty a {
+      color: var(--button-primary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Conversation view: flex column holding header + hint + messages */
+    .conv-wrap {
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+    }
+
+    /* Conversation sub-header: back · avatar · name-over-email · mute */
+    .conv-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-primary);
+      background: var(--bg-header);
+      flex-shrink: 0;
+    }
+
+    .conv-icon-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .conv-icon-button:hover {
+      background: var(--accent-soft);
+      color: var(--button-primary);
+    }
+
+    .conv-icon-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .conv-title {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .conv-name {
+      font-size: 14px;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .conv-email {
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .conv-hint {
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+      padding: 8px 20px 0;
+    }
+
     .no-messages {
       text-align: center;
       color: var(--text-secondary);
@@ -940,6 +1215,15 @@
       overflow-wrap: anywhere;
       line-height: 1.4;
       white-space: pre-wrap;
+    }
+
+    .notification-image {
+      display: block;
+      width: 100%;
+      max-height: 260px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-top: 8px;
     }
 
     .notification-actions {
@@ -1222,8 +1506,9 @@
         <span data-i18n="sms_button">SMS</span>
       </a>
       <div class="tab-switcher" id="tabSwitcher" style="display: none;">
-        <button id="pushTab" class="tab-button active" data-i18n="push_button">Push</button>
-        <button id="notificationTab" class="tab-button" data-i18n="notification_button">Notification</button>
+        <button id="pushTab" class="tab-button active"><span class="tab-label" data-i18n="push_button">Push</span><span class="tab-count" id="pushTabCount" hidden></span></button>
+        <button id="chatTab" class="tab-button" style="display: none;"><span class="tab-label" data-i18n="chat_tab">Chat</span><span class="tab-count" id="chatTabCount" hidden></span></button>
+        <button id="notificationTab" class="tab-button" style="display: none;"><span class="tab-label" data-i18n="notification_button">Notification</span><span class="tab-count" id="notificationTabCount" hidden></span></button>
       </div>
       <button id="retryConnection"
         style="background: var(--button-primary); color: var(--text-white); border: none; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease;"
@@ -1237,6 +1522,30 @@
   </div>
 
   <div class="messages" id="notificationsList" style="display: none;">
+  </div>
+
+  <div class="messages" id="peopleList" style="display: none; padding: 8px;">
+  </div>
+
+  <div class="conv-wrap" id="convWrap" style="display: none;">
+    <div class="conv-header">
+      <button class="conv-icon-button" id="convBack" data-i18n-title="back_button_title" title="Back">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+        </svg>
+      </button>
+      <div class="person-avatar md" id="convAvatar"></div>
+      <div class="conv-title">
+        <span class="conv-name" id="convName"></span>
+        <span class="conv-email" id="convEmail"></span>
+      </div>
+      <button class="conv-icon-button" id="convMute" data-i18n-title="mute_person_title" title="Mute">
+        <svg viewBox="0 0 24 24" fill="currentColor" id="convMuteIcon"></svg>
+      </button>
+    </div>
+    <div class="conv-hint" id="convHint" style="display: none;" data-i18n="person_not_on_pushbullet">Not on Pushbullet
+      yet — pushes arrive by email.</div>
+    <div class="messages" id="convMessages"></div>
   </div>
 
   <div class="clear-notifications-bar" id="clearNotificationsBar">

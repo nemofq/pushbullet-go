@@ -81,7 +81,7 @@
     "message": "가져옴"
   },
   "target_devices_label": {
-    "message": "기본 대상 기기:"
+    "message": "푸시 보낼 기기:"
   },
   "choose_devices_tip": {
     "message": "팝업, 오른쪽 클릭 메뉴, 키보드 단축키로 보낼 푸시의 기본 대상입니다."
@@ -285,22 +285,22 @@
     "message": "OAuth 오류:"
   },
   "only_notify_show_pushes_title": {
-    "message": "다음 푸시만 알림 및 표시"
+    "message": "푸시 표시"
   },
   "current_chrome_devices_label": {
-    "message": "현재 기기 - Chrome(s)"
+    "message": "이 Chrome으로 보낸 푸시"
   },
   "other_devices_label": {
-    "message": "다른 기기"
+    "message": "다른 기기로 보낸 푸시"
   },
   "pushes_without_target_label": {
-    "message": "대상 기기 없는 푸시"
+    "message": "“모든 기기”로 보낸 푸시 (대상 없음)"
   },
   "delete_notification": {
     "message": "알림 삭제"
   },
   "copy_notification": {
-    "message": "알림 복사"
+    "message": "텍스트 복사"
   },
   "delete_push": {
     "message": "푸시 삭제"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "팝업에서 전송별 대상 선택기 표시"
+  },
+  "enable_context_menu_label": {
+    "message": "마우스 오른쪽 버튼 메뉴 활성화"
   },
   "all_devices": {
     "message": "모든 기기"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "알림을 보려면 종단간 암호화 비밀번호를 설정하세요."
+  },
+  "behavior_tab": {
+    "message": "동작"
+  },
+  "auto_open_people_label": {
+    "message": "사용자가 보낸 푸시도"
+  },
+  "chat_tab": {
+    "message": "채팅"
+  },
+  "enable_chat_label": {
+    "message": "사용자와의 채팅 활성화"
+  },
+  "no_people_yet": {
+    "message": "아직 사용자가 없습니다"
+  },
+  "manage_people_tip": {
+    "message": "사용자 추가, 삭제 또는 차단은 여기에서:"
+  },
+  "no_pushes_with_person": {
+    "message": "아직 $1님과의 푸시가 없습니다"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "아직 푸시 없음"
+  },
+  "person_not_on_pushbullet": {
+    "message": "아직 Pushbullet 사용자가 아닙니다 — 푸시는 이메일로 도착합니다."
+  },
+  "person_muted_title": {
+    "message": "음소거됨"
+  },
+  "mute_person_title": {
+    "message": "음소거"
+  },
+  "unmute_person_title": {
+    "message": "음소거 해제"
+  },
+  "back_button_title": {
+    "message": "뒤로"
+  },
+  "person_avatar_alt": {
+    "message": "프로필 사진"
+  },
+  "auto_open_files_label": {
+    "message": "파일 푸시(이미지)도"
+  },
+  "rename_device_title": {
+    "message": "이름 변경"
+  },
+  "chats_label": {
+    "message": "채팅"
+  },
+  "show_pushes_tip": {
+    "message": "팝업 목록과 알림 모두에 적용됩니다."
   }
 }

@@ -81,7 +81,7 @@
     "message": "取得完了"
   },
   "target_devices_label": {
-    "message": "既定の対象デバイス:"
+    "message": "プッシュの送信先:"
   },
   "choose_devices_tip": {
     "message": "ポップアップ、右クリックメニュー、キーボード ショートカットから送信するプッシュのデフォルト ターゲットです。"
@@ -285,22 +285,22 @@
     "message": "OAuthエラー:"
   },
   "only_notify_show_pushes_title": {
-    "message": "以下のプッシュのみ通知して表示"
+    "message": "プッシュを表示"
   },
   "current_chrome_devices_label": {
-    "message": "現在のデバイス - Chrome(s)"
+    "message": "このChromeへのプッシュ"
   },
   "other_devices_label": {
-    "message": "他のデバイス"
+    "message": "他のデバイスへのプッシュ"
   },
   "pushes_without_target_label": {
-    "message": "ターゲットデバイスなしのプッシュ"
+    "message": "「すべてのデバイス」へのプッシュ（ターゲットなし）"
   },
   "delete_notification": {
     "message": "通知を削除"
   },
   "copy_notification": {
-    "message": "通知をコピー"
+    "message": "テキストをコピー"
   },
   "delete_push": {
     "message": "プッシュを削除"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "ポップアップに送信ごとのターゲット選択を表示"
+  },
+  "enable_context_menu_label": {
+    "message": "右クリックメニューを有効にする"
   },
   "all_devices": {
     "message": "すべてのデバイス"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "通知を見るには、エンドツーエンド暗号化パスワードを設定してください。"
+  },
+  "behavior_tab": {
+    "message": "動作"
+  },
+  "auto_open_people_label": {
+    "message": "ユーザーからのプッシュも自動的に開く"
+  },
+  "chat_tab": {
+    "message": "チャット"
+  },
+  "enable_chat_label": {
+    "message": "ユーザーとのチャットを有効化"
+  },
+  "no_people_yet": {
+    "message": "まだユーザーがありません"
+  },
+  "manage_people_tip": {
+    "message": "ユーザーの追加・削除・ブロックはこちらから:"
+  },
+  "no_pushes_with_person": {
+    "message": "まだ$1とのプッシュがありません"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "まだプッシュなし"
+  },
+  "person_not_on_pushbullet": {
+    "message": "まだPushbulletを利用していないため、プッシュはメールで届きます。"
+  },
+  "person_muted_title": {
+    "message": "ミュート中"
+  },
+  "mute_person_title": {
+    "message": "ミュート"
+  },
+  "unmute_person_title": {
+    "message": "ミュート解除"
+  },
+  "back_button_title": {
+    "message": "戻る"
+  },
+  "person_avatar_alt": {
+    "message": "プロフィール画像"
+  },
+  "auto_open_files_label": {
+    "message": "ファイルのプッシュ（画像を含む）も自動的に開く"
+  },
+  "rename_device_title": {
+    "message": "名前変更"
+  },
+  "chats_label": {
+    "message": "チャット"
+  },
+  "show_pushes_tip": {
+    "message": "ポップアップの一覧と通知の両方に適用されます。"
   }
 }

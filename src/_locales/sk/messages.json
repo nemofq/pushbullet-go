@@ -81,7 +81,7 @@
     "message": "Získané"
   },
   "target_devices_label": {
-    "message": "Predvolené cieľové zariadenia:"
+    "message": "Kam odosielať push:"
   },
   "choose_devices_tip": {
     "message": "Predvolený cieľ pre správy, ktoré odošlete – z popup-u, kontextového menu a klávesovej skratky."
@@ -285,22 +285,22 @@
     "message": "OAuth chyba:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Upozorniť a zobraziť push iba pre nasledujúce"
+    "message": "Zobraziť push"
   },
   "current_chrome_devices_label": {
-    "message": "Aktuálne zariadenie - Chrome"
+    "message": "Odoslané na tento Chrome"
   },
   "other_devices_label": {
-    "message": "Iné zariadenia"
+    "message": "Odoslané na iné zariadenia"
   },
   "pushes_without_target_label": {
-    "message": "Push bez cieľového zariadenia"
+    "message": "Odoslané na „Všetky zariadenia“ (bez cieľa)"
   },
   "delete_notification": {
     "message": "Odstrániť upozornenie"
   },
   "copy_notification": {
-    "message": "Kopírovať upozornenie"
+    "message": "Kopírovať text"
   },
   "delete_push": {
     "message": "Odstrániť push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Zobraziť výber cieľa pre každé odoslanie v popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Povoliť kontextovú ponuku pravým tlačidlom myši"
   },
   "all_devices": {
     "message": "Všetky zariadenia"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Nakonfigurujte svoje heslo end-to-end šifrovania na zobrazenie oznámení."
+  },
+  "behavior_tab": {
+    "message": "Správanie"
+  },
+  "auto_open_people_label": {
+    "message": "Aj push od ľudí"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Povoliť Chat s ľuďmi"
+  },
+  "no_people_yet": {
+    "message": "Zatiaľ žiadni ľudia"
+  },
+  "manage_people_tip": {
+    "message": "Môžete pridať, odstrániť alebo zablokovať ľudí na"
+  },
+  "no_pushes_with_person": {
+    "message": "Zatiaľ žiadne push správy s $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Zatiaľ žiadne push správy"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Zatiaľ nie je na Pushbullet – push správy prichádzajú e-mailom."
+  },
+  "person_muted_title": {
+    "message": "Stlmené"
+  },
+  "mute_person_title": {
+    "message": "Stlmiť"
+  },
+  "unmute_person_title": {
+    "message": "Zrušiť stlmenie"
+  },
+  "back_button_title": {
+    "message": "Späť"
+  },
+  "person_avatar_alt": {
+    "message": "Profilová fotka"
+  },
+  "auto_open_files_label": {
+    "message": "Aj push súborov (obrázky)"
+  },
+  "rename_device_title": {
+    "message": "Premenovať"
+  },
+  "chats_label": {
+    "message": "Chaty"
+  },
+  "show_pushes_tip": {
+    "message": "Platí pre zoznam v popup-e aj pre oznámenia."
   }
 }

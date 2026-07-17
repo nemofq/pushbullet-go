@@ -81,7 +81,7 @@
     "message": "Отримано"
   },
   "target_devices_label": {
-    "message": "Цільові пристрої за замовчуванням:"
+    "message": "Надсилати push на:"
   },
   "choose_devices_tip": {
     "message": "Типовий отримувач ваших push — зі спливаючого вікна, контекстного меню та комбінації клавіш."
@@ -285,22 +285,22 @@
     "message": "Помилка OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Сповіщати та показувати push лише для наступних"
+    "message": "Показувати push"
   },
   "current_chrome_devices_label": {
-    "message": "Поточний пристрій - Chrome"
+    "message": "Push надіслані на цей Chrome"
   },
   "other_devices_label": {
-    "message": "Інші пристрої"
+    "message": "Push надіслані на інші пристрої"
   },
   "pushes_without_target_label": {
-    "message": "Push без цільового пристрою"
+    "message": "Push надіслані на «Усі пристрої» (без цілі)"
   },
   "delete_notification": {
     "message": "Видалити сповіщення"
   },
   "copy_notification": {
-    "message": "Копіювати сповіщення"
+    "message": "Копіювати текст"
   },
   "delete_push": {
     "message": "Видалити push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Показати вибір отримувача для кожного надсилання у спливаючому вікні"
+  },
+  "enable_context_menu_label": {
+    "message": "Увімкнути контекстне меню правою кнопкою миші"
   },
   "all_devices": {
     "message": "Усі пристрої"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Налаштуйте свій пароль наскрізного шифрування, щоб побачити сповіщення."
+  },
+  "behavior_tab": {
+    "message": "Поведінка"
+  },
+  "auto_open_people_label": {
+    "message": "Також push від контактів"
+  },
+  "chat_tab": {
+    "message": "Чат"
+  },
+  "enable_chat_label": {
+    "message": "Увімкнути чат з контактами"
+  },
+  "no_people_yet": {
+    "message": "Контактів ще немає"
+  },
+  "manage_people_tip": {
+    "message": "Додавайте, видаляйте або блокуйте контакти на"
+  },
+  "no_pushes_with_person": {
+    "message": "Push із $1 ще немає"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Push ще немає"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Ще не користується Pushbullet — push надходять електронною поштою."
+  },
+  "person_muted_title": {
+    "message": "Звук вимкнено"
+  },
+  "mute_person_title": {
+    "message": "Вимкнути звук"
+  },
+  "unmute_person_title": {
+    "message": "Увімкнути звук"
+  },
+  "back_button_title": {
+    "message": "Назад"
+  },
+  "person_avatar_alt": {
+    "message": "Фото профілю"
+  },
+  "auto_open_files_label": {
+    "message": "Також push файлів (зображення)"
+  },
+  "rename_device_title": {
+    "message": "Перейменувати"
+  },
+  "chats_label": {
+    "message": "Чати"
+  },
+  "show_pushes_tip": {
+    "message": "Стосується як списку у спливаючому вікні, так і сповіщень."
   }
 }

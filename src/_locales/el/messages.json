@@ -81,7 +81,7 @@
     "message": "Ανακτήθηκε"
   },
   "target_devices_label": {
-    "message": "Προεπιλεγμένες συσκευές-στόχοι:"
+    "message": "Αποστολή προωθήσεων σε:"
   },
   "choose_devices_tip": {
     "message": "Ο προεπιλεγμένος στόχος για τις προωθήσεις που στέλνετε — από το popup, το μενού δεξί κλικ και τη συντόμευση πληκτρολογίου."
@@ -285,22 +285,22 @@
     "message": "Σφάλμα OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Μόνο ειδοποίηση και εμφάνιση προωθήσεων για τα ακόλουθα"
+    "message": "Εμφάνιση προωθήσεων"
   },
   "current_chrome_devices_label": {
-    "message": "Τρέχουσα συσκευή - Chrome(s)"
+    "message": "Σταλμένες σε αυτό το Chrome"
   },
   "other_devices_label": {
-    "message": "Άλλες συσκευές"
+    "message": "Σταλμένες σε άλλες συσκευές"
   },
   "pushes_without_target_label": {
-    "message": "Προωθήσεις χωρίς συσκευή-στόχο"
+    "message": "Σταλμένες σε «Όλες οι συσκευές» (χωρίς στόχο)"
   },
   "delete_notification": {
     "message": "Διαγραφή ειδοποίησης"
   },
   "copy_notification": {
-    "message": "Αντιγραφή ειδοποίησης"
+    "message": "Αντιγραφή κειμένου"
   },
   "delete_push": {
     "message": "Διαγραφή προώθησης"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Εμφάνιση επιλογέα στόχου ανά αποστολή στο popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Ενεργοποίηση μενού περιβάλλοντος με δεξί κλικ"
   },
   "all_devices": {
     "message": "Όλες οι συσκευές"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Ρυθμίστε τον κωδικό κρυπτογράφησης από άκρο σε άκρο για να δείτε τις ειδοποιήσεις."
+  },
+  "behavior_tab": {
+    "message": "Συμπεριφορά"
+  },
+  "auto_open_people_label": {
+    "message": "Επίσης αποστολές από επαφές"
+  },
+  "chat_tab": {
+    "message": "Συνομιλία"
+  },
+  "enable_chat_label": {
+    "message": "Ενεργοποίηση συνομιλίας με επαφές"
+  },
+  "no_people_yet": {
+    "message": "Δεν υπάρχουν επαφές"
+  },
+  "manage_people_tip": {
+    "message": "Προσθέστε, αφαιρέστε ή αποκλείστε επαφές στο"
+  },
+  "no_pushes_with_person": {
+    "message": "Δεν υπάρχουν αποστολές με $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Χωρίς αποστολές"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Δεν είναι ακόμα στο Pushbullet — οι αποστολές φτάνουν μέσω email."
+  },
+  "person_muted_title": {
+    "message": "Σε σίγαση"
+  },
+  "mute_person_title": {
+    "message": "Σίγαση"
+  },
+  "unmute_person_title": {
+    "message": "Κατάργηση σίγασης"
+  },
+  "back_button_title": {
+    "message": "Πίσω"
+  },
+  "person_avatar_alt": {
+    "message": "Φωτογραφία προφίλ"
+  },
+  "auto_open_files_label": {
+    "message": "Επίσης αποστολές αρχείων (εικόνες)"
+  },
+  "rename_device_title": {
+    "message": "Μετονομασία"
+  },
+  "chats_label": {
+    "message": "Συνομιλίες"
+  },
+  "show_pushes_tip": {
+    "message": "Ισχύει τόσο για τη λίστα στο popup όσο και για τις ειδοποιήσεις."
   }
 }

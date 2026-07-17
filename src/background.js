@@ -412,9 +412,28 @@ initializeBackgroundI18n().then(async () => {
   await setupContextMenus();
 });
 
+// Seeds the user's default ON the first time the account has people; an
+// explicit value is never overwritten.
+async function seedEnableChatDefault() {
+  try {
+    const { people, enableChat } = await chrome.storage.local.get(['people', 'enableChat']);
+    if (enableChat === undefined && (people || []).length > 0) {
+      await chrome.storage.local.set({ enableChat: true });
+    }
+  } catch (error) {
+    console.error('Failed to seed enableChat default:', error);
+  }
+}
+
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
-  if (namespace === 'local' && (changes.devices || changes.people)) {
+  if (namespace === 'local' && (changes.devices || changes.people || changes.enableContextMenu)) {
     await setupContextMenus();
+  }
+  if (namespace === 'local' && changes.people) {
+    // Seed the Chat-default the first time the account has people; this branch
+    // catches every people writer (incl. the options-page Retrieve, whose write
+    // wakes the service worker). An explicit value is never overwritten.
+    await seedEnableChatDefault();
   }
   if (namespace === 'local' && changes.languageMode) {
     // Language changed, reinitialize i18n and update context menus
@@ -425,8 +444,25 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
       await setupContextMenus();
     });
   }
+  // Recompute the derived chat unread count when any of its inputs change: the
+  // people list (membership + mute), or the per-person read stamps the popup
+  // writes on opening a conversation. Push arrivals are handled by the notify
+  // batch, and popup deletions by deletePush.
+  if (namespace === 'local' && (changes.people || changes.peopleLastRead)) {
+    await updateChatUnreadCount();
+  }
+  // Chat surface toggled. Enabling stamps a fresh read floor so people
+  // pushes that accumulated while Chat was off never badge retroactively
+  // (they were out of scope); the recompute then settles the count in
+  // both directions (to 0 on disable).
+  if (namespace === 'local' && changes.enableChat) {
+    if (changes.enableChat.newValue === true && changes.enableChat.oldValue !== true) {
+      await chrome.storage.local.set({ chatReadFloor: Date.now() / 1000 });
+    }
+    await updateChatUnreadCount();
+  }
   // Update badge when display settings change
-  if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored)) {
+  if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored || changes.displayUnreadChats)) {
     await updateBadge();
   }
 });
@@ -475,6 +511,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'clear_push_history':
       clearPushHistory();
       return;
+    case 'clear_person_history':
+      clearPersonHistory(message.email_normalized);
+      return;
     case 'clear_mirror_history':
       clearMirrorHistory();
       return;
@@ -484,6 +523,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'delete_push':
       deletePush(message.iden);
       return;
+    case 'refresh_people':
+      // Chat tab opened: opportunistic people-list refresh (§7 trigger 4),
+      // fire-and-forget. Throttled to 15 min on tab open here, then to 60s
+      // inside refreshPeopleFromServer().
+      maybeRefreshPeopleOnTabOpen();
+      return;
+    case 'set_person_muted':
+      // Mute / unmute the person's chat — the one in-extension chat action
+      // (POST /v2/chats/{iden}); replies with { success } once the server + the
+      // local people entry are updated.
+      setPersonMuted(message.iden, message.email_normalized, message.muted)
+        .then(success => sendResponse({ success }));
+      return true; // Will respond asynchronously
     case 'encryption_updated':
       // Encryption settings changed: reset the drop notice; the next
       // encrypted ephemeral re-evaluates against the new key state
@@ -547,6 +599,23 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     console.log('Page URL pushed via keyboard shortcut:', tab.url);
   }
 });
+
+// Trim a chat object down to the fields we store per person. Written to
+// storage.local only — never to the stale pre-1.11.5 sync copies, which must
+// not gain the new fields. Older {email_normalized, name} entries that predate
+// these fields are tolerated by every consumer until the next fetch upgrades them.
+// keep in sync with options.js trimChatToPerson
+function trimChatToPerson(chat) {
+  return {
+    iden: chat.iden,
+    type: chat.with.type,
+    email: chat.with.email,
+    email_normalized: chat.with.email_normalized,
+    name: chat.with.name || chat.with.email,
+    image_url: chat.with.image_url,
+    muted: chat.muted === true
+  };
+}
 
 // Fetch the devices and people lists from the server when a token exists but
 // the local lists are missing or empty (new machine that received the token
@@ -615,7 +684,10 @@ async function ensureDeviceDataFromServer() {
       }
     }
 
-    const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats', {
+    // ?active=true asks the server to omit deleted chats; the client-side
+    // active filter below stays as belt-and-braces (deleted objects are
+    // returned by default per the API docs).
+    const chatsResponse = await fetch('https://api.pushbullet.com/v2/chats?active=true', {
       headers: { 'Access-Token': token }
     });
     if (!chatsResponse.ok) return; // Save nothing partial; retry later
@@ -623,24 +695,117 @@ async function ensureDeviceDataFromServer() {
     const chatsData = await chatsResponse.json();
     const people = (chatsData.chats || [])
       .filter(chat => chat.active === true)
-      .map(chat => ({
-        email_normalized: chat.with.email_normalized,
-        name: chat.with.name
-      }));
+      .map(trimChatToPerson);
 
     const chromeDevice = devices.find(device => device.active && device.pushable !== false && device.type === 'chrome');
     const chromeDeviceId = chromeDevice ? chromeDevice.iden : null;
 
-    await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId });
+    await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId, lastPeopleFetch: Date.now() });
     console.log(`Device data fetched from server: ${devices.length} devices, ${people.length} people`);
   } finally {
     isEnsuringDeviceData = false;
   }
 }
 
+// People-list freshness (§7): there is no chat tickle, so the list is refreshed
+// opportunistically — here, when an incoming push arrives from a sender not yet
+// in the local list. Throttled to at most once a minute via a module-level
+// timestamp so a burst of unknown-sender pushes triggers a single refetch.
+let lastPeopleRefreshAttempt = 0;
+
+// Bumped on every targeted local write to `people` (currently the mute
+// toggle). refreshPeopleFromServer snapshots it before fetching and discards
+// its response if the token moved while the request was in flight — a
+// wholesale write from a stale snapshot must never overwrite a newer local
+// fact; the next refresh, whose request post-dates the write, reconciles.
+let peopleWriteToken = 0;
+
+async function refreshPeopleFromServer() {
+  if (Date.now() - lastPeopleRefreshAttempt < 60 * 1000) return;
+  lastPeopleRefreshAttempt = Date.now();
+
+  const token = await getAccessToken();
+  if (!token) return;
+  const writeTokenAtFetch = peopleWriteToken;
+
+  try {
+    // ?active=true asks the server to omit deleted chats; the client-side
+    // active filter below stays as belt-and-braces.
+    const response = await fetch('https://api.pushbullet.com/v2/chats?active=true', {
+      headers: { 'Access-Token': token }
+    });
+    if (!response.ok) return;
+
+    const data = await response.json();
+    // A targeted write landed while this fetch was in flight: this response
+    // pre-dates it — discard instead of overwriting (see peopleWriteToken).
+    if (writeTokenAtFetch !== peopleWriteToken) return;
+    const people = (data.chats || [])
+      .filter(chat => chat.active === true)
+      .map(trimChatToPerson);
+    await chrome.storage.local.set({ people: people, lastPeopleFetch: Date.now() });
+  } catch (error) {
+    console.error('Failed to refresh people from server:', error);
+  }
+}
+
+// Chat tab open (§7 trigger 4): refresh the people list only when the last
+// successful fetch is older than 15 minutes. refreshPeopleFromServer() keeps its
+// own 60s guard on top; fire-and-forget.
+async function maybeRefreshPeopleOnTabOpen() {
+  const data = await chrome.storage.local.get('lastPeopleFetch');
+  const last = data.lastPeopleFetch || 0;
+  if (Date.now() - last < 15 * 60 * 1000) return;
+  refreshPeopleFromServer();
+}
+
+// Mute / unmute a person's chat (POST /v2/chats/{iden} {muted}). On success the
+// local people entry is updated immediately from the POST response body — the
+// updated chat object, the post-mute truth. Returns whether it succeeded.
+async function setPersonMuted(iden, emailNormalized, muted) {
+  const token = await getAccessToken();
+  if (!token || !iden) return false;
+
+  try {
+    const response = await fetch(`https://api.pushbullet.com/v2/chats/${iden}`, {
+      method: 'POST',
+      headers: {
+        'Access-Token': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ muted: muted })
+    });
+    if (!response.ok) return false;
+
+    // The response body is the updated chat object — the post-mute truth —
+    // so apply it directly instead of refetching to confirm (the old confirm
+    // refetch was throttled into a no-op by the refresh's own 60s guard).
+    // Fall back to flipping the flag if the body ever lacks the shape.
+    let updatedPerson = null;
+    try {
+      const chat = await response.json();
+      if (chat && chat.with) updatedPerson = trimChatToPerson(chat);
+    } catch (e) {
+      // Body unusable; the flag-flip below covers it.
+    }
+
+    const data = await chrome.storage.local.get('people');
+    const people = (data.people || []).map(person =>
+      person.email_normalized === emailNormalized
+        ? (updatedPerson || { ...person, muted: muted })
+        : person);
+    peopleWriteToken++;
+    await chrome.storage.local.set({ people: people });
+    return true;
+  } catch (error) {
+    console.error('Failed to set chat muted state:', error);
+    return false;
+  }
+}
+
 async function initializeExtension() {
   const data = await chrome.storage.sync.get('accessToken');
-  const localData = await chrome.storage.local.get(['lastModified', 'lastMirrorReadTime']);
+  const localData = await chrome.storage.local.get(['lastModified', 'lastMirrorReadTime', 'chatReadFloor', 'people', 'lastPeopleFetch']);
   accessToken = data.accessToken;
 
   // Restore lastModified from storage to survive extension restarts
@@ -655,9 +820,19 @@ async function initializeExtension() {
     await chrome.storage.local.set({ lastMirrorReadTime: Date.now() / 1000 });
   }
 
+  // Same day-zero guard for the derived chat unread count: seed the read floor
+  // at now the first time we run (existing installs and fresh setups alike), so
+  // historical people pushes already in the cache never badge retroactively.
+  if (localData.chatReadFloor === undefined) {
+    await chrome.storage.local.set({ chatReadFloor: Date.now() / 1000 });
+  }
+
   // Recompute the derived unread count on startup so the cached value can
   // never stay stale across service worker restarts.
   await updateMirrorNotifications(() => null);
+
+  // Same startup recompute for the derived chat unread count.
+  await updateChatUnreadCount();
 
   if (accessToken) {
     // Initialize encryption if key is stored (userIden should be available from options page)
@@ -672,11 +847,26 @@ async function initializeExtension() {
   // Update badge on initialization
   await updateBadge();
 
+  // Seed the Chat-default for installs that already had people before this
+  // logic existed: the storage.onChanged people branch only fires on future
+  // writes, so cover the already-present case here once (a no-op afterwards).
+  await seedEnableChatDefault();
+
   // Repopulate local device data if it's missing (never awaited — must not
   // delay connection setup)
   ensureDeviceDataFromServer().catch(error => {
     console.error('Failed to ensure device data:', error);
   });
+
+  // One-time people refresh for installs whose stored records predate the
+  // wide people trim ({email_normalized, name} only — no muted flag, so
+  // server-side mutes would go unhonored until a manual Chat-tab open).
+  // lastPeopleFetch is stamped only on a successful fetch, so this retries
+  // across startups until one lands, then never fires again. Fire-and-forget —
+  // must not delay connection setup.
+  if ((localData.people || []).length > 0 && localData.lastPeopleFetch === undefined) {
+    refreshPeopleFromServer();
+  }
 }
 
 
@@ -911,6 +1101,36 @@ async function handleReconnection() {
   }
 }
 
+// classifyPush(push) — the single classifier for every push. Consumers act
+// only on the tag they own; a tag they don't recognize is inert to them, so
+// ignored (and any future) kinds are skipped everywhere by construction.
+//
+//   'ignored'      — channel pushes. Unsupported: kept in the cache
+//                    (faithful server mirror), consumed by no surface.
+//   'people'       — a human wrote to me. sender_email_normalized is also
+//                    the conversation key, so every people push is
+//                    displayable by construction. Chat surface only, and
+//                    only while Chat is enabled.
+//   'conversation' — I wrote to a human (receiver key — the official
+//                    client's own gate). Sent bubble in that thread only;
+//                    never a Push-tab bubble, never notified, never counted.
+//   'device'       — my own device traffic (direction self, both
+//                    directions), app/OAuth-created pushes (incoming with
+//                    no human sender — e.g. this extension's own OAuth
+//                    sends), receiver-less outgoing, and any unforeseen
+//                    shape. Exactly the pre-Chat behavior: target buckets,
+//                    device notifications, push counter. Deliberate
+//                    fail-safe — a surprise shape behaves like v1.11; it
+//                    can never vanish and never impersonate a person.
+// keep in sync with the copy in popup.js
+function classifyPush(push) {
+  if (push.channel_iden) return 'ignored';
+  if (push.direction === 'self') return 'device';
+  if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
+  if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
+  return 'device'; // unknown direction — fail toward v1.11 visibility
+}
+
 // Refreshes run strictly one at a time. Overlapping runs (ws.onopen plus an
 // immediately-following tickle) would read the same lastModified/pushes
 // baseline and notify and count the same pushes twice; a queued run sees the
@@ -980,7 +1200,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         
         // Save updated pushes array
         if (newPushes.length > 0 || updatedPushes.length > 0) {
-          await chrome.storage.local.set({ pushes: pushes.slice(0, 100) });
+          await chrome.storage.local.set({ pushes: pushes.slice(0, 200) });
         }
 
         // Show notifications for new pushes (only if from tickle, meaning
@@ -990,10 +1210,17 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         // updates when a resume delivers many pushes at once.
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
-          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
-          const localData = await chrome.storage.local.get('chromeDeviceId');
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
+          const people = localData.people || [];
 
           const pushesToNotify = newPushes.filter(push => {
+            // Only device-tagged pushes use these buckets; people, conversation,
+            // and ignored (channel) pushes never notify through this lane.
+            if (classifyPush(push) !== 'device') {
+              return false;
+            }
+
             // Apply new flexible push filtering
             let shouldShowPush = false;
 
@@ -1041,14 +1268,110 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             return !shouldHideNotification;
           });
 
-          const counted = await Promise.all(pushesToNotify.map(push =>
-            showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false)
-          ));
+          // People pushes: mirror-notification style, attributed to the sender.
+          // Notified and counted while Chat is enabled and the sender's chat is
+          // not muted. Auto-opened (issue #66) only for senders in the trusted
+          // list, when the auto-open master + its people sub are on and the Chat
+          // surface is enabled — otherwise the auto-open arg stays off.
+          const trustedPeople = (configData.autoOpenTrustedPeople || '').split(',').map(e => e.trim()).filter(Boolean);
+          // undefined = not yet seeded, behaves as off; the background seeds
+          // true once people first exist.
+          const chatEnabled = configData.enableChat === true;
+          const peopleTasks = [];
+          for (const push of newPushes) {
+            if (classifyPush(push) !== 'people') continue;
+            const person = people.find(p => p.email_normalized === push.sender_email_normalized);
+            // Unknown sender: refresh the chats list (throttled, fire-and-forget)
+            // even while Chat is off — this write is what lets
+            // seedEnableChatDefault flip Chat on when people first exist.
+            if (!person) refreshPeopleFromServer();
+            // Already dismissed (device-lane parity, see the pushesToNotify
+            // filter): a remote dismissal bumps `modified` and can re-deliver
+            // an old push the cache no longer holds — it must be cached
+            // silently, never toasted, auto-opened, or counted.
+            if (push.dismissed === true) continue;
+            // Chat disabled: people pushes are out of scope — stored, but never
+            // notified, auto-opened, or counted.
+            if (!chatEnabled) continue;
+            // muted = notifications from this chat will not be shown, so a
+            // muted push is neither notified nor counted (it is still stored
+            // and shown in the popup, which does not check muted). This skip
+            // also keeps muted senders out of the auto-open path below.
+            if (person && person.muted === true) continue;
+            const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
+            // Unknown senders have no person record yet; synthesize one from
+            // the push's sender fields so getPersonIconDataUrl renders the same
+            // letter avatar the popup will show once the chats refresh lands.
+            const iconPerson = person || {
+              name: push.sender_name,
+              email: push.sender_email,
+              email_normalized: push.sender_email_normalized
+            };
+            const iconUrl = await getPersonIconDataUrl(iconPerson);
+            // Explicit trusted selection: only checked people auto-open, and
+            // only while the sender is still in the chats list — deleting the
+            // chat revokes the grant the moment the local list refreshes (the
+            // options checklist can neither show nor edit a grant for a person
+            // who is gone). The Chat surface (chatEnabled above) gates it so a
+            // hidden option can never keep acting. Resume gating and
+            // hideNotificationOnAutoOpen compose exactly as the device path.
+            const autoOpenForPush = configData.autoOpenLinks
+              && configData.autoOpenLinksFromPeople
+              && chatEnabled
+              && !!person
+              && trustedPeople.includes(push.sender_email_normalized);
+            // Keep the push alongside its task so a false result (auto-opened
+            // + hidden) can be traced back to the iden after the batch.
+            peopleTasks.push({
+              push,
+              promise: showNotificationForPush(
+                push,
+                autoOpenForPush && allowAutoOpenLinks,
+                configData.hideNotificationOnAutoOpen || false,
+                { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true }
+              )
+            });
+          }
 
-          const unreadDelta = counted.filter(Boolean).length;
+          // Device pushes feed the incremental push counter; people pushes are
+          // counted separately by the derived updateChatUnreadCount() below, so
+          // they are awaited here (for completion + side effects) but excluded
+          // from unreadDelta. Both sets run concurrently.
+          const [deviceResults, peopleResults] = await Promise.all([
+            Promise.all(pushesToNotify.map(push =>
+              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false, { autoOpenFiles: configData.autoOpenFiles === true })
+            )),
+            Promise.all(peopleTasks.map(task => task.promise))
+          ]);
+
+          const unreadDelta = deviceResults.filter(Boolean).length;
           if (unreadDelta > 0) {
             await incrementUnreadPushCount(unreadDelta);
           }
+
+          // A people task resolving false means the push was auto-opened with
+          // its notification hidden (trusted auto-open, issue #66): record its
+          // iden so the derived chat count and the popup dot both treat it as
+          // already consumed — the people analogue of a device push returning
+          // false and being left out of unreadDelta. One read-modify-write,
+          // newest appended, oldest dropped past the 100 cap.
+          const autoOpenedIdens = peopleTasks
+            .filter((task, i) => peopleResults[i] === false)
+            .map(task => task.push.iden);
+          if (autoOpenedIdens.length > 0) {
+            const stored = await chrome.storage.local.get('chatAutoOpenedIdens');
+            const merged = [...(stored.chatAutoOpenedIdens || []), ...autoOpenedIdens].slice(-100);
+            await chrome.storage.local.set({ chatAutoOpenedIdens: merged });
+          }
+
+          // Recompute the derived chat unread count once for the whole batch.
+          await updateChatUnreadCount();
+        } else if (newPushes.length > 0 || updatedPushes.length > 0) {
+          // The cache changed without the notify path running — update-only
+          // batches (e.g. remote dismissals streaming in) and non-tickle
+          // refreshes. Dismissed pushes must stop counting, so settle the
+          // derived chat count here too.
+          await updateChatUnreadCount();
         }
       }
       
@@ -1069,9 +1392,22 @@ function normalizeOpenUrl(url) {
 // when the push is auto-opened with hideNotificationOnAutoOpen. The caller
 // tallies a whole batch into one counter write, so the decision is made before
 // the side effects below, and their failures neither reject nor change it.
-async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false) {
+// A people push passes { titleOverride, iconUrl } so the sender names the
+// notification and their avatar (or the fallback icon) is shown; device pushes
+// keep the push title with the default icon. autoOpenLinks is the composed gate
+// (master / trusted-people): when it is on, link pushes auto-open their url and
+// — only if autoOpenFiles is also on — file pushes auto-open their file_url,
+// mirroring the notification Open button.
+async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false, { titleOverride, iconUrl, autoOpenFiles } = {}) {
   // Determine if this push will actually be auto-opened
-  const autoOpenUrl = (push.type === 'link' && autoOpenLinks) ? normalizeOpenUrl(push.url) : null;
+  let autoOpenUrl = null;
+  if (autoOpenLinks) {
+    if (push.type === 'link') {
+      autoOpenUrl = normalizeOpenUrl(push.url);
+    } else if (push.type === 'file' && autoOpenFiles && push.file_url) {
+      autoOpenUrl = push.file_url;
+    }
+  }
   const willAutoOpen = autoOpenUrl !== null;
 
   // Skip notification creation if both conditions are met:
@@ -1093,10 +1429,20 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
         notificationBody = push.body || getMessage('new_push');
       }
 
+      // People pushes name the sender in the title, so the push's own title
+      // (if any) folds onto the first line of the message, mirror-style.
+      let notificationTitle = push.title || '';
+      if (titleOverride !== undefined) {
+        notificationTitle = titleOverride;
+        if (push.title) {
+          notificationBody = `${push.title}\n${notificationBody}`;
+        }
+      }
+
       const notificationOptions = {
         type: 'basic',
-        iconUrl: 'assets/icon128.png',
-        title: push.title || '',
+        iconUrl: iconUrl || 'assets/icon128.png',
+        title: notificationTitle,
         message: notificationBody
       };
 
@@ -1113,9 +1459,17 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
         ];
       }
 
-      // Check if require interaction is enabled for pushes
-      const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'showOsNotifications']);
-      if (notifPrefs.requireInteraction && notifPrefs.requireInteractionPushes) {
+      // Check if require interaction is enabled for this notification's
+      // category. People pushes have their own Chats switch; absent means
+      // follow the Pushes switch (their gate before the split), so existing
+      // setups keep persisting until the user saves an explicit choice.
+      const notifPrefs = await chrome.storage.local.get(['requireInteraction', 'requireInteractionPushes', 'requireInteractionChats', 'showOsNotifications']);
+      const requireForCategory = classifyPush(push) === 'people'
+        ? (notifPrefs.requireInteractionChats !== undefined
+          ? notifPrefs.requireInteractionChats
+          : notifPrefs.requireInteractionPushes)
+        : notifPrefs.requireInteractionPushes;
+      if (notifPrefs.requireInteraction && requireForCategory) {
         notificationOptions.requireInteraction = true;
       }
 
@@ -1146,6 +1500,44 @@ const MIRROR_ICON_MAX_SIZE = 256;
 // circle would otherwise sample that band and render a colored ring, so we
 // zoom into the clean interior instead.
 const MIRROR_ICON_INSET = 0.06;
+// Cap the cached person avatars so the store can't grow without bound.
+const PERSON_AVATAR_CACHE_CAP = 50;
+
+// Encode an OffscreenCanvas to a data URL (PNG unless told otherwise). Shared
+// tail of the circle-crop, letter-avatar, and mirror-image thumbnail
+// pipelines.
+async function canvasToDataUrl(canvas, type = 'image/png', quality) {
+  const blob = await canvas.convertToBlob({ type, quality });
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Circle-crop a decoded bitmap to a PNG data URL, insetting the outer band
+// first (see MIRROR_ICON_INSET). Shared by the mirror-icon and person-avatar
+// notification pipelines; consumes (closes) the bitmap.
+async function bitmapToCircleDataUrl(bitmap) {
+  const srcSquare = Math.min(bitmap.width, bitmap.height);
+  const cropSquare = srcSquare * (1 - MIRROR_ICON_INSET);
+  const size = Math.min(Math.round(cropSquare), MIRROR_ICON_MAX_SIZE);
+  const sx = (bitmap.width - cropSquare) / 2;
+  const sy = (bitmap.height - cropSquare) / 2;
+
+  const canvas = new OffscreenCanvas(size, size);
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+  ctx.drawImage(bitmap, sx, sy, cropSquare, cropSquare, 0, 0, size, size);
+  bitmap.close();
+
+  return await canvasToDataUrl(canvas);
+}
 
 async function getMirrorIconDataUrl(iconBase64) {
   if (!iconBase64 || typeof iconBase64 !== 'string') return null;
@@ -1153,33 +1545,137 @@ async function getMirrorIconDataUrl(iconBase64) {
     const resp = await fetch(`data:image/jpeg;base64,${iconBase64}`);
     const blob = await resp.blob();
     const bitmap = await createImageBitmap(blob);
-
-    const srcSquare = Math.min(bitmap.width, bitmap.height);
-    const cropSquare = srcSquare * (1 - MIRROR_ICON_INSET);
-    const size = Math.min(Math.round(cropSquare), MIRROR_ICON_MAX_SIZE);
-    const sx = (bitmap.width - cropSquare) / 2;
-    const sy = (bitmap.height - cropSquare) / 2;
-
-    const canvas = new OffscreenCanvas(size, size);
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingQuality = 'high';
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.clip();
-    ctx.drawImage(bitmap, sx, sy, cropSquare, cropSquare, 0, 0, size, size);
-    bitmap.close();
-
-    const pngBlob = await canvas.convertToBlob({ type: 'image/png' });
-    return await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(pngBlob);
-    });
+    return await bitmapToCircleDataUrl(bitmap);
   } catch (e) {
     console.error('getMirrorIconDataUrl failed:', e);
     return `data:image/jpeg;base64,${iconBase64}`;
+  }
+}
+
+// Stored mirror-image thumbnails: longest-side cap and JPEG quality. Always
+// re-encoding (even when no downscale is needed) bounds every stored thumb to
+// tens of KB regardless of what the phone sends.
+const MIRROR_IMAGE_THUMB_MAX = 480;
+const MIRROR_IMAGE_THUMB_QUALITY = 0.75;
+// Thumbnails kept in mirrorImages (insertion order = recency).
+const MIRROR_IMAGE_CACHE_CAP = 20;
+
+async function getMirrorImageThumbDataUrl(imageBase64) {
+  try {
+    const resp = await fetch(`data:image/jpeg;base64,${imageBase64}`);
+    const blob = await resp.blob();
+    const bitmap = await createImageBitmap(blob);
+    const scale = Math.min(1, MIRROR_IMAGE_THUMB_MAX / Math.max(bitmap.width, bitmap.height));
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = new OffscreenCanvas(width, height);
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    bitmap.close();
+    return await canvasToDataUrl(canvas, 'image/jpeg', MIRROR_IMAGE_THUMB_QUALITY);
+  } catch (e) {
+    // Undecodable image: store no thumbnail; the toast path is unaffected.
+    console.error('getMirrorImageThumbDataUrl failed:', e);
+    return null;
+  }
+}
+
+// Bundled default person avatar (drawn in-repo, official-client-inspired but
+// our own circular design) — the notification icon whenever a real photo
+// cannot be fetched. A static asset rather than a runtime-generated letter
+// circle: the popup can display photo hosts the worker cannot fetch, so a
+// letter here would contradict the photo the user then sees in the popup.
+const PERSON_FALLBACK_ICON = 'assets/person128.png';
+
+// Insert or refresh a personAvatars entry at the freshest position, then evict
+// the oldest (insertion order) until the store is within
+// PERSON_AVATAR_CACHE_CAP. Entries are either successes ({ image_url, dataUrl })
+// or negative-cached failures ({ image_url, failed: true }); both kinds count
+// toward the cap. A write failure is swallowed — the avatar was already
+// produced for the caller.
+async function putPersonAvatar(cache, emailNormalized, entry) {
+  try {
+    const next = { ...cache };
+    delete next[emailNormalized];
+    next[emailNormalized] = entry;
+    const keys = Object.keys(next);
+    for (const key of keys.slice(0, Math.max(0, keys.length - PERSON_AVATAR_CACHE_CAP))) {
+      delete next[key];
+    }
+    await chrome.storage.local.set({ personAvatars: next });
+  } catch (e) {
+    // Non-fatal.
+  }
+}
+
+// Notification avatar for a person. Resolution order:
+//   1. cached success ({ image_url, dataUrl })      -> the cropped photo
+//   2. cached failure ({ image_url, failed: true }) -> the default avatar
+//   3. image_url is an https dl.pushbulletusercontent.com URL -> fetch it; on
+//      success cache + return the photo, on any failure (non-ok / network /
+//      decode) negative-cache the image_url and return the default avatar
+//   4. absent / unparseable / non-whitelisted image_url -> the default avatar
+// Only dl.pushbulletusercontent.com is ever fetched: it is verified to send
+// `access-control-allow-origin: *`. static.pushbullet.com (Google profile
+// photos) sends no CORS headers, so a fetch there can only fail and spam an
+// unsuppressible CORS error onto the extensions page — it, and every other
+// host, is never requested. Cache entries invalidate when image_url changes.
+async function getPersonIconDataUrl(person) {
+  if (!person) return PERSON_FALLBACK_ICON;
+
+  let cache = {};
+  try {
+    const stored = await chrome.storage.local.get('personAvatars');
+    cache = stored.personAvatars || {};
+    const cached = cache[person.email_normalized];
+    if (cached && cached.image_url === person.image_url) {
+      if (cached.dataUrl) return cached.dataUrl;      // cached success
+      if (cached.failed) return PERSON_FALLBACK_ICON; // cached failure
+    }
+  } catch (e) {
+    // Storage read failed; fall through to a fresh attempt.
+  }
+
+  // Whitelist gate: only build a request for an https URL whose host is exactly
+  // dl.pushbulletusercontent.com. Anything unparseable, http, or any other host
+  // (including static.pushbullet.com) never issues a network request.
+  let fetchable = false;
+  if (person.image_url) {
+    try {
+      const u = new URL(person.image_url);
+      fetchable = u.protocol === 'https:' && u.hostname === 'dl.pushbulletusercontent.com';
+    } catch (e) {
+      fetchable = false;
+    }
+  }
+
+  if (!fetchable) {
+    return PERSON_FALLBACK_ICON;
+  }
+
+  try {
+    // Time-bound the request (headers and body both): the people notify loop
+    // awaits this before the batch's device toasts are created, so a hung
+    // download must fail fast rather than stall the notification queue.
+    const resp = await fetch(person.image_url, { signal: AbortSignal.timeout(5000) });
+    if (!resp.ok) throw new Error(`avatar fetch failed: ${resp.status}`);
+    const blob = await resp.blob();
+    const bitmap = await createImageBitmap(blob);
+    const dataUrl = await bitmapToCircleDataUrl(bitmap);
+    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, dataUrl });
+    return dataUrl;
+  } catch (e) {
+    // A timeout is transient: fall back for this batch but skip the negative
+    // cache so the photo is retried on the next notification.
+    if (e && e.name === 'TimeoutError') {
+      return PERSON_FALLBACK_ICON;
+    }
+    // Everything else (non-ok, network, decode): negative-cache this image_url
+    // so it is not retried (or re-logged) until it changes, then fall back to
+    // the default avatar.
+    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, failed: true });
+    return PERSON_FALLBACK_ICON;
   }
 }
 
@@ -1212,6 +1708,27 @@ function updateMirrorNotifications(mutate) {
       await recomputeUnreadMirrorCount(next || notifications);
     } catch (error) {
       console.error('Failed to update mirrorNotifications:', error);
+    }
+  });
+  mirrorStoreOps = run.catch(() => {});
+  return run;
+}
+
+// mirrorImages ({ entryUuid: thumbnail dataUrl }, insertion order = recency) is
+// read-modify-write from the same concurrent entry points as
+// mirrorNotifications, so its ops ride the same queue. mutate() gets the
+// stored map and returns the next one, or falsy to skip the write.
+function updateMirrorImages(mutate) {
+  const run = mirrorStoreOps.then(async () => {
+    try {
+      const data = await chrome.storage.local.get('mirrorImages');
+      const images = data.mirrorImages || {};
+      const next = await mutate(images);
+      if (next) {
+        await chrome.storage.local.set({ mirrorImages: next });
+      }
+    } catch (error) {
+      console.error('Failed to update mirrorImages:', error);
     }
   });
   mirrorStoreOps = run.catch(() => {});
@@ -1258,6 +1775,14 @@ async function handleMirrorNotification(mirrorData) {
     return;
   }
 
+  // Mirrors of big-picture notifications carry an undocumented `image` field
+  // (base64 JPEG, sibling of `icon`) that official clients send and consume.
+  // It stays out of notificationData: entries are persisted a hundred deep, so
+  // the raw payload is never stored — only a bounded thumbnail, keyed by entry
+  // UUID in mirrorImages.
+  const imageBase64 = typeof mirrorData.image === 'string' && mirrorData.image ? mirrorData.image : null;
+  const imageThumb = imageBase64 ? await getMirrorImageThumbDataUrl(imageBase64) : null;
+
   // Extract needed fields for storage
   const notificationData = {
     id: crypto.randomUUID(), // Generate unique ID for reliable deletion
@@ -1294,6 +1819,7 @@ async function handleMirrorNotification(mirrorData) {
   // entries stay in the list as history; their Android slot starts over as a
   // new entry.
   let isUpdate = false;
+  let keptIds;
   await updateMirrorNotifications((notifications) => {
     const existingIndex = notifications.findIndex(n => isSameMirrorNotification(n, notificationData));
     if (existingIndex !== -1 && !notifications[existingIndex].dismissed) {
@@ -1302,14 +1828,40 @@ async function handleMirrorNotification(mirrorData) {
       isUpdate = true;
     }
     notifications.unshift(notificationData);
-    return notifications.slice(0, 100);
+    const next = notifications.slice(0, 100);
+    keptIds = new Set(next.map(n => n.id));
+    return next;
   });
 
+  // Maintain the thumbnail map when there is one to write, or when an
+  // in-place update must drop a stale one (a re-posted notification without a
+  // picture must not keep showing the old picture).
+  if (imageThumb || isUpdate) {
+    await updateMirrorImages((images) => {
+      const next = { ...images };
+      // Entries evicted from the 100-entry history must not leak thumbnails.
+      for (const id of Object.keys(next)) {
+        if (keptIds && !keptIds.has(id)) {
+          delete next[id];
+        }
+      }
+      delete next[notificationData.id];
+      if (imageThumb) {
+        next[notificationData.id] = imageThumb;
+        const ids = Object.keys(next);
+        for (const id of ids.slice(0, Math.max(0, ids.length - MIRROR_IMAGE_CACHE_CAP))) {
+          delete next[id];
+        }
+      }
+      return next;
+    });
+  }
+
   // Create or replace Chrome notification
-  await showMirrorNotification(notificationData, isUpdate);
+  await showMirrorNotification(notificationData, isUpdate, imageBase64);
 }
 
-async function showMirrorNotification(notificationData, isUpdate = false) {
+async function showMirrorNotification(notificationData, isUpdate = false, imageBase64 = null) {
   const appName = notificationData.application_name || notificationData.package_name || getMessage('unknown_app');
 
   let message = '';
@@ -1321,10 +1873,13 @@ async function showMirrorNotification(notificationData, isUpdate = false) {
   }
 
   const notificationOptions = {
-    type: 'basic',
+    type: imageBase64 ? 'image' : 'basic',
     title: appName,
     message: message.trim() || getMessage('new_notification')
   };
+  if (imageBase64) {
+    notificationOptions.imageUrl = `data:image/jpeg;base64,${imageBase64}`;
+  }
 
   const processedIconUrl = await getMirrorIconDataUrl(notificationData.icon);
   notificationOptions.iconUrl = processedIconUrl || 'assets/icon128.png';
@@ -1354,7 +1909,16 @@ async function showMirrorNotification(notificationData, isUpdate = false) {
       // show nothing at all once the old toast is gone.
       await chrome.notifications.clear(notificationId);
     }
-    chrome.notifications.create(notificationId, notificationOptions);
+    chrome.notifications.create(notificationId, notificationOptions, () => {
+      // A corrupt or oversized image may fail create() outright; it must
+      // degrade the toast to the plain form, never suppress it.
+      if (chrome.runtime.lastError && notificationOptions.type === 'image') {
+        console.warn('Image toast rejected, retrying as basic:', chrome.runtime.lastError.message);
+        const fallbackOptions = { ...notificationOptions, type: 'basic' };
+        delete fallbackOptions.imageUrl;
+        chrome.notifications.create(notificationId, fallbackOptions, () => void chrome.runtime.lastError);
+      }
+    });
   }
 
   // Play alert sound
@@ -1492,8 +2056,21 @@ async function dismissPush(pushIden) {
     
     if (response.ok) {
       console.log('Push dismissed successfully');
-      // Decrement unread push count when successfully dismissed
-      await decrementUnreadPushCount();
+      // Route the counter side effect by category: device pushes decrement
+      // the incremental counter they were counted into. People pushes are
+      // counted by the derived chat recompute instead — their dismissal
+      // settles when the server's update echo lands (the updatedPushes
+      // recompute in doRefreshPushList), so decrementing here would eat an
+      // unrelated device unread. On a cache miss (evicted or cleared while
+      // its toast lingered) the lane is unknowable, so decrement nothing:
+      // the worst case is a one-unit over-count that the next Push-tab open
+      // clears, whereas a blind decrement could eat an unrelated device
+      // unread when the missing push was a people push.
+      const data = await chrome.storage.local.get('pushes');
+      const push = (data.pushes || []).find(p => p.iden === pushIden);
+      if (push && classifyPush(push) !== 'people') {
+        await decrementUnreadPushCount();
+      }
     } else {
       console.error('Failed to dismiss push:', response.statusText);
     }
@@ -1626,11 +2203,21 @@ async function sendPush(pushData) {
       pushData.source_device_iden = configData.chromeDeviceId;
     }
 
-    // Handle multiple device IDs
+    // Build the target list: one entry per device iden and one per email
+    // (either param may carry a comma-joined list, or be absent). device_iden
+    // and email are mutually exclusive on a single push, so each target owns
+    // exactly one addressing field and the shared base drops both.
     const deviceIds = pushData.device_iden ? pushData.device_iden.split(',').map(id => id.trim()).filter(id => id) : [];
+    const emails = pushData.email ? pushData.email.split(',').map(e => e.trim()).filter(e => e) : [];
+    const { device_iden, email, ...basePushData } = pushData;
+    const targets = [
+      ...deviceIds.map(iden => ({ device_iden: iden })),
+      ...emails.map(addr => ({ email: addr }))
+    ];
 
-    if (deviceIds.length <= 1) {
-      // Single or no device - use original logic
+    if (targets.length <= 1) {
+      // Single or no explicit target - use original logic (an untargeted push
+      // still goes out as-is, i.e. to all devices)
       const response = await fetch('https://api.pushbullet.com/v2/pushes', {
         method: 'POST',
         headers: {
@@ -1645,21 +2232,21 @@ async function sendPush(pushData) {
         await storeSentMessage(push);
       }
     } else {
-      // Multiple devices - send to each one
-      const pushPromises = deviceIds.map(deviceId => {
-        const devicePushData = { ...pushData, device_iden: deviceId };
+      // Multiple targets - one POST each, addressed to a single device or email
+      const pushPromises = targets.map(target => {
+        const targetPushData = { ...basePushData, ...target };
         return fetch('https://api.pushbullet.com/v2/pushes', {
           method: 'POST',
           headers: {
             'Access-Token': token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(devicePushData)
+          body: JSON.stringify(targetPushData)
         });
       });
-      
+
       const responses = await Promise.all(pushPromises);
-      
+
       // Store the first successful push for display
       for (const response of responses) {
         if (response.ok) {
@@ -1722,6 +2309,61 @@ async function clearUnreadPushCount() {
   return updateUnreadCount('unreadPushCount', () => 0);
 }
 
+// The unread chat count is derived, not bookkept — the same pattern the mirror
+// count uses (recomputeUnreadMirrorCount). It is the number of cached pushes
+// that are ALL of:
+//   - tagged 'people' by classifyPush (a human wrote to me)
+//   - not dismissed (push.dismissed !== true)
+//   - from a sender present in the local people list
+//   - whose person is not muted (person.muted !== true)
+//   - not a hidden trusted auto-open (push.iden ∉ chatAutoOpenedIdens)
+//   - newer than that sender's read stamp and the global chat read floor:
+//       push.created > max(peopleLastRead[sender] ?? 0, chatReadFloor ?? 0)
+// It is 0 whenever Chat is disabled — people pushes are out of scope then; the
+// enableChat onChanged branch below recomputes on toggle. Recomputed (never
+// incremented), serialized through its own promise-chain queue (mirror of
+// unreadCountOps/mirrorStoreOps) so overlapping recomputes can't interleave
+// their read-modify-writes.
+let chatCountOps = Promise.resolve();
+
+function updateChatUnreadCount() {
+  const run = chatCountOps.then(async () => {
+    try {
+      const data = await chrome.storage.local.get(['pushes', 'people', 'peopleLastRead', 'enableChat', 'chatAutoOpenedIdens', 'chatReadFloor', 'unreadChatCount']);
+      const pushes = data.pushes || [];
+      const people = data.people || [];
+      const peopleLastRead = data.peopleLastRead || {};
+      const autoOpenedIdens = data.chatAutoOpenedIdens || [];
+      const floor = data.chatReadFloor ?? 0;
+      const chatEnabled = data.enableChat === true;
+
+      let count = 0;
+      if (chatEnabled) {
+        for (const push of pushes) {
+          if (classifyPush(push) !== 'people') continue;
+          if (push.dismissed === true) continue;
+          const person = people.find(p => p.email_normalized === push.sender_email_normalized);
+          if (!person || person.muted === true) continue;
+          if (autoOpenedIdens.includes(push.iden)) continue;
+          const readAt = Math.max(peopleLastRead[push.sender_email_normalized] ?? 0, floor);
+          if ((push.created ?? 0) > readAt) count++;
+        }
+      }
+
+      // Skip the write + badge refresh when nothing changed — this recompute
+      // runs on every service-worker wake and most runs are no-ops.
+      if (count !== (data.unreadChatCount || 0)) {
+        await chrome.storage.local.set({ unreadChatCount: count });
+        await updateBadge();
+      }
+    } catch (error) {
+      console.error('Failed to update unread chat count:', error);
+    }
+  });
+  chatCountOps = run.catch(() => {});
+  return run;
+}
+
 async function updateBadge() {
   try {
     // PRIORITY 1: Show OFF badge when not connected
@@ -1736,8 +2378,10 @@ async function updateBadge() {
       'displayUnreadCounts',
       'displayUnreadPushes',
       'displayUnreadMirrored',
+      'displayUnreadChats',
       'unreadPushCount',
-      'unreadMirrorCount'
+      'unreadMirrorCount',
+      'unreadChatCount'
     ]);
 
     // Check if badge display is enabled
@@ -1745,19 +2389,24 @@ async function updateBadge() {
       chrome.action.setBadgeText({ text: '' });
       return;
     }
-    
+
     const pushCount = data.unreadPushCount || 0;
     const mirrorCount = data.unreadMirrorCount || 0;
+    const chatCount = data.unreadChatCount || 0;
     const showPushes = data.displayUnreadPushes !== false; // Default true
     const showMirrored = data.displayUnreadMirrored !== false; // Default true
-    
+    const showChats = data.displayUnreadChats !== false; // Default true
+
     let totalCount = 0;
-    
+
     if (showPushes) {
       totalCount += pushCount;
     }
     if (showMirrored) {
       totalCount += mirrorCount;
+    }
+    if (showChats) {
+      totalCount += chatCount;
     }
     
     // Set badge text
@@ -1788,8 +2437,16 @@ async function setupContextMenus() {
       // an update doesn't read local before the lists land (the concurrency
       // guard above drops the rebuild the migration would otherwise trigger)
       await devicesPeopleMigration;
-      // Get stored devices and people data
-      const data = await chrome.storage.local.get(['devices', 'people']);
+      // Get stored devices, people & enableContextMenu data
+      const data = await chrome.storage.local.get(['devices', 'people', 'enableContextMenu']);
+
+      // Don't create context menu if option is manually disabled (default is true or not set)
+      if (data.enableContextMenu === false) {
+        isSettingUpContextMenus = false;
+        
+        return resolve();
+      }
+
       const devices = data.devices || [];
       const people = data.people || [];
     
@@ -2235,19 +2892,56 @@ async function clearPushHistory() {
   try {
     await chrome.storage.local.set({
       pushes: [],
-      sentMessages: []
+      sentMessages: [],
+      // Cache emptied ⇒ the derived chat count is definitionally 0; write it
+      // atomically with the list reset so no window shows a stale chat badge.
+      unreadChatCount: 0
     });
-    // Reset the counter through the serialized queue (which also refreshes
-    // the badge) so an in-flight batch increment can't overwrite it
+    // Reset the counter through the serialized queue (which also refreshes the
+    // badge, picking up unreadChatCount: 0 above) so an in-flight batch
+    // increment can't overwrite it
     await clearUnreadPushCount();
+    // Converge the chat counter too: a recompute already in flight may have
+    // read the pre-clear pushes and would write a stale count back over the
+    // atomic zero above — this enqueued recompute runs after it and reads the
+    // emptied cache, so the cleared state always wins (same pattern as
+    // clearPersonHistory).
+    await updateChatUnreadCount();
     console.log('Push history cleared');
   } catch (error) {
     console.error('Failed to clear push history:', error);
   }
 }
 
+// Clear one conversation's local history — the per-person analogue of
+// clearPushHistory (popup button at the top of the conversation). Removes the
+// person's pushes and sent messages from the local caches only (the server is
+// never touched), then recomputes the derived chat count through its
+// serialized queue — other conversations' unreads must survive, so no atomic
+// zero here.
+async function clearPersonHistory(emailNormalized) {
+  if (!emailNormalized) return;
+  try {
+    const data = await chrome.storage.local.get(['pushes', 'sentMessages']);
+    const belongsToPerson = p => {
+      const kind = classifyPush(p);
+      return (kind === 'people' && p.sender_email_normalized === emailNormalized)
+        || (kind === 'conversation' && p.receiver_email_normalized === emailNormalized);
+    };
+    await chrome.storage.local.set({
+      pushes: (data.pushes || []).filter(p => !belongsToPerson(p)),
+      sentMessages: (data.sentMessages || []).filter(m => !belongsToPerson(m))
+    });
+    await updateChatUnreadCount();
+    console.log('Person history cleared:', emailNormalized);
+  } catch (error) {
+    console.error('Failed to clear person history:', error);
+  }
+}
+
 async function clearMirrorHistory() {
   await updateMirrorNotifications(() => []);
+  await updateMirrorImages(() => ({}));
   console.log('Mirror notification history cleared');
 }
 
@@ -2255,6 +2949,14 @@ async function deleteNotification(id) {
   // Filter out the notification with the matching unique ID
   await updateMirrorNotifications(notifications =>
     notifications.filter(notification => notification.id !== id));
+  await updateMirrorImages((images) => {
+    if (!(id in images)) {
+      return null;
+    }
+    const next = { ...images };
+    delete next[id];
+    return next;
+  });
   console.log('Notification deleted:', id);
 }
 
@@ -2266,6 +2968,9 @@ async function deletePush(iden) {
     const sentMessages = (data.sentMessages || []).filter(m => m.iden !== iden);
 
     await chrome.storage.local.set({ pushes, sentMessages });
+    // A deleted push may have been an unread people push; recompute the derived
+    // chat count (the general pushes-change path deliberately doesn't).
+    await updateChatUnreadCount();
     console.log('Push deleted:', iden);
   } catch (error) {
     console.error('Failed to delete push:', error);

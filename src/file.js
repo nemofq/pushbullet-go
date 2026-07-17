@@ -5,10 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressFill = document.getElementById('progressFill');
   const status = document.getElementById('status');
 
-  // One-shot target override threaded in by the popup's per-send selector
-  // (comma-joined device idens). Scoped to this window only — it dies with
-  // the window, so it can't leak into the next file send.
-  const targetOverride = new URLSearchParams(window.location.search).get('to');
+  // One-shot target override threaded in by the popup: comma-joined device
+  // idens in `to` (per-send selector) or the conversation recipient's email in
+  // `email` (Chat). Scoped to this window only — it dies with the window, so it
+  // can't leak into the next file send.
+  const params = new URLSearchParams(window.location.search);
+  const targetOverride = params.get('to');
+  const emailOverride = params.get('email');
 
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -61,8 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
       status.textContent = window.CustomI18n.getMessage('preparing_upload');
       progressFill.style.width = '50%';
 
-      // Upload file using Pushbullet API directly
-      await uploadFile(file, tokenData.accessToken, targetOverride || configData.remoteDeviceId);
+      // Upload file using Pushbullet API directly. The per-send override (if
+      // any) carries devices and/or people; fall back to the configured
+      // default device only when neither was threaded in.
+      const target = (targetOverride || emailOverride)
+        ? { device_iden: targetOverride || undefined, email: emailOverride || undefined }
+        : { device_iden: configData.remoteDeviceId };
+      await uploadFile(file, tokenData.accessToken, target);
 
       status.textContent = window.CustomI18n.getMessage('file_image_pushed');
       progressFill.style.width = '100%';
@@ -79,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  async function uploadFile(file, accessToken, remoteDeviceId) {
+  async function uploadFile(file, accessToken, target) {
     // Step 1: Request upload URL
     const uploadRequest = await fetch('https://api.pushbullet.com/v2/upload-request', {
       method: 'POST',
@@ -131,14 +139,17 @@ document.addEventListener('DOMContentLoaded', function() {
       file_url: uploadData.file_url
     };
 
-    if (remoteDeviceId) {
-      pushData.device_iden = remoteDeviceId;
+    if (target.device_iden) {
+      pushData.device_iden = target.device_iden;
+    }
+    if (target.email) {
+      pushData.email = target.email;
     }
 
     // Use the background script's sendPush function which handles multiple devices
-    chrome.runtime.sendMessage({ 
-      type: 'send_push', 
-      data: pushData 
+    chrome.runtime.sendMessage({
+      type: 'send_push',
+      data: pushData
     });
 
     console.log('File upload window: Push sent via background script');

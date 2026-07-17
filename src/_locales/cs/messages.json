@@ -81,7 +81,7 @@
     "message": "Načteno"
   },
   "target_devices_label": {
-    "message": "Výchozí cílová zařízení:"
+    "message": "Kam odesílat push:"
   },
   "choose_devices_tip": {
     "message": "Výchozí cíl pro push, které odesíláte – z popup okna, kontextové nabídky a klávesové zkratky."
@@ -285,22 +285,22 @@
     "message": "OAuth chyba:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Pouze upozornit a zobrazit push pro následující"
+    "message": "Zobrazit push"
   },
   "current_chrome_devices_label": {
-    "message": "Aktuální zařízení - Chrome(s)"
+    "message": "Odesláno na tento Chrome"
   },
   "other_devices_label": {
-    "message": "Další zařízení"
+    "message": "Odesláno na další zařízení"
   },
   "pushes_without_target_label": {
-    "message": "Push bez cílového zařízení"
+    "message": "Odesláno na „Všechna zařízení“ (bez cíle)"
   },
   "delete_notification": {
     "message": "Smazat oznámení"
   },
   "copy_notification": {
-    "message": "Kopírovat oznámení"
+    "message": "Kopírovat text"
   },
   "delete_push": {
     "message": "Smazat push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Zobrazit výběr cíle pro každé odeslání v popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Povolit kontextovou nabídku pravým tlačítkem myši"
   },
   "all_devices": {
     "message": "Všechna zařízení"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Nakonfigurujte své heslo end-to-end šifrování pro zobrazení oznámení."
+  },
+  "behavior_tab": {
+    "message": "Chování"
+  },
+  "auto_open_people_label": {
+    "message": "Také push od osob"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Povolit chat s osobami"
+  },
+  "no_people_yet": {
+    "message": "Zatím žádné osoby"
+  },
+  "manage_people_tip": {
+    "message": "Přidat, odebrat nebo blokovat osoby na"
+  },
+  "no_pushes_with_person": {
+    "message": "Zatím žádný push s $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Zatím žádný push"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Zatím není na Pushbulletu — push přicházejí e-mailem."
+  },
+  "person_muted_title": {
+    "message": "Ztlumeno"
+  },
+  "mute_person_title": {
+    "message": "Ztlumit"
+  },
+  "unmute_person_title": {
+    "message": "Odtlumit"
+  },
+  "back_button_title": {
+    "message": "Zpět"
+  },
+  "person_avatar_alt": {
+    "message": "Profilový obrázek"
+  },
+  "auto_open_files_label": {
+    "message": "Také push souborů (obrázky)"
+  },
+  "rename_device_title": {
+    "message": "Přejmenovat"
+  },
+  "chats_label": {
+    "message": "Chaty"
+  },
+  "show_pushes_tip": {
+    "message": "Platí pro seznam v popup i pro oznámení."
   }
 }

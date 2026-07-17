@@ -81,7 +81,7 @@
     "message": "Recuperat"
   },
   "target_devices_label": {
-    "message": "Dispozitive țintă implicite:"
+    "message": "Trimite push-uri către:"
   },
   "choose_devices_tip": {
     "message": "Destinația implicită pentru push-urile trimise — din popup, meniul cu clic dreapta și scurtătura de tastatură."
@@ -285,22 +285,22 @@
     "message": "Eroare OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Notifică și arată push-uri doar pentru următoarele"
+    "message": "Afișează push-urile"
   },
   "current_chrome_devices_label": {
-    "message": "Dispozitiv curent - Chrome(uri)"
+    "message": "Trimise către acest Chrome"
   },
   "other_devices_label": {
-    "message": "Alte dispozitive"
+    "message": "Trimise către alte dispozitive"
   },
   "pushes_without_target_label": {
-    "message": "Push-uri fără dispozitiv țintă"
+    "message": "Trimise către „Toate dispozitivele” (fără țintă)"
   },
   "delete_notification": {
     "message": "Șterge notificarea"
   },
   "copy_notification": {
-    "message": "Copiază notificarea"
+    "message": "Copiază textul"
   },
   "delete_push": {
     "message": "Șterge push-ul"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Afișează selector de destinație per-trimitere în popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Activează meniul contextual la clic-dreapta"
   },
   "all_devices": {
     "message": "Toate dispozitivele"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configurați parola de criptare end-to-end pentru a vedea notificările."
+  },
+  "behavior_tab": {
+    "message": "Comportament"
+  },
+  "auto_open_people_label": {
+    "message": "De asemenea, push-uri de la persoane"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Activează Chat-ul cu persoane"
+  },
+  "no_people_yet": {
+    "message": "Nicio persoană încă"
+  },
+  "manage_people_tip": {
+    "message": "Adăugați, eliminați sau blocați persoane pe"
+  },
+  "no_pushes_with_person": {
+    "message": "Niciun push cu $1 încă"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Niciun push încă"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Nu este încă pe Pushbullet – push-urile ajung prin e-mail."
+  },
+  "person_muted_title": {
+    "message": "Silențios"
+  },
+  "mute_person_title": {
+    "message": "Fără sunet"
+  },
+  "unmute_person_title": {
+    "message": "Cu sunet"
+  },
+  "back_button_title": {
+    "message": "Înapoi"
+  },
+  "person_avatar_alt": {
+    "message": "Poză de profil"
+  },
+  "auto_open_files_label": {
+    "message": "De asemenea, push-uri de fișiere (imagini)"
+  },
+  "rename_device_title": {
+    "message": "Redenumire"
+  },
+  "chats_label": {
+    "message": "Chat-uri"
+  },
+  "show_pushes_tip": {
+    "message": "Se aplică atât listei de push-uri din popup, cât și notificărilor."
   }
 }

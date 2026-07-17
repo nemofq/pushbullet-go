@@ -81,7 +81,7 @@
     "message": "Haettu"
   },
   "target_devices_label": {
-    "message": "Oletuskohdelaitteet:"
+    "message": "Lähetä pushit laitteille:"
   },
   "choose_devices_tip": {
     "message": "Oletuskohde lähettämillesi pusheille – ponnahdusikkunasta, hiiren kakkospainikkeen valikosta ja pikanäppäimestä."
@@ -285,22 +285,22 @@
     "message": "OAuth-virhe:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Ilmoita ja näytä pushit vain seuraaville"
+    "message": "Näytä pushit"
   },
   "current_chrome_devices_label": {
-    "message": "Nykyinen laite - Chrome(t)"
+    "message": "Lähetetty tälle Chromelle"
   },
   "other_devices_label": {
-    "message": "Muut laitteet"
+    "message": "Lähetetty muille laitteille"
   },
   "pushes_without_target_label": {
-    "message": "Pushit ilman kohdelaitetta"
+    "message": "Lähetetty kohteeseen ”Kaikki laitteet” (ei kohdetta)"
   },
   "delete_notification": {
     "message": "Poista ilmoitus"
   },
   "copy_notification": {
-    "message": "Kopioi ilmoitus"
+    "message": "Kopioi teksti"
   },
   "delete_push": {
     "message": "Poista push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Näytä kohdevalitsin ponnahdusikkunassa"
+  },
+  "enable_context_menu_label": {
+    "message": "Ota käyttöön hiiren oikean painikkeen pikavalikko"
   },
   "all_devices": {
     "message": "Kaikki laitteet"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Määritä päästä-päähän -salaussalasana nähdäksesi ilmoitukset."
+  },
+  "behavior_tab": {
+    "message": "Toiminta"
+  },
+  "auto_open_people_label": {
+    "message": "Myös pushit henkilöiltä"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Ota käyttöön Chat henkilöiden kanssa"
+  },
+  "no_people_yet": {
+    "message": "Ei henkilöitä vielä"
+  },
+  "manage_people_tip": {
+    "message": "Lisää, poista tai estä henkilöitä osoitteessa"
+  },
+  "no_pushes_with_person": {
+    "message": "Ei lähetyksiä $1:n kanssa vielä"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Ei lähetyksiä vielä"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Ei vielä Pushbulletissa — lähetykset saapuvat sähköpostitse."
+  },
+  "person_muted_title": {
+    "message": "Mykistetty"
+  },
+  "mute_person_title": {
+    "message": "Mykistä"
+  },
+  "unmute_person_title": {
+    "message": "Poista mykistys"
+  },
+  "back_button_title": {
+    "message": "Takaisin"
+  },
+  "person_avatar_alt": {
+    "message": "Profiilikuva"
+  },
+  "auto_open_files_label": {
+    "message": "Myös tiedostopushit (kuvat)"
+  },
+  "rename_device_title": {
+    "message": "Nimeä uudelleen"
+  },
+  "chats_label": {
+    "message": "Chatit"
+  },
+  "show_pushes_tip": {
+    "message": "Koskee sekä ponnahdusikkunan listaa että ilmoituksia."
   }
 }

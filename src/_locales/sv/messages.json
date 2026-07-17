@@ -81,7 +81,7 @@
     "message": "Hämtat"
   },
   "target_devices_label": {
-    "message": "Standardmålenheter:"
+    "message": "Skicka pushes till:"
   },
   "choose_devices_tip": {
     "message": "Standardmål för pushar du skickar – från popup-fönstret, högerklicksmenyn och tangentbordsgenvägen."
@@ -285,22 +285,22 @@
     "message": "OAuth-fel:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Meddela och visa endast pushes för följande"
+    "message": "Visa pushes"
   },
   "current_chrome_devices_label": {
-    "message": "Aktuell enhet - Chrome"
+    "message": "Skickade till denna Chrome"
   },
   "other_devices_label": {
-    "message": "Andra enheter"
+    "message": "Skickade till andra enheter"
   },
   "pushes_without_target_label": {
-    "message": "Pushes utan målenhet"
+    "message": "Skickade till ”Alla enheter” (utan mål)"
   },
   "delete_notification": {
     "message": "Ta bort avisering"
   },
   "copy_notification": {
-    "message": "Kopiera avisering"
+    "message": "Kopiera text"
   },
   "delete_push": {
     "message": "Ta bort push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Visa målväljare per sändning i popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Aktivera snabbmeny vid högerklick"
   },
   "all_devices": {
     "message": "Alla enheter"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Konfigurera ditt end-to-end krypteringslösenord för att se aviseringarna."
+  },
+  "behavior_tab": {
+    "message": "Beteende"
+  },
+  "auto_open_people_label": {
+    "message": "Även pushes från personer"
+  },
+  "chat_tab": {
+    "message": "Chatt"
+  },
+  "enable_chat_label": {
+    "message": "Aktivera chatt med personer"
+  },
+  "no_people_yet": {
+    "message": "Inga personer ännu"
+  },
+  "manage_people_tip": {
+    "message": "Lägg till, ta bort eller blockera personer på"
+  },
+  "no_pushes_with_person": {
+    "message": "Inga pushes med $1 ännu"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Inga pushes ännu"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Inte på Pushbullet ännu — pushes kommer via e-post."
+  },
+  "person_muted_title": {
+    "message": "Tystad"
+  },
+  "mute_person_title": {
+    "message": "Tysta"
+  },
+  "unmute_person_title": {
+    "message": "Avtysta"
+  },
+  "back_button_title": {
+    "message": "Tillbaka"
+  },
+  "person_avatar_alt": {
+    "message": "Profilbild"
+  },
+  "auto_open_files_label": {
+    "message": "Även pushes av filer (bilder)"
+  },
+  "rename_device_title": {
+    "message": "Byt namn"
+  },
+  "chats_label": {
+    "message": "Chattar"
+  },
+  "show_pushes_tip": {
+    "message": "Gäller både listan i popup-fönstret och aviseringarna."
   }
 }

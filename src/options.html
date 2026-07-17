@@ -155,6 +155,14 @@
       margin-bottom: 20px;
     }
 
+    /* Hairline that opens each sectioned group (a titled group, or a master
+       option with sub-options). Consecutive one-line options cluster without
+       a divider between them; the first group of each tab has none. */
+    .group-start {
+      border-top: 1px solid var(--border-primary);
+      padding-top: 18px;
+    }
+
     label {
       display: block;
       margin-bottom: 8px;
@@ -333,6 +341,26 @@
       white-space: nowrap;
     }
 
+    /* Muted email line beside the name on trusted-people rows only (rows with
+       .has-subtext). Device pickers never carry it, so their layout is
+       unchanged. The name yields to its natural width so the email fills the
+       remainder; both ellipsize when cramped. */
+    .device-list .opt-subtext {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-align: left;
+    }
+
+    .device-list .list-option.has-subtext .opt-text {
+      flex: 0 1 auto;
+      max-width: 55%;
+    }
+
     .device-list .opt-check {
       display: flex;
       flex-shrink: 0;
@@ -388,6 +416,60 @@
       height: 1px;
       background: var(--border-primary);
       margin: 6px 4px;
+    }
+
+    /* Ghost pencil for inline device rename — hidden at rest, revealed on row
+       hover/focus (mirrors the popup's copy-button), green on hover.
+       width:auto is load-bearing: the page's global `button` rule sets
+       width:100%, which would make this flex-shrink:0 item swallow the whole
+       row and collapse the flex:1 label next to it to zero width. */
+    .device-list .opt-pencil {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      width: auto;
+      padding: 4px;
+      margin-left: 2px;
+      opacity: 0;
+      transition: opacity 0.2s, color 0.2s;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .device-list .opt-pencil svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .device-list .list-option:hover .opt-pencil,
+    .device-list .list-option:focus-within .opt-pencil {
+      opacity: 1;
+    }
+
+    .device-list .opt-pencil:hover {
+      color: var(--toggle-active);
+    }
+
+    /* Compact inline editor that replaces the label span while renaming. */
+    .device-list .opt-rename-input {
+      flex: 1;
+      min-width: 0;
+      padding: 2px 6px;
+      border: 1px solid var(--border-secondary);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      box-sizing: border-box;
+    }
+
+    .device-list .opt-rename-input:focus {
+      outline: none;
+      border-color: var(--toggle-active);
     }
 
     /* Custom dropdown (single-select) — closed face styled like the inputs;
@@ -466,6 +548,12 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
+    }
+
+    /* Require-interaction's Pushes/Mirrored subs sit one indent step deeper
+       than the other Show-notifications sub-rows. */
+    .toggle-container.nested {
+      margin-left: 24px;
     }
 
     .toggle-label {
@@ -560,6 +648,15 @@
       margin-right: 8px;
       font-size: 14px;
       font-weight: normal;
+      flex-shrink: 0;
+    }
+
+    /* Hanging indent for every sub-option label: the ↳ marker sits in its own
+       fixed gutter and the text wraps inside its own box, so wrapped lines
+       align with the first line's text instead of sliding under the marker. */
+    label:has(> .sub-option-icon) {
+      display: flex;
+      align-items: baseline;
     }
   </style>
 </head>
@@ -568,6 +665,7 @@
   <div class="container">
     <div class="tabs">
       <div class="tab active" data-tab="general" data-i18n="general_tab">General</div>
+      <div class="tab" data-tab="behavior" data-i18n="behavior_tab">Behavior</div>
       <div class="tab" data-tab="appearance" data-i18n="appearance_tab">Appearance</div>
     </div>
 
@@ -589,8 +687,8 @@
         <button id="retrieveDevices" class="retrieve-button" disabled data-i18n="retrieve_devices_button">Retrieve
           devices and people</button>
       </div>
-      <div class="form-group">
-        <label data-i18n="target_devices_label">Default Target Devices:</label>
+      <div class="form-group group-start">
+        <label data-i18n="target_devices_label">Send pushes to:</label>
         <div id="remoteDevicePicker" class="device-list"></div>
         <div class="tip" data-i18n="choose_devices_tip">
           The default target for pushes you send - from the popup, the right-click menu, and the keyboard shortcut.
@@ -606,13 +704,14 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="form-group">
-        <label data-i18n="only_notify_show_pushes_title">Only notify and show pushes for the following</label>
+      <div class="form-group group-start">
+        <label data-i18n="only_notify_show_pushes_title">Show pushes</label>
+        <div class="tip" data-i18n="show_pushes_tip">Applies to both the popup list and notifications.</div>
       </div>
       <div class="toggle-container" style="margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="current_chrome_devices_label">Current device - Chrome(s)</span>
+          <span data-i18n="current_chrome_devices_label">Sent to this Chrome</span>
         </label>
         <input type="checkbox" id="onlyBrowserPushes" class="toggle-input">
         <div class="toggle-switch" id="onlyBrowserPushesToggle">
@@ -622,7 +721,7 @@
       <div class="toggle-container" style="margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="other_devices_label">Other devices</span>
+          <span data-i18n="other_devices_label">Sent to other devices</span>
         </label>
         <input type="checkbox" id="showOtherDevicePushes" class="toggle-input">
         <div class="toggle-switch" id="showOtherDevicePushesToggle">
@@ -638,13 +737,17 @@
       <div class="toggle-container" style="margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
-          <span data-i18n="pushes_without_target_label">Pushes without target device</span>
+          <span data-i18n="pushes_without_target_label">Sent to "All devices" (no target)</span>
         </label>
         <input type="checkbox" id="showNoTargetPushes" class="toggle-input">
         <div class="toggle-switch" id="showNoTargetPushesToggle">
           <div class="toggle-slider"></div>
         </div>
       </div>
+    </div>
+
+    <!-- Behavior Tab Content -->
+    <div class="tab-content" id="behavior-content">
       <div class="toggle-container">
         <label class="toggle-label" data-i18n="auto_open_links_label">Auto-open in new tab (inactive) when receiving a
           link</label>
@@ -673,7 +776,33 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="toggle-container">
+      <div class="toggle-container" id="autoOpenFilesContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="auto_open_files_label">Also include file (image) pushes</span>
+        </label>
+        <input type="checkbox" id="autoOpenFiles" class="toggle-input">
+        <div class="toggle-switch" id="autoOpenFilesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <!-- Auto-open links from trusted people (issue #66). Shown only while the
+           auto-open master is on and the Chat surface is enabled; the trusted
+           checklist below is explicit-selection (only checked people auto-open). -->
+      <div class="toggle-container" id="autoOpenLinksFromPeopleContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="auto_open_people_label">Also include pushes from people</span>
+        </label>
+        <input type="checkbox" id="autoOpenLinksFromPeople" class="toggle-input">
+        <div class="toggle-switch" id="autoOpenLinksFromPeopleToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="form-group" id="trustedPeopleGroup" style="display: none; margin-left: 24px;">
+        <div id="trustedPeoplePicker" class="device-list"></div>
+      </div>
+      <div class="toggle-container group-start">
         <label class="toggle-label" data-i18n="show_os_notifications_label">Show notifications</label>
         <input type="checkbox" id="showOsNotifications" class="toggle-input">
         <div class="toggle-switch" id="showOsNotificationsToggle">
@@ -702,6 +831,58 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
+      <!-- Require interaction + native-close-as-dismiss nest under the Show
+           notifications master (UI-only — each key stays independent in code) -->
+      <div class="toggle-container" id="requireInteractionContainer" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="require_interaction_label">Require interaction to dismiss notifications in Chrome</span>
+        </label>
+        <input type="checkbox" id="requireInteraction" class="toggle-input">
+        <div class="toggle-switch" id="requireInteractionToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container nested" id="requireInteractionPushesContainer" style="display: none;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="pushes_label">Pushes</span>
+        </label>
+        <input type="checkbox" id="requireInteractionPushes" class="toggle-input">
+        <div class="toggle-switch" id="requireInteractionPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container nested" id="requireInteractionChatsContainer" style="display: none;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="chats_label">Chats</span>
+        </label>
+        <input type="checkbox" id="requireInteractionChats" class="toggle-input">
+        <div class="toggle-switch" id="requireInteractionChatsToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container nested" id="requireInteractionMirroredContainer" style="display: none;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
+        </label>
+        <input type="checkbox" id="requireInteractionMirrored" class="toggle-input">
+        <div class="toggle-switch" id="requireInteractionMirroredToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container" id="closeAsDismissContainer" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="close_as_dismiss_label">Treat native close of Chrome notification as dismiss action</span>
+        </label>
+        <input type="checkbox" id="closeAsDismiss" class="toggle-input">
+        <div class="toggle-switch" id="closeAsDismissToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Appearance Tab Content -->
@@ -710,6 +891,13 @@
         <label class="toggle-label" data-i18n="show_sms_shortcut_label">Show Pushbullet SMS shortcut in popup</label>
         <input type="checkbox" id="showSmsShortcut" class="toggle-input">
         <div class="toggle-switch" id="showSmsShortcutToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="enable_chat_label">Enable Chat with People</label>
+        <input type="checkbox" id="enableChat" class="toggle-input">
+        <div class="toggle-switch" id="enableChatToggle">
           <div class="toggle-slider"></div>
         </div>
       </div>
@@ -731,50 +919,11 @@
         <div class="tip" data-i18n="encryption_help_text">Enable encryption for Notification Mirroring and SMS. Your
           password is never stored. Must be the same on all devices.</div>
       </div>
-      <div class="form-group" id="defaultTabGroup" style="display: none;">
-        <label>
-          <span class="sub-option-icon">↳</span>
-          <span data-i18n="default_tab_label">Default tab in popup:</span>
-        </label>
+      <div class="form-group group-start" id="defaultTabGroup">
+        <label data-i18n="default_tab_label">Default tab in popup:</label>
         <div id="defaultTabDropdown"></div>
       </div>
-      <div class="toggle-container">
-        <label class="toggle-label" data-i18n="require_interaction_label">Require interaction to dismiss notifications
-          in Chrome</label>
-        <input type="checkbox" id="requireInteraction" class="toggle-input">
-        <div class="toggle-switch" id="requireInteractionToggle">
-          <div class="toggle-slider"></div>
-        </div>
-      </div>
-      <div class="toggle-container" id="requireInteractionPushesContainer" style="display: none; margin-left: 0px;">
-        <label class="toggle-label">
-          <span class="sub-option-icon">↳</span>
-          <span data-i18n="pushes_label">Pushes</span>
-        </label>
-        <input type="checkbox" id="requireInteractionPushes" class="toggle-input">
-        <div class="toggle-switch" id="requireInteractionPushesToggle">
-          <div class="toggle-slider"></div>
-        </div>
-      </div>
-      <div class="toggle-container" id="requireInteractionMirroredContainer" style="display: none; margin-left: 0px;">
-        <label class="toggle-label">
-          <span class="sub-option-icon">↳</span>
-          <span data-i18n="mirrored_notifications_label">Mirrored Notifications</span>
-        </label>
-        <input type="checkbox" id="requireInteractionMirrored" class="toggle-input">
-        <div class="toggle-switch" id="requireInteractionMirroredToggle">
-          <div class="toggle-slider"></div>
-        </div>
-      </div>
-      <div class="toggle-container">
-        <label class="toggle-label" data-i18n="close_as_dismiss_label">Treat native close of Chrome notification as
-          dismiss action</label>
-        <input type="checkbox" id="closeAsDismiss" class="toggle-input">
-        <div class="toggle-switch" id="closeAsDismissToggle">
-          <div class="toggle-slider"></div>
-        </div>
-      </div>
-      <div class="toggle-container">
+      <div class="toggle-container group-start">
         <label class="toggle-label" data-i18n="display_unread_counts_label">Display unread counts</label>
         <input type="checkbox" id="displayUnreadCounts" class="toggle-input">
         <div class="toggle-switch" id="displayUnreadCountsToggle">
@@ -791,6 +940,16 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
+      <div class="toggle-container" id="displayUnreadChatsContainer" style="display: none; margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="chats_label">Chats</span>
+        </label>
+        <input type="checkbox" id="displayUnreadChats" class="toggle-input">
+        <div class="toggle-switch" id="displayUnreadChatsToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
       <div class="toggle-container" id="displayUnreadMirroredContainer" style="display: none; margin-left: 0px;">
         <label class="toggle-label">
           <span class="sub-option-icon">↳</span>
@@ -801,18 +960,25 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="toggle-container">
+      <div class="toggle-container group-start">
         <label class="toggle-label" data-i18n="show_quick_share_label">Show quick share for current page</label>
         <input type="checkbox" id="showQuickShare" class="toggle-input">
         <div class="toggle-switch" id="showQuickShareToggle">
           <div class="toggle-slider"></div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="toggle-container">
+        <label class="toggle-label" data-i18n="enable_context_menu_label">Enable right-click context menu</label>
+        <input type="checkbox" id="enableContextMenu" class="toggle-input">
+        <div class="toggle-switch" id="enableContextMenuToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
+      <div class="form-group group-start">
         <label data-i18n="language_label">Language:</label>
         <div id="languageList" class="device-list"></div>
       </div>
-      <div class="form-group">
+      <div class="form-group group-start">
         <label data-i18n="color_mode_label">Color Mode:</label>
         <div id="colorModeDropdown"></div>
       </div>

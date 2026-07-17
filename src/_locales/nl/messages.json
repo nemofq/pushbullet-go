@@ -81,7 +81,7 @@
     "message": "Opgehaald"
   },
   "target_devices_label": {
-    "message": "Standaard doelapparaten:"
+    "message": "Stuur pushes naar:"
   },
   "choose_devices_tip": {
     "message": "De standaard bestemming voor pushes die je verstuurt – vanuit de popup, het rechtsklikmenu en de sneltoets."
@@ -285,22 +285,22 @@
     "message": "OAuth fout:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Alleen melden en tonen voor de volgende pushes"
+    "message": "Pushes tonen"
   },
   "current_chrome_devices_label": {
-    "message": "Huidig apparaat - Chrome(s)"
+    "message": "Verzonden naar deze Chrome"
   },
   "other_devices_label": {
-    "message": "Andere apparaten"
+    "message": "Verzonden naar andere apparaten"
   },
   "pushes_without_target_label": {
-    "message": "Pushes zonder doelapparaat"
+    "message": "Verzonden naar \"Alle apparaten\" (geen doel)"
   },
   "delete_notification": {
     "message": "Melding verwijderen"
   },
   "copy_notification": {
-    "message": "Melding kopiëren"
+    "message": "Tekst kopiëren"
   },
   "delete_push": {
     "message": "Push verwijderen"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Doelkiezer per verzending in popup tonen"
+  },
+  "enable_context_menu_label": {
+    "message": "Contextmenu bij rechtsklikken inschakelen"
   },
   "all_devices": {
     "message": "Alle apparaten"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configureer je end-to-end versleuteling wachtwoord om de meldingen te zien."
+  },
+  "behavior_tab": {
+    "message": "Gedrag"
+  },
+  "auto_open_people_label": {
+    "message": "Ook pushes van personen"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Chat met personen inschakelen"
+  },
+  "no_people_yet": {
+    "message": "Nog geen personen"
+  },
+  "manage_people_tip": {
+    "message": "Voeg personen toe, verwijder of blokkeer ze op"
+  },
+  "no_pushes_with_person": {
+    "message": "Nog geen pushes met $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Nog geen pushes"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Nog niet op Pushbullet - pushes komen per e-mail binnen."
+  },
+  "person_muted_title": {
+    "message": "Gedempt"
+  },
+  "mute_person_title": {
+    "message": "Dempen"
+  },
+  "unmute_person_title": {
+    "message": "Dempen opheffen"
+  },
+  "back_button_title": {
+    "message": "Terug"
+  },
+  "person_avatar_alt": {
+    "message": "Profielfoto"
+  },
+  "auto_open_files_label": {
+    "message": "Ook pushes van bestanden (afbeeldingen)"
+  },
+  "rename_device_title": {
+    "message": "Hernoemen"
+  },
+  "chats_label": {
+    "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "Geldt voor zowel de lijst in de popup als meldingen."
   }
 }

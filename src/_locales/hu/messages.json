@@ -81,7 +81,7 @@
     "message": "Lekérve"
   },
   "target_devices_label": {
-    "message": "Alapértelmezett céleszközök:"
+    "message": "Push küldése ide:"
   },
   "choose_devices_tip": {
     "message": "Az alapértelmezett cél a küldött push üzenetekhez – a felugró ablakból, a jobb klikk menüből és a billentyűparancsból."
@@ -285,22 +285,22 @@
     "message": "OAuth hiba:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Értesítés és megjelenítés csak a következőknél"
+    "message": "Küldések megjelenítése"
   },
   "current_chrome_devices_label": {
-    "message": "Jelenlegi eszköz - Chrome(ok)"
+    "message": "Erre a Chrome-ra küldött"
   },
   "other_devices_label": {
-    "message": "Egyéb eszközök"
+    "message": "Más eszközökre küldött"
   },
   "pushes_without_target_label": {
-    "message": "Céleszköz nélküli küldések"
+    "message": "„Minden eszköz”-re küldött (céleszköz nélkül)"
   },
   "delete_notification": {
     "message": "Értesítés törlése"
   },
   "copy_notification": {
-    "message": "Értesítés másolása"
+    "message": "Szöveg másolása"
   },
   "delete_push": {
     "message": "Push törlése"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Céleszköz-választó megjelenítése a popup-ban"
+  },
+  "enable_context_menu_label": {
+    "message": "Helyi menü engedélyezése jobb kattintással"
   },
   "all_devices": {
     "message": "Minden eszköz"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Állítsa be a végpontok közötti titkosítási jelszót az értesítések megtekintéséhez."
+  },
+  "behavior_tab": {
+    "message": "Viselkedés"
+  },
+  "auto_open_people_label": {
+    "message": "Küldések személyektől is"
+  },
+  "chat_tab": {
+    "message": "Csevegés"
+  },
+  "enable_chat_label": {
+    "message": "Csevegés személyekkel engedélyezése"
+  },
+  "no_people_yet": {
+    "message": "Még nincs személy"
+  },
+  "manage_people_tip": {
+    "message": "Személyek hozzáadása, eltávolítása vagy letiltása itt:"
+  },
+  "no_pushes_with_person": {
+    "message": "$1: még nincs küldés"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Még nincs küldés"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Még nincs Pushbullet-fiókja — a küldések e-mailben érkeznek."
+  },
+  "person_muted_title": {
+    "message": "Némítva"
+  },
+  "mute_person_title": {
+    "message": "Némítás"
+  },
+  "unmute_person_title": {
+    "message": "Némítás feloldása"
+  },
+  "back_button_title": {
+    "message": "Vissza"
+  },
+  "person_avatar_alt": {
+    "message": "Profilkép"
+  },
+  "auto_open_files_label": {
+    "message": "Fájlküldések (képek) is"
+  },
+  "rename_device_title": {
+    "message": "Átnevezés"
+  },
+  "chats_label": {
+    "message": "Csevegések"
+  },
+  "show_pushes_tip": {
+    "message": "A felugró ablak listájára és az értesítésekre is vonatkozik."
   }
 }

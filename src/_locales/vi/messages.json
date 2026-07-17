@@ -81,7 +81,7 @@
     "message": "Đã lấy"
   },
   "target_devices_label": {
-    "message": "Thiết bị nhận mặc định:"
+    "message": "Gửi push tới:"
   },
   "choose_devices_tip": {
     "message": "Đích mặc định cho các push bạn gửi - từ popup, menu chuột phải và phím tắt bàn phím."
@@ -285,22 +285,22 @@
     "message": "Lỗi OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Chỉ thông báo và hiển thị push cho các mục sau"
+    "message": "Hiển thị push"
   },
   "current_chrome_devices_label": {
-    "message": "Thiết bị hiện tại - Chrome"
+    "message": "Đã gửi tới Chrome này"
   },
   "other_devices_label": {
-    "message": "Thiết bị khác"
+    "message": "Đã gửi tới thiết bị khác"
   },
   "pushes_without_target_label": {
-    "message": "Push không có thiết bị đích"
+    "message": "Đã gửi tới “Tất cả thiết bị” (không có đích)"
   },
   "delete_notification": {
     "message": "Xóa thông báo"
   },
   "copy_notification": {
-    "message": "Sao chép thông báo"
+    "message": "Sao chép văn bản"
   },
   "delete_push": {
     "message": "Xóa push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Hiển thị bộ chọn đích mỗi lần gửi trong popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Bật menu chuột phải"
   },
   "all_devices": {
     "message": "Tất cả thiết bị"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Cấu hình mật khẩu mã hóa end-to-end để xem thông báo."
+  },
+  "behavior_tab": {
+    "message": "Hành vi"
+  },
+  "auto_open_people_label": {
+    "message": "Cả push từ người"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Bật Chat với người"
+  },
+  "no_people_yet": {
+    "message": "Chưa có người"
+  },
+  "manage_people_tip": {
+    "message": "Thêm, xóa hoặc chặn người tại"
+  },
+  "no_pushes_with_person": {
+    "message": "Chưa có push nào với $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Chưa có push nào"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Chưa có Pushbullet — push sẽ đến qua email."
+  },
+  "person_muted_title": {
+    "message": "Đã tắt tiếng"
+  },
+  "mute_person_title": {
+    "message": "Tắt tiếng"
+  },
+  "unmute_person_title": {
+    "message": "Bật tiếng"
+  },
+  "back_button_title": {
+    "message": "Quay lại"
+  },
+  "person_avatar_alt": {
+    "message": "Ảnh đại diện"
+  },
+  "auto_open_files_label": {
+    "message": "Cả push tệp (hình ảnh)"
+  },
+  "rename_device_title": {
+    "message": "Đổi tên"
+  },
+  "chats_label": {
+    "message": "Chat"
+  },
+  "show_pushes_tip": {
+    "message": "Áp dụng cho cả danh sách push trong popup và thông báo."
   }
 }

@@ -81,7 +81,7 @@
     "message": "Récupéré"
   },
   "target_devices_label": {
-    "message": "Appareils cibles par défaut :"
+    "message": "Envoyer les pushs vers :"
   },
   "choose_devices_tip": {
     "message": "La cible par défaut pour les envois — depuis la popup, le menu contextuel et le raccourci clavier."
@@ -285,22 +285,22 @@
     "message": "Erreur OAuth :"
   },
   "only_notify_show_pushes_title": {
-    "message": "Notifier et afficher uniquement les pushs pour"
+    "message": "Afficher les pushs"
   },
   "current_chrome_devices_label": {
-    "message": "Appareil actuel - Chrome(s)"
+    "message": "Envoyés vers ce Chrome"
   },
   "other_devices_label": {
-    "message": "Autres appareils"
+    "message": "Envoyés vers d'autres appareils"
   },
   "pushes_without_target_label": {
-    "message": "Pushs sans appareil cible"
+    "message": "Envoyés vers « Tous les appareils » (sans cible)"
   },
   "delete_notification": {
     "message": "Supprimer la notification"
   },
   "copy_notification": {
-    "message": "Copier la notification"
+    "message": "Copier le texte"
   },
   "delete_push": {
     "message": "Supprimer le push"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Afficher le sélecteur de destination par envoi dans la popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Activer le menu contextuel du clic droit"
   },
   "all_devices": {
     "message": "Tous les appareils"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configurez votre mot de passe de chiffrement de bout en bout pour voir les notifications."
+  },
+  "behavior_tab": {
+    "message": "Comportement"
+  },
+  "auto_open_people_label": {
+    "message": "Aussi les pushs des personnes"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Activer le chat avec les personnes"
+  },
+  "no_people_yet": {
+    "message": "Aucune personne"
+  },
+  "manage_people_tip": {
+    "message": "Ajoutez, supprimez ou bloquez des personnes sur"
+  },
+  "no_pushes_with_person": {
+    "message": "Aucun envoi avec $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Aucun envoi"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Pas encore sur Pushbullet — les envois arrivent par e-mail."
+  },
+  "person_muted_title": {
+    "message": "Muet"
+  },
+  "mute_person_title": {
+    "message": "Couper le son"
+  },
+  "unmute_person_title": {
+    "message": "Réactiver le son"
+  },
+  "back_button_title": {
+    "message": "Retour"
+  },
+  "person_avatar_alt": {
+    "message": "Photo de profil"
+  },
+  "auto_open_files_label": {
+    "message": "Aussi les pushs de fichiers (images)"
+  },
+  "rename_device_title": {
+    "message": "Renommer"
+  },
+  "chats_label": {
+    "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "S'applique à la fois à la liste de la popup et aux notifications."
   }
 }

@@ -84,13 +84,16 @@
     "message": "Couldn't retrieve devices and people. Check access token and try again."
   },
   "target_devices_label": {
-    "message": "Default Target Devices:"
+    "message": "Send pushes to:"
   },
   "choose_devices_tip": {
     "message": "The default target for pushes you send - from the popup, the right-click menu, and the keyboard shortcut."
   },
   "show_per_send_target_label": {
     "message": "Show per-send target picker in popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Enable right-click context menu"
   },
   "all_devices": {
     "message": "All devices"
@@ -133,6 +136,9 @@
   },
   "auto_open_links_label": {
     "message": "Auto-open in new tab (inactive) when receiving a link"
+  },
+  "auto_open_files_label": {
+    "message": "Also include file (image) pushes"
   },
   "enable_notification_mirroring_label": {
     "message": "Enable Notification Mirroring"
@@ -260,6 +266,9 @@
   "general_tab": {
     "message": "General"
   },
+  "behavior_tab": {
+    "message": "Behavior"
+  },
   "appearance_tab": {
     "message": "Appearance"
   },
@@ -277,6 +286,9 @@
   },
   "mirrored_notifications_label": {
     "message": "Mirrored Notifications"
+  },
+  "chats_label": {
+    "message": "Chats"
   },
   "close_as_dismiss_label": {
     "message": "Treat native close of Chrome notification as dismiss action"
@@ -333,22 +345,25 @@
     "message": "OAuth error:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Only notify and show pushes for the following"
+    "message": "Show pushes"
+  },
+  "show_pushes_tip": {
+    "message": "Applies to both the popup list and notifications."
   },
   "current_chrome_devices_label": {
-    "message": "Current device - Chrome(s)"
+    "message": "Sent to this Chrome"
   },
   "other_devices_label": {
-    "message": "Other devices"
+    "message": "Sent to other devices"
   },
   "pushes_without_target_label": {
-    "message": "Pushes without target device"
+    "message": "Sent to \"All devices\" (no target)"
   },
   "delete_notification": {
     "message": "Delete notification"
   },
   "copy_notification": {
-    "message": "Copy notification"
+    "message": "Copy text"
   },
   "delete_push": {
     "message": "Delete push"
@@ -362,7 +377,49 @@
   "hide_notification_on_auto_open_label": {
     "message": "Hide notification when it has auto-opened"
   },
+  "auto_open_people_label": {
+    "message": "Also include pushes from people"
+  },
   "show_os_notifications_label": {
     "message": "Show notifications"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Enable Chat with People"
+  },
+  "no_people_yet": {
+    "message": "No people yet"
+  },
+  "manage_people_tip": {
+    "message": "Add, remove or block people at"
+  },
+  "no_pushes_with_person": {
+    "message": "No pushes with $1 yet"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "No pushes yet"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Not on Pushbullet yet — pushes arrive by email."
+  },
+  "person_muted_title": {
+    "message": "Muted"
+  },
+  "mute_person_title": {
+    "message": "Mute"
+  },
+  "unmute_person_title": {
+    "message": "Unmute"
+  },
+  "rename_device_title": {
+    "message": "Rename"
+  },
+  "back_button_title": {
+    "message": "Back"
+  },
+  "person_avatar_alt": {
+    "message": "Profile picture"
   }
 }

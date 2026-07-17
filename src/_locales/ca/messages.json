@@ -81,7 +81,7 @@
     "message": "Recuperat"
   },
   "target_devices_label": {
-    "message": "Dispositius destinataris per defecte:"
+    "message": "Enviar enviaments a:"
   },
   "choose_devices_tip": {
     "message": "El destinatari per defecte dels enviaments que fas, des de la finestra emergent, el menú contextual i la drecera de teclat."
@@ -285,22 +285,22 @@
     "message": "Error OAuth:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Només notificar i mostrar enviaments per als següents"
+    "message": "Mostra enviaments"
   },
   "current_chrome_devices_label": {
-    "message": "Dispositiu actual - Chrome(s)"
+    "message": "Enviats a aquest Chrome"
   },
   "other_devices_label": {
-    "message": "Altres dispositius"
+    "message": "Enviats a altres dispositius"
   },
   "pushes_without_target_label": {
-    "message": "Enviaments sense dispositiu destinatari"
+    "message": "Enviats a «Tots els dispositius» (sense destinatari)"
   },
   "delete_notification": {
     "message": "Eliminar notificació"
   },
   "copy_notification": {
-    "message": "Copiar notificació"
+    "message": "Copiar text"
   },
   "delete_push": {
     "message": "Eliminar enviament"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Mostra el selector de destinatari per enviament al popup"
+  },
+  "enable_context_menu_label": {
+    "message": "Activa el menú contextual del clic dret"
   },
   "all_devices": {
     "message": "Tots els dispositius"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Configura la teva contrasenya de xifratge extrem a extrem per veure les notificacions."
+  },
+  "behavior_tab": {
+    "message": "Comportament"
+  },
+  "auto_open_people_label": {
+    "message": "També enviaments de persones"
+  },
+  "chat_tab": {
+    "message": "Chat"
+  },
+  "enable_chat_label": {
+    "message": "Activar Chat amb persones"
+  },
+  "no_people_yet": {
+    "message": "Encara no hi ha persones"
+  },
+  "manage_people_tip": {
+    "message": "Afegeix, elimina o bloqueja persones a"
+  },
+  "no_pushes_with_person": {
+    "message": "Encara no hi ha enviaments amb $1"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Encara no hi ha enviaments"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Encara no és a Pushbullet - els enviaments arriben per correu electrònic."
+  },
+  "person_muted_title": {
+    "message": "Silenciat"
+  },
+  "mute_person_title": {
+    "message": "Silenciar"
+  },
+  "unmute_person_title": {
+    "message": "Dessilenciar"
+  },
+  "back_button_title": {
+    "message": "Enrere"
+  },
+  "person_avatar_alt": {
+    "message": "Foto de perfil"
+  },
+  "auto_open_files_label": {
+    "message": "També enviaments de fitxers (imatges)"
+  },
+  "rename_device_title": {
+    "message": "Reanomenar"
+  },
+  "chats_label": {
+    "message": "Chats"
+  },
+  "show_pushes_tip": {
+    "message": "S'aplica tant a la llista de la finestra emergent com a les notificacions."
   }
 }

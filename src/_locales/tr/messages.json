@@ -81,7 +81,7 @@
     "message": "Getirildi"
   },
   "target_devices_label": {
-    "message": "Varsayılan Hedef Cihazlar:"
+    "message": "Push gönderilecek cihazlar:"
   },
   "choose_devices_tip": {
     "message": "Gönderdiğiniz push'ların varsayılan hedefi — popup'tan, sağ tık menüsünden ve klavye kısayolundan."
@@ -285,22 +285,22 @@
     "message": "OAuth hatası:"
   },
   "only_notify_show_pushes_title": {
-    "message": "Yalnızca şunlar için bildirim ve gösterim"
+    "message": "Push'ları göster"
   },
   "current_chrome_devices_label": {
-    "message": "Geçerli cihaz - Chrome"
+    "message": "Bu Chrome'a gönderilen push'lar"
   },
   "other_devices_label": {
-    "message": "Diğer cihazlar"
+    "message": "Diğer cihazlara gönderilen push'lar"
   },
   "pushes_without_target_label": {
-    "message": "Hedef cihaz olmayan bildirimler"
+    "message": "“Tüm cihazlar”a gönderilen push'lar (hedefsiz)"
   },
   "delete_notification": {
     "message": "Bildirimi sil"
   },
   "copy_notification": {
-    "message": "Bildirimi kopyala"
+    "message": "Metni kopyala"
   },
   "delete_push": {
     "message": "Push'u sil"
@@ -316,6 +316,9 @@
   },
   "show_per_send_target_label": {
     "message": "Gönderim başına hedef seçiciyi popup'ta göster"
+  },
+  "enable_context_menu_label": {
+    "message": "Sağ tık bağlam menüsünü etkinleştir"
   },
   "all_devices": {
     "message": "Tüm cihazlar"
@@ -364,5 +367,59 @@
   },
   "mirror_encryption_text": {
     "message": "Bildirimleri görmek için uçtan uca şifreleme parolanızı yapılandırın."
+  },
+  "behavior_tab": {
+    "message": "Davranış"
+  },
+  "auto_open_people_label": {
+    "message": "Kişilerden gelen bildirimleri de otomatik aç"
+  },
+  "chat_tab": {
+    "message": "Sohbet"
+  },
+  "enable_chat_label": {
+    "message": "Kişilerle Sohbeti Etkinleştir"
+  },
+  "no_people_yet": {
+    "message": "Henüz kişi yok"
+  },
+  "manage_people_tip": {
+    "message": "Kişi eklemek, kaldırmak veya engellemek için şu adresi ziyaret edin:"
+  },
+  "no_pushes_with_person": {
+    "message": "$1 ile henüz push yok"
+  },
+  "no_pushes_yet_snippet": {
+    "message": "Henüz push yok"
+  },
+  "person_not_on_pushbullet": {
+    "message": "Henüz Pushbullet'te değil — push'lar e-posta ile ulaşır."
+  },
+  "person_muted_title": {
+    "message": "Sessize alındı"
+  },
+  "mute_person_title": {
+    "message": "Sessize al"
+  },
+  "unmute_person_title": {
+    "message": "Sesi aç"
+  },
+  "back_button_title": {
+    "message": "Geri"
+  },
+  "person_avatar_alt": {
+    "message": "Profil fotoğrafı"
+  },
+  "auto_open_files_label": {
+    "message": "Dosya bildirimlerini de otomatik aç (görseller dahil)"
+  },
+  "rename_device_title": {
+    "message": "Yeniden adlandır"
+  },
+  "chats_label": {
+    "message": "Sohbetler"
+  },
+  "show_pushes_tip": {
+    "message": "Hem popup'taki liste hem de bildirimler için geçerlidir."
   }
 }
