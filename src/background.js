@@ -2061,11 +2061,14 @@ async function dismissPush(pushIden) {
       // counted by the derived chat recompute instead — their dismissal
       // settles when the server's update echo lands (the updatedPushes
       // recompute in doRefreshPushList), so decrementing here would eat an
-      // unrelated device unread. A cache miss (aged-out push) keeps the old
-      // decrement behavior.
+      // unrelated device unread. On a cache miss (evicted or cleared while
+      // its toast lingered) the lane is unknowable, so decrement nothing:
+      // the worst case is a one-unit over-count that the next Push-tab open
+      // clears, whereas a blind decrement could eat an unrelated device
+      // unread when the missing push was a people push.
       const data = await chrome.storage.local.get('pushes');
       const push = (data.pushes || []).find(p => p.iden === pushIden);
-      if (!push || classifyPush(push) !== 'people') {
+      if (push && classifyPush(push) !== 'people') {
         await decrementUnreadPushCount();
       }
     } else {
