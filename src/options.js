@@ -1307,6 +1307,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateEnableChatToggleVisual();
         updateAutoOpenLinksFromPeopleVisibility();
         updateDefaultTabVisibility();
+        // Keep this visibility set in sync with the enableChatToggle click
+        // handler: the "↳ Chats" sub-rows under Display unread counts and
+        // Require interaction must appear the moment Chat seeds on, not only
+        // after a manual toggle (values are left on their load-time fallbacks,
+        // matching the background-seed path).
+        updateDisplayUnreadChatsVisibility();
+        updateRequireInteractionChatsVisibility();
       }
 
       // Notify background script to establish connection
