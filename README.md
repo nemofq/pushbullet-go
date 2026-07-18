@@ -38,7 +38,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 
 **Chat**
 
-- Per-person conversations with message history — send text and files the same way as pushes
+- Per-person conversations with message history, send text and files the same way as pushes
 - Mute/unmute conversations
 - Auto-open links from selected people
 - Clear local chat history per conversation
@@ -51,15 +51,15 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 **SMS**
 
 - The Pushbullet API doesn't provide full SMS endpoints, so SMS conversations like the official extension aren't possible for now. Instead, you can enable a popup shortcut that opens SMS on the Pushbullet website
-- If you want SMS notifications mirrored to your browser, remember to turn off "SMS sync" in the Pushbullet Android app — otherwise they won't come through
+- If you want SMS notifications mirrored to your browser, remember to turn off "SMS sync" in the Pushbullet Android app; otherwise they won't come through
 
 **Customization**
 
 Push Go offers fine-grained options for advanced users to tailor almost everything, such as:
 
-- Auto-open tuning — include file pushes, auto-open on reconnect, hide auto-opened notifications
-- Notification behavior — sound, hide pushes sent from browsers, require interaction to dismiss (per category), treat native close as dismiss
-- Toggle individual features on/off — chat, notification mirroring, context menu, quick share, SMS shortcut
+- Auto-open tuning: Include file pushes, auto-open on reconnect, hide auto-opened notifications
+- Notification behavior: Sound, hide pushes sent from browsers, require interaction to dismiss (per category), treat native close as dismiss
+- Toggle individual features: Chat, notification mirroring, context menu, quick share, SMS shortcut
 - Default popup tab and which unread counts to display
 - Dark Mode (follows system by default, or choose manually)
 
