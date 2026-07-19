@@ -725,6 +725,26 @@
       margin: 6px 4px;
     }
 
+    /* Labelled boundary inserted above the first unread item in the Push,
+       Notification and conversation streams (see buildUnreadDivider in popup.js). */
+    .unread-divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0px 4px 12px 4px;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .unread-divider::before,
+    .unread-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-primary);
+    }
+
     /* small muted hint under the Default option; the top padding keeps it
        clear of the option's selected background. The "Options" word is an
        always-visible green link (same treatment as the options page's
