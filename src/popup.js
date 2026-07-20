@@ -968,11 +968,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const [receivedData, sentData, configData, localData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes']),
+      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes']),
       chrome.storage.local.get('chromeDeviceId')
     ]);
 
     // Get received messages (filtered by new flexible filtering settings)
+    // Other-device selection ([] = all other devices), shared by every push in
+    // the filter below.
+    const selectedOtherIds = (configData.selectedOtherDeviceIds || '')
+      .split(',').map(id => id.trim()).filter(id => id);
     let receivedMessages = receivedData.pushes || [];
     receivedMessages = receivedMessages.filter(push => {
       // Only device pushes belong to this timeline; people ('people'),
@@ -988,8 +992,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Push is targeted to current Chrome device
         return configData.onlyBrowserPushes !== false; // Default is true
       } else if (targetDeviceIden && targetDeviceIden !== localData.chromeDeviceId) {
-        // Push is targeted to other device
-        return configData.showOtherDevicePushes === true; // Default is false
+        // Push is targeted to another device: shown when the option is on AND
+        // the device is in the selection (empty = all other devices) — the
+        // same rule the background applies to notifications and the unread
+        // count (pushesToNotify), so the list, toasts, badge and the unread
+        // divider agree on membership.
+        return configData.showOtherDevicePushes === true &&
+          (selectedOtherIds.length === 0 || selectedOtherIds.includes(targetDeviceIden));
       } else if (!targetDeviceIden) {
         // Push has no target device (sent to all)
         return configData.showNoTargetPushes === true; // Default is false
