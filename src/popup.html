@@ -744,6 +744,13 @@
       height: 1px;
       background: var(--border-primary);
     }
+    /* Arabic joins letters cursively — tracking them apart cuts the joins,
+       so the label drops its letter-spacing under Arabic. The :lang() match
+       works because CustomI18n stamps the active locale on <html lang>
+       (applyDocumentLang in i18n.js). */
+    :lang(ar) .unread-divider {
+      letter-spacing: normal;
+    }
 
     /* small muted hint under the Default option; the top padding keeps it
        clear of the option's selected background. The "Options" word is an

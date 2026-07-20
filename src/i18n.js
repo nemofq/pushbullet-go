@@ -8,7 +8,8 @@ async function initializeI18n() {
   try {
     const data = await chrome.storage.local.get('languageMode');
     currentLanguage = data.languageMode || 'auto';
-    
+    applyDocumentLang();
+
     if (currentLanguage === 'auto') {
       // Use Chrome's default behavior
       isInitialized = true;
@@ -21,6 +22,7 @@ async function initializeI18n() {
   } catch (error) {
     console.warn('Failed to initialize custom i18n, falling back to Chrome default:', error);
     currentLanguage = 'auto';
+    applyDocumentLang();
     isInitialized = true;
   }
 }
@@ -85,7 +87,8 @@ function getMessage(messageKey, substitutions = []) {
 // Function to change language and reload messages
 async function changeLanguage(newLanguage) {
   currentLanguage = newLanguage;
-  
+  applyDocumentLang();
+
   if (newLanguage === 'auto') {
     cachedMessages = {};
   } else {
@@ -113,6 +116,17 @@ function getActiveLocale() {
   }
   // Chrome locale codes use '_' (zh_CN); Intl/BCP-47 expects '-'.
   return currentLanguage.replace('_', '-');
+}
+
+// Stamp the active locale on <html lang> so language-sensitive text rules
+// track what the page actually renders: Turkish/Greek text-transform casing,
+// :lang() CSS (e.g. the popup's Arabic unread-divider rule), screen-reader
+// voice selection, and Han glyph forms. Called on init and on language change
+// by every page that loads this script; a no-op outside DOM contexts.
+function applyDocumentLang() {
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document.documentElement.lang = getActiveLocale();
+  }
 }
 
 // Tiered, locale-aware timestamp formatter. Returns { text, title }:
