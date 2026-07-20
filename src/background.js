@@ -1210,7 +1210,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         // updates when a resume delivers many pushes at once.
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
-          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenTabActive', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
           const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
           const people = localData.people || [];
 
@@ -1328,7 +1328,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
                 push,
                 autoOpenForPush && allowAutoOpenLinks,
                 configData.hideNotificationOnAutoOpen || false,
-                { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true }
+                { titleOverride, iconUrl, autoOpenFiles: configData.autoOpenFiles === true, autoOpenTabActive: configData.autoOpenTabActive === true }
               )
             });
           }
@@ -1339,7 +1339,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           // from unreadDelta. Both sets run concurrently.
           const [deviceResults, peopleResults] = await Promise.all([
             Promise.all(pushesToNotify.map(push =>
-              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false, { autoOpenFiles: configData.autoOpenFiles === true })
+              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false, { autoOpenFiles: configData.autoOpenFiles === true, autoOpenTabActive: configData.autoOpenTabActive === true })
             )),
             Promise.all(peopleTasks.map(task => task.promise))
           ]);
@@ -1397,8 +1397,9 @@ function normalizeOpenUrl(url) {
 // keep the push title with the default icon. autoOpenLinks is the composed gate
 // (master / trusted-people): when it is on, link pushes auto-open their url and
 // — only if autoOpenFiles is also on — file pushes auto-open their file_url,
-// mirroring the notification Open button.
-async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false, { titleOverride, iconUrl, autoOpenFiles } = {}) {
+// mirroring the notification Open button. autoOpenTabActive makes the created
+// tab focused instead of the default background tab.
+async function showNotificationForPush(push, autoOpenLinks = false, hideNotificationOnAutoOpen = false, { titleOverride, iconUrl, autoOpenFiles, autoOpenTabActive } = {}) {
   // Determine if this push will actually be auto-opened
   let autoOpenUrl = null;
   if (autoOpenLinks) {
@@ -1483,9 +1484,10 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
     // Play alert sound (happens whenever push is processed, respects global sound setting)
     await playAlertSound();
 
-    // Auto-open link pushes in background tabs (happens regardless of notification)
+    // Auto-open link pushes in new tabs (happens regardless of notification);
+    // background tabs unless the autoOpenTabActive option asks for focus
     if (autoOpenUrl) {
-      chrome.tabs.create({ url: autoOpenUrl, active: false });
+      chrome.tabs.create({ url: autoOpenUrl, active: autoOpenTabActive === true });
     }
   } catch (error) {
     console.error('Failed to show notification for push:', error);

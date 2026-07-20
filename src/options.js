@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const autoOpenLinksFromPeopleContainer = document.getElementById('autoOpenLinksFromPeopleContainer');
   const trustedPeoplePickerEl = document.getElementById('trustedPeoplePicker');
   const trustedPeopleGroup = document.getElementById('trustedPeopleGroup');
+  const autoOpenTabActiveCheckbox = document.getElementById('autoOpenTabActive');
+  const autoOpenTabActiveToggle = document.getElementById('autoOpenTabActiveToggle');
+  const autoOpenTabActiveContainer = document.getElementById('autoOpenTabActiveContainer');
   const notificationMirroringCheckbox = document.getElementById('notificationMirroring');
   const notificationMirroringToggle = document.getElementById('notificationMirroringToggle');
   const onlyBrowserPushesCheckbox = document.getElementById('onlyBrowserPushes');
@@ -630,7 +633,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'autoOpenTabActive', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -688,6 +691,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (data.autoOpenTrustedPeople) {
       trustedPeoplePicker.setSelected(data.autoOpenTrustedPeople.split(',').map(e => e.trim()).filter(e => e));
     }
+
+    // Load make-the-new-tab-active sub-option (default is false/off)
+    autoOpenTabActiveCheckbox.checked = data.autoOpenTabActive === true;
+    updateAutoOpenTabActiveToggleVisual();
 
     // Show/hide the auto-open sub-options based on auto-open links setting (the
     // people row/checklist additionally require the Chat surface to be enabled)
@@ -874,6 +881,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     autoOpenLinksFromPeopleCheckbox.checked = !autoOpenLinksFromPeopleCheckbox.checked;
     updateAutoOpenLinksFromPeopleToggleVisual();
     updateAutoOpenLinksFromPeopleVisibility();
+  });
+
+  autoOpenTabActiveToggle.addEventListener('click', function() {
+    autoOpenTabActiveCheckbox.checked = !autoOpenTabActiveCheckbox.checked;
+    updateAutoOpenTabActiveToggleVisual();
   });
 
   notificationMirroringToggle.addEventListener('click', function() {
@@ -1479,6 +1491,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideNotificationOnAutoOpen: hideNotificationOnAutoOpenCheckbox.checked,
       autoOpenLinksFromPeople: autoOpenLinksFromPeopleCheckbox.checked,
       autoOpenTrustedPeople: trustedPeoplePicker.getSelected().join(','),
+      autoOpenTabActive: autoOpenTabActiveCheckbox.checked,
       // Appearance settings
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
@@ -1557,6 +1570,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       hideNotificationOnAutoOpen: saveData.hideNotificationOnAutoOpen,
       autoOpenLinksFromPeople: saveData.autoOpenLinksFromPeople,
       autoOpenTrustedPeople: saveData.autoOpenTrustedPeople,
+      autoOpenTabActive: saveData.autoOpenTabActive,
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
       enableChat: saveData.enableChat,
@@ -1743,10 +1757,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       autoOpenFilesContainer.style.display = 'flex';
       autoOpenOnResumeContainer.style.display = 'flex';
       hideNotificationOnAutoOpenContainer.style.display = 'flex';
+      autoOpenTabActiveContainer.style.display = 'flex';
     } else {
       autoOpenFilesContainer.style.display = 'none';
       autoOpenOnResumeContainer.style.display = 'none';
       hideNotificationOnAutoOpenContainer.style.display = 'none';
+      autoOpenTabActiveContainer.style.display = 'none';
     }
     // The people auto-open row/checklist also require the Chat surface enabled.
     updateAutoOpenLinksFromPeopleVisibility();
@@ -1768,6 +1784,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     autoOpenLinksFromPeopleContainer.style.display = showRow ? 'flex' : 'none';
     trustedPeopleGroup.style.display =
       (showRow && autoOpenLinksFromPeopleCheckbox.checked) ? 'block' : 'none';
+  }
+
+  function updateAutoOpenTabActiveToggleVisual() {
+    if (autoOpenTabActiveCheckbox.checked) {
+      autoOpenTabActiveToggle.classList.add('active');
+    } else {
+      autoOpenTabActiveToggle.classList.remove('active');
+    }
   }
 
   function updateNotificationMirroringToggleVisual() {

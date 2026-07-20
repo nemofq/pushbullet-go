@@ -383,6 +383,9 @@
   "auto_open_people_label": {
     "message": "Also include pushes from people"
   },
+  "auto_open_tab_active_label": {
+    "message": "Make the new tab active"
+  },
   "show_os_notifications_label": {
     "message": "Show notifications"
   },
