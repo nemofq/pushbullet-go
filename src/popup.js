@@ -51,6 +51,17 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentTab = 'push';   // 'push' | 'chat' | 'notification'
   let chatView = 'list';     // 'list' | 'conv'
   let currentPerson = null;
+
+  // Unread-boundary snapshots captured the instant a tab/conversation is
+  // opened, BEFORE the read state is cleared, so the render can draw an
+  // "— Unread —" divider above the first unread item. Pushes use a count from
+  // the bottom; notifications use the lastMirrorReadTime timestamp; a
+  // conversation anchors on its oldest unread push's iden.
+  let pushUnreadSnapshot = 0;    // received pushes unread at popup open (count)
+  let pushReadBoundary = null;   // derived read-boundary timestamp (epoch s), frozen on first render
+  let mirrorReadSnapshot = null; // lastMirrorReadTime at popup open (epoch seconds)
+  let convFirstUnreadIden = null; // oldest unread push in the open conversation (iden), set on open
+
   // Cached "should the per-send target chip show" flag (set by
   // initTargetSelector). The conversation force-hides the chip; returning to
   // the Push tab restores it from this cached value without an async re-read.
@@ -85,7 +96,10 @@ document.addEventListener('DOMContentLoaded', function() {
   loadAndApplyColorMode();
   
   // Check access token first, then handle other initializations
-  checkAccessToken().then(() => {
+  checkAccessToken().then(async () => {
+    // Capture the unread boundaries BEFORE the first render, so the "— Unread —"
+    // divider is present on the very first paint (no layout jump).
+    await captureUnreadSnapshots();
     // Only load messages after checking access token to ensure proper display
     debouncedLoadMessages();
     checkNotificationMirroring();
@@ -609,6 +623,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Read the Push and Notification unread boundaries once, at popup open, into
+  // the session snapshots the render functions use to place the "— Unread —"
+  // divider. Runs before the first render and before any tab-open clear.
+  async function captureUnreadSnapshots() {
+    const data = await chrome.storage.local.get(['unreadPushCount', 'lastMirrorReadTime']);
+    pushUnreadSnapshot = data.unreadPushCount || 0;
+    mirrorReadSnapshot = data.lastMirrorReadTime ?? 0;
+  }
+
+  // Derive the push read-boundary timestamp from the open-time unread count and
+  // the open-time ordered (oldest→newest) message list: the boundary is the
+  // `created` of the newest already-read received push, so anything newer — the
+  // pushes that were unread at open, PLUS any that arrive while viewing — sits
+  // below the divider.
+  function computePushReadBoundary(ordered, unreadCount) {
+    if (ordered.length === 0) return null;
+    const receivedTimes = [];
+    for (const m of ordered) {
+      if (m.messageType === 'received') receivedTimes.push(itemTime(m));
+    }
+    const newestReadIdx = receivedTimes.length - unreadCount - 1;
+    return newestReadIdx >= 0 ? receivedTimes[newestReadIdx] : -Infinity;
+  }
+
+  // The iden of a conversation's oldest unread incoming message (or null),
+  // using the same predicate as the people-list unread dots (renderPeopleList).
+  // Called in openConversation BEFORE the read stamp. Anchoring the divider on
+  // an iden — not a count — keeps it exact when dismissed or auto-opened
+  // messages interleave among the newest, and keeps it stable across
+  // re-renders: later arrivals land below it, and deleting the anchor simply
+  // drops the divider.
+  async function findFirstUnreadIden(key) {
+    if (!key) return null;
+    const data = await chrome.storage.local.get(['pushes', 'peopleLastRead', 'chatReadFloor', 'chatAutoOpenedIdens']);
+    const pushes = data.pushes || [];
+    const peopleLastRead = data.peopleLastRead || {};
+    const chatReadFloor = data.chatReadFloor ?? 0;
+    const autoOpenedIdens = data.chatAutoOpenedIdens || [];
+    const readThreshold = Math.max(peopleLastRead[key] ?? 0, chatReadFloor);
+    let oldest = null;
+    pushes.forEach(push => {
+      if (push.sender_email_normalized === key && classifyPush(push) === 'people' &&
+          push.dismissed !== true && !autoOpenedIdens.includes(push.iden) &&
+          itemTime(push) > readThreshold &&
+          (oldest === null || itemTime(push) < itemTime(oldest))) {
+        oldest = push;
+      }
+    });
+    return oldest ? oldest.iden : null;
+  }
+
   // Toggle the Chat sub-view (list vs conversation) plus the composer. The
   // conversation reuses the standard composer but with no target chip — the
   // header already names the recipient (the per-send picker does not apply).
@@ -770,6 +835,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
     if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
     return 'device'; // unknown direction — fail toward v1.11 visibility
+  }
+
+  // Labelled boundary row ("— Unread —") inserted above the first unread item
+  // in a stream. Styled by .unread-divider in popup.html.
+  function buildUnreadDivider() {
+    const divider = document.createElement('div');
+    divider.className = 'unread-divider';
+    const label = document.createElement('span');
+    label.textContent = window.CustomI18n.getMessage('unread');
+    divider.appendChild(label);
+    return divider;
   }
 
   // Shared bubble builder for both the main Push timeline and the conversation
@@ -966,7 +1042,18 @@ document.addEventListener('DOMContentLoaded', function() {
       fragment.appendChild(clearButton);
     }
     
-    allMessages.reverse().forEach(push => {
+    // Display order: oldest→newest (newest at the bottom). The divider goes above
+    // the first received push, newer than the read boundary. The boundary is a
+    // timestamp so pushes that arrive while the tab is open fall below it too.
+    const ordered = allMessages.reverse();
+    if (pushReadBoundary === null) {
+      pushReadBoundary = computePushReadBoundary(ordered, pushUnreadSnapshot);
+    }
+    const pushDividerIndex = (pushReadBoundary === null)
+      ? -1
+      : ordered.findIndex(m => m.messageType === 'received' && itemTime(m) > pushReadBoundary);
+    ordered.forEach((push, i) => {
+      if (i === pushDividerIndex) fragment.appendChild(buildUnreadDivider());
       fragment.appendChild(buildMessageRow(push, push.messageType, messagesList));
     });
     
@@ -1039,8 +1126,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Sort by timestamp (oldest to newest as requested)
     notifications.sort((a, b) => (a.created || 0) - (b.created || 0));
-    
-    notifications.forEach(notification => {
+
+    // First unread card is the boundary, per the background count's exact
+    // predicate (recomputeUnreadMirrorCount): not dismissed AND newer than the
+    // read-time snapshot — so the divider appears iff the badge counted
+    // something at open, never over phone-dismissed cards alone. -1 = none.
+    const notifDividerIndex = (mirrorReadSnapshot != null)
+      ? notifications.findIndex(n => !n.dismissed && (n.receivedAt ?? n.created ?? 0) > mirrorReadSnapshot)
+      : -1;
+
+    notifications.forEach((notification, notifIndex) => {
+      if (notifIndex === notifDividerIndex) fragment.appendChild(buildUnreadDivider());
       const cardDiv = document.createElement('div');
       cardDiv.className = 'notification-card';
       
@@ -1428,6 +1524,9 @@ document.addEventListener('DOMContentLoaded', function() {
   async function openConversation(person) {
     currentPerson = person;
     chatView = 'conv';
+    // Anchor the "— Unread —" divider on the oldest unread message, before the
+    // read stamp below clears the unread state.
+    convFirstUnreadIden = await findFirstUnreadIden(person.email_normalized);
     // Opening marks the conversation read (epoch seconds).
     await stampPersonRead(person.email_normalized);
     refreshConversationHeader();
@@ -1498,7 +1597,15 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.runtime.sendMessage({ type: 'clear_person_history', email_normalized: key });
     };
     fragment.appendChild(clearButton);
-    merged.forEach(push => {
+    // "— Unread —" divider above the oldest unread message, anchored by iden
+    // in openConversation — so every re-render keeps it in place and messages
+    // arriving while the conversation is open land below it. -1 (nothing
+    // unread, or the anchor was deleted meanwhile) = no divider.
+    const convDividerIndex = convFirstUnreadIden
+      ? merged.findIndex(m => m.iden === convFirstUnreadIden)
+      : -1;
+    merged.forEach((push, i) => {
+      if (i === convDividerIndex) fragment.appendChild(buildUnreadDivider());
       // people-tagged → received bubble; my own sends ('conversation') →
       // sent bubble. No caption in the conversation — the header already
       // names the person.
