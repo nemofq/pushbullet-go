@@ -52,15 +52,16 @@ document.addEventListener('DOMContentLoaded', function() {
   let chatView = 'list';     // 'list' | 'conv'
   let currentPerson = null;
 
-  // Unread-count snapshots captured the instant a tab/conversation is opened,
-  // BEFORE the count is cleared, so the render can draw an "— Unread —" divider
-  // above the last N unread items. Pushes/conversation use a count from the bottom;
-  // notifications use a lastMirrorReadTime timestamp.
+  // Unread-boundary snapshots captured the instant a tab/conversation is
+  // opened, BEFORE the read state is cleared, so the render can draw an
+  // "— Unread —" divider above the first unread item. Pushes use a count from
+  // the bottom; notifications use the lastMirrorReadTime timestamp; a
+  // conversation anchors on its oldest unread push's iden.
   let pushUnreadSnapshot = 0;    // received pushes unread at popup open (count)
   let pushReadBoundary = null;   // derived read-boundary timestamp (epoch s), frozen on first render
   let mirrorReadSnapshot = null; // lastMirrorReadTime at popup open (epoch seconds)
-  let convUnreadSnapshot = 0;    // messages unread when current conversation opened (count)
-  
+  let convFirstUnreadIden = null; // oldest unread push in the open conversation (iden), set on open
+
   // Cached "should the per-send target chip show" flag (set by
   // initTargetSelector). The conversation force-hides the chip; returning to
   // the Push tab restores it from this cached value without an async re-read.
@@ -646,26 +647,31 @@ document.addEventListener('DOMContentLoaded', function() {
     return newestReadIdx >= 0 ? receivedTimes[newestReadIdx] : -Infinity;
   }
 
-  // Count a conversation's unread incoming messages using the same predicate as
-  // the people-list unread dots (renderPeopleList) and the derived badge. Called
-  // in openConversation BEFORE the read stamp so the divider boundary survives.
-  async function computePersonUnreadCount(key) {
-    if (!key) return 0;
+  // The iden of a conversation's oldest unread incoming message (or null),
+  // using the same predicate as the people-list unread dots (renderPeopleList).
+  // Called in openConversation BEFORE the read stamp. Anchoring the divider on
+  // an iden — not a count — keeps it exact when dismissed or auto-opened
+  // messages interleave among the newest, and keeps it stable across
+  // re-renders: later arrivals land below it, and deleting the anchor simply
+  // drops the divider.
+  async function findFirstUnreadIden(key) {
+    if (!key) return null;
     const data = await chrome.storage.local.get(['pushes', 'peopleLastRead', 'chatReadFloor', 'chatAutoOpenedIdens']);
     const pushes = data.pushes || [];
     const peopleLastRead = data.peopleLastRead || {};
     const chatReadFloor = data.chatReadFloor ?? 0;
     const autoOpenedIdens = data.chatAutoOpenedIdens || [];
     const readThreshold = Math.max(peopleLastRead[key] ?? 0, chatReadFloor);
-    let count = 0;
+    let oldest = null;
     pushes.forEach(push => {
       if (push.sender_email_normalized === key && classifyPush(push) === 'people' &&
           push.dismissed !== true && !autoOpenedIdens.includes(push.iden) &&
-          itemTime(push) > readThreshold) {
-        count++;
+          itemTime(push) > readThreshold &&
+          (oldest === null || itemTime(push) < itemTime(oldest))) {
+        oldest = push;
       }
     });
-    return count;
+    return oldest ? oldest.iden : null;
   }
 
   // Toggle the Chat sub-view (list vs conversation) plus the composer. The
@@ -1517,8 +1523,9 @@ document.addEventListener('DOMContentLoaded', function() {
   async function openConversation(person) {
     currentPerson = person;
     chatView = 'conv';
-    // Snapshot the unread count so we can draw an "— Unread —" divider above the new messages.
-    convUnreadSnapshot = await computePersonUnreadCount(person.email_normalized);
+    // Anchor the "— Unread —" divider on the oldest unread message, before the
+    // read stamp below clears the unread state.
+    convFirstUnreadIden = await findFirstUnreadIden(person.email_normalized);
     // Opening marks the conversation read (epoch seconds).
     await stampPersonRead(person.email_normalized);
     refreshConversationHeader();
@@ -1589,20 +1596,13 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.runtime.sendMessage({ type: 'clear_person_history', email_normalized: key });
     };
     fragment.appendChild(clearButton);
-    // The last `convUnreadSnapshot` for incoming "people" messages are unread.
-    // Walk from the end counting them to place the "— Unread —" divider.
-    const convUnread = convUnreadSnapshot;
-    convUnreadSnapshot = 0;
-    let convDividerIndex = -1;
-    if (convUnread > 0) {
-      let received = 0;
-      for (let i = merged.length - 1; i >= 0; i--) {
-        if (classifyPush(merged[i]) === 'people') {
-          received++;
-          if (received === convUnread) { convDividerIndex = i; break; }
-        }
-      }
-    }
+    // "— Unread —" divider above the oldest unread message, anchored by iden
+    // in openConversation — so every re-render keeps it in place and messages
+    // arriving while the conversation is open land below it. -1 (nothing
+    // unread, or the anchor was deleted meanwhile) = no divider.
+    const convDividerIndex = convFirstUnreadIden
+      ? merged.findIndex(m => m.iden === convFirstUnreadIden)
+      : -1;
     merged.forEach((push, i) => {
       if (i === convDividerIndex) fragment.appendChild(buildUnreadDivider());
       // people-tagged → received bubble; my own sends ('conversation') →
