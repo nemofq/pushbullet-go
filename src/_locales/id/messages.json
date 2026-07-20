@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Juga push dari orang"
   },
+  "auto_open_tab_active_label": {
+    "message": "Jadikan tab baru aktif"
+  },
   "chat_tab": {
     "message": "Chat"
   },

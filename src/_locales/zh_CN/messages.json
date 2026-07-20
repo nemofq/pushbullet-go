@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "来自联系人的推送也自动打开"
   },
+  "auto_open_tab_active_label": {
+    "message": "激活新标签页"
+  },
   "chat_tab": {
     "message": "聊天"
   },

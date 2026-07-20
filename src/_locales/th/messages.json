@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "พุชจากบุคคลด้วย"
   },
+  "auto_open_tab_active_label": {
+    "message": "ทำให้แท็บใหม่เป็นแท็บที่ใช้งานอยู่"
+  },
   "chat_tab": {
     "message": "แชท"
   },

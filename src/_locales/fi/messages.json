@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Myös pushit henkilöiltä"
   },
+  "auto_open_tab_active_label": {
+    "message": "Tee uudesta välilehdestä aktiivinen"
+  },
   "chat_tab": {
     "message": "Chat"
   },

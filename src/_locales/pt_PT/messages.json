@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Também pushs de pessoas"
   },
+  "auto_open_tab_active_label": {
+    "message": "Tornar o novo separador ativo"
+  },
   "chat_tab": {
     "message": "Chat"
   },

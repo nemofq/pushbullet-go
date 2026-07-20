@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Ook pushes van personen"
   },
+  "auto_open_tab_active_label": {
+    "message": "Maak het nieuwe tabblad actief"
+  },
   "chat_tab": {
     "message": "Chat"
   },

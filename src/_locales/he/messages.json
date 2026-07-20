@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "גם דחיפות מאנשים"
   },
+  "auto_open_tab_active_label": {
+    "message": "הפוך את הלשונית החדשה לפעילה"
+  },
   "chat_tab": {
     "message": "צ'אט"
   },

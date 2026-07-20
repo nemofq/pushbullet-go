@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Även pushes från personer"
   },
+  "auto_open_tab_active_label": {
+    "message": "Gör den nya fliken aktiv"
+  },
   "chat_tab": {
     "message": "Chatt"
   },

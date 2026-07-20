@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Επίσης αποστολές από επαφές"
   },
+  "auto_open_tab_active_label": {
+    "message": "Ενεργοποίηση της νέας καρτέλας"
+  },
   "chat_tab": {
     "message": "Συνομιλία"
   },

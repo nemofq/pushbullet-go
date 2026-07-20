@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Tudi pushes od oseb"
   },
+  "auto_open_tab_active_label": {
+    "message": "Naredi nov zavihek aktiven"
+  },
   "chat_tab": {
     "message": "Klepet"
   },

@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Küldések személyektől is"
   },
+  "auto_open_tab_active_label": {
+    "message": "Az új fül aktiválása"
+  },
   "chat_tab": {
     "message": "Csevegés"
   },

@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "También envíos de personas"
   },
+  "auto_open_tab_active_label": {
+    "message": "Activar la nueva pestaña"
+  },
   "chat_tab": {
     "message": "Chat"
   },

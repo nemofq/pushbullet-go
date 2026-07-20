@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Aussi les pushs des personnes"
   },
+  "auto_open_tab_active_label": {
+    "message": "Activer le nouvel onglet"
+  },
   "chat_tab": {
     "message": "Chat"
   },

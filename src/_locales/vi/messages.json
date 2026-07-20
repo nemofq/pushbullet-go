@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Cả push từ người"
   },
+  "auto_open_tab_active_label": {
+    "message": "Kích hoạt tab mới"
+  },
   "chat_tab": {
     "message": "Chat"
   },

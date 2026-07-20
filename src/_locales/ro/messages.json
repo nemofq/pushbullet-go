@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "De asemenea, push-uri de la persoane"
   },
+  "auto_open_tab_active_label": {
+    "message": "Fă fila nouă activă"
+  },
   "chat_tab": {
     "message": "Chat"
   },

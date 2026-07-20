@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Kişilerden gelen bildirimleri de otomatik aç"
   },
+  "auto_open_tab_active_label": {
+    "message": "Yeni sekmeyi aktif yap"
+  },
   "chat_tab": {
     "message": "Sohbet"
   },

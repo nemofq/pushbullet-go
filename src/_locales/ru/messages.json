@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Также push от людей"
   },
+  "auto_open_tab_active_label": {
+    "message": "Делать новую вкладку активной"
+  },
   "chat_tab": {
     "message": "Чат"
   },

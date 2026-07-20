@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Aj push od ľudí"
   },
+  "auto_open_tab_active_label": {
+    "message": "Urobiť novú kartu aktívnou"
+  },
   "chat_tab": {
     "message": "Chat"
   },

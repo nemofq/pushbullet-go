@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "أيضًا الإرسالات من الأشخاص"
   },
+  "auto_open_tab_active_label": {
+    "message": "جعل علامة التبويب الجديدة نشطة"
+  },
   "chat_tab": {
     "message": "الدردشة"
   },

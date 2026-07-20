@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Także push od osób"
   },
+  "auto_open_tab_active_label": {
+    "message": "Ustaw nową kartę jako aktywną"
+  },
   "chat_tab": {
     "message": "Czat"
   },

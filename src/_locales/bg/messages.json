@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "Също и изпращания от хора"
   },
+  "auto_open_tab_active_label": {
+    "message": "Направи новия раздел активен"
+  },
   "chat_tab": {
     "message": "Чат"
   },

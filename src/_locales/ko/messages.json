@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "사용자가 보낸 푸시도"
   },
+  "auto_open_tab_active_label": {
+    "message": "새 탭을 활성 상태로 만들기"
+  },
   "chat_tab": {
     "message": "채팅"
   },

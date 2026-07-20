@@ -377,6 +377,9 @@
   "auto_open_people_label": {
     "message": "來自聯絡人的推送也自動開啟"
   },
+  "auto_open_tab_active_label": {
+    "message": "啟用新標籤頁"
+  },
   "chat_tab": {
     "message": "聊天"
   },
