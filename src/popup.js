@@ -1127,11 +1127,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sort by timestamp (oldest to newest as requested)
     notifications.sort((a, b) => (a.created || 0) - (b.created || 0));
 
-    // First card newer than the read-time snapshot is the unread boundary
-    // (matches the background count's `(receivedAt ?? created) > lastRead` and
-    // ignores dismissed entries interleaved among the newest). -1 = none newer.
+    // First unread card is the boundary, per the background count's exact
+    // predicate (recomputeUnreadMirrorCount): not dismissed AND newer than the
+    // read-time snapshot — so the divider appears iff the badge counted
+    // something at open, never over phone-dismissed cards alone. -1 = none.
     const notifDividerIndex = (mirrorReadSnapshot != null)
-      ? notifications.findIndex(n => (n.receivedAt ?? n.created ?? 0) > mirrorReadSnapshot)
+      ? notifications.findIndex(n => !n.dismissed && (n.receivedAt ?? n.created ?? 0) > mirrorReadSnapshot)
       : -1;
 
     notifications.forEach((notification, notifIndex) => {
