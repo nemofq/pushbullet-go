@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "לא התקבלו התראות"
   },
+  "unread": {
+    "message": "לא נקראים"
+  },
   "paste_one_file": {
     "message": "שלח קובץ/תמונה אחד בכל פעם."
   },

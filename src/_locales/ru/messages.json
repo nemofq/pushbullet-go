@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Уведомлений не получено"
   },
+  "unread": {
+    "message": "Непрочитанные"
+  },
   "paste_one_file": {
     "message": "Отправляйте только один файл/изображение за раз."
   },

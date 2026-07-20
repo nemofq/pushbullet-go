@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "No s'han rebut notificacions"
   },
+  "unread": {
+    "message": "No llegits"
+  },
   "paste_one_file": {
     "message": "Envia un sol fitxer/imatge alhora."
   },

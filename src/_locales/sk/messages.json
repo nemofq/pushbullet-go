@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Neboli prijaté žiadne upozornenia"
   },
+  "unread": {
+    "message": "Neprečítané"
+  },
   "paste_one_file": {
     "message": "Odošlite jeden obrázok/súbor naraz."
   },

@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Inga aviseringar mottagna"
   },
+  "unread": {
+    "message": "Olästa"
+  },
   "paste_one_file": {
     "message": "Skicka en bild/fil åt gången."
   },

@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Δεν ελήφθησαν ειδοποιήσεις"
   },
+  "unread": {
+    "message": "Μη αναγνωσμένα"
+  },
   "paste_one_file": {
     "message": "Προωθήστε ένα αρχείο/εικόνα κάθε φορά."
   },

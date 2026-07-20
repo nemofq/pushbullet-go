@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "받은 알림이 없습니다"
   },
+  "unread": {
+    "message": "읽지 않음"
+  },
   "paste_one_file": {
     "message": "한 번에 이미지/파일 하나만 푸시."
   },

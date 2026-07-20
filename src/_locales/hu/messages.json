@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Nem érkezett értesítés"
   },
+  "unread": {
+    "message": "Olvasatlan"
+  },
   "paste_one_file": {
     "message": "Egyszerre csak egy képet/fájlt küldjön."
   },

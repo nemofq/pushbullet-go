@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Ingen notifikationer modtaget"
   },
+  "unread": {
+    "message": "Ulæste"
+  },
   "paste_one_file": {
     "message": "Send én fil/billede ad gangen."
   },

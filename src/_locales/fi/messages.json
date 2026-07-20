@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Ei ilmoituksia vastaanotettu"
   },
+  "unread": {
+    "message": "Lukemattomat"
+  },
   "paste_one_file": {
     "message": "Lähetä yksi kuva/tiedosto kerrallaan."
   },

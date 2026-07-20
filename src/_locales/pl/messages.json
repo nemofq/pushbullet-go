@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Brak powiadomień"
   },
+  "unread": {
+    "message": "Nieprzeczytane"
+  },
   "paste_one_file": {
     "message": "Wyślij jeden obraz/plik naraz."
   },

@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Ni prejetih obvestil"
   },
+  "unread": {
+    "message": "Neprebrano"
+  },
   "paste_one_file": {
     "message": "Pošljite eno sliko/datoteko naenkrat."
   },

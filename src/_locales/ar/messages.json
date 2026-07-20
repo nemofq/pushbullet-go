@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "لم يتم تلقي أي إشعارات"
   },
+  "unread": {
+    "message": "غير مقروءة"
+  },
   "paste_one_file": {
     "message": "أرسل ملف/صورة واحد فقط في المرة."
   },

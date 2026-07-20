@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Chưa nhận thông báo nào"
   },
+  "unread": {
+    "message": "Chưa đọc"
+  },
   "paste_one_file": {
     "message": "Chỉ gửi một tệp/hình ảnh mỗi lần."
   },

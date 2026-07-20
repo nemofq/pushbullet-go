@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "未收到通知"
   },
+  "unread": {
+    "message": "未读"
+  },
   "paste_one_file": {
     "message": "一次推送一张图片/文件。"
   },

@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Geen meldingen ontvangen"
   },
+  "unread": {
+    "message": "Ongelezen"
+  },
   "paste_one_file": {
     "message": "Push één afbeelding/bestand tegelijk."
   },

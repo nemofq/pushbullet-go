@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Keine Benachrichtigungen erhalten"
   },
+  "unread": {
+    "message": "Ungelesen"
+  },
   "paste_one_file": {
     "message": "Senden Sie jeweils nur eine Datei/Bild."
   },

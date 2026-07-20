@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "ยังไม่มีการแจ้งเตือน"
   },
+  "unread": {
+    "message": "ยังไม่อ่าน"
+  },
   "paste_one_file": {
     "message": "ส่งไฟล์/รูปภาพทีละหนึ่งไฟล์"
   },

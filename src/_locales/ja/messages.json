@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "通知はありません"
   },
+  "unread": {
+    "message": "未読"
+  },
   "paste_one_file": {
     "message": "一度に 1 つの画像/ファイルをプッシュしてください。"
   },

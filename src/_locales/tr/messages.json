@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Bildirim alınmadı"
   },
+  "unread": {
+    "message": "Okunmamış"
+  },
   "paste_one_file": {
     "message": "Tek seferde bir görsel/dosya gönderin."
   },

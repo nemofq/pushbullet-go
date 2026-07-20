@@ -35,6 +35,9 @@
   "no_notifications_received": {
     "message": "Tidak ada notifikasi"
   },
+  "unread": {
+    "message": "Belum dibaca"
+  },
   "paste_one_file": {
     "message": "Kirim satu gambar/file sekaligus."
   },
