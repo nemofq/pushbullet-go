@@ -809,10 +809,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // classifyPush(push) — the single classifier for every push. Consumers act
   // only on the tag they own; a tag they don't recognize is inert to them, so
-  // ignored (and any future) kinds are skipped everywhere by construction.
+  // unhandled (and any future) kinds are skipped everywhere by construction.
   //
-  //   'ignored'      — channel pushes. Unsupported: kept in the cache
-  //                    (faithful server mirror), consumed by no surface.
+  //   'channel'      — a channel / RSS-feed subscription push (channel_iden,
+  //                    with the feed's sender_name). Opt-in: shown in the
+  //                    Push timeline and notified only while the
+  //                    showChannelPushes option is on; always cached.
   //   'people'       — a human wrote to me. sender_email_normalized is also
   //                    the conversation key, so every people push is
   //                    displayable by construction. Chat surface only, and
@@ -830,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
   //                    can never vanish and never impersonate a person.
   // keep in sync with the copy in background.js
   function classifyPush(push) {
-    if (push.channel_iden) return 'ignored';
+    if (push.channel_iden) return 'channel';
     if (push.direction === 'self') return 'device';
     if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
     if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
@@ -870,6 +872,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${messageType}`;
+
+    // Channel / RSS pushes carry the feed's name in sender_name; it names the
+    // bubble above the push's own title (people and device pushes never render
+    // a caption here — the Chat header / the Push tab itself is the context).
+    if (classifyPush(push) === 'channel' && push.sender_name) {
+      const senderDiv = document.createElement('div');
+      senderDiv.className = 'message-sender';
+      senderDiv.textContent = push.sender_name;
+      messageDiv.appendChild(senderDiv);
+    }
 
     if (push.title) {
       const titleDiv = document.createElement('div');
@@ -968,7 +980,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const [receivedData, sentData, configData, localData] = await Promise.all([
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
-      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes']),
+      chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showChannelPushes']),
       chrome.storage.local.get('chromeDeviceId')
     ]);
 
@@ -979,10 +991,18 @@ document.addEventListener('DOMContentLoaded', function() {
       .split(',').map(id => id.trim()).filter(id => id);
     let receivedMessages = receivedData.pushes || [];
     receivedMessages = receivedMessages.filter(push => {
-      // Only device pushes belong to this timeline; people ('people'),
-      // sent-to-person ('conversation'), and channel ('ignored') pushes
-      // never render here.
-      if (classifyPush(push) !== 'device') {
+      const kind = classifyPush(push);
+
+      // Channel / RSS pushes are their own opt-in bucket: they have no target
+      // device, so the device switches below say nothing about them (the same
+      // rule the background applies to their notifications). Default is false.
+      if (kind === 'channel') {
+        return configData.showChannelPushes === true;
+      }
+
+      // Otherwise only device pushes belong to this timeline; people
+      // ('people') and sent-to-person ('conversation') pushes never render here.
+      if (kind !== 'device') {
         return false;
       }
 

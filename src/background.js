@@ -1103,10 +1103,12 @@ async function handleReconnection() {
 
 // classifyPush(push) — the single classifier for every push. Consumers act
 // only on the tag they own; a tag they don't recognize is inert to them, so
-// ignored (and any future) kinds are skipped everywhere by construction.
+// unhandled (and any future) kinds are skipped everywhere by construction.
 //
-//   'ignored'      — channel pushes. Unsupported: kept in the cache
-//                    (faithful server mirror), consumed by no surface.
+//   'channel'      — a channel / RSS-feed subscription push (channel_iden,
+//                    with the feed's sender_name). Opt-in: shown in the
+//                    Push timeline and notified only while the
+//                    showChannelPushes option is on; always cached.
 //   'people'       — a human wrote to me. sender_email_normalized is also
 //                    the conversation key, so every people push is
 //                    displayable by construction. Chat surface only, and
@@ -1124,7 +1126,7 @@ async function handleReconnection() {
 //                    can never vanish and never impersonate a person.
 // keep in sync with the copy in popup.js
 function classifyPush(push) {
-  if (push.channel_iden) return 'ignored';
+  if (push.channel_iden) return 'channel';
   if (push.direction === 'self') return 'device';
   if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
   if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
@@ -1210,14 +1212,24 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         // updates when a resume delivers many pushes at once.
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
-          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenTabActive', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showChannelPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenTabActive', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
           const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
           const people = localData.people || [];
 
           const pushesToNotify = newPushes.filter(push => {
-            // Only device-tagged pushes use these buckets; people, conversation,
-            // and ignored (channel) pushes never notify through this lane.
-            if (classifyPush(push) !== 'device') {
+            const kind = classifyPush(push);
+
+            // Channel / RSS pushes are their own opt-in bucket: they carry
+            // neither a target nor a source device, so none of the device
+            // switches below say anything about them (same rule as the popup
+            // list). Already-dismissed ones stay silent, as in the device lane.
+            if (kind === 'channel') {
+              return configData.showChannelPushes === true && push.dismissed !== true;
+            }
+
+            // Otherwise only device-tagged pushes use these buckets; people and
+            // conversation pushes never notify through this lane.
+            if (kind !== 'device') {
               return false;
             }
 
@@ -1338,9 +1350,26 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           // they are awaited here (for completion + side effects) but excluded
           // from unreadDelta. Both sets run concurrently.
           const [deviceResults, peopleResults] = await Promise.all([
-            Promise.all(pushesToNotify.map(push =>
-              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false, { autoOpenFiles: configData.autoOpenFiles === true, autoOpenTabActive: configData.autoOpenTabActive === true })
-            )),
+            Promise.all(pushesToNotify.map(push => {
+              // Channel / RSS pushes are titled by the feed (their sender_name),
+              // mirroring the caption on their popup bubble, and never
+              // auto-open: a busy feed would otherwise flood the browser with
+              // tabs the user never asked for, one per item.
+              const isChannel = classifyPush(push) === 'channel';
+              const options = {
+                autoOpenFiles: configData.autoOpenFiles === true,
+                autoOpenTabActive: configData.autoOpenTabActive === true
+              };
+              if (isChannel && push.sender_name) {
+                options.titleOverride = push.sender_name;
+              }
+              return showNotificationForPush(
+                push,
+                !isChannel && configData.autoOpenLinks && allowAutoOpenLinks,
+                configData.hideNotificationOnAutoOpen || false,
+                options
+              );
+            })),
             Promise.all(peopleTasks.map(task => task.promise))
           ]);
 
@@ -1393,8 +1422,9 @@ function normalizeOpenUrl(url) {
 // tallies a whole batch into one counter write, so the decision is made before
 // the side effects below, and their failures neither reject nor change it.
 // A people push passes { titleOverride, iconUrl } so the sender names the
-// notification and their avatar (or the fallback icon) is shown; device pushes
-// keep the push title with the default icon. autoOpenLinks is the composed gate
+// notification and their avatar (or the fallback icon) is shown; a channel push
+// passes titleOverride alone (the feed's sender_name, default icon); device
+// pushes keep the push title with the default icon. autoOpenLinks is the composed gate
 // (master / trusted-people): when it is on, link pushes auto-open their url and
 // — only if autoOpenFiles is also on — file pushes auto-open their file_url,
 // mirroring the notification Open button. autoOpenTabActive makes the created
@@ -1430,8 +1460,9 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
         notificationBody = push.body || getMessage('new_push');
       }
 
-      // People pushes name the sender in the title, so the push's own title
-      // (if any) folds onto the first line of the message, mirror-style.
+      // People and channel pushes name their sender (the person / the feed) in
+      // the title, so the push's own title (if any) folds onto the first line
+      // of the message, mirror-style.
       let notificationTitle = push.title || '';
       if (titleOverride !== undefined) {
         notificationTitle = titleOverride;

@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Đã gửi tới “Tất cả thiết bị” (không có đích)"
   },
+  "channel_pushes_label": {
+    "message": "Bao gồm push từ kênh/RSS"
+  },
   "delete_notification": {
     "message": "Xóa thông báo"
   },

@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "דחיפות שנשלחו אל \"כל המכשירים\" (ללא יעד)"
   },
+  "channel_pushes_label": {
+    "message": "כלול דחיפות מערוצים/RSS"
+  },
   "delete_notification": {
     "message": "מחק התראה"
   },

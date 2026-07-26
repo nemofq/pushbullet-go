@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "“Tüm cihazlar”a gönderilen push'lar (hedefsiz)"
   },
+  "channel_pushes_label": {
+    "message": "Kanal/RSS push'larını dahil et"
+  },
   "delete_notification": {
     "message": "Bildirimi sil"
   },

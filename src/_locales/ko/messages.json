@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "“모든 기기”로 보낸 푸시 (대상 없음)"
   },
+  "channel_pushes_label": {
+    "message": "채널/RSS 푸시 포함"
+  },
   "delete_notification": {
     "message": "알림 삭제"
   },

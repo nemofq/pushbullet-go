@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "الإرسالات إلى «جميع الأجهزة» (بدون جهاز مستهدف)"
   },
+  "channel_pushes_label": {
+    "message": "تضمين إرسالات القنوات/RSS"
+  },
   "delete_notification": {
     "message": "حذف الإشعار"
   },

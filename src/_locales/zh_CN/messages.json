@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "发送到“所有设备”的推送（无目标）"
   },
+  "channel_pushes_label": {
+    "message": "包含频道/RSS 推送"
+  },
   "delete_notification": {
     "message": "删除通知"
   },

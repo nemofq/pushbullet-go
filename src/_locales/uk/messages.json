@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Push надіслані на «Усі пристрої» (без цілі)"
   },
+  "channel_pushes_label": {
+    "message": "Включати push з каналів/RSS"
+  },
   "delete_notification": {
     "message": "Видалити сповіщення"
   },

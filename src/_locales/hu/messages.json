@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "„Minden eszköz”-re küldött (céleszköz nélkül)"
   },
+  "channel_pushes_label": {
+    "message": "Csatorna-/RSS-küldések is"
+  },
   "delete_notification": {
     "message": "Értesítés törlése"
   },

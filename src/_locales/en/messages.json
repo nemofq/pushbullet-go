@@ -362,6 +362,9 @@
   "pushes_without_target_label": {
     "message": "Sent to \"All devices\" (no target)"
   },
+  "channel_pushes_label": {
+    "message": "Include Channel/RSS pushes"
+  },
   "delete_notification": {
     "message": "Delete notification"
   },

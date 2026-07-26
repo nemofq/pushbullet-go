@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Push на «Все устройства» (без получателя)"
   },
+  "channel_pushes_label": {
+    "message": "Включать push из каналов/RSS"
+  },
   "delete_notification": {
     "message": "Удалить уведомление"
   },

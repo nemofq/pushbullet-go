@@ -314,6 +314,17 @@
       text-align: right;
     }
 
+    /* Channel / RSS feed name, above the title of a channel push. Bold but a
+       step smaller and quieter than .message-title, so it reads as the source
+       of the bubble rather than competing with the headline. */
+    .message-sender {
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 3px;
+      overflow-wrap: anywhere;
+    }
+
     .message-title {
       font-weight: bold;
       margin-bottom: 5px;

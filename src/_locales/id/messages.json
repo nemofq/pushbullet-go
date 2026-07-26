@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Dikirim ke “Semua perangkat” (tanpa target)"
   },
+  "channel_pushes_label": {
+    "message": "Sertakan push saluran/RSS"
+  },
   "delete_notification": {
     "message": "Hapus notifikasi"
   },

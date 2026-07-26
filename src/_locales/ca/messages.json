@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Enviats a «Tots els dispositius» (sense destinatari)"
   },
+  "channel_pushes_label": {
+    "message": "Inclou enviaments de canals/RSS"
+  },
   "delete_notification": {
     "message": "Eliminar notificació"
   },

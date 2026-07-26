@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Σταλμένες σε «Όλες οι συσκευές» (χωρίς στόχο)"
   },
+  "channel_pushes_label": {
+    "message": "Συμπερίληψη αποστολών από κανάλια/RSS"
+  },
   "delete_notification": {
     "message": "Διαγραφή ειδοποίησης"
   },

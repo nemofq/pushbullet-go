@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Odoslané na „Všetky zariadenia“ (bez cieľa)"
   },
+  "channel_pushes_label": {
+    "message": "Zahrnúť push z kanálov/RSS"
+  },
   "delete_notification": {
     "message": "Odstrániť upozornenie"
   },

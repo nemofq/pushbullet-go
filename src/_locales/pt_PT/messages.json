@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Enviados para «Todos os dispositivos» (sem destino)"
   },
+  "channel_pushes_label": {
+    "message": "Incluir pushs de canais/RSS"
+  },
   "delete_notification": {
     "message": "Eliminar notificação"
   },

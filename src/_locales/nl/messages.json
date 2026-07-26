@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Verzonden naar \"Alle apparaten\" (geen doel)"
   },
+  "channel_pushes_label": {
+    "message": "Pushes van kanalen/RSS opnemen"
+  },
   "delete_notification": {
     "message": "Melding verwijderen"
   },

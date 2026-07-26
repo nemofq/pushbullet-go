@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Sendt til »Alle enheder« (uden målenhed)"
   },
+  "channel_pushes_label": {
+    "message": "Inkludér pushes fra kanaler/RSS"
+  },
   "delete_notification": {
     "message": "Slet notifikation"
   },

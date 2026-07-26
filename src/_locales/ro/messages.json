@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Trimise către „Toate dispozitivele” (fără țintă)"
   },
+  "channel_pushes_label": {
+    "message": "Include push-uri de la canale/RSS"
+  },
   "delete_notification": {
     "message": "Șterge notificarea"
   },

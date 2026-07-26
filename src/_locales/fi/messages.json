@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "Lähetetty kohteeseen ”Kaikki laitteet” (ei kohdetta)"
   },
+  "channel_pushes_label": {
+    "message": "Sisällytä kanava-/RSS-pushit"
+  },
   "delete_notification": {
     "message": "Poista ilmoitus"
   },

@@ -299,6 +299,9 @@
   "pushes_without_target_label": {
     "message": "「すべてのデバイス」へのプッシュ（ターゲットなし）"
   },
+  "channel_pushes_label": {
+    "message": "チャンネル/RSS のプッシュを含める"
+  },
   "delete_notification": {
     "message": "通知を削除"
   },
