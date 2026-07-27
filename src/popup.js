@@ -569,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
       chatTab.classList.add('active');
       notificationTab.classList.remove('active');
       updateChatView();
-      // Freshen the people list on tab open (throttled to 15 min in background).
+      // Freshen the people list on tab open (throttled to a week in background).
       chrome.runtime.sendMessage({ type: 'refresh_people' });
       return;
     }

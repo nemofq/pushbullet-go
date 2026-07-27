@@ -534,7 +534,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return;
     case 'refresh_people':
       // Chat tab opened: opportunistic people-list refresh (§7 trigger 4),
-      // fire-and-forget. Throttled to 15 min on tab open here, then to 60s
+      // fire-and-forget. Throttled to a week on tab open here, then to 60s
       // inside refreshPeopleFromServer().
       maybeRefreshPeopleOnTabOpen();
       return;
@@ -816,12 +816,16 @@ async function refreshChannelList(token) {
 }
 
 // Chat tab open (§7 trigger 4): refresh the people list only when the last
-// successful fetch is older than 15 minutes. refreshPeopleFromServer() keeps its
-// own 60s guard on top; fire-and-forget.
+// successful fetch is older than a week. The list only changes when a person is
+// added, removed or muted on pushbullet.com — all rare, and none of them urgent
+// here: an unknown sender already forces an immediate refresh from the notify
+// path, our own mute writes locally, and Retrieve is the manual lever. A short
+// window just meant a fetch nearly every time the tab was opened.
+// refreshPeopleFromServer() keeps its own 60s guard on top; fire-and-forget.
 async function maybeRefreshPeopleOnTabOpen() {
   const data = await chrome.storage.local.get('lastPeopleFetch');
   const last = data.lastPeopleFetch || 0;
-  if (Date.now() - last < 15 * 60 * 1000) return;
+  if (Date.now() - last < 7 * 24 * 60 * 60 * 1000) return;
   refreshPeopleFromServer();
 }
 
