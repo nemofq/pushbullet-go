@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "Enviats a «Tots els dispositius» (sense destinatari)"
   },
-  "channel_pushes_label": {
-    "message": "Inclou enviaments de canals/RSS"
-  },
   "delete_notification": {
     "message": "Eliminar notificació"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "S'aplica tant a la llista de la finestra emergent com a les notificacions."
+  },
+  "channel_pushes_label": {
+    "message": "Des dels canals que segueixes (no silenciats)"
+  },
+  "channel_label": {
+    "message": "Canal"
   }
 }

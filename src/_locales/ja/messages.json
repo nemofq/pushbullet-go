@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "「すべてのデバイス」へのプッシュ（ターゲットなし）"
   },
-  "channel_pushes_label": {
-    "message": "チャンネル/RSS のプッシュを含める"
-  },
   "delete_notification": {
     "message": "通知を削除"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "ポップアップの一覧と通知の両方に適用されます。"
+  },
+  "channel_pushes_label": {
+    "message": "フォロー中のチャンネルからのプッシュ（ミュートを除く）"
+  },
+  "channel_label": {
+    "message": "チャンネル"
   }
 }

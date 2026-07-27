@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "Envoyés vers « Tous les appareils » (sans cible)"
   },
-  "channel_pushes_label": {
-    "message": "Inclure les pushs de chaînes/RSS"
-  },
   "delete_notification": {
     "message": "Supprimer la notification"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "S'applique à la fois à la liste de la popup et aux notifications."
+  },
+  "channel_pushes_label": {
+    "message": "Des canaux que vous suivez (non muets)"
+  },
+  "channel_label": {
+    "message": "Canal"
   }
 }

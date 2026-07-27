@@ -363,7 +363,10 @@
     "message": "Sent to \"All devices\" (no target)"
   },
   "channel_pushes_label": {
-    "message": "Include Channel/RSS pushes"
+    "message": "From channels you follow (unmuted)"
+  },
+  "channel_label": {
+    "message": "Channel"
   },
   "delete_notification": {
     "message": "Delete notification"

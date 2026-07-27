@@ -890,11 +890,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Channel / RSS pushes carry the feed's name in sender_name; it names the
     // bubble above the push's own title (people and device pushes never render
     // a caption here — the Chat header / the Push tab itself is the context).
-    if (classifyPush(push) === 'channel' && push.sender_name) {
-      const senderDiv = document.createElement('div');
-      senderDiv.className = 'message-sender';
-      senderDiv.textContent = push.sender_name;
-      messageDiv.appendChild(senderDiv);
+    // The row renders for every channel push, falling back to the generic word
+    // on the rare push that carries no sender_name, so the glyph always marks a
+    // broadcast as one.
+    if (classifyPush(push) === 'channel') {
+      const channelDiv = document.createElement('div');
+      channelDiv.className = 'message-channel';
+      const channelIcon = document.createElement('span');
+      channelIcon.innerHTML = '<svg class="message-channel-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z"/></svg>';
+      channelIcon.style.display = 'flex';
+      const channelName = document.createElement('span');
+      channelName.className = 'message-channel-name';
+      channelName.textContent = push.sender_name || window.CustomI18n.getMessage('channel_label');
+      channelDiv.appendChild(channelIcon);
+      channelDiv.appendChild(channelName);
+      messageDiv.appendChild(channelDiv);
     }
 
     if (push.title) {

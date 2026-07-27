@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "Skickade till ”Alla enheter” (utan mål)"
   },
-  "channel_pushes_label": {
-    "message": "Inkludera pushes från kanaler/RSS"
-  },
   "delete_notification": {
     "message": "Ta bort avisering"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Gäller både listan i popup-fönstret och aviseringarna."
+  },
+  "channel_pushes_label": {
+    "message": "Från följda kanaler (inte tystade)"
+  },
+  "channel_label": {
+    "message": "Kanal"
   }
 }

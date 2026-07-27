@@ -314,14 +314,31 @@
       text-align: right;
     }
 
-    /* Channel / RSS feed name, above the title of a channel push. Bold but a
-       step smaller and quieter than .message-title, so it reads as the source
-       of the bubble rather than competing with the headline. */
-    .message-sender {
-      font-weight: 600;
-      font-size: 12px;
+    /* Channel / RSS feed name, above the title of a channel push: quieter and a
+       step smaller than .message-title so it reads as the source of the bubble
+       rather than competing with the headline, and led by a feed glyph so a
+       broadcast can't be mistaken for device traffic. The row lives inside the
+       bubble, not on the timestamp line above it: refreshTimestamps()
+       overwrites the textContent of every [data-ts] node once a minute, so
+       anything parked there would silently vanish within 60s of rendering. */
+    .message-channel {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      line-height: 1.4;
       color: var(--text-secondary);
-      margin-bottom: 3px;
+    }
+
+    .message-channel-icon {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    .message-channel-name {
+      font-weight: 600;
       overflow-wrap: anywhere;
     }
 

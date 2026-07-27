@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "„Minden eszköz”-re küldött (céleszköz nélkül)"
   },
-  "channel_pushes_label": {
-    "message": "Csatorna-/RSS-küldések is"
-  },
   "delete_notification": {
     "message": "Értesítés törlése"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "A felugró ablak listájára és az értesítésekre is vonatkozik."
+  },
+  "channel_pushes_label": {
+    "message": "Követett csatornákról (nem némítva)"
+  },
+  "channel_label": {
+    "message": "Csatorna"
   }
 }

@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "Sendt til »Alle enheder« (uden målenhed)"
   },
-  "channel_pushes_label": {
-    "message": "Inkludér pushes fra kanaler/RSS"
-  },
   "delete_notification": {
     "message": "Slet notifikation"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Gælder for både popup-listen og notifikationer."
+  },
+  "channel_pushes_label": {
+    "message": "Fra kanaler du følger (ikke lydløse)"
+  },
+  "channel_label": {
+    "message": "Kanal"
   }
 }

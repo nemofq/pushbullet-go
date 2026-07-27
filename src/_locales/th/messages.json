@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "ส่งไปยัง “ทุกเครื่อง” (ไม่มีเป้าหมาย)"
   },
-  "channel_pushes_label": {
-    "message": "รวมพุชจากช่อง/RSS"
-  },
   "delete_notification": {
     "message": "ลบการแจ้งเตือน"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "มีผลกับทั้งรายการในป๊อปอัพและการแจ้งเตือน"
+  },
+  "channel_pushes_label": {
+    "message": "จากช่องที่ติดตาม (เปิดเสียง)"
+  },
+  "channel_label": {
+    "message": "ช่อง"
   }
 }

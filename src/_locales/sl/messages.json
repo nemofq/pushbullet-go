@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "Poslano na »Vse naprave« (brez cilja)"
   },
-  "channel_pushes_label": {
-    "message": "Vključi pushes s kanalov/RSS"
-  },
   "delete_notification": {
     "message": "Izbriši obvestilo"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Velja tako za seznam v pojavnem oknu kot za obvestila."
+  },
+  "channel_pushes_label": {
+    "message": "Iz sledenih kanalov (brez utišanja)"
+  },
+  "channel_label": {
+    "message": "Kanal"
   }
 }

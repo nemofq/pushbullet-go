@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "Lähetetty kohteeseen ”Kaikki laitteet” (ei kohdetta)"
   },
-  "channel_pushes_label": {
-    "message": "Sisällytä kanava-/RSS-pushit"
-  },
   "delete_notification": {
     "message": "Poista ilmoitus"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Koskee sekä ponnahdusikkunan listaa että ilmoituksia."
+  },
+  "channel_pushes_label": {
+    "message": "Seuraamiltasi kanavilta (ei mykistetyt)"
+  },
+  "channel_label": {
+    "message": "Kanava"
   }
 }

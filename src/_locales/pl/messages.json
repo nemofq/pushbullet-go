@@ -299,9 +299,6 @@
   "pushes_without_target_label": {
     "message": "Wysłane do „Wszystkich urządzeń” (bez celu)"
   },
-  "channel_pushes_label": {
-    "message": "Uwzględnij push z kanałów/RSS"
-  },
   "delete_notification": {
     "message": "Usuń powiadomienie"
   },
@@ -430,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Dotyczy zarówno listy w oknie popup, jak i powiadomień."
+  },
+  "channel_pushes_label": {
+    "message": "Z kanałów, które obserwujesz (nie wyciszone)"
+  },
+  "channel_label": {
+    "message": "Kanał"
   }
 }
