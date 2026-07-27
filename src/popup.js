@@ -817,7 +817,8 @@ document.addEventListener('DOMContentLoaded', function() {
   //                    so any later ordering could misfile it as a chat message.
   //                    Opt-in: shown in the Push timeline and notified only while
   //                    the showChannelPushes option is on and the subscription is
-  //                    not muted; always cached.
+  //                    not muted; always cached. Past those two gates it behaves
+  //                    exactly like a device push, auto-open included.
   //   'people'       — a human wrote to me. sender_email_normalized is also
   //                    the conversation key, so every people push is
   //                    displayable by construction. Chat surface only, and

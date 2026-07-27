@@ -1177,7 +1177,8 @@ async function handleReconnection() {
 //                    so any later ordering could misfile it as a chat message.
 //                    Opt-in: shown in the Push timeline and notified only while
 //                    the showChannelPushes option is on and the subscription is
-//                    not muted; always cached.
+//                    not muted; always cached. Past those two gates it behaves
+//                    exactly like a device push, auto-open included.
 //   'people'       — a human wrote to me. sender_email_normalized is also
 //                    the conversation key, so every people push is
 //                    displayable by construction. Chat surface only, and
@@ -1458,8 +1459,6 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
               // needs the list — and either may be absent without disturbing the
               // other: showNotificationForPush keeps the push's own title when
               // titleOverride is absent, and the default icon when iconUrl is.
-              // They never auto-open: a busy feed would otherwise flood the
-              // browser with tabs the user never asked for, one per item.
               const isChannel = classifyPush(push) === 'channel';
               const options = {
                 autoOpenFiles: configData.autoOpenFiles === true,
@@ -1476,7 +1475,7 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
               }
               return showNotificationForPush(
                 push,
-                !isChannel && configData.autoOpenLinks && allowAutoOpenLinks,
+                configData.autoOpenLinks && allowAutoOpenLinks,
                 configData.hideNotificationOnAutoOpen || false,
                 options
               );
