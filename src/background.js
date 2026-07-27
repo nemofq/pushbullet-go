@@ -461,6 +461,15 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
     }
     await updateChatUnreadCount();
   }
+  // Channel pushes just switched on: the subscriptions list must be in hand
+  // before the first channel push is presented, since the push itself cannot
+  // say whether its channel is muted. Enabling the option is the natural moment
+  // to fetch a list nothing has needed until now. Fire-and-forget;
+  // refreshPeopleFromServer is self-throttled.
+  if (namespace === 'local' && changes.showChannelPushes &&
+      changes.showChannelPushes.newValue === true && changes.showChannelPushes.oldValue !== true) {
+    refreshPeopleFromServer();
+  }
   // Update badge when display settings change
   if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored || changes.displayUnreadChats)) {
     await updateBadge();
@@ -617,6 +626,25 @@ function trimChatToPerson(chat) {
   };
 }
 
+// Trim a subscription down to the fields we store per channel. Written to
+// storage.local only — never to the stale pre-1.11.5 sync copies, which must
+// not gain a list they never had. Deliberately no name: a channel push carries
+// its own feed name in sender_name, which is always current and needs no
+// lookup, so this record exists purely for the two things the push cannot
+// answer — whether the subscription is muted, and what the channel's image is.
+// `iden` is the subscription's own iden, not the channel's; nothing writes it
+// today, but a future mute POST (/v2/subscriptions/{iden}) is the one action
+// that would need it, so it is kept rather than re-fetched later.
+function trimSubscriptionToChannel(subscription) {
+  const channel = subscription.channel || {};
+  return {
+    iden: subscription.iden,
+    channel_iden: channel.iden,
+    image_url: channel.image_url,
+    muted: subscription.muted === true
+  };
+}
+
 // Fetch the devices and people lists from the server when a token exists but
 // the local lists are missing or empty (new machine that received the token
 // via Chrome sync, token saved without running Retrieve).
@@ -720,14 +748,28 @@ let lastPeopleRefreshAttempt = 0;
 // fact; the next refresh, whose request post-dates the write, reconciles.
 let peopleWriteToken = 0;
 
+// Refreshes both tickle-less server lists in one throttled pass: chats (people)
+// and subscriptions (channels). The realtime stream has no subscription tickle
+// either, so channels ride along with people instead of growing a trigger set of
+// their own — they inherit every existing trigger and the 60s throttle above.
+// The name stays refreshPeopleFromServer because all four call sites are people
+// triggers; the channel fetch is a passenger. Each list gets its own helper so
+// that an early return in one (a failed request, a stale write token) abandons
+// that list only and never skips the other.
 async function refreshPeopleFromServer() {
   if (Date.now() - lastPeopleRefreshAttempt < 60 * 1000) return;
   lastPeopleRefreshAttempt = Date.now();
 
   const token = await getAccessToken();
   if (!token) return;
-  const writeTokenAtFetch = peopleWriteToken;
 
+  await Promise.all([
+    refreshPeopleList(token, peopleWriteToken),
+    refreshChannelList(token)
+  ]);
+}
+
+async function refreshPeopleList(token, writeTokenAtFetch) {
   try {
     // ?active=true asks the server to omit deleted chats; the client-side
     // active filter below stays as belt-and-braces.
@@ -746,6 +788,30 @@ async function refreshPeopleFromServer() {
     await chrome.storage.local.set({ people: people, lastPeopleFetch: Date.now() });
   } catch (error) {
     console.error('Failed to refresh people from server:', error);
+  }
+}
+
+// Subscriptions -> the channels list. No write-token dance here: nothing
+// performs targeted local writes to `channels` (the extension is a client — mute
+// lives on pushbullet.com), so a wholesale write has nothing to clobber.
+// lastPeopleFetch is deliberately not stamped from this path: it gates
+// maybeRefreshPeopleOnTabOpen and must keep meaning "the people list was fetched".
+async function refreshChannelList(token) {
+  try {
+    // ?active=true asks the server to omit cancelled subscriptions; the
+    // client-side active filter below stays as belt-and-braces.
+    const response = await fetch('https://api.pushbullet.com/v2/subscriptions?active=true', {
+      headers: { 'Access-Token': token }
+    });
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const channels = (data.subscriptions || [])
+      .filter(subscription => subscription.active === true)
+      .map(trimSubscriptionToChannel);
+    await chrome.storage.local.set({ channels: channels });
+  } catch (error) {
+    console.error('Failed to refresh channels from server:', error);
   }
 }
 
@@ -1103,10 +1169,16 @@ async function handleReconnection() {
 
 // classifyPush(push) — the single classifier for every push. Consumers act
 // only on the tag they own; a tag they don't recognize is inert to them, so
-// ignored (and any future) kinds are skipped everywhere by construction.
+// unhandled (and any future) kinds are skipped everywhere by construction.
 //
-//   'ignored'      — channel pushes. Unsupported: kept in the cache
-//                    (faithful server mirror), consumed by no surface.
+//   'channel'      — a channel / RSS-feed subscription push (channel_iden,
+//                    with the feed's sender_name). Tested FIRST: the sender_*
+//                    fields of a channel push describe the feed, not a person,
+//                    so any later ordering could misfile it as a chat message.
+//                    Opt-in: shown in the Push timeline and notified only while
+//                    the showChannelPushes option is on and the subscription is
+//                    not muted; always cached. Past those two gates it behaves
+//                    exactly like a device push, auto-open included.
 //   'people'       — a human wrote to me. sender_email_normalized is also
 //                    the conversation key, so every people push is
 //                    displayable by construction. Chat surface only, and
@@ -1124,11 +1196,22 @@ async function handleReconnection() {
 //                    can never vanish and never impersonate a person.
 // keep in sync with the copy in popup.js
 function classifyPush(push) {
-  if (push.channel_iden) return 'ignored';
+  if (push.channel_iden) return 'channel';
   if (push.direction === 'self') return 'device';
   if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
   if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
   return 'device'; // unknown direction — fail toward v1.11 visibility
+}
+
+// The stored subscription record for a channel push, or null while the
+// channels list has not caught up (a brand-new subscription, a first run before
+// any fetch). Everything the bubble and the toast title need travels on the
+// push itself; this record answers only "is it muted" and "what is its image",
+// so an unknown channel is simply treated as unmuted and imageless — fail
+// toward showing the push, never toward hiding it.
+// keep in sync with the copy in popup.js
+function findChannelForPush(channels, push) {
+  return (channels || []).find(c => c.channel_iden === push.channel_iden) || null;
 }
 
 // Refreshes run strictly one at a time. Overlapping runs (ws.onopen plus an
@@ -1210,14 +1293,44 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         // updates when a resume delivers many pushes at once.
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
-          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenTabActive', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
-          const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
+          const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showChannelPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenTabActive', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
+          const localData = await chrome.storage.local.get(['chromeDeviceId', 'people', 'channels']);
           const people = localData.people || [];
+          const channels = localData.channels || [];
+
+          // Unknown channel: refresh the subscriptions list (throttled,
+          // fire-and-forget) so the next push from it can honor its mute flag
+          // and carry its image — the exact analogue of the unknown-sender
+          // refresh in the people loop below. Only while the option is on: a
+          // user who never enables channel pushes must never trigger the fetch.
+          if (configData.showChannelPushes === true &&
+              newPushes.some(push => classifyPush(push) === 'channel' && !findChannelForPush(channels, push))) {
+            refreshPeopleFromServer();
+          }
 
           const pushesToNotify = newPushes.filter(push => {
-            // Only device-tagged pushes use these buckets; people, conversation,
-            // and ignored (channel) pushes never notify through this lane.
-            if (classifyPush(push) !== 'device') {
+            const kind = classifyPush(push);
+
+            // Channel / RSS pushes are their own opt-in bucket: they carry
+            // neither a target nor a source device, so none of the device
+            // switches below say anything about them (same rule as the popup
+            // list). A muted subscription is hidden from the timeline as well
+            // as from notifications, deliberately stricter than a muted chat
+            // (notify-only, because the conversation surface must stay
+            // browsable): a channel has no surface of its own and no
+            // in-extension unmute, so a muted channel disappears entirely —
+            // which is what the option label's "(unmuted)" tells the user.
+            // Already-dismissed ones stay silent, as in the device lane.
+            if (kind === 'channel') {
+              const channel = findChannelForPush(channels, push);
+              return configData.showChannelPushes === true &&
+                !(channel && channel.muted === true) &&
+                push.dismissed !== true;
+            }
+
+            // Otherwise only device-tagged pushes use these buckets; people and
+            // conversation pushes never notify through this lane.
+            if (kind !== 'device') {
               return false;
             }
 
@@ -1299,9 +1412,13 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             // also keeps muted senders out of the auto-open path below.
             if (person && person.muted === true) continue;
             const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
-            // Unknown senders have no person record yet; synthesize one from
-            // the push's sender fields so getPersonIconDataUrl renders the same
-            // letter avatar the popup will show once the chats refresh lands.
+            // Unknown senders have no person record yet, and therefore no
+            // image_url: synthesize the shape getPersonIconDataUrl expects and
+            // let it fall back to the bundled default avatar (notifications
+            // never draw letter avatars — that is the popup's fillAvatar, see
+            // PERSON_FALLBACK_ICON). email_normalized is the field that earns
+            // its keep: it keys the icon cache, so this entry lines up with the
+            // real record once the chats refresh lands and a photo is fetchable.
             const iconPerson = person || {
               name: push.sender_name,
               email: push.sender_email,
@@ -1333,14 +1450,40 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             });
           }
 
-          // Device pushes feed the incremental push counter; people pushes are
-          // counted separately by the derived updateChatUnreadCount() below, so
-          // they are awaited here (for completion + side effects) but excluded
-          // from unreadDelta. Both sets run concurrently.
+          // Device and channel pushes feed the incremental push counter; people
+          // pushes are counted separately by the derived updateChatUnreadCount()
+          // below, so they are awaited here (for completion + side effects) but
+          // excluded from unreadDelta. Both sets run concurrently.
           const [deviceResults, peopleResults] = await Promise.all([
-            Promise.all(pushesToNotify.map(push =>
-              showNotificationForPush(push, configData.autoOpenLinks && allowAutoOpenLinks, configData.hideNotificationOnAutoOpen || false, { autoOpenFiles: configData.autoOpenFiles === true, autoOpenTabActive: configData.autoOpenTabActive === true })
-            )),
+            Promise.all(pushesToNotify.map(async push => {
+              // Channel / RSS pushes are titled by the feed (their sender_name),
+              // mirroring the caption on their popup bubble, and iconed with the
+              // channel's image where the subscriptions list has one. The two
+              // resolve independently — the title travels on the push, the image
+              // needs the list — and either may be absent without disturbing the
+              // other: showNotificationForPush keeps the push's own title when
+              // titleOverride is absent, and the default icon when iconUrl is.
+              const isChannel = classifyPush(push) === 'channel';
+              const options = {
+                autoOpenFiles: configData.autoOpenFiles === true,
+                autoOpenTabActive: configData.autoOpenTabActive === true
+              };
+              if (isChannel) {
+                if (push.sender_name) {
+                  options.titleOverride = push.sender_name;
+                }
+                const channel = findChannelForPush(channels, push);
+                if (channel && channel.image_url) {
+                  options.iconUrl = await getChannelIconDataUrl(channel);
+                }
+              }
+              return showNotificationForPush(
+                push,
+                configData.autoOpenLinks && allowAutoOpenLinks,
+                configData.hideNotificationOnAutoOpen || false,
+                options
+              );
+            })),
             Promise.all(peopleTasks.map(task => task.promise))
           ]);
 
@@ -1393,8 +1536,10 @@ function normalizeOpenUrl(url) {
 // tallies a whole batch into one counter write, so the decision is made before
 // the side effects below, and their failures neither reject nor change it.
 // A people push passes { titleOverride, iconUrl } so the sender names the
-// notification and their avatar (or the fallback icon) is shown; device pushes
-// keep the push title with the default icon. autoOpenLinks is the composed gate
+// notification and their avatar (or the fallback icon) is shown; a channel push
+// passes the feed's sender_name as titleOverride, plus the channel's image as
+// iconUrl when the subscriptions list has one; device pushes keep the push
+// title with the default icon. autoOpenLinks is the composed gate
 // (master / trusted-people): when it is on, link pushes auto-open their url and
 // — only if autoOpenFiles is also on — file pushes auto-open their file_url,
 // mirroring the notification Open button. autoOpenTabActive makes the created
@@ -1430,8 +1575,9 @@ async function showNotificationForPush(push, autoOpenLinks = false, hideNotifica
         notificationBody = push.body || getMessage('new_push');
       }
 
-      // People pushes name the sender in the title, so the push's own title
-      // (if any) folds onto the first line of the message, mirror-style.
+      // People and channel pushes name their sender (the person / the feed) in
+      // the title, so the push's own title (if any) folds onto the first line
+      // of the message, mirror-style.
       let notificationTitle = push.title || '';
       if (titleOverride !== undefined) {
         notificationTitle = titleOverride;
@@ -1594,16 +1740,19 @@ const PERSON_FALLBACK_ICON = 'assets/person128.png';
 // the oldest (insertion order) until the store is within
 // PERSON_AVATAR_CACHE_CAP. Entries are either successes ({ image_url, dataUrl })
 // or negative-cached failures ({ image_url, failed: true }); both kinds count
-// toward the cap. A write failure is swallowed — the avatar was already
-// produced for the caller.
-async function putPersonAvatar(cache, emailNormalized, entry) {
+// toward the cap. The store holds channel icons too, keyed 'channel:<iden>' — a
+// shape no email_normalized can take, so the two kinds can never collide, and
+// the store keeps its name (renaming it would need a migration for zero
+// benefit). A write failure is swallowed — the icon was already produced for
+// the caller.
+async function putPersonAvatar(cache, key, entry) {
   try {
     const next = { ...cache };
-    delete next[emailNormalized];
-    next[emailNormalized] = entry;
+    delete next[key];
+    next[key] = entry;
     const keys = Object.keys(next);
-    for (const key of keys.slice(0, Math.max(0, keys.length - PERSON_AVATAR_CACHE_CAP))) {
-      delete next[key];
+    for (const staleKey of keys.slice(0, Math.max(0, keys.length - PERSON_AVATAR_CACHE_CAP))) {
+      delete next[staleKey];
     }
     await chrome.storage.local.set({ personAvatars: next });
   } catch (e) {
@@ -1611,29 +1760,27 @@ async function putPersonAvatar(cache, emailNormalized, entry) {
   }
 }
 
-// Notification avatar for a person. Resolution order:
-//   1. cached success ({ image_url, dataUrl })      -> the cropped photo
-//   2. cached failure ({ image_url, failed: true }) -> the default avatar
-//   3. image_url is an https dl.pushbulletusercontent.com URL -> fetch it; on
-//      success cache + return the photo, on any failure (non-ok / network /
-//      decode) negative-cache the image_url and return the default avatar
-//   4. absent / unparseable / non-whitelisted image_url -> the default avatar
+// Notification icon for a remote image, keyed by cacheKey. Resolution order:
+//   1. cached success ({ image_url, dataUrl })      -> the cropped image
+//   2. cached failure ({ image_url, failed: true }) -> the fallback icon
+//   3. imageUrl is an https dl.pushbulletusercontent.com URL -> fetch it; on
+//      success cache + return the image, on any failure (non-ok / network /
+//      decode) negative-cache the imageUrl and return the fallback icon
+//   4. absent / unparseable / non-whitelisted imageUrl -> the fallback icon
 // Only dl.pushbulletusercontent.com is ever fetched: it is verified to send
 // `access-control-allow-origin: *`. static.pushbullet.com (Google profile
 // photos) sends no CORS headers, so a fetch there can only fail and spam an
 // unsuppressible CORS error onto the extensions page — it, and every other
 // host, is never requested. Cache entries invalidate when image_url changes.
-async function getPersonIconDataUrl(person) {
-  if (!person) return PERSON_FALLBACK_ICON;
-
+async function getRemoteIconDataUrl(cacheKey, imageUrl, fallbackIcon) {
   let cache = {};
   try {
     const stored = await chrome.storage.local.get('personAvatars');
     cache = stored.personAvatars || {};
-    const cached = cache[person.email_normalized];
-    if (cached && cached.image_url === person.image_url) {
-      if (cached.dataUrl) return cached.dataUrl;      // cached success
-      if (cached.failed) return PERSON_FALLBACK_ICON; // cached failure
+    const cached = cache[cacheKey];
+    if (cached && cached.image_url === imageUrl) {
+      if (cached.dataUrl) return cached.dataUrl; // cached success
+      if (cached.failed) return fallbackIcon;    // cached failure
     }
   } catch (e) {
     // Storage read failed; fall through to a fresh attempt.
@@ -1643,9 +1790,9 @@ async function getPersonIconDataUrl(person) {
   // dl.pushbulletusercontent.com. Anything unparseable, http, or any other host
   // (including static.pushbullet.com) never issues a network request.
   let fetchable = false;
-  if (person.image_url) {
+  if (imageUrl) {
     try {
-      const u = new URL(person.image_url);
+      const u = new URL(imageUrl);
       fetchable = u.protocol === 'https:' && u.hostname === 'dl.pushbulletusercontent.com';
     } catch (e) {
       fetchable = false;
@@ -1653,32 +1800,46 @@ async function getPersonIconDataUrl(person) {
   }
 
   if (!fetchable) {
-    return PERSON_FALLBACK_ICON;
+    return fallbackIcon;
   }
 
   try {
-    // Time-bound the request (headers and body both): the people notify loop
-    // awaits this before the batch's device toasts are created, so a hung
-    // download must fail fast rather than stall the notification queue.
-    const resp = await fetch(person.image_url, { signal: AbortSignal.timeout(5000) });
-    if (!resp.ok) throw new Error(`avatar fetch failed: ${resp.status}`);
+    // Time-bound the request (headers and body both): the notify batch awaits
+    // this before its toasts are created, so a hung download must fail fast
+    // rather than stall the notification queue.
+    const resp = await fetch(imageUrl, { signal: AbortSignal.timeout(5000) });
+    if (!resp.ok) throw new Error(`icon fetch failed: ${resp.status}`);
     const blob = await resp.blob();
     const bitmap = await createImageBitmap(blob);
     const dataUrl = await bitmapToCircleDataUrl(bitmap);
-    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, dataUrl });
+    await putPersonAvatar(cache, cacheKey, { image_url: imageUrl, dataUrl });
     return dataUrl;
   } catch (e) {
     // A timeout is transient: fall back for this batch but skip the negative
-    // cache so the photo is retried on the next notification.
+    // cache so the image is retried on the next notification.
     if (e && e.name === 'TimeoutError') {
-      return PERSON_FALLBACK_ICON;
+      return fallbackIcon;
     }
     // Everything else (non-ok, network, decode): negative-cache this image_url
-    // so it is not retried (or re-logged) until it changes, then fall back to
-    // the default avatar.
-    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, failed: true });
-    return PERSON_FALLBACK_ICON;
+    // so it is not retried (or re-logged) until it changes, then fall back.
+    await putPersonAvatar(cache, cacheKey, { image_url: imageUrl, failed: true });
+    return fallbackIcon;
   }
+}
+
+// Notification avatar for a person: their photo, or the bundled default avatar.
+async function getPersonIconDataUrl(person) {
+  return person ? getRemoteIconDataUrl(person.email_normalized, person.image_url, PERSON_FALLBACK_ICON) : PERSON_FALLBACK_ICON;
+}
+
+// Notification icon for a channel: its image, or assets/icon128.png. There is
+// no bundled channel artwork, and that file is already the notification
+// builder's default icon, so an unfetchable channel image degrades to exactly
+// what a normal push toast looks like. The 'channel:' key prefix keeps these
+// entries namespaced away from the email-keyed person avatars in the shared
+// store, which they share the cap with.
+async function getChannelIconDataUrl(channel) {
+  return getRemoteIconDataUrl('channel:' + channel.channel_iden, channel.image_url, 'assets/icon128.png');
 }
 
 // Android identifies an active notification by the (package_name,

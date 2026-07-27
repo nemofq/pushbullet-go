@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   const showOtherDevicePushesToggle = document.getElementById('showOtherDevicePushesToggle');
   const showNoTargetPushesCheckbox = document.getElementById('showNoTargetPushes');
   const showNoTargetPushesToggle = document.getElementById('showNoTargetPushesToggle');
+  const showChannelPushesCheckbox = document.getElementById('showChannelPushes');
+  const showChannelPushesToggle = document.getElementById('showChannelPushesToggle');
   const hideBrowserPushesCheckbox = document.getElementById('hideBrowserPushes');
   const hideBrowserPushesToggle = document.getElementById('hideBrowserPushesToggle');
   const showSmsShortcutCheckbox = document.getElementById('showSmsShortcut');
@@ -633,7 +635,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'autoOpenTabActive', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'autoOpenTabActive', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showChannelPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -749,6 +751,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     updateShowOtherDevicePushesToggleVisual();
     updateShowNoTargetPushesToggleVisual();
+
+    // Channel / RSS pushes (default is false/off). Deliberately outside the
+    // migration above: it is a new bucket, never implied by the old
+    // onlyBrowserPushes setting, so existing installs start with it off.
+    showChannelPushesCheckbox.checked = data.showChannelPushes === true;
+    updateShowChannelPushesToggleVisual();
 
     // Load other device selections ('' or unset means all other devices,
     // which the checklist shows as its selected "All other devices" row)
@@ -934,6 +942,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   showNoTargetPushesToggle.addEventListener('click', function() {
     showNoTargetPushesCheckbox.checked = !showNoTargetPushesCheckbox.checked;
     updateShowNoTargetPushesToggleVisual();
+  });
+
+  showChannelPushesToggle.addEventListener('click', function() {
+    showChannelPushesCheckbox.checked = !showChannelPushesCheckbox.checked;
+    updateShowChannelPushesToggleVisual();
   });
 
   hideBrowserPushesToggle.addEventListener('click', function() {
@@ -1484,6 +1497,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       showOtherDevicePushes: showOtherDevicePushesCheckbox.checked,
       selectedOtherDeviceIds: getSelectedOtherDeviceIds(),
       showNoTargetPushes: showNoTargetPushesCheckbox.checked,
+      showChannelPushes: showChannelPushesCheckbox.checked,
       hideBrowserPushes: hideBrowserPushesCheckbox.checked,
       autoOpenLinks: autoOpenLinksCheckbox.checked,
       autoOpenFiles: autoOpenFilesCheckbox.checked,
@@ -1563,6 +1577,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       showOtherDevicePushes: saveData.showOtherDevicePushes,
       selectedOtherDeviceIds: saveData.selectedOtherDeviceIds,
       showNoTargetPushes: saveData.showNoTargetPushes,
+      showChannelPushes: saveData.showChannelPushes,
       hideBrowserPushes: saveData.hideBrowserPushes,
       autoOpenLinks: saveData.autoOpenLinks,
       autoOpenFiles: saveData.autoOpenFiles,
@@ -1841,6 +1856,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       showNoTargetPushesToggle.classList.add('active');
     } else {
       showNoTargetPushesToggle.classList.remove('active');
+    }
+  }
+
+  function updateShowChannelPushesToggleVisual() {
+    if (showChannelPushesCheckbox.checked) {
+      showChannelPushesToggle.classList.add('active');
+    } else {
+      showChannelPushesToggle.classList.remove('active');
     }
   }
 

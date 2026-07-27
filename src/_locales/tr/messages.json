@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Hem popup'taki liste hem de bildirimler için geçerlidir."
+  },
+  "channel_pushes_label": {
+    "message": "Takip edilen kanallardan (sesi açık)"
+  },
+  "channel_label": {
+    "message": "Kanal"
   }
 }

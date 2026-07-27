@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Se aplica tanto a la lista del popup como a las notificaciones."
+  },
+  "channel_pushes_label": {
+    "message": "De los canales que sigues (sin silenciar)"
+  },
+  "channel_label": {
+    "message": "Canal"
   }
 }

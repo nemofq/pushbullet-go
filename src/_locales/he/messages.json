@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "חל גם על הרשימה בחלונית הקופצת וגם על ההתראות."
+  },
+  "channel_pushes_label": {
+    "message": "דחיפות מערוצים שבמעקב (לא מושתקים)"
+  },
+  "channel_label": {
+    "message": "ערוץ"
   }
 }

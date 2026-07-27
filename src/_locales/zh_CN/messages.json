@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "同时适用于弹窗列表和通知。"
+  },
+  "channel_pushes_label": {
+    "message": "来自已关注频道的推送（未静音）"
+  },
+  "channel_label": {
+    "message": "频道"
   }
 }

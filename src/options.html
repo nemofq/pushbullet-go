@@ -744,6 +744,18 @@
           <div class="toggle-slider"></div>
         </div>
       </div>
+      <!-- Channel / RSS subscriptions have no target device, so they are their
+           own opt-in bucket rather than a case of the three switches above. -->
+      <div class="toggle-container" style="margin-left: 0px;">
+        <label class="toggle-label">
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="channel_pushes_label">From channels you follow (unmuted)</span>
+        </label>
+        <input type="checkbox" id="showChannelPushes" class="toggle-input">
+        <div class="toggle-switch" id="showChannelPushesToggle">
+          <div class="toggle-slider"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Behavior Tab Content -->

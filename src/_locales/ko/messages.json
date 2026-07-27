@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "팝업 목록과 알림 모두에 적용됩니다."
+  },
+  "channel_pushes_label": {
+    "message": "팔로우하는 채널에서 온 푸시 (음소거 제외)"
+  },
+  "channel_label": {
+    "message": "채널"
   }
 }

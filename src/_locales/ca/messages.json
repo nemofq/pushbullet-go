@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "S'aplica tant a la llista de la finestra emergent com a les notificacions."
+  },
+  "channel_pushes_label": {
+    "message": "Des dels canals que segueixes (no silenciats)"
+  },
+  "channel_label": {
+    "message": "Canal"
   }
 }

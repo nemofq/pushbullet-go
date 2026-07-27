@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "同時適用於彈出視窗中的清單和通知。"
+  },
+  "channel_pushes_label": {
+    "message": "來自已關注頻道的推送（未靜音）"
+  },
+  "channel_label": {
+    "message": "頻道"
   }
 }

@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Gjelder både push-listen i popup og varslene."
+  },
+  "channel_pushes_label": {
+    "message": "Fra kanaler du følger (ikke dempede)"
+  },
+  "channel_label": {
+    "message": "Kanal"
   }
 }

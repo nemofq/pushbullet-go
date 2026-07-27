@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Áp dụng cho cả danh sách push trong popup và thông báo."
+  },
+  "channel_pushes_label": {
+    "message": "Từ kênh đã theo dõi (đã bật tiếng)"
+  },
+  "channel_label": {
+    "message": "Kênh"
   }
 }

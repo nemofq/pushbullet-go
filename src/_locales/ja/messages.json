@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "ポップアップの一覧と通知の両方に適用されます。"
+  },
+  "channel_pushes_label": {
+    "message": "フォロー中のチャンネルからのプッシュ（ミュートを除く）"
+  },
+  "channel_label": {
+    "message": "チャンネル"
   }
 }

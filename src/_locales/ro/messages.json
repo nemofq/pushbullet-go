@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Se aplică atât listei de push-uri din popup, cât și notificărilor."
+  },
+  "channel_pushes_label": {
+    "message": "Din canalele urmărite (cu sunet)"
+  },
+  "channel_label": {
+    "message": "Canal"
   }
 }

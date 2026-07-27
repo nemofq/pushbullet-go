@@ -28,6 +28,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 
 - Receive and send pushes
 - Filter to show and notify pushes by target device
+- Optionally include pushes from Channel and RSS feed subscriptions, labelled with the feed's name
 - Push files/images by pasting, dragging, or uploading
 - Push current page's URL, selected text, or images from context menu
 - Push via keyboard shortcut

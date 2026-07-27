@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Platí pre zoznam v popup-e aj pre oznámenia."
+  },
+  "channel_pushes_label": {
+    "message": "Zo sledovaných kanálov (nestlmené)"
+  },
+  "channel_label": {
+    "message": "Kanál"
   }
 }

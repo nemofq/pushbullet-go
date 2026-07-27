@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Koskee sekä ponnahdusikkunan listaa että ilmoituksia."
+  },
+  "channel_pushes_label": {
+    "message": "Seuraamiltasi kanavilta (ei mykistetyt)"
+  },
+  "channel_label": {
+    "message": "Kanava"
   }
 }

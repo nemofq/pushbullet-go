@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Berlaku untuk daftar di popup maupun notifikasi."
+  },
+  "channel_pushes_label": {
+    "message": "Dari saluran yang Anda ikuti (tidak dibisukan)"
+  },
+  "channel_label": {
+    "message": "Saluran"
   }
 }

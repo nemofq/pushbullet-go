@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Geldt voor zowel de lijst in de popup als meldingen."
+  },
+  "channel_pushes_label": {
+    "message": "Van kanalen die je volgt (niet gedempt)"
+  },
+  "channel_label": {
+    "message": "Kanaal"
   }
 }

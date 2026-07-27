@@ -427,5 +427,11 @@
   },
   "show_pushes_tip": {
     "message": "Gælder for både popup-listen og notifikationer."
+  },
+  "channel_pushes_label": {
+    "message": "Fra kanaler du følger (ikke lydløse)"
+  },
+  "channel_label": {
+    "message": "Kanal"
   }
 }
