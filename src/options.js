@@ -1165,6 +1165,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     };
   }
 
+  // Trim a subscription to the fields we store per channel. Written to
+  // storage.local only (never sync), matching background.js. No name: a channel
+  // push carries its own feed name in sender_name, so this record exists only
+  // for the mute flag and the channel image.
+  // keep in sync with background.js trimSubscriptionToChannel
+  function trimSubscriptionToChannel(subscription) {
+    const channel = subscription.channel || {};
+    return {
+      iden: subscription.iden,
+      channel_iden: channel.iden,
+      image_url: channel.image_url,
+      muted: subscription.muted === true
+    };
+  }
+
   retrieveDevicesButton.addEventListener('click', async function() {
     // Get access token - either from new input or existing stored
     let accessToken = accessTokenInput.value.trim();
@@ -1276,6 +1291,35 @@ document.addEventListener('DOMContentLoaded', async function() {
         await chrome.storage.sync.remove('userIden');
       }
       await chrome.storage.local.set({ devices: devices, people: people, chromeDeviceId: chromeDeviceId, lastPeopleFetch: Date.now() });
+
+      // Channel subscriptions, best effort. This is the manual refresh path for
+      // a subscription muted on pushbullet.com: nothing re-reads the list once a
+      // channel is known, so without it a mute could go unnoticed indefinitely.
+      // Fetched unconditionally, like the people list above, so the list is warm
+      // if the channel option is switched on later. A failure here must not fail
+      // the retrieve — the button's promise is devices and people — so it warns
+      // and leaves the previous list in place, the same way the initial-pushes
+      // fetch below does.
+      try {
+        const subscriptionsResponse = await fetch('https://api.pushbullet.com/v2/subscriptions?active=true', {
+          headers: {
+            'Access-Token': accessToken
+          },
+          credentials: 'omit'
+        });
+
+        if (subscriptionsResponse.ok) {
+          const subscriptionsData = await subscriptionsResponse.json();
+          const channels = (subscriptionsData.subscriptions || [])
+            .filter(subscription => subscription.active === true)
+            .map(trimSubscriptionToChannel);
+          await chrome.storage.local.set({ channels: channels });
+        } else {
+          console.warn('Failed to fetch subscriptions:', subscriptionsResponse.status, subscriptionsResponse.statusText);
+        }
+      } catch (error) {
+        console.warn('Failed to fetch subscriptions:', error);
+      }
 
       // Update access token field display after saving (same as "Save" button behavior)
       accessTokenInput.type = 'password';
