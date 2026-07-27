@@ -1450,18 +1450,29 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
           // they are awaited here (for completion + side effects) but excluded
           // from unreadDelta. Both sets run concurrently.
           const [deviceResults, peopleResults] = await Promise.all([
-            Promise.all(pushesToNotify.map(push => {
+            Promise.all(pushesToNotify.map(async push => {
               // Channel / RSS pushes are titled by the feed (their sender_name),
-              // mirroring the caption on their popup bubble, and never
-              // auto-open: a busy feed would otherwise flood the browser with
-              // tabs the user never asked for, one per item.
+              // mirroring the caption on their popup bubble, and iconed with the
+              // channel's image where the subscriptions list has one. The two
+              // resolve independently — the title travels on the push, the image
+              // needs the list — and either may be absent without disturbing the
+              // other: showNotificationForPush keeps the push's own title when
+              // titleOverride is absent, and the default icon when iconUrl is.
+              // They never auto-open: a busy feed would otherwise flood the
+              // browser with tabs the user never asked for, one per item.
               const isChannel = classifyPush(push) === 'channel';
               const options = {
                 autoOpenFiles: configData.autoOpenFiles === true,
                 autoOpenTabActive: configData.autoOpenTabActive === true
               };
-              if (isChannel && push.sender_name) {
-                options.titleOverride = push.sender_name;
+              if (isChannel) {
+                if (push.sender_name) {
+                  options.titleOverride = push.sender_name;
+                }
+                const channel = findChannelForPush(channels, push);
+                if (channel && channel.image_url) {
+                  options.iconUrl = await getChannelIconDataUrl(channel);
+                }
               }
               return showNotificationForPush(
                 push,
@@ -1727,14 +1738,14 @@ const PERSON_FALLBACK_ICON = 'assets/person128.png';
 // or negative-cached failures ({ image_url, failed: true }); both kinds count
 // toward the cap. A write failure is swallowed — the avatar was already
 // produced for the caller.
-async function putPersonAvatar(cache, emailNormalized, entry) {
+async function putPersonAvatar(cache, key, entry) {
   try {
     const next = { ...cache };
-    delete next[emailNormalized];
-    next[emailNormalized] = entry;
+    delete next[key];
+    next[key] = entry;
     const keys = Object.keys(next);
-    for (const key of keys.slice(0, Math.max(0, keys.length - PERSON_AVATAR_CACHE_CAP))) {
-      delete next[key];
+    for (const staleKey of keys.slice(0, Math.max(0, keys.length - PERSON_AVATAR_CACHE_CAP))) {
+      delete next[staleKey];
     }
     await chrome.storage.local.set({ personAvatars: next });
   } catch (e) {
@@ -1742,29 +1753,27 @@ async function putPersonAvatar(cache, emailNormalized, entry) {
   }
 }
 
-// Notification avatar for a person. Resolution order:
-//   1. cached success ({ image_url, dataUrl })      -> the cropped photo
-//   2. cached failure ({ image_url, failed: true }) -> the default avatar
-//   3. image_url is an https dl.pushbulletusercontent.com URL -> fetch it; on
-//      success cache + return the photo, on any failure (non-ok / network /
-//      decode) negative-cache the image_url and return the default avatar
-//   4. absent / unparseable / non-whitelisted image_url -> the default avatar
+// Notification icon for a remote image, keyed by cacheKey. Resolution order:
+//   1. cached success ({ image_url, dataUrl })      -> the cropped image
+//   2. cached failure ({ image_url, failed: true }) -> the fallback icon
+//   3. imageUrl is an https dl.pushbulletusercontent.com URL -> fetch it; on
+//      success cache + return the image, on any failure (non-ok / network /
+//      decode) negative-cache the imageUrl and return the fallback icon
+//   4. absent / unparseable / non-whitelisted imageUrl -> the fallback icon
 // Only dl.pushbulletusercontent.com is ever fetched: it is verified to send
 // `access-control-allow-origin: *`. static.pushbullet.com (Google profile
 // photos) sends no CORS headers, so a fetch there can only fail and spam an
 // unsuppressible CORS error onto the extensions page — it, and every other
 // host, is never requested. Cache entries invalidate when image_url changes.
-async function getPersonIconDataUrl(person) {
-  if (!person) return PERSON_FALLBACK_ICON;
-
+async function getRemoteIconDataUrl(cacheKey, imageUrl, fallbackIcon) {
   let cache = {};
   try {
     const stored = await chrome.storage.local.get('personAvatars');
     cache = stored.personAvatars || {};
-    const cached = cache[person.email_normalized];
-    if (cached && cached.image_url === person.image_url) {
-      if (cached.dataUrl) return cached.dataUrl;      // cached success
-      if (cached.failed) return PERSON_FALLBACK_ICON; // cached failure
+    const cached = cache[cacheKey];
+    if (cached && cached.image_url === imageUrl) {
+      if (cached.dataUrl) return cached.dataUrl; // cached success
+      if (cached.failed) return fallbackIcon;    // cached failure
     }
   } catch (e) {
     // Storage read failed; fall through to a fresh attempt.
@@ -1774,9 +1783,9 @@ async function getPersonIconDataUrl(person) {
   // dl.pushbulletusercontent.com. Anything unparseable, http, or any other host
   // (including static.pushbullet.com) never issues a network request.
   let fetchable = false;
-  if (person.image_url) {
+  if (imageUrl) {
     try {
-      const u = new URL(person.image_url);
+      const u = new URL(imageUrl);
       fetchable = u.protocol === 'https:' && u.hostname === 'dl.pushbulletusercontent.com';
     } catch (e) {
       fetchable = false;
@@ -1784,32 +1793,46 @@ async function getPersonIconDataUrl(person) {
   }
 
   if (!fetchable) {
-    return PERSON_FALLBACK_ICON;
+    return fallbackIcon;
   }
 
   try {
-    // Time-bound the request (headers and body both): the people notify loop
-    // awaits this before the batch's device toasts are created, so a hung
-    // download must fail fast rather than stall the notification queue.
-    const resp = await fetch(person.image_url, { signal: AbortSignal.timeout(5000) });
-    if (!resp.ok) throw new Error(`avatar fetch failed: ${resp.status}`);
+    // Time-bound the request (headers and body both): the notify batch awaits
+    // this before its toasts are created, so a hung download must fail fast
+    // rather than stall the notification queue.
+    const resp = await fetch(imageUrl, { signal: AbortSignal.timeout(5000) });
+    if (!resp.ok) throw new Error(`icon fetch failed: ${resp.status}`);
     const blob = await resp.blob();
     const bitmap = await createImageBitmap(blob);
     const dataUrl = await bitmapToCircleDataUrl(bitmap);
-    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, dataUrl });
+    await putPersonAvatar(cache, cacheKey, { image_url: imageUrl, dataUrl });
     return dataUrl;
   } catch (e) {
     // A timeout is transient: fall back for this batch but skip the negative
-    // cache so the photo is retried on the next notification.
+    // cache so the image is retried on the next notification.
     if (e && e.name === 'TimeoutError') {
-      return PERSON_FALLBACK_ICON;
+      return fallbackIcon;
     }
     // Everything else (non-ok, network, decode): negative-cache this image_url
-    // so it is not retried (or re-logged) until it changes, then fall back to
-    // the default avatar.
-    await putPersonAvatar(cache, person.email_normalized, { image_url: person.image_url, failed: true });
-    return PERSON_FALLBACK_ICON;
+    // so it is not retried (or re-logged) until it changes, then fall back.
+    await putPersonAvatar(cache, cacheKey, { image_url: imageUrl, failed: true });
+    return fallbackIcon;
   }
+}
+
+// Notification avatar for a person: their photo, or the bundled default avatar.
+async function getPersonIconDataUrl(person) {
+  return person ? getRemoteIconDataUrl(person.email_normalized, person.image_url, PERSON_FALLBACK_ICON) : PERSON_FALLBACK_ICON;
+}
+
+// Notification icon for a channel: its image, or assets/icon128.png. There is
+// no bundled channel artwork, and that file is already the notification
+// builder's default icon, so an unfetchable channel image degrades to exactly
+// what a normal push toast looks like. The 'channel:' key prefix keeps these
+// entries namespaced away from the email-keyed person avatars in the shared
+// store, which they share the cap with.
+async function getChannelIconDataUrl(channel) {
+  return getRemoteIconDataUrl('channel:' + channel.channel_iden, channel.image_url, 'assets/icon128.png');
 }
 
 // Android identifies an active notification by the (package_name,
