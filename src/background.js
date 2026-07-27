@@ -461,6 +461,15 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
     }
     await updateChatUnreadCount();
   }
+  // Channel pushes just switched on: the subscriptions list must be in hand
+  // before the first channel push is presented, since the push itself cannot
+  // say whether its channel is muted. Enabling the option is the natural moment
+  // to fetch a list nothing has needed until now. Fire-and-forget;
+  // refreshPeopleFromServer is self-throttled.
+  if (namespace === 'local' && changes.showChannelPushes &&
+      changes.showChannelPushes.newValue === true && changes.showChannelPushes.oldValue !== true) {
+    refreshPeopleFromServer();
+  }
   // Update badge when display settings change
   if (namespace === 'local' && (changes.displayUnreadCounts || changes.displayUnreadPushes || changes.displayUnreadMirrored || changes.displayUnreadChats)) {
     await updateBadge();
@@ -617,6 +626,25 @@ function trimChatToPerson(chat) {
   };
 }
 
+// Trim a subscription down to the fields we store per channel. Written to
+// storage.local only — never to the stale pre-1.11.5 sync copies, which must
+// not gain a list they never had. Deliberately no name: a channel push carries
+// its own feed name in sender_name, which is always current and needs no
+// lookup, so this record exists purely for the two things the push cannot
+// answer — whether the subscription is muted, and what the channel's image is.
+// `iden` is the subscription's own iden, not the channel's; nothing writes it
+// today, but a future mute POST (/v2/subscriptions/{iden}) is the one action
+// that would need it, so it is kept rather than re-fetched later.
+function trimSubscriptionToChannel(subscription) {
+  const channel = subscription.channel || {};
+  return {
+    iden: subscription.iden,
+    channel_iden: channel.iden,
+    image_url: channel.image_url,
+    muted: subscription.muted === true
+  };
+}
+
 // Fetch the devices and people lists from the server when a token exists but
 // the local lists are missing or empty (new machine that received the token
 // via Chrome sync, token saved without running Retrieve).
@@ -720,14 +748,28 @@ let lastPeopleRefreshAttempt = 0;
 // fact; the next refresh, whose request post-dates the write, reconciles.
 let peopleWriteToken = 0;
 
+// Refreshes both tickle-less server lists in one throttled pass: chats (people)
+// and subscriptions (channels). The realtime stream has no subscription tickle
+// either, so channels ride along with people instead of growing a trigger set of
+// their own — they inherit every existing trigger and the 60s throttle above.
+// The name stays refreshPeopleFromServer because all four call sites are people
+// triggers; the channel fetch is a passenger. Each list gets its own helper so
+// that an early return in one (a failed request, a stale write token) abandons
+// that list only and never skips the other.
 async function refreshPeopleFromServer() {
   if (Date.now() - lastPeopleRefreshAttempt < 60 * 1000) return;
   lastPeopleRefreshAttempt = Date.now();
 
   const token = await getAccessToken();
   if (!token) return;
-  const writeTokenAtFetch = peopleWriteToken;
 
+  await Promise.all([
+    refreshPeopleList(token, peopleWriteToken),
+    refreshChannelList(token)
+  ]);
+}
+
+async function refreshPeopleList(token, writeTokenAtFetch) {
   try {
     // ?active=true asks the server to omit deleted chats; the client-side
     // active filter below stays as belt-and-braces.
@@ -746,6 +788,30 @@ async function refreshPeopleFromServer() {
     await chrome.storage.local.set({ people: people, lastPeopleFetch: Date.now() });
   } catch (error) {
     console.error('Failed to refresh people from server:', error);
+  }
+}
+
+// Subscriptions -> the channels list. No write-token dance here: nothing
+// performs targeted local writes to `channels` (the extension is a client — mute
+// lives on pushbullet.com), so a wholesale write has nothing to clobber.
+// lastPeopleFetch is deliberately not stamped from this path: it gates
+// maybeRefreshPeopleOnTabOpen and must keep meaning "the people list was fetched".
+async function refreshChannelList(token) {
+  try {
+    // ?active=true asks the server to omit cancelled subscriptions; the
+    // client-side active filter below stays as belt-and-braces.
+    const response = await fetch('https://api.pushbullet.com/v2/subscriptions?active=true', {
+      headers: { 'Access-Token': token }
+    });
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const channels = (data.subscriptions || [])
+      .filter(subscription => subscription.active === true)
+      .map(trimSubscriptionToChannel);
+    await chrome.storage.local.set({ channels: channels });
+  } catch (error) {
+    console.error('Failed to refresh channels from server:', error);
   }
 }
 
@@ -1106,9 +1172,12 @@ async function handleReconnection() {
 // unhandled (and any future) kinds are skipped everywhere by construction.
 //
 //   'channel'      — a channel / RSS-feed subscription push (channel_iden,
-//                    with the feed's sender_name). Opt-in: shown in the
-//                    Push timeline and notified only while the
-//                    showChannelPushes option is on; always cached.
+//                    with the feed's sender_name). Tested FIRST: the sender_*
+//                    fields of a channel push describe the feed, not a person,
+//                    so any later ordering could misfile it as a chat message.
+//                    Opt-in: shown in the Push timeline and notified only while
+//                    the showChannelPushes option is on and the subscription is
+//                    not muted; always cached.
 //   'people'       — a human wrote to me. sender_email_normalized is also
 //                    the conversation key, so every people push is
 //                    displayable by construction. Chat surface only, and
@@ -1131,6 +1200,17 @@ function classifyPush(push) {
   if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
   if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
   return 'device'; // unknown direction — fail toward v1.11 visibility
+}
+
+// The stored subscription record for a channel push, or null while the
+// channels list has not caught up (a brand-new subscription, a first run before
+// any fetch). Everything the bubble and the toast title need travels on the
+// push itself; this record answers only "is it muted" and "what is its image",
+// so an unknown channel is simply treated as unmuted and imageless — fail
+// toward showing the push, never toward hiding it.
+// keep in sync with the copy in popup.js
+function findChannelForPush(channels, push) {
+  return (channels || []).find(c => c.channel_iden === push.channel_iden) || null;
 }
 
 // Refreshes run strictly one at a time. Overlapping runs (ws.onopen plus an
@@ -1213,8 +1293,19 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
         if (isFromTickle && newPushes.length > 0) {
           // Apply device filtering for notifications (same as popup display)
           const configData = await chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showChannelPushes', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenTabActive', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'enableChat', 'hideNotificationOnAutoOpen', 'hideBrowserPushes']);
-          const localData = await chrome.storage.local.get(['chromeDeviceId', 'people']);
+          const localData = await chrome.storage.local.get(['chromeDeviceId', 'people', 'channels']);
           const people = localData.people || [];
+          const channels = localData.channels || [];
+
+          // Unknown channel: refresh the subscriptions list (throttled,
+          // fire-and-forget) so the next push from it can honor its mute flag
+          // and carry its image — the exact analogue of the unknown-sender
+          // refresh in the people loop below. Only while the option is on: a
+          // user who never enables channel pushes must never trigger the fetch.
+          if (configData.showChannelPushes === true &&
+              newPushes.some(push => classifyPush(push) === 'channel' && !findChannelForPush(channels, push))) {
+            refreshPeopleFromServer();
+          }
 
           const pushesToNotify = newPushes.filter(push => {
             const kind = classifyPush(push);
@@ -1222,9 +1313,18 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             // Channel / RSS pushes are their own opt-in bucket: they carry
             // neither a target nor a source device, so none of the device
             // switches below say anything about them (same rule as the popup
-            // list). Already-dismissed ones stay silent, as in the device lane.
+            // list). A muted subscription is hidden from the timeline as well
+            // as from notifications, deliberately stricter than a muted chat
+            // (notify-only, because the conversation surface must stay
+            // browsable): a channel has no surface of its own and no
+            // in-extension unmute, so a muted channel disappears entirely —
+            // which is what the option label's "(unmuted)" tells the user.
+            // Already-dismissed ones stay silent, as in the device lane.
             if (kind === 'channel') {
-              return configData.showChannelPushes === true && push.dismissed !== true;
+              const channel = findChannelForPush(channels, push);
+              return configData.showChannelPushes === true &&
+                !(channel && channel.muted === true) &&
+                push.dismissed !== true;
             }
 
             // Otherwise only device-tagged pushes use these buckets; people and

@@ -812,9 +812,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // unhandled (and any future) kinds are skipped everywhere by construction.
   //
   //   'channel'      — a channel / RSS-feed subscription push (channel_iden,
-  //                    with the feed's sender_name). Opt-in: shown in the
-  //                    Push timeline and notified only while the
-  //                    showChannelPushes option is on; always cached.
+  //                    with the feed's sender_name). Tested FIRST: the sender_*
+  //                    fields of a channel push describe the feed, not a person,
+  //                    so any later ordering could misfile it as a chat message.
+  //                    Opt-in: shown in the Push timeline and notified only while
+  //                    the showChannelPushes option is on and the subscription is
+  //                    not muted; always cached.
   //   'people'       — a human wrote to me. sender_email_normalized is also
   //                    the conversation key, so every people push is
   //                    displayable by construction. Chat surface only, and
@@ -837,6 +840,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (push.direction === 'incoming') return push.sender_email_normalized ? 'people' : 'device';
     if (push.direction === 'outgoing') return push.receiver_email_normalized ? 'conversation' : 'device';
     return 'device'; // unknown direction — fail toward v1.11 visibility
+  }
+
+  // The stored subscription record for a channel push, or null while the
+  // channels list has not caught up (a brand-new subscription, a first run
+  // before any fetch). Everything the bubble needs travels on the push itself;
+  // this record answers only "is it muted" — so an unknown channel is simply
+  // treated as unmuted, failing toward showing the push.
+  // keep in sync with the copy in background.js
+  function findChannelForPush(channels, push) {
+    return (channels || []).find(c => c.channel_iden === push.channel_iden) || null;
   }
 
   // Labelled boundary row ("— Unread —") inserted above the first unread item
@@ -981,7 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.storage.local.get('pushes'),
       chrome.storage.local.get('sentMessages'),
       chrome.storage.local.get(['onlyBrowserPushes', 'showOtherDevicePushes', 'selectedOtherDeviceIds', 'showNoTargetPushes', 'showChannelPushes']),
-      chrome.storage.local.get('chromeDeviceId')
+      chrome.storage.local.get(['chromeDeviceId', 'channels'])
     ]);
 
     // Get received messages (filtered by new flexible filtering settings)
@@ -989,15 +1002,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // the filter below.
     const selectedOtherIds = (configData.selectedOtherDeviceIds || '')
       .split(',').map(id => id.trim()).filter(id => id);
+    // Subscriptions list: consulted only for the mute flag — a channel bubble
+    // names itself from the push's own sender_name.
+    const channels = localData.channels || [];
     let receivedMessages = receivedData.pushes || [];
     receivedMessages = receivedMessages.filter(push => {
       const kind = classifyPush(push);
 
       // Channel / RSS pushes are their own opt-in bucket: they have no target
-      // device, so the device switches below say nothing about them (the same
-      // rule the background applies to their notifications). Default is false.
+      // device, so the device switches below say nothing about them. Muted
+      // subscriptions drop out here as well as from notifications — the same
+      // gate the background applies, so list and toasts always agree.
+      // Default is false.
       if (kind === 'channel') {
-        return configData.showChannelPushes === true;
+        const channel = findChannelForPush(channels, push);
+        return configData.showChannelPushes === true && !(channel && channel.muted === true);
       }
 
       // Otherwise only device pushes belong to this timeline; people
@@ -2184,6 +2203,11 @@ document.addEventListener('DOMContentLoaded', function() {
       } else if (currentTab === 'chat') {
         renderPeopleList();
       }
+    }
+    if (areaName === 'local' && changes.channels) {
+      // Subscriptions list landed or changed: repaint the timeline so a newly
+      // muted channel's pushes drop out of it.
+      debouncedLoadMessages();
     }
     if (areaName === 'local' && changes.peopleLastRead && currentTab === 'chat' && chatView === 'list') {
       // Read stamps changed — refresh the list so unread dots clear.
