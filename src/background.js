@@ -1412,9 +1412,13 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             // also keeps muted senders out of the auto-open path below.
             if (person && person.muted === true) continue;
             const titleOverride = (person && person.name) || push.sender_name || push.sender_email || '';
-            // Unknown senders have no person record yet; synthesize one from
-            // the push's sender fields so getPersonIconDataUrl renders the same
-            // letter avatar the popup will show once the chats refresh lands.
+            // Unknown senders have no person record yet, and therefore no
+            // image_url: synthesize the shape getPersonIconDataUrl expects and
+            // let it fall back to the bundled default avatar (notifications
+            // never draw letter avatars — that is the popup's fillAvatar, see
+            // PERSON_FALLBACK_ICON). email_normalized is the field that earns
+            // its keep: it keys the icon cache, so this entry lines up with the
+            // real record once the chats refresh lands and a photo is fetchable.
             const iconPerson = person || {
               name: push.sender_name,
               email: push.sender_email,
@@ -1446,10 +1450,10 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
             });
           }
 
-          // Device pushes feed the incremental push counter; people pushes are
-          // counted separately by the derived updateChatUnreadCount() below, so
-          // they are awaited here (for completion + side effects) but excluded
-          // from unreadDelta. Both sets run concurrently.
+          // Device and channel pushes feed the incremental push counter; people
+          // pushes are counted separately by the derived updateChatUnreadCount()
+          // below, so they are awaited here (for completion + side effects) but
+          // excluded from unreadDelta. Both sets run concurrently.
           const [deviceResults, peopleResults] = await Promise.all([
             Promise.all(pushesToNotify.map(async push => {
               // Channel / RSS pushes are titled by the feed (their sender_name),
@@ -1533,8 +1537,9 @@ function normalizeOpenUrl(url) {
 // the side effects below, and their failures neither reject nor change it.
 // A people push passes { titleOverride, iconUrl } so the sender names the
 // notification and their avatar (or the fallback icon) is shown; a channel push
-// passes titleOverride alone (the feed's sender_name, default icon); device
-// pushes keep the push title with the default icon. autoOpenLinks is the composed gate
+// passes the feed's sender_name as titleOverride, plus the channel's image as
+// iconUrl when the subscriptions list has one; device pushes keep the push
+// title with the default icon. autoOpenLinks is the composed gate
 // (master / trusted-people): when it is on, link pushes auto-open their url and
 // — only if autoOpenFiles is also on — file pushes auto-open their file_url,
 // mirroring the notification Open button. autoOpenTabActive makes the created
@@ -1735,8 +1740,11 @@ const PERSON_FALLBACK_ICON = 'assets/person128.png';
 // the oldest (insertion order) until the store is within
 // PERSON_AVATAR_CACHE_CAP. Entries are either successes ({ image_url, dataUrl })
 // or negative-cached failures ({ image_url, failed: true }); both kinds count
-// toward the cap. A write failure is swallowed — the avatar was already
-// produced for the caller.
+// toward the cap. The store holds channel icons too, keyed 'channel:<iden>' — a
+// shape no email_normalized can take, so the two kinds can never collide, and
+// the store keeps its name (renaming it would need a migration for zero
+// benefit). A write failure is swallowed — the icon was already produced for
+// the caller.
 async function putPersonAvatar(cache, key, entry) {
   try {
     const next = { ...cache };
