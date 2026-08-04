@@ -1530,9 +1530,10 @@ async function doRefreshPushList(isFromTickle, allowAutoOpenLinks) {
 
 function normalizeOpenUrl(url) {
   if (typeof url !== 'string' || !url) return null;
-  // Bare www. without scheme is treated as a relative URL by chrome.tabs.create
-  // and would open under chrome-extension://; prepend https:// to keep it absolute.
-  return url.toLowerCase().startsWith('www.') ? 'https://' + url : url;
+  // A scheme-less url (PDALIFE.com, www.x.com, //x.com) is treated as relative
+  // by chrome.tabs.create and would open under chrome-extension://; force https
+  // to keep it absolute. The popup's link-push href applies the same rule.
+  return /^[a-z][a-z0-9+.-]*:/i.test(url) ? url : 'https://' + url.replace(/^\/+/, '');
 }
 
 // Resolves with whether the push counts toward the unread badge — false only

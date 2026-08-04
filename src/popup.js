@@ -930,9 +930,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       if (hasLinkUrl) {
         const link = document.createElement('a');
-        // Bare www. would resolve as a relative URL under chrome-extension://;
-        // match parseTextWithLinks() and prepend https:// for the href only.
-        link.href = push.url.toLowerCase().startsWith('www.') ? 'https://' + push.url : push.url;
+        // A scheme-less url (PDALIFE.com, www.x.com, //x.com) would resolve as
+        // relative under chrome-extension://; force https on the href only — the
+        // visible text and copy button keep the raw url. Mirrors normalizeOpenUrl().
+        link.href = /^[a-z][a-z0-9+.-]*:/i.test(push.url) ? push.url : 'https://' + push.url.replace(/^\/+/, '');
         link.textContent = push.url;
         link.className = 'message-link';
         link.target = '_blank';
