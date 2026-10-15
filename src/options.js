@@ -80,6 +80,14 @@ document.addEventListener('DOMContentLoaded', async function() {
   const showOsNotificationsToggle = document.getElementById('showOsNotificationsToggle');
   const hideBrowserPushesContainer = document.getElementById('hideBrowserPushesContainer');
   const playSoundOnNotificationContainer = document.getElementById('playSoundOnNotificationContainer');
+  const notificationSoundGroup = document.getElementById('notificationSoundGroup');
+  const previewSoundButton = document.getElementById('previewSound');
+  const customSoundRow = document.getElementById('customSoundRow');
+  const chooseSoundFileButton = document.getElementById('chooseSoundFile');
+  const customSoundNameSpan = document.getElementById('customSoundName');
+  const removeSoundFileButton = document.getElementById('removeSoundFile');
+  const customSoundInput = document.getElementById('customSoundInput');
+  const notificationSoundTip = document.getElementById('notificationSoundTip');
   const otherDevicePickerEl = document.getElementById('otherDevicePicker');
   const otherDeviceListGroup = document.getElementById('otherDeviceListGroup');
   const showPerSendTargetCheckbox = document.getElementById('showPerSendTarget');
@@ -585,6 +593,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     { value: 'light', label: () => window.CustomI18n.getMessage('light') },
     { value: 'dark', label: () => window.CustomI18n.getMessage('dark') }
   ], { onChange: applyColorMode, opensUp: true });
+
+  // Notification sound source. A chosen custom file is held here (as a data
+  // URL) until Save, like every other setting on this page.
+  const MAX_CUSTOM_SOUND_BYTES = 1024 * 1024;
+  let customSound = { data: null, name: null };
+  let customSoundChanged = false;
+  let soundFileError = null;
+  const notificationSoundDropdown = createSelectDropdown(document.getElementById('notificationSoundDropdown'), [
+    { value: 'default', label: () => window.CustomI18n.getMessage('sound_default_option') },
+    { value: 'custom', label: () => window.CustomI18n.getMessage('sound_custom_option') }
+  ], { onChange: function() {
+    soundFileError = null;
+    updateNotificationSoundDetails();
+  } });
   
   // Initialize i18n after CustomI18n is ready
   if (window.CustomI18n) {
@@ -635,7 +657,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'autoOpenTabActive', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showChannelPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'autoOpenTabActive', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showChannelPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'notificationSound', 'customSoundData', 'customSoundName', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -826,6 +848,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load play sound on notification setting (default is true/enabled)
     playSoundOnNotificationCheckbox.checked = data.playSoundOnNotification !== false; // Default to true
     updatePlaySoundOnNotificationToggleVisual();
+
+    // Load notification sound source (default is the bundled sound)
+    notificationSoundDropdown.setValue(data.notificationSound === 'custom' ? 'custom' : 'default');
+    customSound = { data: data.customSoundData || null, name: data.customSoundName || null };
+    updateNotificationSoundDetails();
 
     // Load show OS notifications master setting (default is true/on)
     showOsNotificationsCheckbox.checked = data.showOsNotifications !== false; // Default to true
@@ -1104,6 +1131,52 @@ document.addEventListener('DOMContentLoaded', async function() {
   playSoundOnNotificationToggle.addEventListener('click', function() {
     playSoundOnNotificationCheckbox.checked = !playSoundOnNotificationCheckbox.checked;
     updatePlaySoundOnNotificationToggleVisual();
+    updateNotificationSoundVisibility();
+  });
+
+  chooseSoundFileButton.addEventListener('click', function() {
+    customSoundInput.click();
+  });
+
+  customSoundInput.addEventListener('change', async function() {
+    const file = customSoundInput.files[0];
+    // Reset so picking the same file again still fires change
+    customSoundInput.value = '';
+    if (!file) return;
+
+    soundFileError = null;
+    if (file.size > MAX_CUSTOM_SOUND_BYTES) {
+      soundFileError = 'sound_file_too_large';
+    } else {
+      try {
+        const dataUrl = await readFileAsDataUrl(file);
+        await assertPlayableAudio(dataUrl);
+        customSound = { data: dataUrl, name: file.name };
+        customSoundChanged = true;
+      } catch (error) {
+        console.warn('Rejected custom sound file:', error);
+        soundFileError = 'sound_file_unplayable';
+      }
+    }
+    updateNotificationSoundDetails();
+  });
+
+  // Like a newly picked file, the removal only reaches storage on Save
+  removeSoundFileButton.addEventListener('click', function() {
+    customSound = { data: null, name: null };
+    customSoundChanged = true;
+    soundFileError = null;
+    updateNotificationSoundDetails();
+  });
+
+  previewSoundButton.addEventListener('click', async function() {
+    const mode = notificationSoundDropdown.getValue();
+    const src = mode === 'custom' && customSound.data ? customSound.data : 'assets/alert.ogg';
+    try {
+      await new Audio(src).play();
+    } catch (error) {
+      console.error('Sound preview failed:', error);
+    }
   });
 
   showOsNotificationsToggle.addEventListener('click', function() {
@@ -1568,6 +1641,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       colorMode: colorModeDropdown.getValue(),
       defaultTab: defaultTabDropdown.getValue(),
       playSoundOnNotification: playSoundOnNotificationCheckbox.checked,
+      notificationSound: notificationSoundDropdown.getValue(),
       showOsNotifications: showOsNotificationsCheckbox.checked,
       enableContextMenu: enableContextMenuCheckbox.checked
     };
@@ -1647,9 +1721,22 @@ document.addEventListener('DOMContentLoaded', async function() {
       colorMode: saveData.colorMode,
       defaultTab: saveData.defaultTab,
       playSoundOnNotification: saveData.playSoundOnNotification,
+      notificationSound: saveData.notificationSound,
       showOsNotifications: saveData.showOsNotifications,
       enableContextMenu: saveData.enableContextMenu
     };
+
+    // Only rewrite the (up to ~1.3 MB) custom sound when a new file was picked;
+    // a removed one is deleted from storage outright
+    if (customSoundChanged) {
+      if (customSound.data) {
+        localSaveData.customSoundData = customSound.data;
+        localSaveData.customSoundName = customSound.name;
+      } else {
+        chrome.storage.local.remove(['customSoundData', 'customSoundName']);
+      }
+      customSoundChanged = false;
+    }
 
     // enableChat is only persisted once it means something: the user touched
     // the toggle, or the account has people (so the checkbox shows a real
@@ -2103,6 +2190,56 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
 
+  // The sound picker follows Play sound, which itself follows Show notifications
+  function updateNotificationSoundVisibility() {
+    const visible = showOsNotificationsCheckbox.checked && playSoundOnNotificationCheckbox.checked;
+    notificationSoundGroup.style.display = visible ? 'block' : 'none';
+  }
+
+  function updateNotificationSoundDetails() {
+    const mode = notificationSoundDropdown.getValue();
+    customSoundRow.style.display = mode === 'custom' ? 'flex' : 'none';
+    customSoundNameSpan.textContent = customSound.name || window.CustomI18n.getMessage('no_sound_file_chosen');
+    removeSoundFileButton.style.display = customSound.data ? '' : 'none';
+
+    let tipKey = null;
+    if (soundFileError) {
+      tipKey = soundFileError;
+    } else if (mode === 'custom') {
+      tipKey = 'sound_custom_tip';
+    }
+    notificationSoundTip.textContent = tipKey ? window.CustomI18n.getMessage(tipKey) : '';
+    notificationSoundTip.style.display = tipKey ? 'block' : 'none';
+    notificationSoundTip.classList.toggle('error-tip', Boolean(soundFileError));
+  }
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Resolves once the browser can decode the file's metadata; rejects for
+  // files that aren't audio it can play (checked before anything is stored).
+  function assertPlayableAudio(src) {
+    return new Promise((resolve, reject) => {
+      const audio = new Audio();
+      const timer = setTimeout(() => reject(new Error('Timed out loading audio')), 5000);
+      audio.addEventListener('loadedmetadata', () => {
+        clearTimeout(timer);
+        resolve();
+      }, { once: true });
+      audio.addEventListener('error', () => {
+        clearTimeout(timer);
+        reject(audio.error || new Error('Audio failed to load'));
+      }, { once: true });
+      audio.src = src;
+    });
+  }
+
   function updateShowOsNotificationsVisibility() {
     // Show notifications is the master for all notification behavior: its direct
     // sub-rows (hide-browser-pushes, play-sound, require-interaction,
@@ -2118,6 +2255,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       requireInteractionContainer.style.display = 'none';
       closeAsDismissContainer.style.display = 'none';
     }
+    updateNotificationSoundVisibility();
     // Require-interaction's own Pushes/Mirrored subs need this master too.
     updateRequireInteractionVisibility();
   }
@@ -2189,6 +2327,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     languageList.rerender();
     defaultTabDropdown.rerender();
     colorModeDropdown.rerender();
+    notificationSoundDropdown.rerender();
+    updateNotificationSoundDetails();
   }
 
   function applyColorMode(mode) {

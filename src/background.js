@@ -156,7 +156,7 @@ async function playAlertSound() {
   try {
     // Check if sound is enabled; sound is a sub-option of the OS notifications
     // master toggle, so it is muted when the master is off (absent means on)
-    const soundSettings = await chrome.storage.local.get(['playSoundOnNotification', 'showOsNotifications']);
+    const soundSettings = await chrome.storage.local.get(['playSoundOnNotification', 'showOsNotifications', 'notificationSound']);
     if (soundSettings.playSoundOnNotification === false || soundSettings.showOsNotifications === false) {
       return; // Sound is disabled
     }
@@ -167,12 +167,21 @@ async function playAlertSound() {
       return;
     }
 
+    // A user-chosen file replaces the bundled sound; a custom choice with no
+    // stored file falls back to it
+    let src = null;
+    if (soundSettings.notificationSound === 'custom') {
+      const { customSoundData } = await chrome.storage.local.get('customSoundData');
+      src = customSoundData || null;
+    }
+
     await ensureOffscreenDocument();
 
     // Send message to offscreen document to play sound
     chrome.runtime.sendMessage({
       type: 'PLAY_ALERT_SOUND',
-      target: 'offscreen-doc'
+      target: 'offscreen-doc',
+      src
     });
   } catch (error) {
     console.error('Failed to play alert sound:', error);

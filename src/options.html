@@ -561,6 +561,60 @@
       flex: 1;
     }
 
+    /* Sound picker: one indent step under the Play sound sub-row */
+    #notificationSoundGroup {
+      margin-left: 24px;
+    }
+
+    .sound-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sound-row + .sound-row {
+      margin-top: 8px;
+    }
+
+    #notificationSoundDropdown {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sound-button {
+      width: auto;
+      flex-shrink: 0;
+      padding: 12px 16px;
+      white-space: nowrap;
+    }
+
+    /* Secondary, destructive action: muted until hovered so it doesn't
+       compete with Choose file */
+    .sound-remove-button {
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 12px 8px;
+    }
+
+    .sound-remove-button:hover {
+      background: transparent;
+      color: var(--error-text);
+    }
+
+    .sound-file-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    #notificationSoundTip.error-tip {
+      color: var(--error-text);
+    }
+
     .toggle-switch {
       position: relative;
       width: 50px;
@@ -852,6 +906,30 @@
         <div class="toggle-switch" id="playSoundOnNotificationToggle">
           <div class="toggle-slider"></div>
         </div>
+      </div>
+      <!-- Sound source nests under Play sound and follows it (and its master) -->
+      <div class="form-group" id="notificationSoundGroup">
+        <label>
+          <span class="sub-option-icon">↳</span>
+          <span data-i18n="notification_sound_label">Sound:</span>
+        </label>
+        <div class="sound-row">
+          <div id="notificationSoundDropdown"></div>
+          <button type="button" id="previewSound" class="sound-button">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8,5.14V19.14L19,12.14L8,5.14Z"/></svg>
+            <span data-i18n="preview_sound_button">Preview</span>
+          </button>
+        </div>
+        <div class="sound-row" id="customSoundRow" style="display: none;">
+          <button type="button" id="chooseSoundFile" class="sound-button" data-i18n="choose_sound_file_button">Choose file…</button>
+          <span id="customSoundName" class="sound-file-name"></span>
+          <button type="button" id="removeSoundFile" class="sound-button sound-remove-button">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>
+            <span data-i18n="remove_sound_file_button">Remove</span>
+          </button>
+          <input type="file" id="customSoundInput" accept="audio/*" hidden>
+        </div>
+        <div class="tip" id="notificationSoundTip"></div>
       </div>
       <!-- Require interaction + native-close-as-dismiss nest under the Show
            notifications master (UI-only — each key stays independent in code) -->

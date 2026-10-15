@@ -311,6 +311,36 @@
   "play_sound_on_notification_label": {
     "message": "Play sound on notification"
   },
+  "notification_sound_label": {
+    "message": "Sound:"
+  },
+  "sound_default_option": {
+    "message": "Push Go default"
+  },
+  "sound_custom_option": {
+    "message": "Custom file"
+  },
+  "preview_sound_button": {
+    "message": "Preview"
+  },
+  "choose_sound_file_button": {
+    "message": "Choose file…"
+  },
+  "remove_sound_file_button": {
+    "message": "Remove"
+  },
+  "no_sound_file_chosen": {
+    "message": "No file chosen"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV or other audio up to 1 MB. Without a file, the default sound plays."
+  },
+  "sound_file_too_large": {
+    "message": "That file is larger than 1 MB. Choose a shorter sound."
+  },
+  "sound_file_unplayable": {
+    "message": "That file couldn't be played as audio. Choose a different file."
+  },
   "clear_push_history": {
     "message": "Clear local push history"
   },
