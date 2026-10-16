@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "通知時播放聲音"
   },
+  "notification_sound_label": {
+    "message": "音效："
+  },
+  "sound_default_option": {
+    "message": "Push Go 預設"
+  },
+  "sound_custom_option": {
+    "message": "自訂檔案"
+  },
+  "preview_sound_button": {
+    "message": "試聽"
+  },
+  "choose_sound_file_button": {
+    "message": "選擇檔案…"
+  },
+  "remove_sound_file_button": {
+    "message": "移除"
+  },
+  "no_sound_file_chosen": {
+    "message": "未選擇檔案"
+  },
+  "sound_custom_tip": {
+    "message": "MP3、OGG 或 WAV，不超過 10 秒和 1 MB。"
+  },
+  "sound_file_over_limit": {
+    "message": "檔案超過 1 MB 或長於 10 秒。"
+  },
+  "sound_file_unplayable": {
+    "message": "無法播放此檔案。"
+  },
+  "settings_save_failed": {
+    "message": "無法儲存設定。儲存空間可能已滿。"
+  },
   "clear_push_history": {
     "message": "清除本地推送紀錄"
   },

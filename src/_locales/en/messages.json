@@ -311,6 +311,39 @@
   "play_sound_on_notification_label": {
     "message": "Play sound on notification"
   },
+  "notification_sound_label": {
+    "message": "Sound:"
+  },
+  "sound_default_option": {
+    "message": "Push Go default"
+  },
+  "sound_custom_option": {
+    "message": "Custom file"
+  },
+  "preview_sound_button": {
+    "message": "Preview"
+  },
+  "choose_sound_file_button": {
+    "message": "Choose file…"
+  },
+  "remove_sound_file_button": {
+    "message": "Remove"
+  },
+  "no_sound_file_chosen": {
+    "message": "No file chosen"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG or WAV, up to 10 seconds and 1 MB."
+  },
+  "sound_file_over_limit": {
+    "message": "That file is over 1 MB or longer than 10 seconds."
+  },
+  "sound_file_unplayable": {
+    "message": "That file couldn't be played."
+  },
+  "settings_save_failed": {
+    "message": "Couldn't save settings. Storage may be full."
+  },
   "clear_push_history": {
     "message": "Clear local push history"
   },

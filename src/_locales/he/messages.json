@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "השמע צליל בהודעה"
   },
+  "notification_sound_label": {
+    "message": "צליל:"
+  },
+  "sound_default_option": {
+    "message": "ברירת המחדל של Push Go"
+  },
+  "sound_custom_option": {
+    "message": "קובץ מותאם אישית"
+  },
+  "preview_sound_button": {
+    "message": "השמעה לדוגמה"
+  },
+  "choose_sound_file_button": {
+    "message": "בחירת קובץ…"
+  },
+  "remove_sound_file_button": {
+    "message": "הסרה"
+  },
+  "no_sound_file_chosen": {
+    "message": "לא נבחר קובץ"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, ‏OGG או WAV, עד 10 שניות ו־1 MB."
+  },
+  "sound_file_over_limit": {
+    "message": "הקובץ גדול מ־1 MB או ארוך מ־10 שניות."
+  },
+  "sound_file_unplayable": {
+    "message": "לא ניתן להשמיע את הקובץ."
+  },
+  "settings_save_failed": {
+    "message": "לא ניתן לשמור את ההגדרות. ייתכן שהאחסון מלא."
+  },
   "clear_push_history": {
     "message": "נקה היסטוריית push מקומית"
   },

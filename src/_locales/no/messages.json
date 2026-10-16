@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Spill av lyd ved varsling"
   },
+  "notification_sound_label": {
+    "message": "Lyd:"
+  },
+  "sound_default_option": {
+    "message": "Push Go-standard"
+  },
+  "sound_custom_option": {
+    "message": "Egendefinert fil"
+  },
+  "preview_sound_button": {
+    "message": "Spill av prøve"
+  },
+  "choose_sound_file_button": {
+    "message": "Velg fil…"
+  },
+  "remove_sound_file_button": {
+    "message": "Fjern"
+  },
+  "no_sound_file_chosen": {
+    "message": "Ingen fil valgt"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG eller WAV, opptil 10 sekunder og 1 MB."
+  },
+  "sound_file_over_limit": {
+    "message": "Filen er over 1 MB eller lengre enn 10 sekunder."
+  },
+  "sound_file_unplayable": {
+    "message": "Filen kunne ikke spilles av."
+  },
+  "settings_save_failed": {
+    "message": "Kunne ikke lagre innstillingene. Lagringsplassen kan være full."
+  },
   "clear_push_history": {
     "message": "Slett lokal push-historikk"
   },

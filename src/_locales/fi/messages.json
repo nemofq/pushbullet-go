@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Toista ääni ilmoituksessa"
   },
+  "notification_sound_label": {
+    "message": "Ääni:"
+  },
+  "sound_default_option": {
+    "message": "Push Gon oletus"
+  },
+  "sound_custom_option": {
+    "message": "Oma tiedosto"
+  },
+  "preview_sound_button": {
+    "message": "Esikuuntele"
+  },
+  "choose_sound_file_button": {
+    "message": "Valitse tiedosto…"
+  },
+  "remove_sound_file_button": {
+    "message": "Poista"
+  },
+  "no_sound_file_chosen": {
+    "message": "Tiedostoa ei ole valittu"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG tai WAV, enintään 10 sekuntia ja 1 Mt."
+  },
+  "sound_file_over_limit": {
+    "message": "Tiedosto on yli 1 Mt tai yli 10 sekuntia pitkä."
+  },
+  "sound_file_unplayable": {
+    "message": "Tiedostoa ei voitu toistaa."
+  },
+  "settings_save_failed": {
+    "message": "Asetuksia ei voitu tallentaa. Tallennustila saattaa olla täynnä."
+  },
   "clear_push_history": {
     "message": "Tyhjennä paikallinen push-historia"
   },

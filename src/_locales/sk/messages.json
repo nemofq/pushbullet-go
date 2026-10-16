@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Prehrať zvuk pri oznámení"
   },
+  "notification_sound_label": {
+    "message": "Zvuk:"
+  },
+  "sound_default_option": {
+    "message": "Predvolený Push Go"
+  },
+  "sound_custom_option": {
+    "message": "Vlastný súbor"
+  },
+  "preview_sound_button": {
+    "message": "Prehrať ukážku"
+  },
+  "choose_sound_file_button": {
+    "message": "Vybrať súbor…"
+  },
+  "remove_sound_file_button": {
+    "message": "Odstrániť"
+  },
+  "no_sound_file_chosen": {
+    "message": "Nie je vybraný žiadny súbor"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG alebo WAV, najviac 10 sekúnd a 1 MB."
+  },
+  "sound_file_over_limit": {
+    "message": "Súbor má viac ako 1 MB alebo je dlhší ako 10 sekúnd."
+  },
+  "sound_file_unplayable": {
+    "message": "Súbor sa nedá prehrať."
+  },
+  "settings_save_failed": {
+    "message": "Nastavenia sa nepodarilo uložiť. Úložisko môže byť plné."
+  },
   "clear_push_history": {
     "message": "Vymazať lokálnu históriu push"
   },

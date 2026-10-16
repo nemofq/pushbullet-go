@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Putar suara pada notifikasi"
   },
+  "notification_sound_label": {
+    "message": "Suara:"
+  },
+  "sound_default_option": {
+    "message": "Bawaan Push Go"
+  },
+  "sound_custom_option": {
+    "message": "File kustom"
+  },
+  "preview_sound_button": {
+    "message": "Pratinjau"
+  },
+  "choose_sound_file_button": {
+    "message": "Pilih file…"
+  },
+  "remove_sound_file_button": {
+    "message": "Hapus"
+  },
+  "no_sound_file_chosen": {
+    "message": "Belum ada file yang dipilih"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, atau WAV, maksimal 10 detik dan 1 MB."
+  },
+  "sound_file_over_limit": {
+    "message": "File lebih dari 1 MB atau lebih dari 10 detik."
+  },
+  "sound_file_unplayable": {
+    "message": "File tidak dapat diputar."
+  },
+  "settings_save_failed": {
+    "message": "Tidak dapat menyimpan pengaturan. Penyimpanan mungkin penuh."
+  },
   "clear_push_history": {
     "message": "Hapus riwayat push lokal"
   },

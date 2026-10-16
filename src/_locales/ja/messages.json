@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "通知時に音を再生"
   },
+  "notification_sound_label": {
+    "message": "サウンド:"
+  },
+  "sound_default_option": {
+    "message": "Push Go の標準"
+  },
+  "sound_custom_option": {
+    "message": "カスタムファイル"
+  },
+  "preview_sound_button": {
+    "message": "試聴"
+  },
+  "choose_sound_file_button": {
+    "message": "ファイルを選択…"
+  },
+  "remove_sound_file_button": {
+    "message": "削除"
+  },
+  "no_sound_file_chosen": {
+    "message": "ファイルが選択されていません"
+  },
+  "sound_custom_tip": {
+    "message": "MP3、OGG、WAV（10 秒・1 MB まで）。"
+  },
+  "sound_file_over_limit": {
+    "message": "ファイルが 1 MB を超えているか、10 秒より長くなっています。"
+  },
+  "sound_file_unplayable": {
+    "message": "このファイルは再生できません。"
+  },
+  "settings_save_failed": {
+    "message": "設定を保存できませんでした。ストレージがいっぱいの可能性があります。"
+  },
   "clear_push_history": {
     "message": "ローカルpush履歴を消去"
   },

@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Ton bei Benachrichtigung abspielen"
   },
+  "notification_sound_label": {
+    "message": "Ton:"
+  },
+  "sound_default_option": {
+    "message": "Push Go-Standard"
+  },
+  "sound_custom_option": {
+    "message": "Eigene Datei"
+  },
+  "preview_sound_button": {
+    "message": "Vorhören"
+  },
+  "choose_sound_file_button": {
+    "message": "Datei auswählen…"
+  },
+  "remove_sound_file_button": {
+    "message": "Entfernen"
+  },
+  "no_sound_file_chosen": {
+    "message": "Keine Datei ausgewählt"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG oder WAV, bis 10 Sekunden und 1 MB."
+  },
+  "sound_file_over_limit": {
+    "message": "Die Datei ist größer als 1 MB oder länger als 10 Sekunden."
+  },
+  "sound_file_unplayable": {
+    "message": "Die Datei konnte nicht abgespielt werden."
+  },
+  "settings_save_failed": {
+    "message": "Einstellungen konnten nicht gespeichert werden. Der Speicher ist möglicherweise voll."
+  },
   "clear_push_history": {
     "message": "Lokale Push-Verlauf löschen"
   },

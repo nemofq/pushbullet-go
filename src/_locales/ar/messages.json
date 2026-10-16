@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "تشغيل الصوت عند الإشعار"
   },
+  "notification_sound_label": {
+    "message": "الصوت:"
+  },
+  "sound_default_option": {
+    "message": "صوت Push Go الافتراضي"
+  },
+  "sound_custom_option": {
+    "message": "ملف مخصص"
+  },
+  "preview_sound_button": {
+    "message": "معاينة"
+  },
+  "choose_sound_file_button": {
+    "message": "اختيار ملف…"
+  },
+  "remove_sound_file_button": {
+    "message": "إزالة"
+  },
+  "no_sound_file_chosen": {
+    "message": "لم يتم اختيار ملف"
+  },
+  "sound_custom_tip": {
+    "message": "MP3 أو OGG أو WAV، حتى 10 ثوانٍ و1 ميغابايت."
+  },
+  "sound_file_over_limit": {
+    "message": "حجم الملف أكبر من 1 ميغابايت أو مدته أطول من 10 ثوانٍ."
+  },
+  "sound_file_unplayable": {
+    "message": "تعذّر تشغيل هذا الملف."
+  },
+  "settings_save_failed": {
+    "message": "تعذّر حفظ الإعدادات. ربما تكون مساحة التخزين ممتلئة."
+  },
   "clear_push_history": {
     "message": "مسح سجل الإرسال المحلي"
   },

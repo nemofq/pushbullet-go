@@ -59,7 +59,7 @@ Require a [Pushbullet](https://www.pushbullet.com/) account. Features include:
 Push Go offers fine-grained options for advanced users to tailor almost everything, such as:
 
 - Auto-open tuning: Include file pushes, auto-open on reconnect, hide auto-opened notifications, make the new tab active
-- Notification behavior: Sound, hide pushes sent from browsers, require interaction to dismiss (per category), treat native close as dismiss
+- Notification behavior: Sound (Push Go default or your own audio file), hide pushes sent from browsers, require interaction to dismiss (per category), treat native close as dismiss
 - Toggle individual features: Chat, notification mirroring, context menu, quick share, SMS shortcut
 - Default popup tab and which unread counts to display
 - Dark Mode (follows system by default, or choose manually)

@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Воспроизвести звук при уведомлении"
   },
+  "notification_sound_label": {
+    "message": "Звук:"
+  },
+  "sound_default_option": {
+    "message": "Стандартный Push Go"
+  },
+  "sound_custom_option": {
+    "message": "Свой файл"
+  },
+  "preview_sound_button": {
+    "message": "Прослушать"
+  },
+  "choose_sound_file_button": {
+    "message": "Выбрать файл…"
+  },
+  "remove_sound_file_button": {
+    "message": "Удалить"
+  },
+  "no_sound_file_chosen": {
+    "message": "Файл не выбран"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG или WAV, до 10 секунд и 1 МБ."
+  },
+  "sound_file_over_limit": {
+    "message": "Файл больше 1 МБ или длиннее 10 секунд."
+  },
+  "sound_file_unplayable": {
+    "message": "Не удалось воспроизвести файл."
+  },
+  "settings_save_failed": {
+    "message": "Не удалось сохранить настройки. Возможно, хранилище заполнено."
+  },
   "clear_push_history": {
     "message": "Очистить локальную историю push"
   },
