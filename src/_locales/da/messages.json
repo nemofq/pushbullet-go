@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Afspil lyd ved notifikation"
   },
+  "notification_sound_label": {
+    "message": "Lyd:"
+  },
+  "sound_default_option": {
+    "message": "Push Go-standard"
+  },
+  "sound_custom_option": {
+    "message": "Brugerdefineret fil"
+  },
+  "preview_sound_button": {
+    "message": "Afspil prøve"
+  },
+  "choose_sound_file_button": {
+    "message": "Vælg fil…"
+  },
+  "remove_sound_file_button": {
+    "message": "Fjern"
+  },
+  "no_sound_file_chosen": {
+    "message": "Ingen fil valgt"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV eller anden lyd, op til 10 sekunder og 1 MB. Uden en fil afspilles standardlyden."
+  },
+  "sound_file_over_limit": {
+    "message": "Filen er over 1 MB eller længere end 10 sekunder. Vælg et kortere klip, eller gem det som MP3 eller OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Filen kunne ikke afspilles som lyd. Vælg en anden fil."
+  },
+  "settings_save_failed": {
+    "message": "Indstillingerne kunne ikke gemmes. Lageret er muligvis fuldt."
+  },
   "clear_push_history": {
     "message": "Ryd lokal push historik"
   },

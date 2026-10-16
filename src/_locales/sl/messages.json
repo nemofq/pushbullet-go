@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Predvajaj zvok ob obvestilu"
   },
+  "notification_sound_label": {
+    "message": "Zvok:"
+  },
+  "sound_default_option": {
+    "message": "Privzeti Push Go"
+  },
+  "sound_custom_option": {
+    "message": "Datoteka po meri"
+  },
+  "preview_sound_button": {
+    "message": "Predvajaj vzorec"
+  },
+  "choose_sound_file_button": {
+    "message": "Izberi datoteko…"
+  },
+  "remove_sound_file_button": {
+    "message": "Odstrani"
+  },
+  "no_sound_file_chosen": {
+    "message": "Datoteka ni izbrana"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV ali drug zvok, do 10 sekund in 1 MB. Brez datoteke se predvaja privzeti zvok."
+  },
+  "sound_file_over_limit": {
+    "message": "Datoteka je večja od 1 MB ali daljša od 10 sekund. Izberite krajši posnetek ali ga shranite kot MP3 ali OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Te datoteke ni bilo mogoče predvajati kot zvok. Izberite drugo datoteko."
+  },
+  "settings_save_failed": {
+    "message": "Nastavitev ni bilo mogoče shraniti. Shramba je morda polna."
+  },
   "clear_push_history": {
     "message": "Počisti lokalno zgodovino push"
   },

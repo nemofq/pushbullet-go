@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Reproduir so en la notificació"
   },
+  "notification_sound_label": {
+    "message": "So:"
+  },
+  "sound_default_option": {
+    "message": "Predeterminat de Push Go"
+  },
+  "sound_custom_option": {
+    "message": "Fitxer personalitzat"
+  },
+  "preview_sound_button": {
+    "message": "Previsualitza"
+  },
+  "choose_sound_file_button": {
+    "message": "Tria un fitxer…"
+  },
+  "remove_sound_file_button": {
+    "message": "Elimina"
+  },
+  "no_sound_file_chosen": {
+    "message": "No s'ha triat cap fitxer"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV o un altre àudio, fins a 10 segons i 1 MB. Sense fitxer, sona el so predeterminat."
+  },
+  "sound_file_over_limit": {
+    "message": "El fitxer supera 1 MB o dura més de 10 segons. Tria un clip més curt o desa'l com a MP3 o OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Aquest fitxer no es pot reproduir com a àudio. Tria un altre fitxer."
+  },
+  "settings_save_failed": {
+    "message": "No s'ha pogut desar la configuració. Pot ser que l'emmagatzematge sigui ple."
+  },
   "clear_push_history": {
     "message": "Esborrar historial local de push"
   },

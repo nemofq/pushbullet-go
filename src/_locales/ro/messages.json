@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Redă sunet la notificare"
   },
+  "notification_sound_label": {
+    "message": "Sunet:"
+  },
+  "sound_default_option": {
+    "message": "Implicit Push Go"
+  },
+  "sound_custom_option": {
+    "message": "Fișier personalizat"
+  },
+  "preview_sound_button": {
+    "message": "Ascultă"
+  },
+  "choose_sound_file_button": {
+    "message": "Alege fișierul…"
+  },
+  "remove_sound_file_button": {
+    "message": "Elimină"
+  },
+  "no_sound_file_chosen": {
+    "message": "Niciun fișier ales"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV sau alt fișier audio, până la 10 secunde și 1 MB. Fără fișier, se redă sunetul implicit."
+  },
+  "sound_file_over_limit": {
+    "message": "Fișierul depășește 1 MB sau durează mai mult de 10 secunde. Alege un clip mai scurt sau salvează-l ca MP3 sau OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Fișierul nu a putut fi redat ca audio. Alege alt fișier."
+  },
+  "settings_save_failed": {
+    "message": "Setările nu au putut fi salvate. Spațiul de stocare poate fi plin."
+  },
   "clear_push_history": {
     "message": "Sterge istoricul push local"
   },

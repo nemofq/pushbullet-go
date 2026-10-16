@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "เล่นเสียงเมื่อมีการแจ้งเตือน"
   },
+  "notification_sound_label": {
+    "message": "เสียง:"
+  },
+  "sound_default_option": {
+    "message": "ค่าเริ่มต้นของ Push Go"
+  },
+  "sound_custom_option": {
+    "message": "ไฟล์ที่กำหนดเอง"
+  },
+  "preview_sound_button": {
+    "message": "ฟังตัวอย่าง"
+  },
+  "choose_sound_file_button": {
+    "message": "เลือกไฟล์…"
+  },
+  "remove_sound_file_button": {
+    "message": "ลบ"
+  },
+  "no_sound_file_chosen": {
+    "message": "ยังไม่ได้เลือกไฟล์"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV หรือไฟล์เสียงอื่น ยาวไม่เกิน 10 วินาทีและไม่เกิน 1 MB หากไม่มีไฟล์ จะเล่นเสียงเริ่มต้น"
+  },
+  "sound_file_over_limit": {
+    "message": "ไฟล์มีขนาดเกิน 1 MB หรือยาวเกิน 10 วินาที เลือกคลิปที่สั้นลง หรือบันทึกเป็น MP3 หรือ OGG"
+  },
+  "sound_file_unplayable": {
+    "message": "ไม่สามารถเล่นไฟล์นี้เป็นเสียงได้ โปรดเลือกไฟล์อื่น"
+  },
+  "settings_save_failed": {
+    "message": "บันทึกการตั้งค่าไม่สำเร็จ พื้นที่จัดเก็บอาจเต็ม"
+  },
   "clear_push_history": {
     "message": "ล้างประวัติ push ในเครื่อง"
   },

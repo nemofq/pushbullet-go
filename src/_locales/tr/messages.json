@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Bildirimde ses çal"
   },
+  "notification_sound_label": {
+    "message": "Ses:"
+  },
+  "sound_default_option": {
+    "message": "Push Go varsayılanı"
+  },
+  "sound_custom_option": {
+    "message": "Özel dosya"
+  },
+  "preview_sound_button": {
+    "message": "Dinle"
+  },
+  "choose_sound_file_button": {
+    "message": "Dosya seç…"
+  },
+  "remove_sound_file_button": {
+    "message": "Kaldır"
+  },
+  "no_sound_file_chosen": {
+    "message": "Dosya seçilmedi"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV veya başka bir ses dosyası, en fazla 10 saniye ve 1 MB. Dosya yoksa varsayılan ses çalınır."
+  },
+  "sound_file_over_limit": {
+    "message": "Dosya 1 MB'tan büyük veya 10 saniyeden uzun. Daha kısa bir klip seçin ya da MP3 veya OGG olarak kaydedin."
+  },
+  "sound_file_unplayable": {
+    "message": "Bu dosya ses olarak çalınamadı. Başka bir dosya seçin."
+  },
+  "settings_save_failed": {
+    "message": "Ayarlar kaydedilemedi. Depolama alanı dolu olabilir."
+  },
   "clear_push_history": {
     "message": "Yerel push geçmişini temizle"
   },

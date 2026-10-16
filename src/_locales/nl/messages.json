@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Geluid afspelen bij melding"
   },
+  "notification_sound_label": {
+    "message": "Geluid:"
+  },
+  "sound_default_option": {
+    "message": "Push Go-standaard"
+  },
+  "sound_custom_option": {
+    "message": "Eigen bestand"
+  },
+  "preview_sound_button": {
+    "message": "Beluisteren"
+  },
+  "choose_sound_file_button": {
+    "message": "Bestand kiezen…"
+  },
+  "remove_sound_file_button": {
+    "message": "Verwijderen"
+  },
+  "no_sound_file_chosen": {
+    "message": "Geen bestand gekozen"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV of andere audio, tot 10 seconden en 1 MB. Zonder bestand speelt het standaardgeluid."
+  },
+  "sound_file_over_limit": {
+    "message": "Het bestand is groter dan 1 MB of langer dan 10 seconden. Kies een kortere clip, of sla het op als MP3 of OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Dit bestand kan niet als audio worden afgespeeld. Kies een ander bestand."
+  },
+  "settings_save_failed": {
+    "message": "Instellingen konden niet worden opgeslagen. De opslag is mogelijk vol."
+  },
   "clear_push_history": {
     "message": "Lokale push geschiedenis wissen"
   },

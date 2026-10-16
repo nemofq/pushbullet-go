@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Phát âm thanh khi thông báo"
   },
+  "notification_sound_label": {
+    "message": "Âm thanh:"
+  },
+  "sound_default_option": {
+    "message": "Mặc định của Push Go"
+  },
+  "sound_custom_option": {
+    "message": "Tệp tùy chỉnh"
+  },
+  "preview_sound_button": {
+    "message": "Nghe thử"
+  },
+  "choose_sound_file_button": {
+    "message": "Chọn tệp…"
+  },
+  "remove_sound_file_button": {
+    "message": "Xóa"
+  },
+  "no_sound_file_chosen": {
+    "message": "Chưa chọn tệp"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV hoặc âm thanh khác, tối đa 10 giây và 1 MB. Nếu không có tệp, âm thanh mặc định sẽ phát."
+  },
+  "sound_file_over_limit": {
+    "message": "Tệp lớn hơn 1 MB hoặc dài hơn 10 giây. Hãy chọn đoạn ngắn hơn, hoặc lưu dưới dạng MP3 hay OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Không thể phát tệp này dưới dạng âm thanh. Hãy chọn tệp khác."
+  },
+  "settings_save_failed": {
+    "message": "Không thể lưu cài đặt. Bộ nhớ có thể đã đầy."
+  },
   "clear_push_history": {
     "message": "Xóa lịch sử push cục bộ"
   },

@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Riproduci suono alla notifica"
   },
+  "notification_sound_label": {
+    "message": "Suono:"
+  },
+  "sound_default_option": {
+    "message": "Predefinito di Push Go"
+  },
+  "sound_custom_option": {
+    "message": "File personalizzato"
+  },
+  "preview_sound_button": {
+    "message": "Anteprima"
+  },
+  "choose_sound_file_button": {
+    "message": "Scegli file…"
+  },
+  "remove_sound_file_button": {
+    "message": "Rimuovi"
+  },
+  "no_sound_file_chosen": {
+    "message": "Nessun file scelto"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV o altro audio, fino a 10 secondi e 1 MB. Senza file viene riprodotto il suono predefinito."
+  },
+  "sound_file_over_limit": {
+    "message": "Il file supera 1 MB o dura più di 10 secondi. Scegli una clip più breve o salvala come MP3 o OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Non è stato possibile riprodurre il file come audio. Scegli un altro file."
+  },
+  "settings_save_failed": {
+    "message": "Impossibile salvare le impostazioni. Lo spazio di archiviazione potrebbe essere pieno."
+  },
   "clear_push_history": {
     "message": "Cancella cronologia push locale"
   },

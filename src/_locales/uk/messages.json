@@ -260,6 +260,39 @@
   "play_sound_on_notification_label": {
     "message": "Відтворити звук при сповіщенні"
   },
+  "notification_sound_label": {
+    "message": "Звук:"
+  },
+  "sound_default_option": {
+    "message": "Стандартний Push Go"
+  },
+  "sound_custom_option": {
+    "message": "Власний файл"
+  },
+  "preview_sound_button": {
+    "message": "Прослухати"
+  },
+  "choose_sound_file_button": {
+    "message": "Вибрати файл…"
+  },
+  "remove_sound_file_button": {
+    "message": "Видалити"
+  },
+  "no_sound_file_chosen": {
+    "message": "Файл не вибрано"
+  },
+  "sound_custom_tip": {
+    "message": "MP3, OGG, WAV або інший аудіофайл, до 10 секунд і 1 МБ. Без файлу відтворюється стандартний звук."
+  },
+  "sound_file_over_limit": {
+    "message": "Файл більший за 1 МБ або довший за 10 секунд. Виберіть коротший фрагмент або збережіть його у MP3 чи OGG."
+  },
+  "sound_file_unplayable": {
+    "message": "Цей файл не вдалося відтворити як аудіо. Виберіть інший файл."
+  },
+  "settings_save_failed": {
+    "message": "Не вдалося зберегти налаштування. Можливо, сховище заповнене."
+  },
   "clear_push_history": {
     "message": "Очистити локальну історію push"
   },
