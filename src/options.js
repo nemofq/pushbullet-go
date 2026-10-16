@@ -598,6 +598,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   // URL) until Save, like every other setting on this page.
   const MAX_CUSTOM_SOUND_BYTES = 1024 * 1024;
   const MAX_CUSTOM_SOUND_SECONDS = 10;
+  // The data URL's type comes from the extension, not file.type, which can be
+  // empty or a variant Chrome won't play
+  const CUSTOM_SOUND_TYPES = { mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav' };
   // Same bundled sound offscreen.js falls back to
   const DEFAULT_SOUND_SRC = 'assets/alert.ogg';
   let customSound = { data: null, name: null };
@@ -1149,22 +1152,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (!file) return;
 
     soundFileError = null;
-    if (file.size > MAX_CUSTOM_SOUND_BYTES) {
+    // The picker's accept list is only a hint, so the extension is checked here
+    const type = CUSTOM_SOUND_TYPES[file.name.split('.').pop().toLowerCase()];
+    if (!type) {
+      soundFileError = 'sound_file_unplayable';
+    } else if (file.size > MAX_CUSTOM_SOUND_BYTES) {
       soundFileError = 'sound_file_over_limit';
     } else {
       try {
-        let dataUrl = await readFileAsDataUrl(file);
-        // An unknown extension yields an empty type (stored as
-        // application/octet-stream), and some real ones carry a type Chrome
-        // won't play (audio/opus); a generic audio type lets Chrome sniff the
-        // actual format from the bytes
-        if (!file.type || !new Audio().canPlayType(file.type)) {
-          dataUrl = dataUrl.replace(/^data:[^;,]*/, 'data:audio/mpeg');
-        }
+        const dataUrl = (await readFileAsDataUrl(file)).replace(/^data:[^;,]*/, `data:${type}`);
         const duration = await loadAudioDuration(dataUrl);
-        // Some files (e.g. MediaRecorder WebM) report no finite duration;
-        // those are let through on the size cap alone
-        if (Number.isFinite(duration) && duration > MAX_CUSTOM_SOUND_SECONDS) {
+        // A duration that isn't a finite number counts as over the limit
+        if (!(duration <= MAX_CUSTOM_SOUND_SECONDS)) {
           soundFileError = 'sound_file_over_limit';
         } else {
           customSound = { data: dataUrl, name: file.name };

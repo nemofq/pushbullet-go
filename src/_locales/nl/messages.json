@@ -282,13 +282,13 @@
     "message": "Geen bestand gekozen"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV of andere audio, tot 10 seconden en 1 MB. Zonder bestand speelt het standaardgeluid."
+    "message": "MP3, OGG of WAV, tot 10 seconden en 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Het bestand is groter dan 1 MB of langer dan 10 seconden. Kies een kortere clip, of sla het op als MP3 of OGG."
+    "message": "Het bestand is groter dan 1 MB of langer dan 10 seconden."
   },
   "sound_file_unplayable": {
-    "message": "Dit bestand kan niet als audio worden afgespeeld. Kies een ander bestand."
+    "message": "Het bestand kan niet worden afgespeeld. Kies een MP3-, OGG- of WAV-bestand."
   },
   "settings_save_failed": {
     "message": "Instellingen konden niet worden opgeslagen. De opslag is mogelijk vol."

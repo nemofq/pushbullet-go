@@ -282,13 +282,13 @@
     "message": "Keine Datei ausgewählt"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV oder andere Audiodateien, bis 10 Sekunden und 1 MB. Ohne Datei wird der Standardton abgespielt."
+    "message": "MP3, OGG oder WAV, bis 10 Sekunden und 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Die Datei ist größer als 1 MB oder länger als 10 Sekunden. Wähle einen kürzeren Clip oder speichere ihn als MP3 oder OGG."
+    "message": "Die Datei ist größer als 1 MB oder länger als 10 Sekunden."
   },
   "sound_file_unplayable": {
-    "message": "Diese Datei konnte nicht als Audio abgespielt werden. Wähle eine andere Datei."
+    "message": "Die Datei konnte nicht abgespielt werden. Wähle eine MP3-, OGG- oder WAV-Datei."
   },
   "settings_save_failed": {
     "message": "Einstellungen konnten nicht gespeichert werden. Der Speicher ist möglicherweise voll."

@@ -282,13 +282,13 @@
     "message": "未選擇檔案"
   },
   "sound_custom_tip": {
-    "message": "MP3、OGG、WAV 或其他音訊，不超過 10 秒和 1 MB。未選擇檔案時播放預設音效。"
+    "message": "MP3、OGG 或 WAV，不超過 10 秒和 1 MB。"
   },
   "sound_file_over_limit": {
-    "message": "檔案超過 1 MB 或長於 10 秒。請選擇較短的片段，或另存為 MP3 或 OGG。"
+    "message": "檔案超過 1 MB 或長於 10 秒。"
   },
   "sound_file_unplayable": {
-    "message": "無法將此檔案作為音訊播放。請選擇其他檔案。"
+    "message": "無法播放此檔案。請選擇 MP3、OGG 或 WAV 檔案。"
   },
   "settings_save_failed": {
     "message": "無法儲存設定。儲存空間可能已滿。"

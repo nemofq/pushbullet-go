@@ -282,13 +282,13 @@
     "message": "Belum ada file yang dipilih"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV, atau audio lain, maksimal 10 detik dan 1 MB. Tanpa file, suara bawaan yang diputar."
+    "message": "MP3, OGG, atau WAV, maksimal 10 detik dan 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "File lebih dari 1 MB atau lebih dari 10 detik. Pilih klip yang lebih pendek, atau simpan sebagai MP3 atau OGG."
+    "message": "File lebih dari 1 MB atau lebih dari 10 detik."
   },
   "sound_file_unplayable": {
-    "message": "File itu tidak dapat diputar sebagai audio. Pilih file lain."
+    "message": "File tidak dapat diputar. Pilih file MP3, OGG, atau WAV."
   },
   "settings_save_failed": {
     "message": "Tidak dapat menyimpan pengaturan. Penyimpanan mungkin penuh."

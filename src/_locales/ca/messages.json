@@ -282,13 +282,13 @@
     "message": "No s'ha triat cap fitxer"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV o un altre àudio, fins a 10 segons i 1 MB. Sense fitxer, sona el so predeterminat."
+    "message": "MP3, OGG o WAV, fins a 10 segons i 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "El fitxer supera 1 MB o dura més de 10 segons. Tria un clip més curt o desa'l com a MP3 o OGG."
+    "message": "El fitxer supera 1 MB o dura més de 10 segons."
   },
   "sound_file_unplayable": {
-    "message": "Aquest fitxer no es pot reproduir com a àudio. Tria un altre fitxer."
+    "message": "No s'ha pogut reproduir el fitxer. Tria un fitxer MP3, OGG o WAV."
   },
   "settings_save_failed": {
     "message": "No s'ha pogut desar la configuració. Pot ser que l'emmagatzematge sigui ple."

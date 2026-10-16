@@ -282,13 +282,13 @@
     "message": "Dosya seçilmedi"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV veya başka bir ses dosyası, en fazla 10 saniye ve 1 MB. Dosya yoksa varsayılan ses çalınır."
+    "message": "MP3, OGG veya WAV, en fazla 10 saniye ve 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Dosya 1 MB'tan büyük veya 10 saniyeden uzun. Daha kısa bir klip seçin ya da MP3 veya OGG olarak kaydedin."
+    "message": "Dosya 1 MB'tan büyük veya 10 saniyeden uzun."
   },
   "sound_file_unplayable": {
-    "message": "Bu dosya ses olarak çalınamadı. Başka bir dosya seçin."
+    "message": "Dosya çalınamadı. MP3, OGG veya WAV dosyası seçin."
   },
   "settings_save_failed": {
     "message": "Ayarlar kaydedilemedi. Depolama alanı dolu olabilir."

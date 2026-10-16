@@ -282,13 +282,13 @@
     "message": "Není vybrán žádný soubor"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV nebo jiný zvuk, nejvýše 10 sekund a 1 MB. Bez souboru se přehraje výchozí zvuk."
+    "message": "MP3, OGG nebo WAV, nejvýše 10 sekund a 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Soubor má více než 1 MB nebo je delší než 10 sekund. Vyberte kratší ukázku nebo ji uložte jako MP3 či OGG."
+    "message": "Soubor má více než 1 MB nebo je delší než 10 sekund."
   },
   "sound_file_unplayable": {
-    "message": "Tento soubor nelze přehrát jako zvuk. Vyberte jiný soubor."
+    "message": "Soubor nelze přehrát. Vyberte soubor MP3, OGG nebo WAV."
   },
   "settings_save_failed": {
     "message": "Nastavení se nepodařilo uložit. Úložiště může být plné."

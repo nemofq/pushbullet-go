@@ -282,13 +282,13 @@
     "message": "Niciun fișier ales"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV sau alt fișier audio, până la 10 secunde și 1 MB. Fără fișier, se redă sunetul implicit."
+    "message": "MP3, OGG sau WAV, până la 10 secunde și 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Fișierul depășește 1 MB sau durează mai mult de 10 secunde. Alege un clip mai scurt sau salvează-l ca MP3 sau OGG."
+    "message": "Fișierul depășește 1 MB sau durează mai mult de 10 secunde."
   },
   "sound_file_unplayable": {
-    "message": "Fișierul nu a putut fi redat ca audio. Alege alt fișier."
+    "message": "Fișierul nu a putut fi redat. Alege un fișier MP3, OGG sau WAV."
   },
   "settings_save_failed": {
     "message": "Setările nu au putut fi salvate. Spațiul de stocare poate fi plin."

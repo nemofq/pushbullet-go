@@ -282,13 +282,13 @@
     "message": "Chưa chọn tệp"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV hoặc âm thanh khác, tối đa 10 giây và 1 MB. Nếu không có tệp, âm thanh mặc định sẽ phát."
+    "message": "MP3, OGG hoặc WAV, tối đa 10 giây và 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Tệp lớn hơn 1 MB hoặc dài hơn 10 giây. Hãy chọn đoạn ngắn hơn, hoặc lưu dưới dạng MP3 hay OGG."
+    "message": "Tệp lớn hơn 1 MB hoặc dài hơn 10 giây."
   },
   "sound_file_unplayable": {
-    "message": "Không thể phát tệp này dưới dạng âm thanh. Hãy chọn tệp khác."
+    "message": "Không thể phát tệp này. Hãy chọn tệp MP3, OGG hoặc WAV."
   },
   "settings_save_failed": {
     "message": "Không thể lưu cài đặt. Bộ nhớ có thể đã đầy."

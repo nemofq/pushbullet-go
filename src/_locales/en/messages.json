@@ -333,13 +333,13 @@
     "message": "No file chosen"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV or other audio, up to 10 seconds and 1 MB. Without a file, the default sound plays."
+    "message": "MP3, OGG or WAV, up to 10 seconds and 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "That file is over 1 MB or longer than 10 seconds. Choose a shorter clip, or save it as MP3 or OGG."
+    "message": "That file is over 1 MB or longer than 10 seconds."
   },
   "sound_file_unplayable": {
-    "message": "That file couldn't be played as audio. Choose a different file."
+    "message": "That file couldn't be played. Choose an MP3, OGG or WAV file."
   },
   "settings_save_failed": {
     "message": "Couldn't save settings. Storage may be full."

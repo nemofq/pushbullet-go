@@ -282,13 +282,13 @@
     "message": "Ingen fil vald"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV eller annat ljud, upp till 10 sekunder och 1 MB. Utan fil spelas standardljudet."
+    "message": "MP3, OGG eller WAV, upp till 10 sekunder och 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Filen är större än 1 MB eller längre än 10 sekunder. Välj ett kortare klipp, eller spara det som MP3 eller OGG."
+    "message": "Filen är större än 1 MB eller längre än 10 sekunder."
   },
   "sound_file_unplayable": {
-    "message": "Filen kunde inte spelas upp som ljud. Välj en annan fil."
+    "message": "Filen kunde inte spelas upp. Välj en MP3-, OGG- eller WAV-fil."
   },
   "settings_save_failed": {
     "message": "Det gick inte att spara inställningarna. Lagringsutrymmet kan vara fullt."

@@ -282,13 +282,13 @@
     "message": "Nessun file scelto"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV o altro audio, fino a 10 secondi e 1 MB. Senza file viene riprodotto il suono predefinito."
+    "message": "MP3, OGG o WAV, fino a 10 secondi e 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "Il file supera 1 MB o dura più di 10 secondi. Scegli una clip più breve o salvala come MP3 o OGG."
+    "message": "Il file supera 1 MB o dura più di 10 secondi."
   },
   "sound_file_unplayable": {
-    "message": "Non è stato possibile riprodurre il file come audio. Scegli un altro file."
+    "message": "Impossibile riprodurre il file. Scegli un file MP3, OGG o WAV."
   },
   "settings_save_failed": {
     "message": "Impossibile salvare le impostazioni. Lo spazio di archiviazione potrebbe essere pieno."

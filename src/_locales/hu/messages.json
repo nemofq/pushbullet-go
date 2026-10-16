@@ -282,13 +282,13 @@
     "message": "Nincs kiválasztott fájl"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV vagy más hangfájl, legfeljebb 10 másodperc és 1 MB. Fájl nélkül az alapértelmezett hang szól."
+    "message": "MP3, OGG vagy WAV, legfeljebb 10 másodperc és 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "A fájl nagyobb 1 MB-nál vagy hosszabb 10 másodpercnél. Válassz rövidebb részletet, vagy mentsd MP3 vagy OGG formátumban."
+    "message": "A fájl nagyobb 1 MB-nál vagy hosszabb 10 másodpercnél."
   },
   "sound_file_unplayable": {
-    "message": "Ez a fájl nem játszható le hangként. Válassz másik fájlt."
+    "message": "A fájl nem játszható le. Válassz MP3, OGG vagy WAV fájlt."
   },
   "settings_save_failed": {
     "message": "Nem sikerült menteni a beállításokat. Lehet, hogy megtelt a tárhely."

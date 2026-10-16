@@ -282,13 +282,13 @@
     "message": "Nenhum ficheiro escolhido"
   },
   "sound_custom_tip": {
-    "message": "MP3, OGG, WAV ou outro áudio, até 10 segundos e 1 MB. Sem ficheiro, é reproduzido o som predefinido."
+    "message": "MP3, OGG ou WAV, até 10 segundos e 1 MB."
   },
   "sound_file_over_limit": {
-    "message": "O ficheiro tem mais de 1 MB ou mais de 10 segundos. Escolha um excerto mais curto ou guarde-o como MP3 ou OGG."
+    "message": "O ficheiro tem mais de 1 MB ou mais de 10 segundos."
   },
   "sound_file_unplayable": {
-    "message": "Não foi possível reproduzir este ficheiro como áudio. Escolha outro ficheiro."
+    "message": "Não foi possível reproduzir o ficheiro. Escolha um ficheiro MP3, OGG ou WAV."
   },
   "settings_save_failed": {
     "message": "Não foi possível guardar as definições. O armazenamento pode estar cheio."
