@@ -270,13 +270,13 @@
     "message": "Fitxer personalitzat"
   },
   "preview_sound_button": {
-    "message": "Previsualitza"
+    "message": "Previsualitzar"
   },
   "choose_sound_file_button": {
-    "message": "Tria un fitxer…"
+    "message": "Triar un fitxer…"
   },
   "remove_sound_file_button": {
-    "message": "Elimina"
+    "message": "Eliminar"
   },
   "no_sound_file_chosen": {
     "message": "No s'ha triat cap fitxer"
@@ -291,7 +291,7 @@
     "message": "No s'ha pogut reproduir el fitxer."
   },
   "settings_save_failed": {
-    "message": "No s'ha pogut desar la configuració. Pot ser que l'emmagatzematge sigui ple."
+    "message": "No s'ha pogut desar la configuració. Pot ser que l'emmagatzematge estigui ple."
   },
   "clear_push_history": {
     "message": "Esborrar historial local de push"
