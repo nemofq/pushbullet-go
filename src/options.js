@@ -597,7 +597,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Notification sound source. A chosen custom file is held here (as a data
   // URL) until Save, like every other setting on this page.
   const MAX_CUSTOM_SOUND_BYTES = 1024 * 1024;
+  const MAX_CUSTOM_SOUND_SECONDS = 10;
+  // Same bundled sound offscreen.js falls back to
+  const DEFAULT_SOUND_SRC = 'assets/alert.ogg';
   let customSound = { data: null, name: null };
+  let previewAudio = null;
   let customSoundChanged = false;
   let soundFileError = null;
   const notificationSoundDropdown = createSelectDropdown(document.getElementById('notificationSoundDropdown'), [
@@ -1146,13 +1150,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     soundFileError = null;
     if (file.size > MAX_CUSTOM_SOUND_BYTES) {
-      soundFileError = 'sound_file_too_large';
+      soundFileError = 'sound_file_over_limit';
     } else {
       try {
-        const dataUrl = await readFileAsDataUrl(file);
-        await assertPlayableAudio(dataUrl);
-        customSound = { data: dataUrl, name: file.name };
-        customSoundChanged = true;
+        let dataUrl = await readFileAsDataUrl(file);
+        // An unknown extension yields an empty type (stored as
+        // application/octet-stream), and some real ones carry a type Chrome
+        // won't play (audio/opus); a generic audio type lets Chrome sniff the
+        // actual format from the bytes
+        if (!file.type || !new Audio().canPlayType(file.type)) {
+          dataUrl = dataUrl.replace(/^data:[^;,]*/, 'data:audio/mpeg');
+        }
+        const duration = await loadAudioDuration(dataUrl);
+        // Some files (e.g. MediaRecorder WebM) report no finite duration;
+        // those are let through on the size cap alone
+        if (Number.isFinite(duration) && duration > MAX_CUSTOM_SOUND_SECONDS) {
+          soundFileError = 'sound_file_over_limit';
+        } else {
+          customSound = { data: dataUrl, name: file.name };
+          customSoundChanged = true;
+        }
       } catch (error) {
         console.warn('Rejected custom sound file:', error);
         soundFileError = 'sound_file_unplayable';
@@ -1171,11 +1188,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   previewSoundButton.addEventListener('click', async function() {
     const mode = notificationSoundDropdown.getValue();
-    const src = mode === 'custom' && customSound.data ? customSound.data : 'assets/alert.ogg';
+    const src = mode === 'custom' && customSound.data ? customSound.data : DEFAULT_SOUND_SRC;
+    // Restart rather than overlap when Preview is clicked again
+    if (previewAudio) {
+      previewAudio.pause();
+    }
+    previewAudio = new Audio(src);
     try {
-      await new Audio(src).play();
+      await previewAudio.play();
     } catch (error) {
-      console.error('Sound preview failed:', error);
+      // AbortError: a newer click paused this one before it started
+      if (error.name !== 'AbortError') {
+        console.error('Sound preview failed:', error);
+      }
     }
   });
 
@@ -1727,15 +1752,24 @@ document.addEventListener('DOMContentLoaded', async function() {
     };
 
     // Only rewrite the (up to ~1.3 MB) custom sound when a new file was picked;
-    // a removed one is deleted from storage outright
+    // a removed one is deleted from storage outright. Switching back to the
+    // default sound keeps a stored file, so switching to Custom again needs no
+    // re-upload. The file is written on its own, before the other settings, so
+    // a full storage.local fails here with an error rather than taking every
+    // other setting down with it unnoticed.
     if (customSoundChanged) {
-      if (customSound.data) {
-        localSaveData.customSoundData = customSound.data;
-        localSaveData.customSoundName = customSound.name;
-      } else {
-        chrome.storage.local.remove(['customSoundData', 'customSoundName']);
+      try {
+        if (customSound.data) {
+          await chrome.storage.local.set({ customSoundData: customSound.data, customSoundName: customSound.name });
+        } else {
+          await chrome.storage.local.remove(['customSoundData', 'customSoundName']);
+        }
+        customSoundChanged = false;
+      } catch (error) {
+        console.error('Failed to save custom sound:', error);
+        showStatus(window.CustomI18n.getMessage('settings_save_failed'), 'error');
+        return;
       }
-      customSoundChanged = false;
     }
 
     // enableChat is only persisted once it means something: the user touched
@@ -1754,6 +1788,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     chrome.storage.sync.set(syncSaveData);
     chrome.storage.local.set(localSaveData, function() {
+      if (chrome.runtime.lastError) {
+        console.error('Failed to save settings:', chrome.runtime.lastError);
+        showStatus(window.CustomI18n.getMessage('settings_save_failed'), 'error');
+        return;
+      }
+
       // Check if language has changed
       const oldLanguage = window.CustomI18n.getCurrentLanguage();
       const newLanguage = languageList.getValue();
@@ -2222,15 +2262,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
   }
 
-  // Resolves once the browser can decode the file's metadata; rejects for
-  // files that aren't audio it can play (checked before anything is stored).
-  function assertPlayableAudio(src) {
+  // Resolves with the duration in seconds once the browser can decode the
+  // file's metadata; rejects for files that aren't audio it can play (checked
+  // before anything is stored).
+  function loadAudioDuration(src) {
     return new Promise((resolve, reject) => {
       const audio = new Audio();
       const timer = setTimeout(() => reject(new Error('Timed out loading audio')), 5000);
       audio.addEventListener('loadedmetadata', () => {
         clearTimeout(timer);
-        resolve();
+        resolve(audio.duration);
       }, { once: true });
       audio.addEventListener('error', () => {
         clearTimeout(timer);
