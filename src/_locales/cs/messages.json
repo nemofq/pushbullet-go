@@ -288,7 +288,7 @@
     "message": "Soubor má více než 1 MB nebo je delší než 10 sekund."
   },
   "sound_file_unplayable": {
-    "message": "Soubor nelze přehrát. Vyberte soubor MP3, OGG nebo WAV."
+    "message": "Soubor nelze přehrát."
   },
   "settings_save_failed": {
     "message": "Nastavení se nepodařilo uložit. Úložiště může být plné."

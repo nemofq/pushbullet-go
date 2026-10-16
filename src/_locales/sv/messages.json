@@ -288,7 +288,7 @@
     "message": "Filen är större än 1 MB eller längre än 10 sekunder."
   },
   "sound_file_unplayable": {
-    "message": "Filen kunde inte spelas upp. Välj en MP3-, OGG- eller WAV-fil."
+    "message": "Filen kunde inte spelas upp."
   },
   "settings_save_failed": {
     "message": "Det gick inte att spara inställningarna. Lagringsutrymmet kan vara fullt."

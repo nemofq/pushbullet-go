@@ -288,7 +288,7 @@
     "message": "文件超过 1 MB 或长于 10 秒。"
   },
   "sound_file_unplayable": {
-    "message": "无法播放此文件。请选择 MP3、OGG 或 WAV 文件。"
+    "message": "无法播放此文件。"
   },
   "settings_save_failed": {
     "message": "无法保存设置。存储空间可能已满。"

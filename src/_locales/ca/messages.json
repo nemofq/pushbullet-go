@@ -288,7 +288,7 @@
     "message": "El fitxer supera 1 MB o dura més de 10 segons."
   },
   "sound_file_unplayable": {
-    "message": "No s'ha pogut reproduir el fitxer. Tria un fitxer MP3, OGG o WAV."
+    "message": "No s'ha pogut reproduir el fitxer."
   },
   "settings_save_failed": {
     "message": "No s'ha pogut desar la configuració. Pot ser que l'emmagatzematge sigui ple."

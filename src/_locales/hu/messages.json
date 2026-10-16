@@ -288,7 +288,7 @@
     "message": "A fájl nagyobb 1 MB-nál vagy hosszabb 10 másodpercnél."
   },
   "sound_file_unplayable": {
-    "message": "A fájl nem játszható le. Válassz MP3, OGG vagy WAV fájlt."
+    "message": "A fájl nem játszható le."
   },
   "settings_save_failed": {
     "message": "Nem sikerült menteni a beállításokat. Lehet, hogy megtelt a tárhely."

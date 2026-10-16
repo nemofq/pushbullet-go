@@ -288,7 +288,7 @@
     "message": "Tệp lớn hơn 1 MB hoặc dài hơn 10 giây."
   },
   "sound_file_unplayable": {
-    "message": "Không thể phát tệp này. Hãy chọn tệp MP3, OGG hoặc WAV."
+    "message": "Không thể phát tệp này."
   },
   "settings_save_failed": {
     "message": "Không thể lưu cài đặt. Bộ nhớ có thể đã đầy."

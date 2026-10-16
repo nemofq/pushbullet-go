@@ -288,7 +288,7 @@
     "message": "O ficheiro tem mais de 1 MB ou mais de 10 segundos."
   },
   "sound_file_unplayable": {
-    "message": "Não foi possível reproduzir o ficheiro. Escolha um ficheiro MP3, OGG ou WAV."
+    "message": "Não foi possível reproduzir o ficheiro."
   },
   "settings_save_failed": {
     "message": "Não foi possível guardar as definições. O armazenamento pode estar cheio."

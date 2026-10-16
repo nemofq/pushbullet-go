@@ -288,7 +288,7 @@
     "message": "ファイルが 1 MB を超えているか、10 秒より長くなっています。"
   },
   "sound_file_unplayable": {
-    "message": "このファイルは再生できません。MP3、OGG、WAV ファイルを選択してください。"
+    "message": "このファイルは再生できません。"
   },
   "settings_save_failed": {
     "message": "設定を保存できませんでした。ストレージがいっぱいの可能性があります。"

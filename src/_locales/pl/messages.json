@@ -288,7 +288,7 @@
     "message": "Plik ma ponad 1 MB lub trwa dłużej niż 10 sekund."
   },
   "sound_file_unplayable": {
-    "message": "Nie można odtworzyć pliku. Wybierz plik MP3, OGG lub WAV."
+    "message": "Nie można odtworzyć pliku."
   },
   "settings_save_failed": {
     "message": "Nie udało się zapisać ustawień. Pamięć może być pełna."

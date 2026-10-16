@@ -288,7 +288,7 @@
     "message": "Il file supera 1 MB o dura più di 10 secondi."
   },
   "sound_file_unplayable": {
-    "message": "Impossibile riprodurre il file. Scegli un file MP3, OGG o WAV."
+    "message": "Impossibile riprodurre il file."
   },
   "settings_save_failed": {
     "message": "Impossibile salvare le impostazioni. Lo spazio di archiviazione potrebbe essere pieno."

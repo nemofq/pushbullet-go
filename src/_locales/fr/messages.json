@@ -288,7 +288,7 @@
     "message": "Ce fichier dépasse 1 Mo ou dure plus de 10 secondes."
   },
   "sound_file_unplayable": {
-    "message": "Impossible de lire ce fichier. Choisissez un fichier MP3, OGG ou WAV."
+    "message": "Impossible de lire ce fichier."
   },
   "settings_save_failed": {
     "message": "Impossible d'enregistrer les paramètres. Le stockage est peut-être plein."

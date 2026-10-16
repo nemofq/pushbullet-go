@@ -288,7 +288,7 @@
     "message": "File lebih dari 1 MB atau lebih dari 10 detik."
   },
   "sound_file_unplayable": {
-    "message": "File tidak dapat diputar. Pilih file MP3, OGG, atau WAV."
+    "message": "File tidak dapat diputar."
   },
   "settings_save_failed": {
     "message": "Tidak dapat menyimpan pengaturan. Penyimpanan mungkin penuh."
