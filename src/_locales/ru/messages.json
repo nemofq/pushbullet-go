@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Чат"
   },
+  "people_tab": {
+    "message": "Люди"
+  },
   "enable_chat_label": {
     "message": "Включить чат с людьми"
+  },
+  "chat_tab_name_label": {
+    "message": "Название вкладки:"
   },
   "no_people_yet": {
     "message": "Людей пока нет"

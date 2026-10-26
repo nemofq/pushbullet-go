@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "채팅"
   },
+  "people_tab": {
+    "message": "사용자"
+  },
   "enable_chat_label": {
     "message": "사용자와의 채팅 활성화"
+  },
+  "chat_tab_name_label": {
+    "message": "탭 이름:"
   },
   "no_people_yet": {
     "message": "아직 사용자가 없습니다"

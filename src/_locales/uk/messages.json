@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Чат"
   },
+  "people_tab": {
+    "message": "Контакти"
+  },
   "enable_chat_label": {
     "message": "Увімкнути чат з контактами"
+  },
+  "chat_tab_name_label": {
+    "message": "Назва вкладки:"
   },
   "no_people_yet": {
     "message": "Контактів ще немає"

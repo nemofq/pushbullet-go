@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Csevegés"
   },
+  "people_tab": {
+    "message": "Személyek"
+  },
   "enable_chat_label": {
     "message": "Csevegés személyekkel engedélyezése"
+  },
+  "chat_tab_name_label": {
+    "message": "Lap neve:"
   },
   "no_people_yet": {
     "message": "Még nincs személy"

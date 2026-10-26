@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "聊天"
   },
+  "people_tab": {
+    "message": "联系人"
+  },
   "enable_chat_label": {
     "message": "启用联系人聊天"
+  },
+  "chat_tab_name_label": {
+    "message": "标签页名称："
   },
   "no_people_yet": {
     "message": "暂无联系人"

@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Συνομιλία"
   },
+  "people_tab": {
+    "message": "Επαφές"
+  },
   "enable_chat_label": {
     "message": "Ενεργοποίηση συνομιλίας με επαφές"
+  },
+  "chat_tab_name_label": {
+    "message": "Όνομα καρτέλας:"
   },
   "no_people_yet": {
     "message": "Δεν υπάρχουν επαφές"

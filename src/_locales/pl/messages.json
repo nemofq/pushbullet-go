@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Czat"
   },
+  "people_tab": {
+    "message": "Osoby"
+  },
   "enable_chat_label": {
     "message": "Włącz czat z osobami"
+  },
+  "chat_tab_name_label": {
+    "message": "Nazwa karty:"
   },
   "no_people_yet": {
     "message": "Brak osób"

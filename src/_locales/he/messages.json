@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "צ'אט"
   },
+  "people_tab": {
+    "message": "אנשים"
+  },
   "enable_chat_label": {
     "message": "אפשר צ'אט עם אנשים"
+  },
+  "chat_tab_name_label": {
+    "message": "שם הכרטיסיה:"
   },
   "no_people_yet": {
     "message": "אין אנשים עדיין"

@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Sohbet"
   },
+  "people_tab": {
+    "message": "Kişiler"
+  },
   "enable_chat_label": {
     "message": "Kişilerle Sohbeti Etkinleştir"
+  },
+  "chat_tab_name_label": {
+    "message": "Sekme adı:"
   },
   "no_people_yet": {
     "message": "Henüz kişi yok"

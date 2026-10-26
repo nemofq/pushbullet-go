@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Chat"
   },
+  "people_tab": {
+    "message": "Henkilöt"
+  },
   "enable_chat_label": {
     "message": "Ota käyttöön Chat henkilöiden kanssa"
+  },
+  "chat_tab_name_label": {
+    "message": "Välilehden nimi:"
   },
   "no_people_yet": {
     "message": "Ei henkilöitä vielä"

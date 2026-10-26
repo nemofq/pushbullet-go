@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Чат"
   },
+  "people_tab": {
+    "message": "Хора"
+  },
   "enable_chat_label": {
     "message": "Активирай чат с хора"
+  },
+  "chat_tab_name_label": {
+    "message": "Име на раздела:"
   },
   "no_people_yet": {
     "message": "Все още няма хора"

@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const targetControlLabel = document.getElementById('targetControlLabel');
   const targetMenu = document.getElementById('targetMenu');
   const chatTab = document.getElementById('chatTab');
+  const chatTabLabel = chatTab.querySelector('.tab-label');
   const pushTabCount = document.getElementById('pushTabCount');
   const chatTabCount = document.getElementById('chatTabCount');
   const notificationTabCount = document.getElementById('notificationTabCount');
@@ -438,12 +439,13 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    const localData = await chrome.storage.local.get(['notificationMirroring', 'enableChat', 'defaultTab']);
+    const localData = await chrome.storage.local.get(['notificationMirroring', 'enableChat', 'chatTabName', 'defaultTab']);
     const mirroringOn = !!localData.notificationMirroring;
     // undefined = not yet seeded, behaves as off; the background seeds true once
     // people first exist.
     const chatOn = localData.enableChat === true;
 
+    applyChatTabName(localData.chatTabName);
     // Per-button visibility (fixed order); the switcher shows with >1 surface.
     chatTab.style.display = chatOn ? '' : 'none';
     notificationTab.style.display = mirroringOn ? '' : 'none';
@@ -471,6 +473,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const targetTab = (preserveCurrent && isTabAvailable(currentTab)) ? currentTab : effectiveDefaultTab;
     switchTab(targetTab);
     checkSmsShortcut();
+  }
+
+  // The Chat surface's tab can be labeled "People" (options "Tab name"); only
+  // the label changes. Kept in data-i18n so a later language switch follows it.
+  function applyChatTabName(name) {
+    chatTabLabel.dataset.i18n = name === 'people' ? 'people_tab' : 'chat_tab';
+    chatTabLabel.textContent = window.CustomI18n.getMessage(chatTabLabel.dataset.i18n);
   }
 
   async function checkSmsShortcut() {
@@ -2188,6 +2197,9 @@ document.addEventListener('DOMContentLoaded', function() {
       // (not the people write) is what flips Chat visibility live after Retrieve.
       // Same preserve-or-fall-back behavior.
       checkNotificationMirroring({ preserveCurrent: true });
+    }
+    if (areaName === 'local' && changes.chatTabName) {
+      applyChatTabName(changes.chatTabName.newValue);
     }
     if (areaName === 'local' && changes.mirrorDecryptIssue) {
       debouncedLoadNotifications();

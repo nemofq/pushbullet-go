@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "チャット"
   },
+  "people_tab": {
+    "message": "ユーザー"
+  },
   "enable_chat_label": {
     "message": "ユーザーとのチャットを有効化"
+  },
+  "chat_tab_name_label": {
+    "message": "タブ名:"
   },
   "no_people_yet": {
     "message": "まだユーザーがありません"

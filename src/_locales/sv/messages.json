@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Chatt"
   },
+  "people_tab": {
+    "message": "Personer"
+  },
   "enable_chat_label": {
     "message": "Aktivera chatt med personer"
+  },
+  "chat_tab_name_label": {
+    "message": "Flikens namn:"
   },
   "no_people_yet": {
     "message": "Inga personer ännu"

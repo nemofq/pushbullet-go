@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Chat"
   },
+  "people_tab": {
+    "message": "Personas"
+  },
   "enable_chat_label": {
     "message": "Habilitar chat con personas"
+  },
+  "chat_tab_name_label": {
+    "message": "Nombre de la pestaña:"
   },
   "no_people_yet": {
     "message": "Aún no hay personas"

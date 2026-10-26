@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "แชท"
   },
+  "people_tab": {
+    "message": "บุคคล"
+  },
   "enable_chat_label": {
     "message": "เปิดใช้งานแชทกับบุคคล"
+  },
+  "chat_tab_name_label": {
+    "message": "ชื่อแท็บ:"
   },
   "no_people_yet": {
     "message": "ยังไม่มีบุคคล"

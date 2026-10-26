@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Klepet"
   },
+  "people_tab": {
+    "message": "Osebe"
+  },
   "enable_chat_label": {
     "message": "Omogoči klepet z osebami"
+  },
+  "chat_tab_name_label": {
+    "message": "Ime zavihka:"
   },
   "no_people_yet": {
     "message": "Ni oseb"

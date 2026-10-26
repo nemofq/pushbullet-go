@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Chat"
   },
+  "people_tab": {
+    "message": "Osoby"
+  },
   "enable_chat_label": {
     "message": "Povolit chat s osobami"
+  },
+  "chat_tab_name_label": {
+    "message": "Název karty:"
   },
   "no_people_yet": {
     "message": "Zatím žádné osoby"

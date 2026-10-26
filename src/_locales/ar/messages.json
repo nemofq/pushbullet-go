@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "الدردشة"
   },
+  "people_tab": {
+    "message": "الأشخاص"
+  },
   "enable_chat_label": {
     "message": "تفعيل الدردشة مع الأشخاص"
+  },
+  "chat_tab_name_label": {
+    "message": "اسم علامة التبويب:"
   },
   "no_people_yet": {
     "message": "لا يوجد أشخاص بعد"

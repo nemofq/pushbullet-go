@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Chat"
   },
+  "people_tab": {
+    "message": "Người"
+  },
   "enable_chat_label": {
     "message": "Bật Chat với người"
+  },
+  "chat_tab_name_label": {
+    "message": "Tên tab:"
   },
   "no_people_yet": {
     "message": "Chưa có người"

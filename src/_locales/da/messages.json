@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Chat"
   },
+  "people_tab": {
+    "message": "Personer"
+  },
   "enable_chat_label": {
     "message": "Aktivér chat med personer"
+  },
+  "chat_tab_name_label": {
+    "message": "Fanenavn:"
   },
   "no_people_yet": {
     "message": "Ingen personer endnu"

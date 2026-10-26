@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   const showSmsShortcutToggle = document.getElementById('showSmsShortcutToggle');
   const enableChatCheckbox = document.getElementById('enableChat');
   const enableChatToggle = document.getElementById('enableChatToggle');
+  const chatTabNameGroup = document.getElementById('chatTabNameGroup');
   // Retrieve-then-Save on a freshly loaded page must not write the checkbox's
   // pre-seed unchecked state back as an explicit false (see the Retrieve
   // success path, which mirrors the background's one-time seeding in-page).
@@ -580,12 +581,29 @@ document.addEventListener('DOMContentLoaded', async function() {
   function defaultTabItems() {
     const items = [{ value: 'push', label: () => window.CustomI18n.getMessage('push_button') }];
     if (enableChatCheckbox.checked) {
-      items.push({ value: 'chat', label: () => window.CustomI18n.getMessage('chat_tab') });
+      items.push({ value: 'chat', label: () => window.CustomI18n.getMessage(chatTabNameKey()) });
     }
     if (notificationMirroringCheckbox.checked) {
       items.push({ value: 'notification', label: () => window.CustomI18n.getMessage('notification_button') });
     }
     return items;
+  }
+  // The Chat surface can be labeled "People" — display only; stored values and
+  // internals stay "chat". This page previews the pick live; Save persists it.
+  const chatTabNameDropdown = createSelectDropdown(document.getElementById('chatTabNameDropdown'), [
+    { value: 'chat', label: () => window.CustomI18n.getMessage('chat_tab') },
+    { value: 'people', label: () => window.CustomI18n.getMessage('people_tab') }
+  ], { onChange: applyChatTabName });
+  function chatTabNameKey() {
+    return chatTabNameDropdown.getValue() === 'people' ? 'people_tab' : 'chat_tab';
+  }
+  function applyChatTabName() {
+    const key = chatTabNameDropdown.getValue() === 'people' ? 'people_tab' : 'chats_label';
+    document.querySelectorAll('.chats-label').forEach(element => {
+      element.dataset.i18n = key;
+      element.textContent = window.CustomI18n.getMessage(key);
+    });
+    defaultTabDropdown.rerender();
   }
   const defaultTabDropdown = createSelectDropdown(document.getElementById('defaultTabDropdown'), defaultTabItems());
   const colorModeDropdown = createSelectDropdown(document.getElementById('colorModeDropdown'), [
@@ -664,7 +682,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.sync.get(['accessToken', 'userIden'], resolve);
   });
   const localData = await new Promise(resolve => {
-    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'autoOpenTabActive', 'enableChat', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showChannelPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'notificationSound', 'customSoundData', 'customSoundName', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
+    chrome.storage.local.get(['devices', 'people', 'remoteDeviceId', 'showPerSendTarget', 'enableContextMenu', 'autoOpenLinks', 'autoOpenFiles', 'autoOpenOnResume', 'hideNotificationOnAutoOpen', 'autoOpenLinksFromPeople', 'autoOpenTrustedPeople', 'autoOpenTabActive', 'enableChat', 'chatTabName', 'notificationMirroring', 'onlyBrowserPushes', 'showOtherDevicePushes', 'showNoTargetPushes', 'showChannelPushes', 'hideBrowserPushes', 'showSmsShortcut', 'showQuickShare', 'requireInteraction', 'requireInteractionPushes', 'requireInteractionMirrored', 'requireInteractionChats', 'closeAsDismiss', 'displayUnreadCounts', 'displayUnreadPushes', 'displayUnreadMirrored', 'displayUnreadChats', 'colorMode', 'languageMode', 'defaultTab', 'playSoundOnNotification', 'notificationSound', 'customSoundData', 'customSoundName', 'showOsNotifications', 'selectedOtherDeviceIds'], resolve);
   });
   const data = { ...syncData, ...localData };
   
@@ -851,7 +869,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Load default tab setting (default is 'push')
     defaultTabDropdown.setValue(data.defaultTab || 'push');
-    
+
+    // Load Chat tab name (default is 'chat')
+    chatTabNameDropdown.setValue(data.chatTabName === 'people' ? 'people' : 'chat');
+    applyChatTabName();
+
     // Load play sound on notification setting (default is true/enabled)
     playSoundOnNotificationCheckbox.checked = data.playSoundOnNotification !== false; // Default to true
     updatePlaySoundOnNotificationToggleVisual();
@@ -872,7 +894,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Update conditional visibility for default tab option
     updateDefaultTabVisibility();
-    
+
+    // Update conditional visibility for the Chat tab name option
+    updateChatTabNameVisibility();
+
     // Update conditional visibility for require interaction mirrored option
     updateRequireInteractionMirroredVisibility();
 
@@ -998,10 +1023,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     enableChatCheckbox.checked = !enableChatCheckbox.checked;
     updateEnableChatToggleVisual();
     // Chat is the visibility master for the people auto-open row + trusted list
-    // (Behavior), and adds/removes Chat from the default-tab dropdown. It also
-    // gates the "↳ Chats" sub-rows under Display unread counts (Appearance)
-    // and Require interaction (Behavior).
+    // (Behavior), its own "↳ Tab name" row, and adds/removes Chat from the
+    // default-tab dropdown. It also gates the "↳ Chats" sub-rows under Display
+    // unread counts (Appearance) and Require interaction (Behavior).
     updateAutoOpenLinksFromPeopleVisibility();
+    updateChatTabNameVisibility();
     updateDefaultTabVisibility();
     updateDisplayUnreadChatsVisibility();
     updateRequireInteractionChatsVisibility();
@@ -1472,6 +1498,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         enableChatWasUndefined = false;
         updateEnableChatToggleVisual();
         updateAutoOpenLinksFromPeopleVisibility();
+        updateChatTabNameVisibility();
         updateDefaultTabVisibility();
         // Keep this visibility set in sync with the enableChatToggle click
         // handler: the "↳ Chats" sub-rows under Display unread counts and
@@ -1651,6 +1678,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       notificationMirroring: notificationMirroringCheckbox.checked,
       showSmsShortcut: showSmsShortcutCheckbox.checked,
       enableChat: enableChatCheckbox.checked,
+      chatTabName: chatTabNameDropdown.getValue(),
       showQuickShare: showQuickShareCheckbox.checked,
       requireInteraction: requireInteractionCheckbox.checked,
       requireInteractionPushes: requireInteractionPushesCheckbox.checked,
@@ -1731,6 +1759,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       notificationMirroring: saveData.notificationMirroring,
       showSmsShortcut: saveData.showSmsShortcut,
       enableChat: saveData.enableChat,
+      chatTabName: saveData.chatTabName,
       showQuickShare: saveData.showQuickShare,
       requireInteraction: saveData.requireInteraction,
       requireInteractionPushes: saveData.requireInteractionPushes,
@@ -2069,6 +2098,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
+  function updateChatTabNameVisibility() {
+    chatTabNameGroup.style.display = isChatEnabled() ? 'block' : 'none';
+  }
+
   function updateDefaultTabVisibility() {
     // The control is always visible now; only its option list tracks the
     // enabled surfaces, rebuilt when mirroring flips. The stored defaultTab is
@@ -2365,6 +2398,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     otherDevicePicker.rerender();
     trustedPeoplePicker.rerender();
     languageList.rerender();
+    chatTabNameDropdown.rerender();
     defaultTabDropdown.rerender();
     colorModeDropdown.rerender();
     notificationSoundDropdown.rerender();

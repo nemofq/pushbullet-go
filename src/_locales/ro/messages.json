@@ -416,8 +416,14 @@
   "chat_tab": {
     "message": "Chat"
   },
+  "people_tab": {
+    "message": "Persoane"
+  },
   "enable_chat_label": {
     "message": "Activează Chat-ul cu persoane"
+  },
+  "chat_tab_name_label": {
+    "message": "Numele filei:"
   },
   "no_people_yet": {
     "message": "Nicio persoană încă"
