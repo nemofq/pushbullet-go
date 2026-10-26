@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const sendFileButton = document.getElementById('sendFileButton');
   const setupGuide = document.getElementById('setupGuide');
   const openOptionsButton = document.getElementById('openOptionsButton');
+  const header = document.querySelector('.header');
   const tabSwitcher = document.getElementById('tabSwitcher');
   const pushTab = document.getElementById('pushTab');
   const notificationTab = document.getElementById('notificationTab');
@@ -722,6 +723,22 @@ document.addEventListener('DOMContentLoaded', function() {
       renderPeopleList();
     }
   }
+
+  // Tab pills sit inline after their labels; when that would overflow the
+  // 450px header (long localized labels + SMS shortcut + counts), switch them
+  // to corner badges, which add no width. Measured inline first, so the header
+  // returns to inline as soon as it fits again.
+  function fitTabCounts() {
+    header.classList.remove('compact-counts');
+    header.classList.toggle('compact-counts', header.scrollWidth > header.clientWidth);
+  }
+  // Re-fit on anything that changes the header's width: pill counts, tab
+  // labels (Chat/People, language), and shown/hidden tabs, SMS or Reconnect.
+  // Our own class toggle isn't observed, so this can't loop.
+  new MutationObserver(fitTabCounts).observe(header, {
+    subtree: true, childList: true, characterData: true,
+    attributes: true, attributeFilter: ['hidden', 'style']
+  });
 
   // Per-tab unread pills mirror the toolbar badge composition exactly (see
   // background.js updateBadge): a component shows only when the master

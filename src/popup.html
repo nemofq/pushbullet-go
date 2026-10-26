@@ -157,6 +157,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px; /* minimum logo-to-tabs spacing; less counts as overflow */
       font-size: 15px;
       background: var(--bg-header);
       transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -178,6 +179,8 @@
       padding: 4px 8px;
       border-radius: 4px;
       transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      white-space: nowrap;
     }
 
     .tab-button.active {
@@ -209,6 +212,16 @@
       vertical-align: 1px;
       box-sizing: border-box;
       text-align: center;
+    }
+
+    /* Crowded header (long labels + SMS + counts would overflow 450px, see
+       fitTabCounts): pin the pills to each button's top-right corner instead,
+       where they add no width. */
+    .header.compact-counts .tab-count {
+      position: absolute;
+      top: -9px;
+      right: -9px;
+      margin-left: 0;
     }
 
     /* Re-assert hiding: the class selector above outweighs the UA [hidden] rule. */
@@ -1463,6 +1476,7 @@
       font-size: 15px;
       transition: color 0.3s ease;
       user-select: none;
+      white-space: nowrap;
     }
 
     .logo-link:hover {
