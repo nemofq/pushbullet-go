@@ -487,7 +487,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
+  // Quick share is one-shot per popup: the page can't change while the popup
+  // is open, so once it's sent anywhere (Push or a conversation) the bar stays
+  // hidden on every surface until the popup is reopened.
+  let quickShareSent = false;
+
   async function checkQuickShare() {
+    if (quickShareSent) {
+      quickShareContainer.style.display = 'none';
+      return;
+    }
+
     const [tokenData, quickShareData] = await Promise.all([
       chrome.storage.sync.get('accessToken'),
       chrome.storage.local.get('showQuickShare')
@@ -515,8 +525,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   async function sendLink(url) {
-    const configData = await chrome.storage.local.get('remoteDeviceId');
-
     const pushData = {
       type: 'link',
       url: url,
@@ -529,7 +537,13 @@ document.addEventListener('DOMContentLoaded', function() {
       pushData.title = title;
     }
 
-    applyPerSendTargets(pushData, configData.remoteDeviceId);
+    if (currentTab === 'chat' && chatView === 'conv' && currentPerson) {
+      // Conversation: share with this person only, like a typed send.
+      pushData.email = currentPerson.email_normalized;
+    } else {
+      const configData = await chrome.storage.local.get('remoteDeviceId');
+      applyPerSendTargets(pushData, configData.remoteDeviceId);
+    }
 
     // Use the background script's sendPush function which handles multiple devices
     chrome.runtime.sendMessage({
@@ -537,18 +551,12 @@ document.addEventListener('DOMContentLoaded', function() {
       data: pushData
     });
 
-    // Provide visual feedback
-    const originalText = quickShareSend.textContent;
+    // Provide visual feedback, then hide the bar for the rest of this popup
+    quickShareSent = true;
     quickShareSend.textContent = '✓';
     quickShareSend.disabled = true;
-
     setTimeout(() => {
-      // Hide the quick share element after sending, and restore the button so
-      // a later re-show (returning from another tab re-runs checkQuickShare)
-      // offers a working Send again instead of the spent checkmark.
       quickShareContainer.style.display = 'none';
-      quickShareSend.textContent = originalText;
-      quickShareSend.disabled = false;
     }, 1500);
   }
 
@@ -569,6 +577,11 @@ document.addEventListener('DOMContentLoaded', function() {
       chatTab.classList.add('active');
       notificationTab.classList.remove('active');
       updateChatView();
+      // Re-check quick share for a conversation left open on this tab (only
+      // on a real switch, like the Push tab below).
+      if (tabChanged) {
+        checkQuickShare();
+      }
       // Freshen the people list on tab open (throttled to a week in background).
       chrome.runtime.sendMessage({ type: 'refresh_people' });
       return;
@@ -587,9 +600,9 @@ document.addEventListener('DOMContentLoaded', function() {
       // Restore the per-send target chip a conversation may have force-hidden.
       targetControl.hidden = !targetChipEnabled;
       // Restore the quick-share bar the Chat surface hid (shows only when
-      // enabled + on a shareable page). Only on a real switch: re-entrant
-      // calls (the disconnected status tick forces this tab every 2s) must
-      // not re-query the active tab or resurrect the bar after a send.
+      // enabled + on a shareable page + not yet sent from this popup). Only
+      // on a real switch: re-entrant calls (the disconnected status tick
+      // forces this tab every 2s) must not re-query the active tab.
       if (tabChanged) {
         checkQuickShare();
       }
@@ -688,15 +701,15 @@ document.addEventListener('DOMContentLoaded', function() {
     convWrap.style.display = inConv ? 'flex' : 'none';
     clearNotificationsBar.style.display = 'none';
     sendForm.style.display = inConv ? 'block' : 'none';
-    // Quick share is a Push-tab affordance; the conversation composer (which
-    // also shows the send-form) must never surface it.
-    quickShareContainer.style.display = 'none';
 
     if (inConv) {
       targetControl.hidden = true;
       closeTargetMenu();
       renderConversation();
     } else {
+      // Quick share rides the composer, so the list never shows it; entering
+      // a conversation (openConversation / switchTab) re-checks it.
+      quickShareContainer.style.display = 'none';
       renderPeopleList();
     }
   }
@@ -1591,6 +1604,7 @@ document.addEventListener('DOMContentLoaded', function() {
     await stampPersonRead(person.email_normalized);
     refreshConversationHeader();
     updateChatView();
+    checkQuickShare();
   }
 
   // Fill the conversation header from currentPerson (name over email, email
