@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "Kanál"
+  },
+  "open_pushbullet_website": {
+    "message": "Otvoriť Pushbullet.com"
+  },
+  "logo_menu_options": {
+    "message": "Nastavenia"
   }
 }

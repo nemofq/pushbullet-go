@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "Csatorna"
+  },
+  "open_pushbullet_website": {
+    "message": "Pushbullet.com megnyitása"
+  },
+  "logo_menu_options": {
+    "message": "Beállítások"
   }
 }

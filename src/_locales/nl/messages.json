@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "Kanaal"
+  },
+  "open_pushbullet_website": {
+    "message": "Pushbullet.com openen"
+  },
+  "logo_menu_options": {
+    "message": "Instellingen"
   }
 }

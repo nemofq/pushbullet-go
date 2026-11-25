@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "Κανάλι"
+  },
+  "open_pushbullet_website": {
+    "message": "Άνοιγμα Pushbullet.com"
+  },
+  "logo_menu_options": {
+    "message": "Επιλογές"
   }
 }

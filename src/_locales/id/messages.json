@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "Saluran"
+  },
+  "open_pushbullet_website": {
+    "message": "Buka Pushbullet.com"
+  },
+  "logo_menu_options": {
+    "message": "Pengaturan"
   }
 }

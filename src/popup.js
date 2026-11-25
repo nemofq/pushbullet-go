@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const quickShareUrl = document.getElementById('quickShareUrl');
   const quickShareSend = document.getElementById('quickShareSend');
   const logoLink = document.getElementById('logoLink');
+  const logoMenu = document.getElementById('logoMenu');
   const clearNotificationsButton = document.getElementById('clearNotificationsButton');
   const targetControl = document.getElementById('targetControl');
   const targetControlLabel = document.getElementById('targetControlLabel');
@@ -165,9 +166,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  logoLink.addEventListener('click', (e) => {
-    e.preventDefault();
+  // Logo menu: the website link (what the logo used to open directly) and
+  // Options. Stays the same in every connection state; Reconnect keeps its
+  // own header button.
+  function setLogoMenuOpen(open) {
+    logoMenu.hidden = !open;
+    logoLink.setAttribute('aria-expanded', String(open));
+  }
+
+  logoLink.addEventListener('click', () => {
+    setLogoMenuOpen(logoMenu.hidden);
+  });
+
+  document.getElementById('logoMenuWebsite').addEventListener('click', () => {
+    setLogoMenuOpen(false);
     chrome.tabs.create({ url: 'https://www.pushbullet.com/#people/me' });
+  });
+
+  document.getElementById('logoMenuOptions').addEventListener('click', () => {
+    setLogoMenuOpen(false);
+    chrome.runtime.openOptionsPage();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!logoMenu.hidden && !logoMenu.contains(e.target) && !logoLink.contains(e.target)) {
+      setLogoMenuOpen(false);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !logoMenu.hidden) {
+      setLogoMenuOpen(false);
+      logoLink.focus();
+    }
   });
 
   clearNotificationsButton.addEventListener('click', () => {
@@ -783,10 +814,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if we have an access token first
         chrome.storage.sync.get('accessToken').then(tokenData => {
           if (!tokenData.accessToken) {
-            // No access token - show setup button
-            retryButton.style.display = 'block';
-            retryButton.textContent = window.CustomI18n.getMessage('reconnect_button');
-            retryButton.title = window.CustomI18n.getMessage('open_settings_to_configure');
+            // No access token - nothing to reconnect; the setup guide and
+            // the logo menu both open Options.
+            retryButton.style.display = 'none';
             tabSwitcher.style.display = 'none';
             lastConnectionStatus = currentStatus;
             return;

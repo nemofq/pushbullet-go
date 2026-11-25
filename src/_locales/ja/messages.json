@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "チャンネル"
+  },
+  "open_pushbullet_website": {
+    "message": "Pushbullet.com を開く"
+  },
+  "logo_menu_options": {
+    "message": "設定"
   }
 }

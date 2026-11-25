@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "频道"
+  },
+  "open_pushbullet_website": {
+    "message": "打开 Pushbullet.com"
+  },
+  "logo_menu_options": {
+    "message": "设置"
   }
 }

@@ -122,6 +122,12 @@
   "options_link_text": {
     "message": "Options"
   },
+  "open_pushbullet_website": {
+    "message": "Open Pushbullet.com"
+  },
+  "logo_menu_options": {
+    "message": "Options"
+  },
   "target_default_tooltip": {
     "message": "Click to choose target devices"
   },

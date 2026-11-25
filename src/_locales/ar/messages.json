@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "قناة"
+  },
+  "open_pushbullet_website": {
+    "message": "فتح Pushbullet.com"
+  },
+  "logo_menu_options": {
+    "message": "الخيارات"
   }
 }

@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "채널"
+  },
+  "open_pushbullet_website": {
+    "message": "Pushbullet.com 열기"
+  },
+  "logo_menu_options": {
+    "message": "옵션"
   }
 }

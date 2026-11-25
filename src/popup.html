@@ -1469,9 +1469,23 @@
       color: var(--copy-button-hover);
     }
 
+    /* Logo doubles as the popup's menu button (website + Options), so the
+       Options entry costs the crowded header no width beyond the caret. */
+    .logo-menu-wrap {
+      position: relative;
+      display: flex;
+    }
+
     .logo-link {
-      text-decoration: none;
-      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-family: inherit;
+      color: var(--text-primary);
       cursor: pointer;
       font-size: 15px;
       transition: color 0.3s ease;
@@ -1479,8 +1493,59 @@
       white-space: nowrap;
     }
 
-    .logo-link:hover {
+    .logo-link:hover,
+    .logo-link[aria-expanded="true"] {
       color: var(--button-primary);
+    }
+
+    .logo-caret {
+      display: flex;
+      color: var(--text-tertiary);
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .logo-caret svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .logo-link:hover .logo-caret,
+    .logo-link[aria-expanded="true"] .logo-caret {
+      color: var(--button-primary);
+    }
+
+    .logo-link[aria-expanded="true"] .logo-caret {
+      transform: rotate(180deg);
+    }
+
+    /* Same surface as .target-menu, opening downward from the logo. */
+    .logo-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: -6px;
+      min-width: 190px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-secondary);
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+      padding: 6px;
+      z-index: 30;
+      box-sizing: border-box;
+    }
+
+    .logo-menu[hidden] {
+      display: none;
+    }
+
+    .logo-menu .opt-icon {
+      display: flex;
+      flex-shrink: 0;
+      color: var(--text-secondary);
+    }
+
+    .logo-menu .opt-icon svg {
+      width: 16px;
+      height: 16px;
     }
 
     .verification-code-button {
@@ -1562,7 +1627,36 @@
   <div class="header">
     <div style="display: flex; align-items: center;">
       <div id="connectionStatus" class="status disconnected"></div>
-      <a id="logoLink" class="logo-link" href="#" target="_blank">Push Go</a>
+      <div class="logo-menu-wrap">
+        <button id="logoLink" class="logo-link" type="button" aria-haspopup="menu" aria-expanded="false">
+          <span>Push Go</span>
+          <span class="logo-caret">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+          </span>
+        </button>
+        <div class="logo-menu" id="logoMenu" role="menu" hidden>
+          <button class="menu-option" id="logoMenuWebsite" type="button" role="menuitem">
+            <span class="opt-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" />
+              </svg>
+            </span>
+            <span class="opt-text" data-i18n="open_pushbullet_website">Open Pushbullet.com</span>
+          </button>
+          <button class="menu-option" id="logoMenuOptions" type="button" role="menuitem">
+            <span class="opt-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+              </svg>
+            </span>
+            <span class="opt-text" data-i18n="logo_menu_options">Options</span>
+          </button>
+        </div>
+      </div>
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
       <a id="smsShortcut" class="sms-shortcut" href="https://www.pushbullet.com/#sms/" target="_blank"

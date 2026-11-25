@@ -472,5 +472,11 @@
   },
   "channel_label": {
     "message": "ช่อง"
+  },
+  "open_pushbullet_website": {
+    "message": "เปิด Pushbullet.com"
+  },
+  "logo_menu_options": {
+    "message": "การตั้งค่า"
   }
 }
